@@ -42,7 +42,12 @@
             </a>
         </li>
 
-
-
+        {{-- DESTINATIONS --}}
+        <li class="{{ request()->routeIs('admin.destinations.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.destinations.index') }}">
+                <i class="fa-solid fa-map-location-dot"></i> Destinations
+            </a>
+        </li>
+        
     </ul>
 </div>

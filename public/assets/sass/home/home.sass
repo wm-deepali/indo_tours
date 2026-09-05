@@ -1,0 +1,1840 @@
+@import '../_var'
+
+main
+    @include media(1280)
+      overflow-x: hidden 
+
+.home-banner
+  position: relative
+  &::before
+    content: ""
+    position: absolute
+    bottom: 0
+    right: 0
+    width: 400px
+    height: 400px
+    background-image: url(../../icon/h3-destination-shape.png)
+    background-repeat: no-repeat
+    background-position: 100% 100%
+    background-size: contain
+    pointer-events: none
+    z-index: 3
+
+    @include media(1280)
+      width: 220px
+      height: 220px
+   
+    @include media(991)
+      display: none
+    @include media(768)
+      display: none
+
+  &::after
+    content: ""
+    position: absolute
+    bottom: 0
+    left: 0
+    width: 800px
+    height: 800px
+    background-image: url(../../icon/men.png)
+    background-repeat: no-repeat
+    background-position: 100% 100%
+    background-size: contain
+    pointer-events: none
+    transform: scaleX(-1)
+    z-index: 3
+
+    @include media(1366)
+      width: 600px
+      height: 600px
+    @include media(1280)
+      width: 400px
+      height: 400px
+      bottom: 85px
+    @include media(991)
+      display: none
+
+.banner-bg
+  background: linear-gradient(120deg, #1053b0 0%, #183e8e 50%, #002251 100%)
+  padding-top: 20px
+  padding-bottom: 0
+  position: relative
+  height: 585px
+
+  @include media(1366)
+    height: 560px
+  @include media(1280)
+    height: 540px
+  @include media(991)
+    padding-top: 16px
+  @include media(768)
+    padding-top: 16px
+  @include media(540)
+    height: 435px
+
+.banner-row
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 20px
+  padding: 126px 0 60px
+  position: relative
+
+  @include media(1280)
+    padding: 136px 0 30px
+    gap: 16px
+    flex-direction: column
+    text-align: center
+  @include media(540)
+    padding: 80px 0 20px
+
+.banner-person
+  width: 320px
+  flex-shrink: 0
+  line-height: 0
+
+  @include media(1280)
+    width: 260px
+  @include media(991)
+    display: none
+
+  img
+    width: 100%
+
+.banner-illustration
+  width: 260px
+  flex-shrink: 0
+  line-height: 0
+
+  @include media(1280)
+    width: 210px
+  @include media(991)
+    display: none
+
+  img
+    width: 100%
+
+.content
+  text-align: center
+  flex: 1
+  width: 100%
+  max-width: 600px
+
+  &.content-white
+    > *:not(.btn)
+      color: $white
+
+  h6
+    font-weight: 400
+    margin-bottom: 4px
+
+  h1
+    font-weight: 800
+    line-height: 1.2
+    font-size: 48px
+    max-width: 600px
+    margin: 0 auto 14px
+    font-family: $Poppins
+    @include font(800)
+
+    @include media(1280)
+      max-width: 480px
+    @include media(991)
+      max-width: 100%
+      font-size: 34px
+    @include media(768)
+      max-width: 100%
+      font-size: 34px
+    @include media(540)
+      font-size: 28px
+
+  p
+    opacity: .9
+    line-height: 1.5
+
+    @include media(991)
+      max-width: 440px
+      margin-left: auto
+      margin-right: auto
+    @include media(768)
+      max-width: 440px
+      margin-left: auto
+      margin-right: auto
+    @include media(540)
+      font-size: 14px
+
+// ================================================
+// TRIP FINDER WIDGET (desktop)
+// ================================================
+
+.trip-finder
+  position: absolute
+  z-index: 4
+  bottom: -40px
+  left: 50%
+  transform: translateX(-50%)
+  background: $white
+  border-radius: 16px 16px 0 0
+  box-shadow: 0 -10px 40px rgba(0,0,0,.15)
+  padding: 20px 24px 0
+  width: 100%
+  max-width: 1100px
+
+  @include media(1366)
+    max-width: 960px
+  @include media(1280)
+    max-width: 93%
+    padding: 10px
+  @include media(1270)
+    max-width: 96%
+  @include media(991)
+    display: none !important
+
+.trip-finder-tabs
+  display: none
+  align-items: center
+  gap: 0
+  margin-top: -46px
+  margin-bottom: 16px
+  position: relative
+  z-index: 2
+
+  .tab-btn
+    border: 0
+    background: $white
+    color: $text
+    font-weight: 700
+    padding: 12px 30px
+    cursor: pointer
+    transition: all .3s ease
+
+    @include media(1280)
+      padding: 10px 22px
+
+    &:first-child
+      border-radius: 8px 8px 0 0
+
+    &.active
+      background: $primary
+      color: $white
+
+// ---------- Category swiper row ----------
+
+.trip-category-swiper
+  display: flex
+  align-items: center
+  gap: 8px
+  border-bottom: 1px solid rgba(0,0,0,.08)
+  padding-bottom: 16px
+  margin-bottom: 16px
+
+  @include media(1280)
+    padding-bottom: 12px
+    margin-bottom: 12px
+    gap: 6px
+
+  .cat-nav
+    width: 30px
+    height: 30px
+    border-radius: 50%
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-shrink: 0
+    cursor: pointer
+    color: $text
+    background: transparent
+    border: 0
+    padding: 0
+    transition: all .3s ease
+
+    &:hover:not(.swiper-button-disabled)
+      background: rgba($primary, .08)
+      color: $primary
+
+    &.swiper-button-disabled
+      opacity: .35
+      cursor: not-allowed
+      &:hover
+        background: transparent
+        color: $text
+
+    svg
+      width: 18px
+      height: 18px
+
+    &.tabingSlider-prev
+      transform: rotate(180deg)
+
+.tabingSlider
+  flex: 1
+  min-width: 0
+  overflow: hidden
+
+  .swiper-wrapper
+    align-items: center
+
+  .swiper-slide
+    width: auto
+    display: flex
+
+.cat-item
+  display: flex
+  align-items: center
+  gap: 8px
+  border: 0
+  background: transparent
+  padding: 8px 16px
+  border-radius: 100px
+  font-weight: 600
+  color: $text
+  white-space: nowrap
+  cursor: pointer
+  transition: all .3s ease
+
+  @include media(1280)
+    padding: 8px 14px
+
+  .cat-ico
+    width: 20px
+    height: 20px
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-shrink: 0
+
+    svg
+      width: 100%
+      height: 100%
+
+  &.active
+    color: $primary
+    border-bottom: 2px solid $primary
+    border-radius: 0
+    padding-bottom: 6px
+
+  &:hover:not(.active)
+    color: $primary
+
+// ---------- Filter form row ----------
+
+.trip-finder-form
+  display: flex
+  align-items: center
+  gap: 0
+  padding-bottom: 20px
+
+  @include media(1280)
+    gap: 10px
+
+.finder-item
+  display: flex
+  align-items: center
+  gap: 8px
+  padding: 0 16px
+  cursor: pointer
+  font-weight: 600
+  color: $black-light
+
+  @include media(1280)
+    background: rgba(0,0,0,.03)
+    border-radius: 10px
+    padding: 10px 14px
+    flex: 1 1 45%
+
+  &:first-child
+    padding-left: 0
+    @include media(1280)
+      padding-left: 14px
+
+  .ico
+    width: 18px
+    line-height: 0
+    flex-shrink: 0
+
+    svg
+      width: 100%
+
+  svg:not(.ico svg)
+    width: 20px
+    height: 20px
+    transform: rotate(90deg)
+    flex-shrink: 0
+
+.finder-item.select-field
+  position: relative
+
+  select
+    display: none !important
+
+  .custom-select
+    position: relative
+    width: 100%
+    display: flex
+    align-items: center
+    height: auto
+    padding: 0
+    border: 0
+    background: transparent
+    cursor: pointer
+
+    &.open
+      &::after
+        transform: rotate(180deg)
+      .list
+        display: block
+
+    .current
+      font-weight: 600
+      color: $black-light
+      white-space: nowrap
+
+    .list
+      display: none
+      position: absolute
+      top: calc(100% + 14px)
+      left: 0
+      z-index: 10
+      min-width: 200px
+      max-height: 240px
+      overflow-y: auto
+      margin: 0
+      padding: 6px
+      list-style: none
+      background: $white
+      border-radius: 10px
+      box-shadow: 0 15px 40px rgba(0,0,0,.15)
+
+      .option
+        padding: 10px 12px
+        font-weight: 500
+        color: $black-light
+        border-radius: 6px
+        cursor: pointer
+        transition: background .15s ease
+
+        &:hover,
+        &.focus
+          background: rgba(0,0,0,.04)
+
+        &.selected
+          color: $primary
+          font-weight: 700
+
+  @include media(1280)
+    .custom-select .list
+      left: 0
+      right: 0
+      min-width: 100%
+
+.finder-filters
+  color: $primary
+  margin-left: auto
+
+  @include media(1280)
+    margin-left: 0
+    order: 5
+  span
+    @include media(1280)
+      font-size: 14px
+
+
+
+.finder-search
+  flex: 1
+  min-width: 200px
+  border: 1px solid rgba(0,0,0,.08)
+  padding: 7px 20px
+
+  @include media(1280)
+    min-width: 160px
+    border: 0
+    background: rgba(0,0,0,.03)
+    border-radius: 10px
+    padding: 10px 14px
+    flex: 1 1 100%
+    order: 4
+
+  input
+    width: 100%
+    border: 0
+    outline: none
+    background: transparent
+    color: $black-light
+    font-weight: 500
+
+    &::placeholder
+      color: rgba(0,0,0,.4)
+
+.finder-btn
+  background: $primary
+  color: $white
+  border: 0
+  border-radius: 100px
+  padding: 14px 32px
+  font-weight: 700
+  cursor: pointer
+  white-space: nowrap
+  margin-left: 16px
+  transition: background .3s ease
+
+  @include media(1280)
+    padding: 13px 26px
+    width: 100%
+    margin-left: 0
+    order: 6
+
+// ================================================
+// MOBILE TRIGGER BAR
+// ================================================
+
+.mobile-filter-trigger
+  display: none  // hidden on desktop, shown only below 991px
+  align-items: center
+  gap: 10px
+  width: 100%
+  margin-top: 20px
+  position: relative
+  z-index: 4
+
+  @include media(991)
+    display: flex
+  @include media(768)
+    display: flex
+
+  .filter-count
+    display: none
+    align-items: center
+    justify-content: center
+    min-width: 18px
+    height: 18px
+    padding: 0 4px
+    border-radius: 50%
+    background: $primary
+    color: $white
+    font-size: 11px
+    font-weight: 700
+    line-height: 1
+
+    &:not(:empty)
+      display: inline-flex
+
+  // "Enquire Now" button
+  .enquire-pop
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 6px
+    flex-shrink: 0
+    text-decoration: none
+    border-radius: 10px
+    padding: 13px 18px
+    font-weight: 700
+    font-size: 14px
+    transition: background .2s ease, color .2s ease
+
+    &.btn-white
+      background: $white
+      color: $primary
+
+      &:hover,
+      &:active
+        background: $white
+
+    svg
+      width: 16px
+      height: 16px
+      flex-shrink: 0
+
+    @include media(540)
+      padding: 11px 14px
+      font-size: 13px
+      gap: 4px
+
+      // collapse to icon-only on very small screens to avoid wrapping
+      span
+        display: none
+
+        
+.home-secA,.home-secC,.home-secG
+  padding: 150px 0 70px
+  position: relative
+
+  @include media(1366)
+    padding: 130px 0 60px
+  @include media(1280)
+    padding: 110px 0 55px
+  @include media(1024)
+    padding: 90px 0 50px
+  @include media(991)
+    padding: 80px 0 45px
+  @include media(768)
+    padding: 60px 0 40px
+  @include media(540)
+    padding: 50px 0 30px
+  @include media(420)
+    padding: 40px 0 24px
+
+  &::before
+    content: ""
+    position: absolute
+    top: 254px
+    left: -157px
+    width: 340px
+    height: 340px
+    background-image: url(../../icon/h4-trip-shape-01.png)
+    background-repeat: no-repeat
+    background-position: 100% 100%
+    background-size: contain
+    pointer-events: none
+    z-index: -1
+
+    @include media(1366)
+      width: 260px
+      height: 260px
+      left: -120px
+    @include media(1024)
+      width: 200px
+      height: 200px
+      left: -90px
+    @include media(768)
+      display: none
+
+  &::after
+    content: ""
+    position: absolute
+    top: 18px
+    right: -164px
+    width: 340px
+    height: 340px
+    background-image: url(../../icon/h4-trip-shape-01.png)
+    background-repeat: no-repeat
+    background-position: 100% 100%
+    background-size: contain
+    pointer-events: none
+    z-index: -1
+    transform: scaleX(-1)
+
+    @include media(1366)
+      width: 260px
+      height: 260px
+      right: -130px
+    @include media(1024)
+      width: 200px
+      height: 200px
+      right: -100px
+    @include media(768)
+      display: none
+
+  .center-btn
+    margin-top: 40px
+    display: none
+    justify-content: center
+
+    @include media(768)
+      margin-top: 28px
+
+  .heading
+    width: 100%
+    max-width: 462px
+    margin: 0 auto
+    text-align: center
+
+    @include media(540)
+      max-width: 100%
+      padding: 0 10px
+
+    h3
+      margin-bottom: 10px
+
+  .swiper-wrap
+    margin-top: 70px
+    position: relative
+
+    @include media(1024)
+      margin-top: 50px
+    @include media(768)
+      margin-top: 36px
+    @include media(540)
+      margin-top: 28px
+
+    .thirdSilder
+      margin: 0 20px
+      padding: 10px
+
+      @include media(991)
+        margin: 0 
+        padding: 0
+
+    .swiper-group
+      position: absolute
+      width: 100%
+      top: 50%
+      left: 50%
+      transform: translate(-50%,-50%)
+      display: flex
+      justify-content: space-between
+      align-items: center
+      gap: 10px
+      z-index: 2
+
+      @include media(768)
+        display: none
+
+      .swiper-button-lock
+        display: none !important
+
+      button
+        width: 45px
+        height: 45px
+        border-radius: 50%
+        background: var(--white)
+        display: flex
+        justify-content: center
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px
+        align-items: center
+
+        @include media(1024)
+          width: 38px
+          height: 38px
+
+        svg
+          width: 20px
+          height: 20px
+          path
+            fill: var(--primary)
+
+        &:hover
+          background: var(--primary)
+          svg
+            path
+              fill: var(--white)
+
+      .btn-next
+        transform: rotate(180deg)
+
+.home-secB
+  padding: 40px 0px 70px
+  position: relative
+
+  @include media(1280)
+    padding: 36px 0 60px
+  @include media(1024)
+    padding: 32px 0 50px
+  @include media(768)
+    padding: 28px 0 40px
+  @include media(540)
+    padding: 24px 0 32px
+
+  &::before
+    content: ""
+    position: absolute
+    bottom: 300px
+    left: 0
+    width: 240px
+    height: 240px
+    background-image: url(../../icon/h2-destination-shape.png)
+    background-repeat: no-repeat
+    background-position: 100% 100%
+    background-size: contain
+    pointer-events: none
+    z-index: -1
+
+    @include media(1024)
+      width: 170px
+      height: 170px
+    @include media(768)
+      display: none
+
+.promo-grid
+  position: relative
+  display: grid
+  grid-template-columns: 435px 1fr
+  border-radius: 28px
+  overflow: hidden
+
+  @include media(1280)
+    grid-template-columns: 380px 1fr
+  @include media(1024)
+    grid-template-columns: 320px 1fr
+    border-radius: 22px
+  @include media(768)
+    grid-template-columns: 1fr
+    border-radius: 18px
+
+// ---------- left panel ----------
+.promo-left
+  position: relative
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+  justify-content: center
+  gap: 14px
+  padding: 48px 40px
+  background: var(--gradient-a)
+  overflow: hidden
+
+  @include media(1280)
+    padding: 40px 32px
+  @include media(1024)
+    padding: 34px 26px
+    gap: 10px
+  @include media(768)
+    padding: 32px 24px
+    align-items: center
+    text-align: center
+  @include media(540)
+    padding: 26px 20px
+  @include media(420)
+    padding: 22px 16px
+
+  &__badge
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    width: 44px
+    height: 44px
+    border-radius: 50%
+    border: 1.5px solid var(--white)
+    color: var(--white)
+    margin-bottom: 6px
+
+    @include media(1024)
+      width: 38px
+      height: 38px
+
+    svg
+      width: 20px
+      height: 20px
+
+  &::after
+    content: ''
+    position: absolute
+    top: 50%
+    left: -60px
+    width: 260px
+    height: 260px
+    transform: translateY(-50%)
+    border-radius: 50%
+    border: 1px dashed rgba(255, 255, 255, 0.08)
+    background: radial-gradient(circle, rgba(124, 92, 255, 0.08) 0%, transparent 70%)
+    pointer-events: none
+
+    @include media(1024)
+      width: 200px
+      height: 200px
+
+  &__eyebrow
+    text-transform: uppercase
+    color: var(--white)
+    margin: 0
+    z-index: 1
+
+  &__heading
+    font-weight: 600
+    color: var(--white)
+    margin: 0 0 12px
+    z-index: 1
+
+    @include media(1024)
+      margin: 0 0 8px
+
+    span
+      color: var(--white)
+
+  .btn
+    z-index: 1
+
+// ---------- right panel ----------
+.promo-right
+  position: relative
+  min-height: 320px
+  overflow: hidden
+
+  @include media(1024)
+    min-height: 260px
+  @include media(768)
+    min-height: 220px
+  @include media(540)
+    min-height: 180px
+
+  img
+    width: 100%
+    height: 100%
+    object-fit: cover
+    display: block
+    position: absolute
+    inset: 0
+    transition: transform 8s ease
+
+  &:hover img
+    transform: scale(1.08)
+
+  &::before
+    content: ''
+    position: absolute
+    inset: 0
+    background: linear-gradient(90deg, rgba(11, 19, 57, 0.35) 0%, rgba(11, 19, 57, 0) 30%)
+    z-index: 1
+
+  &__overlay
+    position: relative
+    z-index: 2
+    height: 100%
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    gap: 4px
+    text-align: center
+    padding: 40px 24px
+
+    @include media(768)
+      padding: 30px 18px
+
+  &__script
+    font-family: 'Caveat', cursive
+    font-weight: 600
+    color: #FFFFFF
+    margin: 0
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.35)
+
+    &--underline
+      position: relative
+
+      &::after
+        content: ''
+        position: absolute
+        left: 50%
+        bottom: -6px
+        width: 70%
+        height: 2px
+        transform: translateX(-50%)
+        background: rgba(255, 255, 255, 0.7)
+        border-radius: 2px
+
+.home-secC
+  padding: 0 0 70px
+  position: relative
+
+  @include media(1024)
+    padding: 0 0 50px
+  @include media(768)
+    padding: 0 0 40px
+  @include media(540)
+    padding: 0 0 30px
+
+  .swiper-wrap
+    z-index: 5
+
+  &::after
+    display: none
+  &::before
+    content: ""
+    position: absolute
+    top: auto
+    bottom: 0
+    left: -201px
+    width: 400px
+    height: 400px
+    background-image: url(../../icon/h4-trip-shape-02.png)
+    background-repeat: no-repeat
+    background-position: 100% 100%
+    background-size: contain
+    pointer-events: none
+    z-index: -1
+
+    @include media(1366)
+      width: 300px
+      height: 300px
+      left: -150px
+    @include media(1024)
+      width: 220px
+      height: 220px
+      left: -110px
+    @include media(768)
+      display: none
+
+.home-secG
+  position: relative
+  padding: 0 0 70px
+  overflow: visible
+  z-index: 1
+
+  @include media(1024)
+    padding: 0 0 50px
+  @include media(768)
+    padding: 0 0 40px
+  @include media(540)
+    padding: 0 0 30px
+
+  &::after
+    display: none
+  &::before
+    content: ""
+    position: absolute
+    inset: 0
+    width: 100%
+    height: 100%
+    background: url("../../icon/h1-destination-bg.png") no-repeat
+    background-size: contain
+    pointer-events: none
+    z-index: 0
+
+    @include media(768)
+      display: none
+.home-secD
+  padding: 70px 0
+  background: var(--gray-sec)
+
+  @include media(1024)
+    padding: 55px 0
+  @include media(768)
+    padding: 45px 0
+  @include media(540)
+    padding: 36px 0
+
+  .grid
+    display: grid
+    grid-template-columns: 1fr 1.1fr
+    gap: 60px
+    align-items: center
+
+    @include media(1280)
+      gap: 44px
+    @include media(1024)
+      gap: 32px
+    @include media(768)
+      grid-template-columns: 1fr
+      gap: 40px
+    @include media(540)
+      gap: 28px
+
+    .img
+      position: relative
+      display: flex
+      align-items: center
+      justify-content: center
+
+      &__blob
+        position: absolute
+        inset: 0
+        margin: auto
+        width: 90%
+        height: 92%
+        background: #F3F1FC
+        border-radius: 45% 55% 60% 40% / 50% 45% 55% 50%
+        z-index: 0
+
+      img
+        position: relative
+        z-index: 1
+        width: 100%
+        max-width: 460px
+        display: block
+        margin: 0 auto
+
+        @include media(1024)
+          max-width: 380px
+        @include media(540)
+          max-width: 300px
+
+      &__doodle
+        position: absolute
+        color: #C7C2F0
+        z-index: 2
+
+        svg
+          width: 46px
+          height: 46px
+
+          @include media(768)
+            width: 34px
+            height: 34px
+
+        &--camera
+          top: 8%
+          left: 4%
+
+        &--hat
+          top: 24%
+          right: 2%
+          transform: rotate(-8deg)
+
+    .item-content
+      .heading
+        margin-bottom: 32px
+
+        @include media(768)
+          margin-bottom: 24px
+
+        .badge
+          display: inline-block
+          padding: 7px 16px
+          border-radius: 999px
+          background: #EDE9FE
+          color: var(--primary)
+          font-weight: 600
+          margin-bottom: 18px
+
+        h3
+          margin: 0 0 18px
+
+        p
+          color: var(--text)
+          margin: 0
+          max-width: 520px
+
+      .stats
+        display: flex
+        gap: 40px
+        list-style: none
+        margin: 0 0 36px
+        padding: 0
+
+        @include media(1024)
+          gap: 28px
+          margin: 0 0 28px
+        @include media(768)
+          gap: 22px
+        @include media(540)
+          flex-wrap: nowrap
+          justify-content: space-between
+          gap: 12px
+          margin: 0 0 22px
+        @include media(420)
+          gap: 8px
+          margin: 0 0 18px
+
+        li
+          display: flex
+          flex-direction: column
+          align-items: flex-start
+          gap: 14px
+
+          @include media(768)
+            gap: 10px
+          @include media(540)
+            gap: 8px
+            justify-content: center
+            align-items: center
+            flex: 1
+            min-width: 0
+
+        &__icon
+          display: inline-flex
+          align-items: center
+          justify-content: center
+          width: 56px
+          height: 56px
+          border-radius: 50%
+          background: #F3F1FC
+          color: #5B3DF0
+          filter: grayscale(100%)
+          opacity: .5
+
+          @include media(768)
+            width: 46px
+            height: 46px
+          @include media(540)
+            width: 38px
+            height: 38px
+          @include media(420)
+            width: 34px
+            height: 34px
+
+          svg
+            width: 26px
+            height: 26px
+
+            @include media(768)
+              width: 22px
+              height: 22px
+            @include media(540)
+              width: 18px
+              height: 18px
+            @include media(420)
+              width: 16px
+              height: 16px
+
+        .content
+          h4
+            font-weight: 700
+            color: #111827
+            margin: 0 0 4px
+
+            @include media(540)
+              font-size: 16px
+              margin: 0 0 3px
+            @include media(420)
+              font-size: 14px
+
+          p
+            color: #6B7280
+            margin: 0
+
+            @include media(540)
+              font-size: 11px
+              line-height: 1.3
+            @include media(420)
+              font-size: 10px
+
+      .footer-row
+        display: flex
+        align-items: center
+        gap: 32px
+        flex-wrap: wrap
+
+        @include media(768)
+          gap: 20px
+        @include media(540)
+          gap: 14px
+
+          .btn
+            width: 100%
+            justify-content: center
+            text-align: center
+.home-secE
+  padding: 70px 0
+
+  @include media(1024)
+    padding: 55px 0
+  @include media(768)
+    padding: 45px 0
+  @include media(540)
+    padding: 36px 0
+
+  .grid
+    display: grid
+    grid-template-columns: 1fr 1fr
+    gap: 28px
+
+    @include media(1024)
+      gap: 20px
+    @include media(991)
+      grid-template-columns: 1fr
+    @include media(540)
+      gap: 16px
+
+  // ---------- left: dark photo overlay card ----------
+  .item-content
+    position: relative
+    border-radius: 20px
+    overflow: hidden
+    min-height: 250px
+    display: flex
+    align-items: center
+
+    @include media(768)
+      min-height: 220px
+    @include media(540)
+      min-height: 190px
+      border-radius: 16px
+
+    img
+      position: absolute
+      inset: 0
+      width: 100%
+      height: 100%
+      object-fit: cover
+      z-index: 0
+
+    &::before
+      content: ''
+      position: absolute
+      inset: 0
+      background: linear-gradient(100deg, rgba(11, 19, 57, 0.85) 0%, rgba(11, 19, 57, 0.35) 55%, rgba(11, 19, 57, 0) 75%)
+      z-index: 1
+
+    &::after
+      content: ''
+      position: absolute
+      top: -20%
+      right: 18%
+      width: 140px
+      height: 160%
+      background: rgba(255, 255, 255, 0.08)
+      transform: rotate(18deg)
+      z-index: 1
+
+      @include media(768)
+        width: 100px
+
+    .content
+      position: relative
+      z-index: 2
+      padding: 44px 48px
+      max-width: 340px
+      display: flex
+      flex-direction: column
+      align-items: flex-start
+
+      @include media(1024)
+        padding: 36px 38px
+      @include media(768)
+        padding: 30px 28px
+        max-width: 100%
+      @include media(540)
+        padding: 24px 20px
+
+      &__eyebrow
+        display: inline-block
+        text-transform: uppercase
+        color: #FFFFFF
+        letter-spacing: 0.04em
+        border-bottom: 2px solid #FFFFFF
+        padding-bottom: 4px
+        margin-bottom: 18px
+
+        @include media(540)
+          margin-bottom: 12px
+
+      .dic
+        display: flex
+        gap: 12px
+        margin-bottom: 28px
+        text-align: left
+
+        @include media(540)
+          margin-bottom: 18px
+
+        h3
+          font-weight: 800
+          line-height: 0.9
+          color: #FFFFFF
+          margin: 0
+
+        h5
+          font-weight: 700
+          line-height: 1.25
+          color: #FFFFFF
+          text-transform: uppercase
+          margin: 0 0 6px
+          letter-spacing: 0.01em
+
+  // ---------- right: light editorial card ----------
+  .item-img
+    position: relative
+    border-radius: 20px
+    overflow: hidden
+
+    @include media(768)
+      min-height: 220px
+      border-radius: 16px
+    @include media(540)
+      display: flex
+      flex-direction: column
+
+
+    img
+      width: 100%
+      height: 100%
+      object-fit: cover
+      display: block
+
+
+    &__logo
+      position: absolute
+      top: 20px
+      left: 20px
+      z-index: 2
+      display: flex
+      align-items: center
+      gap: 8px
+      line-height: 1.2
+      color: #1E2A4A
+      text-transform: uppercase
+      font-weight: 800
+
+      @include media(540)
+        position: relative
+        top: auto
+        left: auto
+        order: 1
+        padding: 18px 18px 0
+
+      svg
+        width: 22px
+        height: 22px
+
+        @include media(540)
+          width: 18px
+          height: 18px
+
+    &__price
+      position: absolute
+      left: 30%
+      bottom: 20px
+      z-index: 2
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+      width: 84px
+      height: 84px
+      border-radius: 50%
+      background: #1E2A4A
+      color: #FFFFFF
+      text-align: center
+      border: 3px solid #C9A15A
+
+      @include media(768)
+        width: 70px
+        height: 70px
+        bottom: 16px
+      @include media(540)
+        position: relative
+        left: auto
+        bottom: auto
+        order: 2
+        align-self: flex-start
+        width: 64px
+        height: 64px
+        margin: 12px 0 0 18px
+
+      span
+        text-transform: uppercase
+        letter-spacing: 0.03em
+        opacity: 0.8
+
+      strong
+        font-weight: 700
+
+    &__panel
+      position: relative
+      padding: 36px 32px
+      display: flex
+      flex-direction: column
+      justify-content: center
+
+      @include media(1024)
+        padding: 30px 26px
+      @include media(768)
+        padding: 26px 22px
+      @include media(540)
+        order: 3
+        padding: 16px 18px 22px
+
+      .eyebrow
+        color: #C9A15A
+        text-transform: uppercase
+        letter-spacing: 0.05em
+        margin: 0 0 8px
+
+      h3
+        font-weight: 800
+        line-height: 1.2
+        color: #1E2A4A
+        margin: 0 0 14px
+
+        @include media(540)
+          margin: 0 0 10px
+
+        span
+          color: #C9A15A
+
+      .desc
+        line-height: 1.6
+        color: #6B7280
+        max-width: 320px
+        margin: 0 0 20px
+
+        @include media(540)
+          margin: 0 0 14px
+
+      .btn-primary
+        align-self: flex-start
+        margin-bottom: 16px
+
+        @include media(540)
+          margin-bottom: 12px
+
+      .phone
+        display: flex
+        align-items: center
+        gap: 8px
+        font-weight: 700
+        color: #1E2A4A
+        margin: 0
+
+        svg
+          width: 16px
+          height: 16px
+          color: #C9A15A
+.home-secF
+  padding: 40px 0 70px
+
+  @include media(1280)
+    padding: 36px 0 60px
+  @include media(991)
+    padding: 40px 0
+  @include media(767)
+    padding: 30px 0
+  @include media(540)
+    padding: 24px 0
+
+  .heading
+    text-align: center
+    margin-bottom: 2rem
+
+    @include media(767)
+      margin-bottom: 2rem
+    @include media(540)
+      margin-bottom: 1.5rem
+
+  .logoSlider
+    width: 100%
+    height: 120px !important
+
+    @include media(1024)
+      height: 100px !important
+    @include media(768)
+      height: 80px !important
+    @include media(540)
+      height: 64px !important
+
+    .swiper-wrapper
+      transition-timing-function: linear
+      align-items: center
+
+      .swiper-slide
+        img
+          display: flex
+          justify-content: center
+          align-items: center
+          margin: 0 auto
+
+.home-secI
+  padding: 70px 0
+  background: var(--gray-sec)
+
+  @include media(1024)
+    padding: 55px 0
+  @include media(768)
+    padding: 45px 0
+  @include media(540)
+    padding: 36px 0
+
+  .heading
+    width: 100%
+    max-width: 550px
+    margin: 0 auto
+    text-align: center
+    margin-bottom: 4rem
+
+    @include media(1024)
+      margin-bottom: 3rem
+    @include media(768)
+      margin-bottom: 2.2rem
+    @include media(540)
+      max-width: 310px
+      padding: 0 10px
+      margin-bottom: 1.8rem
+
+    h3
+      margin-bottom: 10px
+
+  .card
+    background: #FFFFFF
+    border-radius: 20px
+    padding: 28px 26px
+    height: 100%
+
+    @include media(1024)
+      padding: 24px 22px
+      border-radius: 16px
+    @include media(540)
+      padding: 20px 18px
+      border-radius: 14px
+
+    .header
+      display: flex
+      align-items: flex-start
+      gap: 12px
+      margin-bottom: 18px
+
+      @include media(540)
+        margin-bottom: 14px
+        gap: 10px
+
+      img
+        width: 48px
+        height: 48px
+        border-radius: 50%
+        object-fit: cover
+        flex-shrink: 0
+
+        @include media(540)
+          width: 40px
+          height: 40px
+
+      .name
+        flex: 1
+
+        h6
+          font-weight: 700
+          color: #111827
+          margin: 0 0 2px
+
+        p
+          color: #6B7280
+          margin: 0
+
+      .quotes
+        flex-shrink: 0
+        margin-top: 4px
+
+        svg
+          width: 34px
+          height: 26px
+
+          @include media(540)
+            width: 26px
+            height: 20px
+
+    .quote
+      font-style: italic
+      line-height: 1.7
+      color: #4B5563
+      margin: 0 0 20px
+
+      @include media(540)
+        margin: 0 0 14px
+
+    .stars
+      display: flex
+      gap: 4px
+
+      svg
+        width: 16px
+        height: 16px
+        color: #F2A93B
+
+.home-secH
+  padding: 70px 0 0
+
+  @include media(1024)
+    padding: 55px 0 0
+  @include media(768)
+    padding: 45px 0 0
+  @include media(540)
+    padding: 36px 0 0
+
+  .container
+    max-width: 1280px
+    margin: 0 auto
+    padding: 0 20px
+
+    @include media(540)
+      padding: 0 14px
+
+  .homeSlider
+    position: relative
+    border-radius: 24px
+    overflow: hidden
+
+    @include media(768)
+      border-radius: 16px
+
+    .swiper-slide
+      border-radius: 24px
+      overflow: hidden
+
+      @include media(768)
+        border-radius: 16px
+
+      img
+        width: 100%
+        height: 420px
+        object-fit: cover
+        display: block
+        border-radius: 24px
+
+        @include media(1280)
+          height: 360px
+        @include media(1024)
+          height: 320px
+        @include media(768)
+          height: 260px
+          border-radius: 16px
+        @include media(540)
+          height: 200px
+        @include media(420)
+          height: 170px
+
+    .swiper-pagination
+      position: absolute
+      bottom: 20px
+      left: 0
+      right: 0
+      display: flex
+      justify-content: center
+      gap: 8px
+      z-index: 2
+
+      @include media(540)
+        bottom: 14px
+        gap: 6px
+
+      .swiper-pagination-bullet
+        width: 8px
+        height: 8px
+        border-radius: 50%
+        background: rgba(255, 255, 255, 0.5)
+        opacity: 1
+        transition: width 0.3s ease, background 0.3s ease
+
+        @include media(540)
+          width: 6px
+          height: 6px
+
+        &-active
+          width: 22px
+          border-radius: 999px
+          background: #FFFFFF
+
+          @include media(540)
+            width: 16px
+
+.home-secK
+  padding: 90px 0
+  background: var(--gray-sec)
+
+  @include media(1366)
+    padding: 75px 0
+  @include media(1024)
+    padding: 60px 0
+  @include media(768)
+    padding: 45px 0
+  @include media(540)
+    padding: 34px 0
+
+  .grid
+    display: grid
+    grid-template-columns: repeat(2, 1fr)
+    gap: 4rem
+    align-items: flex-start
+
+    @include media(1280)
+      gap: 3rem
+    @include media(1024)
+      gap: 2.2rem
+    @include media(768)
+      grid-template-columns: 1fr
+      gap: 2rem
+    @include media(540)
+      gap: 1.5rem
+
+    .img
+      border-radius: 10px
+      overflow: hidden
+      height: 100%
+
+      img
+        width: 100%
+        height: 100%
+        object-fit: cover
+        display: block
+
+    .content
+      .heading
+        margin-bottom: 40px
+        text-align: left
+
+        @include media(1024)
+          margin-bottom: 28px
+        @include media(540)
+          margin-bottom: 20px
+
+      h3
+        font-weight: 800
+        line-height: 1.2
+        color: #0d1b17
+        margin: 0 0 14px
+
+        span
+          color: #c99a2e
+
+      p
+        line-height: 1.65
+        color: #6b7a75
+        margin: 0
+        max-width: 480px
+
+    .lists
+      list-style: none
+      margin: 0
+      padding: 0
+      display: flex
+      flex-direction: column
+      gap: 26px
+
+      @include media(1024)
+        gap: 20px
+      @include media(540)
+        gap: 16px
+
+      li
+        display: flex
+        gap: 18px
+        align-items: flex-start
+
+        @include media(540)
+          gap: 12px
+
+        .icon
+          flex-shrink: 0
+          width: 48px
+          height: 48px
+          border-radius: 12px
+          background: #114c9e1f
+          border: 1px solid #114c9ea1
+          display: flex
+          align-items: center
+          justify-content: center
+          color: var(--primary)
+          transition: all .25s ease
+
+          @include media(540)
+            width: 40px
+            height: 40px
+            border-radius: 10px
+
+          svg
+            width: 22px
+            height: 22px
+
+            @include media(540)
+              width: 18px
+              height: 18px
+
+        .text
+          flex: 1
+          text-align: left
+
+          h6
+            font-weight: 700
+            color: #0d1b17
+            margin: 0 0 6px
+            line-height: 1.4
+
+          p
+            color: #6b7a75
+            line-height: 1.6
+            margin: 0
+
+        &:hover .icon
+          background: var(--primary)
+          border-color: var(--primary)
+          color: var(--white)
+          transform: translateY(-2px)
+
+.home-secJ
+  padding: 70px 0
+
+  @include media(1280)
+    padding: 60px 0
+  @include media(1024)
+    padding: 50px 0
+  @include media(768)
+    padding: 35px 0

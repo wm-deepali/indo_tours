@@ -1,0 +1,1480 @@
+@import "../_common"
+@import "../_common"
+
+main
+    overflow-x: clip
+    overflow-y: visible
+
+// =========================================
+// Attraction Hero Banner
+// =========================================
+
+.banner.attraction-banner
+    // header offset variable — sirf breadcrumb ke liye use hota hai
+    --header-h: 90px
+
+    @include media(1024)
+        --header-h: 80px
+
+    @include media(768)
+        --header-h: 75px
+
+    @include media(540)
+        --header-h: 68px
+
+    @include media(420)
+        --header-h: 64px
+
+    .bg
+        position: relative
+        min-height: 520px
+        overflow: hidden
+
+        @include media(1366)
+            min-height: 520px
+
+        @include media(1280)
+            min-height: 500px
+
+        @include media(1024)
+            min-height: 480px
+
+        @include media(991)
+            min-height: 500px
+            overflow: visible
+
+        @include media(768)
+            min-height: 520px
+
+        @include media(540)
+            min-height: 540px
+
+        @include media(420)
+            min-height: 560px
+
+        > img , video
+            position: absolute
+            inset: 0
+            width: 100%
+            height: 100%
+            object-fit: cover
+            object-position: center
+            z-index: 0
+
+        &::before
+            content: ''
+            position: absolute
+            inset: 0
+            z-index: 1
+            pointer-events: none
+            background: linear-gradient(
+                360deg,
+                rgba(0, 0, 0, 0.78) 8%,
+                rgba(0, 0, 0, 0.35) 55%,
+                rgba(0, 0, 0, 0.55) 100%
+            )
+
+        .container
+            position: relative
+            z-index: 2
+            width: 100%
+            height: 100%
+
+        // breadcrumb ko top se header height jitna neeche rakho,
+        // taaki wo header ke peeche na chhupe
+        .breadcrumb
+            position: absolute
+            top: calc(var(--header-h) + 16px)
+            z-index: 3
+
+            @include media(768)
+                top: calc(var(--header-h) + 12px)
+
+            @include media(420)
+                top: calc(var(--header-h) + 8px)
+
+        // ab banner-wrapper flex-flow se nikal ke absolute ho gaya —
+        // isliye horizontal centering ke liye left/right/margin zaroori,
+        // padding-top ki ab zaroorat nahi (position khud handle karta hai)
+        .banner-wrapper
+            position: absolute
+            left: 50%
+            margin: 0 auto
+            right: 0
+            bottom: 110px
+            margin: 0 auto
+            width: 100%
+            max-width: 760px
+            box-sizing: border-box
+            z-index: 2
+
+            @include media(1366)
+                bottom: 40px
+
+            @include media(1280)
+                bottom: 36px
+
+            @include media(1024)
+                bottom: 34px
+
+            @include media(991)
+                bottom: 32px
+
+            @include media(768)
+                bottom: 30px
+
+            @include media(540)
+                bottom: 24px
+
+            @include media(420)
+                bottom: 20px
+
+        .content
+            width: 100%
+            display: flex
+            justify-content: center
+            max-width: 760px
+
+// =========================================
+// Attraction Search
+// =========================================
+
+.attraction-search
+    width: 100%
+
+    .search-wrapper
+        width: 100%
+        max-width: 1100px
+        margin: 0 auto
+        text-align: center
+
+        @include media(1366)
+            max-width: 950px
+
+        @include media(1280)
+            max-width: 900px
+
+        @include media(1024)
+            max-width: 850px
+
+        @include media(991)
+            max-width: 850px
+
+        @include media(768)
+            max-width: 100%
+            padding: 0 15px
+
+        @include media(540)
+            padding: 0 12px
+
+        @include media(420)
+            padding: 0 10px
+
+    .search-content
+        margin-bottom: 25px
+        color: var(--white)
+
+        @include media(1024)
+            margin-bottom: 22px
+
+        @include media(768)
+            margin-bottom: 20px
+
+        @include media(540)
+            margin-bottom: 16px
+
+        @include media(420)
+            margin-bottom: 14px
+
+        // NOTE: font-size yahan nahi chheda — tumhara comman h1/p rule
+        // hi apply hoga jaisa already tha
+        .eyebrow
+            display: inline-block
+            margin-bottom: 10px
+            font-size: 13px
+            font-weight: 700
+            letter-spacing: 1.5px
+            text-transform: uppercase
+            color: var(--primary)
+
+            @include media(768)
+                font-size: 11px
+                margin-bottom: 7px
+
+        h1
+            margin: 0 0 10px
+            line-height: 1.2
+            font-weight: 700
+            color: var(--white)
+            max-width: 100%
+
+            @include media(1366)
+                font-size: 40px
+
+            @include media(1280)
+                font-size: 36px
+
+            @include media(1024)
+                font-size: 32px
+
+            @include media(991)
+                font-size: 30px
+
+        p
+            max-width: 650px
+            margin: 0 auto
+            font-size: 15px
+            line-height: 1.6
+            color: rgba(255, 255, 255, 0.88)
+
+            @include media(768)
+                font-size: 13px
+                line-height: 1.5
+
+            @include media(540)
+                font-size: 12px
+                line-height: 1.5
+
+            @include media(420)
+                font-size: 12px
+
+// =========================================
+// Attraction Filter
+// =========================================
+
+.attraction-filter
+    width: 100%
+    display: flex
+    align-items: stretch
+    gap: 10px
+    padding: 10px
+    background: var(--white)
+    border-radius: 12px
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18)
+
+    @include media(1366)
+        gap: 10px
+        padding: 10px
+
+    @include media(1280)
+        gap: 9px
+        padding: 9px
+
+    @include media(1024)
+        gap: 8px
+        padding: 8px
+        border-radius: 10px
+
+    @include media(991)
+        gap: 8px
+        padding: 8px
+
+    @include media(768)
+        flex-direction: column
+        gap: 8px
+        padding: 8px
+        border-radius: 10px
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15)
+
+    @include media(540)
+        gap: 6px
+        padding: 6px
+        border-radius: 8px
+
+    @include media(420)
+        gap: 6px
+        padding: 6px
+
+    input,
+    select,
+    button
+        box-sizing: border-box
+
+    .search-field
+        position: relative
+        flex: 1.5
+        display: flex
+        align-items: center
+
+        @include media(1024)
+            flex: 1.4
+
+        @include media(991)
+            flex: 1.3
+
+        @include media(768)
+            width: 100%
+            flex: none
+
+        img,svg
+            position: absolute
+            left: 16px
+            top: 50%
+            transform: translateY(-50%)
+            z-index: 1
+            font-size: 14px
+            color: var(--text-light)
+            pointer-events: none
+
+            @include media(540)
+                left: 14px
+
+            @include media(420)
+                left: 12px
+
+        input
+            width: 100%
+            height: 52px
+            padding: 0 15px 0 42px
+            border: 1px solid var(--border)
+            border-radius: 8px
+            outline: none
+            background: var(--gray-sec)
+            color: var(--black)
+            font-family: inherit
+            font-size: 14px
+            transition: all .25s ease
+
+            @include media(1024)
+                height: 50px
+
+            @include media(768)
+                height: 50px
+
+            @include media(540)
+                height: 48px
+                padding: 0 12px 0 38px
+
+            @include media(420)
+                font-size: 13px
+                height: 46px
+                padding: 0 10px 0 34px
+
+            &::placeholder
+                color: var(--text-light)
+
+            &:focus
+                border-color: var(--primary)
+                background: var(--white)
+
+    // Just size the flex slot + feed variables into the shared
+    // .custom-select component (built by niceSelect JS as a sibling
+    // of the hidden <select>)
+    .select-field
+        position: relative
+        flex: 1
+        --inputsize: 52px
+        --paddingleftright: 15px
+        --labelfontbefore: 14px
+        --font: 400
+
+        @include media(1024)
+            --inputsize: 50px
+
+        @include media(991)
+            flex: .9
+
+        @include media(768)
+            width: 100%
+            flex: none
+            --inputsize: 50px
+
+        @include media(540)
+            --inputsize: 48px
+            --paddingleftright: 12px
+
+        @include media(420)
+            --inputsize: 46px
+            --paddingleftright: 10px
+
+        select
+            display: none !important
+
+        .custom-select
+            position: relative
+            width: 100%
+            height: var(--inputsize)
+            display: flex
+            align-items: center
+            padding: 0 var(--paddingleftright)
+            border: 1px solid var(--border)
+            border-radius: 8px
+            background: var(--gray-sec)
+            cursor: pointer
+            transition: all .25s ease
+
+            &::after
+                content: "\f107"
+                font-family: "Font Awesome 6 Free"
+                font-weight: 900
+                position: absolute
+                right: var(--paddingleftright)
+                top: 50%
+                transform: translateY(-50%)
+                font-size: 12px
+                color: var(--text-light)
+                pointer-events: none
+                transition: transform .2s ease
+
+            &.open
+                border-color: var(--primary)
+                background: var(--white)
+
+                &::after
+                    transform: translateY(-50%) rotate(180deg)
+
+                .list
+                    display: block
+
+            .current
+                width: 100%
+                font-size: var(--labelfontbefore)
+                font-weight: var(--font)
+                color: var(--black)
+                white-space: nowrap
+                overflow: hidden
+                text-overflow: ellipsis
+                padding-right: 18px
+
+            .list
+                display: none
+                position: absolute
+                top: calc(100% + 6px)
+                left: 0
+                right: 0
+                z-index: 10
+                max-height: 240px
+                overflow-y: auto
+                margin: 0
+                padding: 6px
+                list-style: none
+                background: var(--white)
+                border: 1px solid var(--border)
+                border-radius: 8px
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18)
+
+                .option
+                    padding: 10px 12px
+                    font-size: 14px
+                    color: var(--black)
+                    border-radius: 6px
+                    cursor: pointer
+                    transition: background .15s ease
+
+                    @include media(540)
+                        padding: 8px 10px
+
+                    &:hover,
+                    &.focus
+                        background: var(--gray-sec)
+
+                    &.selected
+                        color: var(--primary)
+                        font-weight: 600
+
+    .btn
+        flex: 0 0 auto
+        min-width: 125px
+        height: 52px
+        display: flex
+        align-items: center
+        justify-content: center
+        gap: 8px
+        padding: 0 24px
+        border: 0
+        border-radius: 8px
+        cursor: pointer
+        font-size: 14px
+        font-weight: 600
+        white-space: nowrap
+
+        @include media(1024)
+            height: 50px
+            min-width: 115px
+            padding: 0 20px
+
+        @include media(768)
+            width: 100%
+            height: 50px
+
+        @include media(540)
+            height: 48px
+            padding: 0 18px
+
+        @include media(420)
+            height: 46px
+            font-size: 13px
+            padding: 0 16px
+
+        i
+            font-size: 13px
+
+            @include media(420)
+                font-size: 12px
+
+.attractions-secA
+    padding: 70px 0
+    position: relative
+
+    @include media(1366)
+        padding: 64px 0
+
+    @include media(1280)
+        padding: 58px 0
+
+    @include media(1024)
+        padding: 52px 0
+
+    @include media(991)
+        padding: 46px 0
+
+    @include media(768)
+        padding: 42px 0
+
+    @include media(540)
+        padding: 40px 0
+
+    @include media(420)
+        padding: 40px 0
+
+    &::before
+        content: ""
+        position: absolute
+        top: 254px
+        left: -157px
+        width: 340px
+        height: 340px
+        background-image: url(../../icon/h4-trip-shape-01.png)
+        background-repeat: no-repeat
+        background-position: 100% 100%
+        background-size: contain
+        pointer-events: none
+        z-index: -1
+
+    &::after
+        content: ""
+        position: absolute
+        top: 18px
+        right: -164px
+        width: 340px
+        height: 340px
+        background-image: url(../../icon/h4-trip-shape-01.png)
+        background-repeat: no-repeat
+        background-position: 100% 100%
+        background-size: contain
+        pointer-events: none
+        z-index: -1
+        transform: scaleX(-1)
+
+    .heading
+        width: 100%
+        max-width: 400px
+        margin: 0 auto 50px
+        text-align: center
+
+        @include media(768)
+            margin: 0 auto 34px
+
+        @include media(540)
+            max-width: 100%
+            margin: 0 auto 30px
+
+        h3
+            margin-bottom: 10px
+
+    .swiper-wrap
+        margin-top: 70px
+        position: relative
+
+        @include media(1024)
+            margin-top: 56px
+
+        @include media(768)
+            margin-top: 40px
+
+        @include media(540)
+            margin-top: 34px
+
+        .fourSilder
+            margin: 0 20px
+            padding: 10px
+
+            @include media(768)
+                margin: 0 10px
+
+            @include media(540)
+                margin: 0
+                padding: 6px
+
+        .swiper-group
+            position: absolute
+            width: 100%
+            top: 50%
+            left: 50%
+            transform: translate(-50%,-50%)
+            display: flex
+            justify-content: space-between
+            align-items: center
+            gap: 10px
+            z-index: 2
+
+            @include media(768)
+                display: none
+
+            .swiper-button-lock
+                display: none !important
+
+            button
+                width: 45px
+                height: 45px
+                border-radius: 50%
+                background: var(--white)
+                display: flex
+                justify-content: center
+                box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px
+                align-items: center
+
+                @include media(1024)
+                    width: 40px
+                    height: 40px
+
+                svg
+                    width: 20px
+                    height: 20px
+
+                    @include media(1024)
+                        width: 18px
+                        height: 18px
+
+                    path
+                        fill: var(--primary)
+
+                &:hover
+                    background: var(--primary)
+
+                    svg
+                        path
+                            fill: var(--white)
+
+            .btn-next
+                transform: rotate(180deg)
+
+.destinations-sec
+    padding: 70px 0
+    position: relative
+
+    @include media(1366)
+        padding: 64px 0
+
+    @include media(1280)
+        padding: 58px 0
+
+    @include media(1024)
+        padding: 52px 0
+
+    @include media(991)
+        padding: 46px 0
+
+    @include media(768)
+        padding: 42px 0
+
+    @include media(540)
+        padding: 40px 0
+
+    @include media(420)
+        padding: 40px 0
+
+    .heading
+        width: 100%
+        max-width: 100%
+        margin: 0 auto
+        text-align: center
+
+        h3
+            margin-bottom: 10px
+
+            span
+                color: var(--primary)
+
+        p
+            font-size: 15px
+            line-height: 1.6
+            color: var(--text-light)
+
+            @include media(768)
+                font-size: 13px
+
+    .destination-grid
+        margin-top: 50px
+        display: grid
+        grid-template-columns: repeat(3, 1fr)
+        gap: 26px
+
+        @include media(991)
+            grid-template-columns: repeat(3, 1fr)
+            gap: 20px
+
+        @include media(540)
+            margin-top: 34px
+            grid-template-columns: 1fr 1fr
+            gap: 16px
+
+    .destination_card
+        position: relative
+        display: flex
+        align-items: flex-end
+        min-height: 320px
+        border-radius: 14px
+        overflow: hidden
+        transition: transform .3s ease, box-shadow .3s ease
+
+        @include media(991)
+            min-height: 300px
+
+        @include media(768)
+            min-height: 260px
+        @include media(540)
+            min-height: 200px
+
+            &:hover
+                transform: none
+
+        &:hover
+            transform: translateY(-6px)
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18)
+
+            img
+                transform: scale(1.08)
+
+            .link-btn
+                gap: 12px
+
+        img
+            position: absolute
+            inset: 0
+            width: 100%
+            height: 100%
+            object-fit: cover
+            object-position: center
+            transition: transform .5s ease
+            z-index: 0
+
+        &::before
+            content: ''
+            position: absolute
+            inset: 0
+            z-index: 1
+            pointer-events: none
+            background: linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.85) 0%,
+                rgba(0, 0, 0, 0.55) 35%,
+                rgba(0, 0, 0, 0.1) 65%,
+                rgba(0, 0, 0, 0) 100%
+            )
+
+        .content
+            position: relative
+            z-index: 2
+            width: 100%
+            padding: 24px 22px
+
+            @include media(768)
+                padding: 20px 18px
+
+            .tag
+                margin: 0 0 6px
+                font-size: 12px
+                font-weight: 700
+                color: #ffffff
+                background: #ffffff7d
+                width: fit-content
+                padding: 6px 14px
+                border-radius: 4px
+                @include media(768)
+                    padding: 3px 5px
+                    font-size: 10px
+
+            h5
+                margin: 0 0 8px
+                font-size: 19px
+                font-weight: 700
+                color: var(--white)
+
+                @include media(768)
+                    font-size: 17px
+                @include media(540)
+                    font-size: 14px
+
+            .desc
+                margin: 0 0 16px
+                font-size: 13px
+                line-height: 1.6
+                color: rgba(255, 255, 255, 0.85)
+
+                @include media(768)
+                    font-size: 12px
+                @include media(540)
+                  display: none
+
+            .link-btn
+                display: inline-flex
+                align-items: center
+                gap: 8px
+                font-size: 14px
+                font-weight: 600
+                color: var(--white)
+                transition: gap .3s ease
+                text-decoration: none
+
+                @include media(540)
+                    font-size: 12px
+
+                svg
+                    width: 16px
+                    height: 16px
+                    transition: transform .3s ease
+
+                &:hover svg
+                    transform: translateX(3px)
+
+.categories-sec
+    padding: 70px 0
+    position: relative
+    background: var(--gray-sec)
+
+    @include media(1366)
+        padding: 64px 0
+
+    @include media(1280)
+        padding: 58px 0
+
+    @include media(1024)
+        padding: 52px 0
+
+    @include media(991)
+        padding: 46px 0
+
+    @include media(768)
+        padding: 42px 0
+
+    @include media(540)
+        padding: 40px 0
+
+    @include media(420)
+        padding: 40px 0
+
+    .heading
+        width: 100%
+        max-width: 100%
+        margin: 0 auto
+        text-align: center
+
+        h3
+            margin-bottom: 10px
+
+            span
+                color: var(--primary)
+
+        p
+            font-size: 15px
+            line-height: 1.6
+            color: var(--text-light)
+
+            @include media(768)
+                font-size: 13px
+
+    .category-grid
+        margin-top: 50px
+        display: grid
+        grid-template-columns: repeat(3, 1fr)
+        gap: 24px
+
+        @include media(991)
+            gap: 18px
+
+        @include media(540)
+            margin-top: 34px
+            grid-template-columns: 1fr 1fr
+            gap: 14px
+
+    .category_card
+        position: relative
+        display: flex
+        align-items: flex-end
+        min-height: 280px
+        border-radius: 16px
+        overflow: hidden
+        text-decoration: none
+        cursor: pointer
+        transition: transform .35s ease, box-shadow .35s ease
+
+        @include media(991)
+            min-height: 260px
+
+        @include media(768)
+            min-height: 220px
+
+            &:hover
+                transform: none
+
+        &:hover
+            transform: translateY(-6px)
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2)
+
+            img
+                transform: scale(1.1)
+
+            .content
+                padding-bottom: 30px
+
+            .pill
+                background: var(--primary)
+                color: var(--white)
+
+        img
+            position: absolute
+            inset: 0
+            width: 100%
+            height: 100%
+            object-fit: cover
+            object-position: center
+            transition: transform .5s ease
+            z-index: 0
+
+        &::before
+            content: ''
+            position: absolute
+            inset: 0
+            z-index: 1
+            pointer-events: none
+            background: linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.9) 0%,
+                rgba(0, 0, 0, 0.5) 45%,
+                rgba(0, 0, 0, 0.05) 75%,
+                rgba(0, 0, 0, 0) 100%
+            )
+
+        .content
+            position: relative
+            z-index: 2
+            width: 100%
+            padding: 24px 22px
+            transition: padding-bottom .35s ease
+
+            @include media(768)
+                padding: 18px
+            @include media(540)
+               padding: 10px
+           
+
+            .pill
+                display: inline-block
+                margin-bottom: 10px
+                padding: 5px 14px
+                border-radius: 20px
+                background: rgba(255, 255, 255, 0.14)
+                backdrop-filter: blur(6px)
+                font-size: 12px
+                font-weight: 700
+                letter-spacing: .3px
+                color: var(--white)
+                transition: background .3s ease, color .3s ease
+
+                @include media(768)
+                    font-size: 11px
+                    padding: 3px 6px
+                @include media(540)
+                    padding: 3px 6px
+                    font-size: 10px
+
+            .desc
+                margin: 0
+                font-size: 13px
+                line-height: 1.6
+                color: rgba(255, 255, 255, 0.85)
+
+                @include media(768)
+                    font-size: 12px
+                @include media(540)
+                  font-size: 10px
+
+.must-visit-sec
+    padding: 70px 0
+
+    @include media(1366)
+        padding: 64px 0
+
+    @include media(1280)
+        padding: 58px 0
+
+    @include media(1024)
+        padding: 52px 0
+
+    @include media(991)
+        padding: 46px 0
+
+    @include media(768)
+        padding: 42px 0
+
+    @include media(540)
+        padding: 40px 0
+
+    @include media(420)
+        padding: 40px 0
+
+    .heading
+        width: 100%
+        max-width: 500px
+        margin: 0 auto
+        text-align: center
+
+        @include media(768)
+            max-width: 100%
+
+        h3
+            margin-bottom: 10px
+
+    .attraction-list
+        margin-top: 50px
+        display: flex
+        flex-direction: column
+        gap: 24px
+
+        @include media(768)
+            margin-top: 34px
+            gap: 16px
+
+    .attraction_row
+        display: flex
+        align-items: stretch
+        gap: 30px
+        padding: 18px
+        border-radius: 16px
+        border: 1px solid var(--border)
+        background: var(--white)
+        transition: box-shadow .3s ease, border-color .3s ease
+
+        @include media(991)
+            gap: 20px
+
+        @include media(768)
+            flex-direction: column !important
+            padding: 14px
+
+        &:hover
+            border-color: transparent
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08)
+
+            .img img
+                transform: scale(1.06)
+
+            .link-btn
+                gap: 12px
+
+        &:nth-child(even)
+            flex-direction: row-reverse
+
+            @include media(768)
+                flex-direction: column !important
+
+        .img
+            position: relative
+            flex: 0 0 320px
+            border-radius: 12px
+            overflow: hidden
+
+            @include media(991)
+                flex: 0 0 260px
+
+            @include media(768)
+                flex: none
+                width: 100%
+                height: 200px
+
+            img
+                width: 100%
+                height: 100%
+                object-fit: cover
+                object-position: center
+                transition: transform .5s ease
+
+        .content
+            flex: 1
+            display: flex
+            flex-direction: column
+            justify-content: center
+            padding: 10px 12px
+
+            @include media(768)
+                padding: 16px 6px 6px
+
+            .meta
+                display: flex
+                align-items: center
+                flex-wrap: wrap
+                gap: 8px
+                margin-bottom: 10px
+
+                .location
+                    display: inline-flex
+                    align-items: center
+                    gap: 5px
+                    font-size: 14px
+                    font-weight: 500
+
+                    svg
+                        width: 14px
+                        height: 14px
+                        color: var(--primary)
+
+                .divider
+                    color: var(--border)
+
+                .category
+                    font-size: 12px
+                    font-weight: 700
+                    text-transform: uppercase
+                    color: var(--primary)
+
+            h4
+                a
+                    margin: 0 0 10px
+                    font-size: 22px
+                    font-weight: 700
+                    color: var(--black)
+
+                    @include media(991)
+                        font-size: 20px
+
+                    @include media(768)
+                        font-size: 18px
+
+            .desc
+                margin: 0 0 18px
+                font-size: 14px
+                max-width: 520px
+
+                @include media(768)
+                    font-size: 13px
+                    margin-bottom: 14px
+
+            .link-btn
+                display: inline-flex
+                align-items: center
+                gap: 8px
+                width: fit-content
+                font-size: 14px
+                font-weight: 600
+                color: var(--black)
+                transition: gap .3s ease, color .3s ease
+
+                svg
+                    width: 16px
+                    height: 16px
+                    transition: transform .3s ease
+
+                &:hover
+                    color: var(--primary)
+
+                    svg
+                        transform: translateX(3px)
+
+.comman_blog
+    padding: 70px 0
+
+    @include media(1366)
+        padding: 64px 0
+
+    @include media(1280)
+        padding: 58px 0
+
+    @include media(1024)
+        padding: 52px 0
+
+    @include media(991)
+        padding: 46px 0
+
+    @include media(768)
+        padding: 42px 0
+
+    @include media(540)
+        padding: 40px 0
+
+    @include media(420)
+        padding: 40px 0
+
+    .heading
+        width: 100%
+        max-width: 100%
+        margin: 0 auto 50px
+        text-align: center
+
+        @include media(768)
+            margin: 0 auto 34px
+
+        h3
+            margin-bottom: 10px
+
+    .swiper-wrap
+        margin-top: 70px
+        position: relative
+
+        @include media(1024)
+            margin-top: 56px
+
+        @include media(768)
+            margin-top: 40px
+
+        @include media(540)
+            margin-top: 34px
+
+        .thirdSilder
+            margin: 0 20px
+            padding: 10px
+
+            @include media(768)
+                margin: 0 10px
+
+            @include media(540)
+                margin: 0
+                padding: 6px
+
+        .swiper-group
+            position: absolute
+            width: 100%
+            top: 50%
+            left: 50%
+            transform: translate(-50%,-50%)
+            display: flex
+            justify-content: space-between
+            align-items: center
+            gap: 10px
+            z-index: 2
+
+            @include media(768)
+                display: none
+
+            .swiper-button-lock
+                display: none !important
+
+            button
+                width: 45px
+                height: 45px
+                border-radius: 50%
+                background: var(--white)
+                display: flex
+                justify-content: center
+                box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px
+                align-items: center
+
+                @include media(1024)
+                    width: 40px
+                    height: 40px
+
+                svg
+                    width: 20px
+                    height: 20px
+
+                    @include media(1024)
+                        width: 18px
+                        height: 18px
+
+                    path
+                        fill: var(--primary)
+
+                &:hover
+                    background: var(--primary)
+
+                    svg
+                        path
+                            fill: var(--white)
+
+            .btn-next
+                transform: rotate(180deg)
+
+.attraction_accordion
+    padding: 70px 0
+    background: var(--white)
+
+    @include media(1366)
+        padding: 64px 0
+
+    @include media(1280)
+        padding: 58px 0
+
+    @include media(1024)
+        padding: 52px 0
+
+    @include media(991)
+        padding: 46px 0
+
+    @include media(768)
+        padding: 42px 0
+
+    @include media(540)
+        padding: 40px 0
+
+    @include media(420)
+        padding: 40px 0
+
+    .heading
+        width: 100%
+        max-width: 100%
+        margin: 0 auto
+        text-align: center
+        margin-bottom: 4rem
+
+        @include media(1024)
+            margin-bottom: 3rem
+
+        @include media(768)
+            margin-bottom: 2.4rem
+
+        @include media(540)
+            margin-bottom: 2rem
+
+    .accordion-wrapper
+        display: flex
+        flex-direction: column
+        width: 100%
+        max-width: 900px
+        margin: 0 auto
+
+    .accordion-item
+        display: flex
+        gap: 22px
+
+        @include media(540)
+            gap: 14px
+
+        &:last-child
+            .track-line
+                display: none
+
+        &.active
+            .day-marker
+                background: var(--primary) !important
+                color: #FFFFFF !important
+                box-shadow: 0 6px 16px -4px rgba(var(--primary-rgb, 17, 97, 73), .5)
+
+            .accordion-header h4
+                color: var(--primary)
+
+            .accordion-icon
+                background: var(--primary)
+                color: #FFFFFF
+
+        // ---------- timeline ----------
+        .timeline-track
+            display: flex
+            flex-direction: column
+            align-items: center
+            flex-shrink: 0
+            width: 44px
+
+            @include media(540)
+                width: 34px
+
+            .day-marker
+                width: 44px
+                height: 44px
+                border-radius: 50%
+                background: #F3F4F6
+                color: #6B7280
+                font-size: 14px
+                font-weight: 800
+                display: flex
+                align-items: center
+                justify-content: center
+                flex-shrink: 0
+                transition: .3s ease
+
+                @include media(540)
+                    width: 34px
+                    height: 34px
+                    font-size: 12px
+
+            .track-line
+                width: 2px
+                flex: 1
+                background: repeating-linear-gradient(180deg, rgba(0,0,0,.12) 0 4px, transparent 4px 8px)
+                margin: 6px 0
+
+        // ---------- body ----------
+        .accordion-body
+            flex: 1
+            padding-bottom: 30px
+            border-bottom: 1px solid rgba(0, 0, 0, .06)
+
+            @include media(768)
+                padding-bottom: 24px
+
+            @include media(540)
+                padding-bottom: 18px
+
+            .accordion-header
+                display: flex
+                align-items: center
+                justify-content: space-between
+                gap: 16px
+                cursor: pointer
+                padding-top: 8px
+
+                @include media(540)
+                    gap: 12px
+
+                h4
+                    font-size: 16px
+                    font-weight: 600
+                    color: #111827
+                    margin: 0
+                    line-height: 1.2
+
+                    @include media(540)
+                        font-size: 15px
+
+                    @include media(420)
+                        font-size: 14px
+
+                .accordion-icon
+                    flex-shrink: 0
+                    width: 30px
+                    height: 30px
+                    border-radius: 50%
+                    background: #F3F4F6
+                    color: #111827
+                    display: flex
+                    align-items: center
+                    justify-content: center
+                    font-size: 17px
+                    font-weight: 400
+                    line-height: 1
+                    transition: background .3s ease, color .3s ease
+
+                    @include media(540)
+                        width: 26px
+                        height: 26px
+                        font-size: 15px
+
+            // hidden by default so there's no flash of all items open
+            // before JS runs; jQuery's show/hide/slideDown/slideUp
+            // override this with inline styles once the accordion initializes
+            .accordion-content
+                display: none
+                padding-top: 16px
+
+                @include media(540)
+                    padding-top: 12px
+
+                p
+                    font-size: 14px
+                    line-height: 1.8
+                    color: #6B7280
+                    margin: 0
+                    max-width: 760px
+
+                    @include media(540)
+                        font-size: 13px
+                        line-height: 1.7

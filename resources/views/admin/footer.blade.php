@@ -50,7 +50,7 @@ body {
 <div class="admin-footer-bar">
     <div class="footer-left">
         <i class="fa-solid fa-shield-halved" style="color:#303d89;font-size:11px"></i>
-        &copy; {{ date('Y') }} <strong>Web Mingo E-Commerce Admin</strong> — All rights reserved
+        &copy; {{ date('Y') }} <strong>Indo Tours & Adventures Admin</strong> — All rights reserved
     </div>
     <div class="footer-right">
         Crafted with <span class="footer-heart"><i class="fa-solid fa-heart"></i></span> by

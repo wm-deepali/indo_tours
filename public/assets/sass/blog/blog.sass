@@ -1,0 +1,749 @@
+@import "../_common"
+
+// =========================
+// Banner
+// =========================
+.banner
+  .bg
+    position: relative
+
+    &::before
+      content: ''
+      position: absolute
+      inset: 0
+      background: linear-gradient(360deg, rgba(0, 0, 0, 0.74) 12%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.74) 100%)
+      z-index: 1
+      pointer-events: none
+
+    .content
+      width: 100%
+      max-width: 440px
+
+      @include media(768)
+        max-width: 100%
+      @include media(540)
+        max-width: 100%
+
+.blog-secA
+  padding: 70px 0
+
+  @include media(1366)
+    padding: 62px 0
+  @include media(1280)
+    padding: 58px 0
+  @include media(1024)
+    padding: 52px 0
+  @include media(991)
+    padding: 46px 0
+  @include media(768)
+    padding: 40px 0
+  @include media(540)
+    padding: 32px 0
+  @include media(420)
+    padding: 28px 0
+
+  .heading
+    width: 100%
+    max-width: 450px
+    margin: 0 auto 50px
+    text-align: center
+
+    h3
+      margin-bottom: 10px
+
+    @include media(1024)
+      margin: 0 auto 42px
+    @include media(768)
+      margin: 0 auto 36px
+    @include media(540)
+      margin: 0 auto 28px
+    @include media(420)
+      margin: 0 auto 24px
+
+  .swiper-wrap
+    margin-top: 70px
+    position: relative
+
+    @include media(1024)
+      margin-top: 56px
+    @include media(768)
+      margin-top: 42px
+    @include media(540)
+      margin-top: 32px
+    @include media(420)
+      margin-top: 26px
+
+    .fourSilder
+      margin: 0 20px
+      padding: 10px
+
+      @include media(1024)
+        margin: 0 16px
+      @include media(991)
+        margin: 0
+        padding: 0
+
+    .swiper-group
+      position: absolute
+      width: 100%
+      top: 50%
+      left: 50%
+      transform: translate(-50%,-50%)
+      display: flex
+      justify-content: space-between
+      align-items: center
+      gap: 10px
+      z-index: 2
+
+      @include media(768)
+        display: none
+
+      .swiper-button-lock
+        display: none !important
+
+      button
+        width: 45px
+        height: 45px
+        border-radius: 50%
+        background: var(--white)
+        display: flex
+        justify-content: center
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px
+        align-items: center
+
+        svg
+          width: 20px
+          height: 20px
+
+          path
+            fill: var(--primary)
+
+        &:hover
+          background: var(--primary)
+
+          svg
+            path
+              fill: var(--white)
+
+        @include media(1366)
+          width: 42px
+          height: 42px
+
+          svg
+            width: 18px
+            height: 18px
+        @include media(1280)
+          width: 40px
+          height: 40px
+        @include media(1024)
+          width: 38px
+          height: 38px
+
+      .btn-next
+        transform: rotate(180deg)
+
+.blog-secB
+  padding: 70px 0
+
+  @include media(1366)
+    padding: 62px 0
+  @include media(1280)
+    padding: 58px 0
+  @include media(1024)
+    padding: 52px 0
+  @include media(991)
+    padding: 46px 0
+  @include media(768)
+    padding: 40px 0
+  @include media(540)
+    padding: 32px 0
+  @include media(420)
+    padding: 28px 0
+
+  .heading
+    width: 100%
+    max-width: 400px
+    margin: 0 auto 50px
+    text-align: center
+
+    h3
+      margin-bottom: 10px
+
+    @include media(1024)
+      margin: 0 auto 42px
+    @include media(768)
+      margin: 0 auto 36px
+    @include media(540)
+      margin: 0 auto 28px
+    @include media(420)
+      margin: 0 auto 24px
+
+  .blog-layout
+    display: grid
+    grid-template-columns: 1.15fr 1fr
+    gap: 40px
+
+    @media (max-width: 900px)
+      grid-template-columns: 1fr
+      gap: 36px
+
+    @include media(1024)
+      gap: 32px
+    @include media(768)
+      gap: 26px
+    @include media(540)
+      gap: 22px
+    @include media(420)
+      gap: 18px
+
+  .featured_post
+    display: block
+    text-decoration: none
+
+    .img
+      aspect-ratio: 4 / 3.1
+      overflow: hidden
+      border-radius: 20px
+
+      img
+        display: block
+        width: 100%
+        height: 100%
+        object-fit: cover
+        transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1)
+
+      @include media(1024)
+        border-radius: 18px
+      @include media(768)
+        border-radius: 16px
+      @include media(540)
+        border-radius: 14px
+      @include media(420)
+        border-radius: 12px
+
+    .content
+      padding-top: 20px
+
+      @include media(768)
+        padding-top: 16px
+      @include media(540)
+        padding-top: 14px
+      @include media(420)
+        padding-top: 12px
+
+    h4
+      margin: 0 0 12px
+      color: #1c1b19
+      font-size: 24px
+      font-weight: 700
+      line-height: 1.4
+      transition: color 0.25s ease
+
+      @include media(1366)
+        font-size: 23px
+      @include media(1280)
+        font-size: 22px
+      @include media(1024)
+        font-size: 21px
+        margin: 0 0 10px
+      @include media(991)
+        font-size: 20px
+      @include media(768)
+        font-size: 19px
+        margin: 0 0 10px
+      @include media(540)
+        font-size: 18px
+        margin: 0 0 8px
+      @include media(420)
+        font-size: 17px
+
+    &:hover
+      .img
+        img
+          transform: scale(1.06)
+
+      h4
+        color: var(--primary)
+
+  .post_list
+    display: flex
+    flex-direction: column
+    gap: 24px
+
+    @include media(1024)
+      gap: 20px
+    @include media(768)
+      gap: 18px
+    @include media(540)
+      gap: 16px
+    @include media(420)
+      gap: 14px
+
+  .post_item
+    display: grid
+    grid-template-columns: 130px 1fr
+    gap: 20px
+    padding-bottom: 24px
+    border-bottom: 1px solid rgba(28, 27, 25, 0.08)
+    text-decoration: none
+
+    &:last-child
+      padding-bottom: 0
+      border-bottom: none
+
+    @media (max-width: 480px)
+      grid-template-columns: 90px 1fr
+      gap: 14px
+
+    @include media(1024)
+      grid-template-columns: 116px 1fr
+      gap: 18px
+      padding-bottom: 20px
+    @include media(768)
+      grid-template-columns: 104px 1fr
+      gap: 16px
+      padding-bottom: 18px
+    @include media(540)
+      grid-template-columns: 92px 1fr
+      gap: 14px
+      padding-bottom: 16px
+
+    .img
+      align-self: start
+      aspect-ratio: 1 / 1
+      overflow: hidden
+      border-radius: 14px
+
+      img
+        display: block
+        width: 100%
+        height: 100%
+        object-fit: cover
+        transition: transform 0.5s ease
+
+      @include media(1024)
+        border-radius: 12px
+      @include media(768)
+        border-radius: 11px
+      @include media(540)
+        border-radius: 10px
+
+    .content
+      display: flex
+      flex-direction: column
+      justify-content: center
+
+    h5
+      margin: 0 0 10px
+      color: #1c1b19
+      font-size: 15.5px
+      font-weight: 700
+      line-height: 1.45
+      transition: color 0.25s ease
+
+      @media (max-width: 480px)
+        font-size: 14px
+
+      @include media(1366)
+        font-size: 15.5px
+      @include media(1280)
+        font-size: 15px
+      @include media(1024)
+        font-size: 14.5px
+        margin: 0 0 8px
+      @include media(991)
+        font-size: 14.5px
+      @include media(768)
+        font-size: 14px
+        margin: 0 0 8px
+      @include media(540)
+        font-size: 13.5px
+        margin: 0 0 6px
+      @include media(420)
+        font-size: 13px
+
+    &:hover
+      .img
+        img
+          transform: scale(1.08)
+
+      h5
+        color: var(--primary)
+
+  .meta
+    display: flex
+    align-items: center
+    gap: 8px
+    font-size: 13px
+
+    .author
+      color: var(--text)
+      font-weight: 500
+      font-size: 14px
+
+    .dot
+      width: 4px
+      height: 4px
+      flex-shrink: 0
+      border-radius: 50%
+      background: #c9c4b8
+
+    .date
+      color: var(--primary)
+      font-weight: 600
+      font-size: 14px
+
+    @include media(1024)
+      font-size: 12.5px
+    @include media(768)
+      font-size: 12px
+    @include media(540)
+      font-size: 11.5px
+      gap: 6px
+    @include media(420)
+      font-size: 11px
+
+.comman_blog
+  padding: 70px 0
+
+  @include media(1366)
+    padding: 62px 0
+  @include media(1280)
+    padding: 58px 0
+  @include media(1024)
+    padding: 52px 0
+  @include media(991)
+    padding: 46px 0
+  @include media(768)
+    padding: 40px 0
+  @include media(540)
+    padding: 32px 0
+  @include media(420)
+    padding: 28px 0
+
+  .heading
+    width: 100%
+    max-width: 450px
+    margin: 0 auto 50px
+    text-align: center
+
+    h3
+      margin-bottom: 10px
+
+    @include media(1024)
+      margin: 0 auto 42px
+    @include media(768)
+      margin: 0 auto 36px
+    @include media(540)
+      margin: 0 auto 28px
+    @include media(420)
+      margin: 0 auto 24px
+
+  .swiper-wrap
+    margin-top: 70px
+    position: relative
+
+    @include media(1024)
+      margin-top: 56px
+    @include media(768)
+      margin-top: 42px
+    @include media(540)
+      margin-top: 32px
+    @include media(420)
+      margin-top: 26px
+
+    .thirdSilder
+      margin: 0 20px
+      padding: 10px
+
+      @include media(1024)
+        margin: 0 16px
+      @include media(991)
+        margin: 0
+        padding: 0
+
+    .swiper-group
+      position: absolute
+      width: 100%
+      top: 50%
+      left: 50%
+      transform: translate(-50%,-50%)
+      display: flex
+      justify-content: space-between
+      align-items: center
+      gap: 10px
+      z-index: 2
+
+      @include media(768)
+        display: none
+
+      .swiper-button-lock
+        display: none !important
+
+      button
+        width: 45px
+        height: 45px
+        border-radius: 50%
+        background: var(--white)
+        display: flex
+        justify-content: center
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px
+        align-items: center
+
+        svg
+          width: 20px
+          height: 20px
+
+          path
+            fill: var(--primary)
+
+        &:hover
+          background: var(--primary)
+
+          svg
+            path
+              fill: var(--white)
+
+        @include media(1366)
+          width: 42px
+          height: 42px
+
+          svg
+            width: 18px
+            height: 18px
+        @include media(1280)
+          width: 40px
+          height: 40px
+        @include media(1024)
+          width: 38px
+          height: 38px
+
+      .btn-next
+        transform: rotate(180deg)
+.blog-secC
+  padding: 40px 0 70px
+  background: var(--gray-sec)
+
+  @include media(1366)
+    padding: 36px 0 62px
+
+  @include media(1280)
+    padding: 34px 0 58px
+
+  @include media(1024)
+    padding: 30px 0 52px
+
+  @include media(991)
+    padding: 28px 0 46px
+
+  @include media(768)
+    padding: 24px 0 40px
+
+  @include media(540)
+    padding: 20px 0 32px
+
+  @include media(420)
+    padding: 18px 0 28px
+
+  .heading
+    width: 100%
+    max-width: 460px
+    margin: 0 auto 45px
+    text-align: center
+
+    h3
+      margin: 0 0 10px
+
+    @include media(1024)
+      margin-bottom: 38px
+
+    @include media(768)
+      margin-bottom: 32px
+
+    @include media(540)
+      margin-bottom: 26px
+
+    @include media(420)
+      margin-bottom: 22px
+
+  .destination-grid
+    display: grid
+    grid-template-columns: 1.4fr 1fr 1fr
+    grid-template-rows: 250px 250px
+    gap: 18px
+
+    @include media(1024)
+      grid-template-rows: 220px 220px
+      gap: 16px
+
+    @include media(991)
+      grid-template-columns: repeat(3, 1fr)
+      grid-template-rows: auto
+      gap: 14px
+
+    @include media(768)
+      grid-template-columns: repeat(2, 1fr)
+      gap: 12px
+
+    @include media(540)
+      gap: 10px
+
+  .destination-card
+    position: relative
+    display: block
+    min-height: 250px
+    overflow: hidden
+    border-radius: 16px
+    text-decoration: none
+    isolation: isolate
+
+    &--large
+      grid-column: 1
+      grid-row: 1 / span 2
+      min-height: 518px
+
+      @include media(1024)
+        min-height: 460px
+
+      @include media(991)
+        grid-column: auto
+        grid-row: auto
+        min-height: 280px
+
+      @include media(768)
+        min-height: 280px
+
+      @include media(540)
+        min-height: 320px
+
+    &:nth-child(2),
+    &:nth-child(3),
+    &:nth-child(4),
+    &:nth-child(5)
+      grid-column: auto
+      grid-row: auto
+
+    @include media(1024)
+      min-height: 220px
+      border-radius: 14px
+
+    @include media(768)
+      min-height: 200px
+      border-radius: 13px
+
+    @include media(540)
+      min-height: 180px
+      border-radius: 12px
+
+    @include media(420)
+      min-height: 170px
+      border-radius: 11px
+
+    .img
+      position: absolute
+      inset: 0
+      z-index: -2
+
+      img
+        display: block
+        width: 100%
+        height: 100%
+        object-fit: cover
+        transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)
+
+    &::after
+      position: absolute
+      inset: 0
+      z-index: -1
+      content: ""
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.02) 25%, rgba(0, 0, 0, 0.78) 100%)
+      transition: background 0.35s ease
+
+    .content
+      position: absolute
+      right: 0
+      bottom: 0
+      left: 0
+      padding: 22px
+
+      .index
+        display: block
+        margin-bottom: 5px
+        color: rgba(255, 255, 255, 0.65)
+        font-size: 11px
+        font-weight: 600
+        letter-spacing: 1px
+
+      h4
+        margin: 0 0 4px
+        color: var(--white)
+        font-size: 21px
+        font-weight: 700
+        line-height: 1.25
+
+      .country
+        color: rgba(255, 255, 255, 0.82)
+        font-size: 12px
+        font-weight: 500
+        letter-spacing: 0.4px
+
+      @include media(1366)
+        h4
+          font-size: 20px
+
+      @include media(1280)
+        h4
+          font-size: 19px
+
+      @include media(1024)
+        padding: 18px
+
+        .index
+          font-size: 10.5px
+
+        h4
+          font-size: 18px
+
+        .country
+          font-size: 11.5px
+
+      @include media(768)
+        padding: 16px
+
+        .index
+          font-size: 10px
+
+        h4
+          font-size: 17px
+
+        .country
+          font-size: 11px
+
+      @include media(540)
+        padding: 14px
+
+        .index
+          font-size: 9.5px
+
+        h4
+          font-size: 16px
+
+        .country
+          font-size: 10.5px
+
+      @include media(420)
+        padding: 12px
+
+        h4
+          font-size: 15px
+
+        .country
+          font-size: 10px
+
+    &:hover
+      .img
+        img
+          transform: scale(1.08)
+
+      &::after
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.08) 15%, rgba(0, 0, 0, 0.88) 100%)

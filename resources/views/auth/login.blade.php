@@ -3,26 +3,26 @@
 @section('content')
 
 <style>
-    body {
-        background: #f3f4f6;
-    }
+   body {
+    background: #f3f4f6;
+}
 
-    .login-wrapper {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+.login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-    .login-card {
-        width: 100%;
-        max-width: 950px;
-        display: flex;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        background: #fff;
-    }
+.login-card {
+    width: 100%;
+    max-width: 950px;
+    display: flex;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    background: #fff;
+}
 
 .logo-box {
     background: #fff;
@@ -38,98 +38,104 @@
     max-height: 90px;
     object-fit: contain;
 }
-    .login-left {
-        width: 45%;
-        background: linear-gradient(135deg, #c98fbb, #c98fbb);
-        color: #fff;
-        text-align: center;
-        padding: 40px 20px;
-    }
 
-    .login-left img {
-        width: 120px;
-        margin-bottom: 20px;
-    }
-
-    .login-left h2 {
-        font-weight: 600;
-        margin-bottom: 10px;
-    }
-
-    .login-left p {
-        font-size: 14px;
-        opacity: 0.9;
-    }
-
-    .login-right {
-        width: 55%;
-        padding: 40px;
-    }
-
-    .login-title {
-        font-weight: 600;
-        margin-bottom: 25px;
-        color: #333;
-    }
-
-    .form-control {
-        border-radius: 10px;
-        padding: 12px;
-        background: #fcf4ef;
-        border: none;
-    }
-
-    .form-control:focus {
-        box-shadow: none;
-        border: 1px solid #00310814;
-        background: #00310814;
-    }
-
-    .btn-login {
-        width: 100%;
-        padding: 12px;
-        border-radius: 12px;
-        border: none;
-        background: linear-gradient(90deg, #c98fbb, #c98fbb);
-        color: #fff;
-        font-weight: 500;
-    }
-
-    .btn-login:hover {
-        opacity: 0.9;
-    }
-
-    .form-check-label {
-        font-size: 14px;
-    }
-
-    .forgot-link {
-        font-size: 14px;
-        text-decoration: none;
-        color: #f97316;
-    }
-
-    .forgot-link:hover {
-        text-decoration: underline;
-    }
-
-    @media (max-width: 768px) {
-        .login-card {
-            flex-direction: column;
-        }
-        .login-left, .login-right {
-            width: 100%;
-        }
-        .login-left {
-    background: linear-gradient(135deg, #f97316, #fbbf24);
+.login-left {
+    width: 45%;
+    background: linear-gradient(135deg, #303d89, #4a5bb8);
+    color: #fff;
+    text-align: center;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
+
+.login-left img {
+    width: 120px;
+    margin-bottom: 20px;
+}
+
+.login-left h2 {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.login-left p {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.login-right {
+    width: 55%;
+    padding: 40px;
+}
+
+.login-title {
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: #202223;
+}
+
+.form-control {
+    border-radius: 10px;
+    padding: 12px;
+    background: #f1f2f4;
+    border: 1px solid #e3e5e8;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 3px rgba(48, 61, 137, .12);
+    border: 1px solid #303d89;
+    background: #fff;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    background: #303d89;
+    color: #fff;
+    font-weight: 500;
+    transition: background .15s;
+}
+
+.btn-login:hover {
+    background: #252f70;
+}
+
+.form-check-label {
+    font-size: 14px;
+}
+
+.forgot-link {
+    font-size: 14px;
+    text-decoration: none;
+    color: #303d89;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .login-card {
+        flex-direction: column;
     }
+    .login-left, .login-right {
+        width: 100%;
+    }
+    .login-left {
+        background: linear-gradient(135deg, #303d89, #4a5bb8);
+    }
+}
 </style>
 
 @php
     $loginLogo = '';
-    $siteName = 'Web Mingo E-Commerce';
-    $tagline = 'By Web Mingo';
+    $siteName = 'Indo Tours & Adventures';
+    $tagline = 'By Indo Tours & Adventures';
 @endphp
 
 <div class="login-wrapper">
@@ -142,7 +148,7 @@
         @if($loginLogo)
             <img src="{{ asset('storage/' . $loginLogo) }}" alt="{{ $siteName }}">
         @else
-            <img src="{{ asset('assets/img/corporate/Oudhyana_img/logo.png') }}" alt="{{ $siteName }}">
+            <img src="{{ asset('assets/images/logo.png') }}" alt="{{ $siteName }}">
         @endif
     </div>
 

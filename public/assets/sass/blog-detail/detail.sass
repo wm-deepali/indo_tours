@@ -1,0 +1,1449 @@
+@import "../_common"
+
+
+main
+    overflow-x: clip
+    overflow-y: visible
+
+.banner
+    .bg
+        position: relative
+        height: 60vh
+
+        @include media(768)
+            height: 50vh
+
+        @include media(540)
+            height: 45vh
+
+        &::before
+            content: ''
+            position: absolute
+            inset: 0
+            background: linear-gradient(360deg, rgba(0, 0, 0, 0.74) 12%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.74) 100%)
+            z-index: 1
+            pointer-events: none
+
+        .banner-wrapper
+            height: 100%
+            display: flex
+            align-items: flex-end
+            padding-bottom: 70px
+
+            @include media(1024)
+                padding-bottom: 56px
+
+            @include media(768)
+                padding-bottom: 40px
+
+            @include media(540)
+                padding-bottom: 30px
+
+        .content
+            width: 100%
+            max-width: 600px
+
+            @include media(1280)
+                max-width: 560px
+
+            @include media(1024)
+                max-width: 520px
+
+            @include media(768)
+                max-width: 100%
+
+            h1
+                color: #fff
+                font-size: 56px
+                font-weight: 700
+                line-height: 1.1
+                margin: 0 0 18px
+
+                @include media(1366)
+                    font-size: 50px
+
+                @include media(1280)
+                    font-size: 46px
+
+                @include media(1024)
+                    font-size: 40px
+
+                @include media(991)
+                    font-size: 36px
+
+                @include media(768)
+                    font-size: 30px
+
+                @include media(540)
+                    font-size: 26px
+
+                @include media(420)
+                    font-size: 22px
+
+            ul
+                display: flex
+                align-items: center
+                flex-wrap: wrap
+                justify-content: center
+                gap: 0
+                padding: 0
+                margin: 0
+                list-style: none
+
+                li
+                    display: flex
+                    align-items: center
+                    color: rgba(255, 255, 255, 0.75)
+                    font-size: 15px
+                    line-height: 1.4
+
+
+
+                    @include media(768)
+                        font-size: 13px
+
+                    @include media(420)
+                        font-size: 12px
+
+                    &:not(:last-child)::after
+                        content: '/'
+                        margin: 0 12px
+                        color: rgba(255, 255, 255, 0.5)
+
+                        @include media(768)
+                            margin: 0 10px
+
+                        @include media(540)
+                            margin: 0 8px
+
+                    a
+                        color: rgba(255, 255, 255, 0.75)
+                        text-decoration: none
+                        transition: color 0.3s ease
+
+                        &:hover
+                            color: #fff
+
+                    &:last-child a
+                        color: #fff
+                        font-weight: 500
+
+header
+    background: var(--primary)
+
+.detail-secA
+    padding: 30px 0 70px
+    margin-top: calc( var(--headerheight) + 40px  )
+
+    @include media(1280)
+        padding: 28px 0 60px
+
+    @include media(1024)
+        padding: 26px 0 55px
+        margin-top: calc( var(--headerheight) + 30px  )
+
+    @include media(991)
+        padding: 24px 0 50px
+
+    @include media(768)
+        padding: 24px 0 50px
+        margin-top: calc( var(--headerheight) + 20px  )
+
+    @include media(540)
+       margin-top: calc( var(--headerheight) + 10px  )
+
+    .container
+        position: relative
+        // FIX: prevent any long inline content in this section from
+        // pushing the viewport width sideways on mobile
+        overflow-x: clip
+
+        .breadcrumb
+            top: -70px
+
+            @include media(1024)
+                top: -65px
+
+            @include media(768)
+                top: -52px
+
+            @include media(540)
+                top: -42px
+
+    .grid
+        display: grid
+        grid-template-columns: 1fr 340px
+        gap: 50px
+
+
+        @include media(1366)
+            gap: 45px
+
+        @include media(1280)
+            grid-template-columns: 1fr 300px
+            gap: 40px
+
+        @include media(1024)
+            grid-template-columns: 1fr 280px
+            gap: 30px
+
+        @include media(991)
+            gap: 28px
+            grid-template-columns: 1fr
+
+        @include media(768)
+            gap: 24px
+
+        @include media(540)
+            gap: 20px
+
+    // ============================================================
+    // FIX: THE ACTUAL BUG
+    // Grid items default to min-width: auto, which means they
+    // refuse to shrink below their content's natural width even
+    // when the column track is 1fr. On mobile this is what was
+    // forcing the whole page to overflow horizontally and get cut
+    // off on the left/right. min-width: 0 lets them respect the
+    // 1fr track and wrap/shrink properly instead.
+    // ============================================================
+    .detail_wrapper,
+    .form_wrapper
+        min-width: 0
+
+    .detail_wrapper
+        display: flex
+        flex-direction: column
+        gap: 28px
+
+        @include media(1024)
+            gap: 24px
+
+        @include media(768)
+            gap: 20px
+
+        @include media(540)
+            gap: 16px
+
+        .top_detail
+            .content_all
+                position: relative
+                margin-bottom: 24px
+
+                @include media(1024)
+                    margin-bottom: 20px
+
+                @include media(768)
+                    margin-bottom: 18px
+
+                @include media(540)
+                    margin-bottom: 14px
+
+                .tag
+                    display: inline-block
+                    padding: 6px 16px
+                    border-radius: 50px
+                    background: var(--gray)
+                    color: var(--primary)
+                    font-size: 12px
+                    font-weight: 600
+                    letter-spacing: .5px
+                    text-transform: uppercase
+                    margin-bottom: 16px
+
+                    @include media(768)
+                        margin-bottom: 14px
+
+                    @include media(540)
+                        padding: 5px 14px
+                        font-size: 11px
+                        margin-bottom: 12px
+
+                h1
+                    font-size: 34px
+                    font-weight: 700
+                    color: var(--black)
+                    margin: 0 0 18px
+                    width: 100%
+                    max-width: 100%
+                    // FIX: long unbroken headings/titles were another
+                    // overflow source — force them to wrap inside their box
+                    overflow-wrap: break-word
+                    word-break: break-word
+
+                    @media (max-width: 767px)
+                        font-size: 26px
+
+                    @include media(1366)
+                        font-size: 33px
+
+                    @include media(1280)
+                        font-size: 32px
+
+                    @include media(1024)
+                        font-size: 30px
+
+                    @include media(991)
+                        font-size: 28px
+
+                    @include media(540)
+                        font-size: 24px
+                        margin: 0 0 14px
+
+                    @include media(420)
+                        font-size: 22px
+
+                .meta
+                    display: flex
+                    align-items: center
+                    justify-content: space-between
+                    flex-wrap: wrap
+                    gap: 12px
+                    padding-top: 18px
+                    border-top: 1px solid var(--border)
+
+                    @include media(768)
+                        padding-top: 16px
+
+                    @include media(540)
+                        padding-top: 14px
+                        gap: 10px
+
+                    .meta_author
+                        display: flex
+                        align-items: center
+                        gap: 12px
+                        min-width: 0
+
+                        @include media(420)
+                            gap: 10px
+
+                        img
+                            width: 44px
+                            min-height: 44px
+                            max-height: 44px
+                            border-radius: 50%
+                            object-fit: cover
+                            flex-shrink: 0
+
+                            @include media(540)
+                                width: 38px
+                                min-height: 38px
+                                max-height: 38px
+
+                        .name
+                            font-size: 14px
+                            font-weight: 600
+                            color: var(--black)
+                            margin: 0
+
+                            @include media(420)
+                                font-size: 13px
+
+                        .date
+                            font-size: 12px
+                            color: var(--text)
+                            margin: 0
+
+                    .meta_views
+                        display: flex
+                        align-items: center
+                        gap: 6px
+                        flex-shrink: 0
+
+                        span
+                            font-size: 12px
+                            color: var(--text)
+                            font-weight: 600
+                            white-space: nowrap
+
+                        svg
+                            width: 20px
+                            height: 20px
+                            color: var(--primary)
+
+                            @include media(540)
+                                width: 18px
+                                height: 18px
+
+                .share_col
+                    position: sticky
+                    top: calc(var(--headerheight) + 30px)
+                    display: flex
+                    align-items: center
+                    flex-wrap: wrap
+                    gap: 12px
+                    margin-top: 20px
+
+                    @include media(1024)
+                        top: calc(var(--headerheight) + 20px)
+
+                    @include media(991)
+                        position: static
+                        margin-top: 18px
+
+                    @include media(540)
+                        gap: 10px
+                        margin-top: 14px
+
+                    .share_label
+                        font-size: 14px
+                        text-transform: uppercase
+                        letter-spacing: .5px
+                        color: var(--text-light)
+                        white-space: nowrap
+
+                        @include media(420)
+                            font-size: 12px
+
+                    .share_ic
+                        width: 38px
+                        height: 38px
+                        flex-shrink: 0
+                        display: flex
+                        align-items: center
+                        justify-content: center
+                        border-radius: 50%
+                        background: var(--gray-sec)
+                        color: var(--primary)
+                        transition: all .3s ease
+
+                        @include media(540)
+                            width: 34px
+                            height: 34px
+
+                        &:hover
+                            background: var(--gradient-a)
+                            color: var(--white)
+                            transform: translateY(-3px)
+
+            > img
+                width: 100%
+                min-height: 420px
+                max-height: 420px
+                object-fit: cover
+                border-radius: 16px
+                display: block
+
+                @media (max-width: 767px)
+                    min-height: 240px
+                    max-height: 240px
+
+                @include media(1366)
+                    min-height: 400px
+                    max-height: 400px
+
+                @include media(1280)
+                    min-height: 380px
+                    max-height: 380px
+
+                @include media(1024)
+                    min-height: 320px
+                    max-height: 320px
+
+                @include media(991)
+                    min-height: 280px
+                    max-height: 280px
+
+                @include media(540)
+                    min-height: 200px
+                    max-height: 200px
+                    border-radius: 12px
+
+                @include media(420)
+                    min-height: 180px
+                    max-height: 180px
+
+        .blog_list_card
+            display: block
+            text-decoration: none
+            border-bottom: 1px solid var(--border)
+            padding-bottom: 32px
+            margin-bottom: 15px
+
+            @include media(1024)
+                padding-bottom: 28px
+
+            @include media(768)
+                padding-bottom: 24px
+                margin-bottom: 12px
+
+            &:last-child
+                border-bottom: none
+                margin-bottom: 0
+                padding-bottom: 0
+
+            .blog_list_thumb
+                position: relative
+                border-radius: 16px
+                overflow: hidden
+                margin-bottom: 20px
+
+                @include media(768)
+                    margin-bottom: 18px
+
+                @include media(540)
+                    border-radius: 12px
+                    margin-bottom: 16px
+
+                img
+                    width: 100%
+                    min-height: 340px
+                    max-height: 340px
+                    object-fit: cover
+                    display: block
+                    transition: transform .4s ease
+
+                    @include media(1366)
+                        min-height: 320px
+                        max-height: 320px
+
+                    @include media(1280)
+                        min-height: 300px
+                        max-height: 300px
+                    @include media(540)
+                        min-height: 270px
+                        max-height: 270px
+                 
+
+                .blog_list_tag
+                    position: absolute
+                    left: 16px
+                    bottom: 16px
+                    background: var(--white)
+                    color: var(--primary)
+                    font-size: 11px
+                    font-weight: 700
+                    letter-spacing: .5px
+                    text-transform: uppercase
+                    padding: 7px 16px
+                    border-radius: 50px
+
+                    @include media(540)
+                        left: 12px
+                        bottom: 12px
+                        padding: 6px 14px
+
+            .blog_list_body
+                h3
+                    font-size: 26px
+                    font-weight: 700
+                    line-height: 1.35
+                    color: var(--black)
+                    margin: 0 0 14px
+                    transition: color .2s ease
+                    overflow-wrap: break-word
+                    word-break: break-word
+
+                    @media (max-width: 767px)
+                        font-size: 20px
+
+                    @include media(1366)
+                        font-size: 25px
+
+                    @include media(1280)
+                        font-size: 24px
+
+                    @include media(1024)
+                        font-size: 22px
+
+                    @include media(991)
+                        font-size: 21px
+
+                    @include media(540)
+                        font-size: 19px
+                        margin: 0 0 10px
+
+                    @include media(420)
+                        font-size: 18px
+
+                .blog_list_meta
+                    display: flex
+                    align-items: center
+                    flex-wrap: wrap
+                    gap: 8px
+                    font-size: 13px
+                    color: var(--text)
+                    margin-bottom: 14px
+
+                    @include media(768)
+                        margin-bottom: 12px
+
+                    @include media(540)
+                        font-size: 12px
+                        margin-bottom: 10px
+
+                    .dot
+                        width: 4px
+                        height: 4px
+                        border-radius: 50%
+                        background: var(--text-light)
+                        flex-shrink: 0
+
+                    .views
+                        display: flex
+                        align-items: center
+                        gap: 5px
+                        font-weight: 600
+                        white-space: nowrap
+
+                        i
+                            color: var(--primary)
+
+                p
+                    font-size: 15px
+                    line-height: 1.8
+                    color: var(--text)
+                    margin: 0 0 18px
+                    overflow-wrap: break-word
+
+                    @include media(768)
+                        margin: 0 0 16px
+
+                    @include media(540)
+                        font-size: 14px
+                        margin: 0 0 14px
+
+                .blog_list_arrow
+                    display: inline-flex
+                    align-items: center
+                    justify-content: center
+                    width: 42px
+                    height: 42px
+                    flex-shrink: 0
+                    border-radius: 50%
+                    border: 1.5px solid var(--border)
+                    color: var(--black)
+                    transition: all .3s ease
+
+                    @include media(540)
+                        width: 36px
+                        height: 36px
+
+            &:hover
+                .blog_list_thumb img
+                    transform: scale(1.06)
+
+                .blog_list_body h3
+                    color: var(--primary)
+
+                .blog_list_arrow
+                    background: var(--gradient-a)
+                    border-color: transparent
+                    color: var(--white)
+                    transform: rotate(-45deg)
+
+        .blog-card,
+        .blog-card2
+            background: var(--white)
+            border: 1px solid var(--border)
+            border-radius: 16px
+            padding: 30px
+            display: flex
+            flex-direction: column
+            gap: 16px
+            min-width: 0
+
+            @include media(1280)
+                padding: 26px
+
+            @include media(1024)
+                padding: 24px
+
+            @include media(991)
+                padding: 22px
+                gap: 15px
+
+            @include media(768)
+                padding: 20px
+                gap: 14px
+
+            @include media(540)
+                border-radius: 12px
+                gap: 12px
+
+            h1, h2, h3, h4, h5, h6
+                font-size: 24px
+                font-weight: 700
+                line-height: 1.35
+                color: var(--black)
+                margin: 0
+                scroll-margin-top: calc(var(--headerheight) + 20px)
+                overflow-wrap: break-word
+                word-break: break-word
+
+                @include media(1024)
+                    font-size: 22px
+
+                @include media(991)
+                    font-size: 21px
+
+                @include media(768)
+                    font-size: 20px
+
+                @include media(540)
+                    font-size: 18px
+
+            p
+                font-size: 16px
+                line-height: 1.8
+                color: var(--text)
+                margin: 0
+                overflow-wrap: break-word
+
+                @include media(540)
+                    font-size: 14px
+
+            ul
+                margin: 0
+                padding: 0
+                list-style: none
+                display: flex
+                flex-direction: column
+                gap: 10px
+
+                @include media(540)
+                    gap: 8px
+
+                li
+                    position: relative
+                    padding-left: 24px
+                    font-size: 16px
+                    line-height: 1.7
+                    color: var(--text)
+                    overflow-wrap: break-word
+
+                    @include media(540)
+                        padding-left: 20px
+                        font-size: 14px
+
+                    &::before
+                        content: ""
+                        position: absolute
+                        left: 0
+                        top: 9px
+                        width: 7px
+                        height: 7px
+                        border-radius: 50%
+                        background: var(--yellow)
+
+            span
+                display: inline-flex
+                align-items: center
+                gap: 8px
+                font-size: 16px
+                font-weight: 600
+                color: var(--primary)
+                cursor: pointer
+                width: fit-content
+
+                @include media(540)
+                    font-size: 14px
+
+                &::after
+                    content: "→"
+                    transition: transform .25s ease
+
+                &:hover::after
+                    transform: translateX(4px)
+
+            img
+                width: 100%
+                min-height: 320px
+                max-height: 320px
+                object-fit: cover
+                border-radius: 12px
+                display: block
+
+                @media (max-width: 767px)
+                    min-height: 200px
+                    max-height: 200px
+
+                @include media(1366)
+                    min-height: 300px
+                    max-height: 300px
+
+                @include media(1280)
+                    min-height: 280px
+                    max-height: 280px
+
+                @include media(1024)
+                    min-height: 240px
+                    max-height: 240px
+
+                @include media(991)
+                    min-height: 220px
+                    max-height: 220px
+
+                @include media(540)
+                    min-height: 180px
+                    max-height: 180px
+
+        .blog-card2
+            // FIX: this fixed-px column (240px) was the other main
+            // overflow source. It stayed active up to 767px, but the
+            // stack-to-1-column rule was ALSO only firing at 767px via
+            // a raw max-width query — leaving a gap where narrow tablets
+            // between the mixin's breakpoints and 767 could squeeze the
+            // fixed column and overflow. Made the stack point match the
+            // mixin's own 768 breakpoint so there's no gap.
+            display: grid
+            grid-template-columns: 240px 1fr
+            align-items: center
+            padding: 20px
+            background: var(--gray-sec)
+            border: none
+            min-width: 0
+
+            @include media(1024)
+                grid-template-columns: 200px 1fr
+
+            @include media(991)
+                grid-template-columns: 180px 1fr
+
+            @include media(768)
+                grid-template-columns: 1fr
+                padding: 16px
+
+            @include media(540)
+                padding: 40px 16px
+
+            img
+                order: -1
+                min-height: 220px
+                max-height: 220px
+                border-radius: 12px
+
+                @include media(1024)
+                    min-height: 190px
+                    max-height: 190px
+
+                @include media(991)
+                    min-height: 170px
+                    max-height: 170px
+
+                @include media(768)
+                    min-height: 180px
+                    max-height: 180px
+
+                @include media(540)
+                    min-height: 160px
+                    max-height: 160px
+
+        .pagination_wrapper
+            display: flex
+            align-items: center
+            justify-content: center
+            gap: 20px
+            padding: 32px 0 0
+            border-top: 1px solid var(--border)
+
+            @include media(1024)
+                gap: 16px
+                padding: 28px 0 0
+
+            @include media(768)
+                gap: 14px
+                padding: 24px 0 0
+
+            @include media(540)
+                gap: 10px
+                flex-wrap: wrap
+
+            .pg_numbers
+                display: flex
+                align-items: center
+                gap: 10px
+
+                @include media(540)
+                    gap: 6px
+
+            .pg_num
+                display: inline-flex
+                align-items: center
+                justify-content: center
+                width: 38px
+                height: 38px
+                border-radius: 50%
+                font-size: 14px
+                font-weight: 600
+                color: var(--black)
+                text-decoration: none
+                transition: all .25s ease
+
+                @include media(540)
+                    width: 32px
+                    height: 32px
+                    font-size: 13px
+
+                &:hover
+                    background: var(--gray-sec)
+
+                &.active
+                    background: var(--primary)
+                    color: var(--white)
+
+            .pg_nav
+                font-size: 14px
+                font-weight: 600
+                color: var(--primary)
+                text-decoration: none
+                letter-spacing: .3px
+                transition: opacity .2s ease
+
+                @include media(540)
+                    font-size: 12px
+
+                &:hover
+                    opacity: .7
+
+                &.pg_prev
+                    padding-right: 4px
+
+                &.pg_next
+                    padding-left: 4px
+
+        .comment_wrapper
+            margin-top: 40px
+            padding-top: 32px
+            border-top: 1px solid var(--border)
+
+            @include media(1024)
+                margin-top: 34px
+                padding-top: 28px
+
+            @include media(991)
+                margin-top: 10px
+                padding-top: 24px
+
+            @include media(540)
+                margin-top: 10px
+                padding-top: 10px
+
+            .author_block
+                display: flex
+                gap: 16px
+                align-items: flex-start
+                padding: 24px
+                background: var(--gray-sec)
+                border-radius: 16px
+                margin-bottom: 36px
+
+                @include media(1024)
+                    padding: 20px
+                    margin-bottom: 32px
+
+                @include media(768)
+                    padding: 18px
+                    margin-bottom: 28px
+
+                @include media(540)
+                    flex-direction: column
+                    align-items: flex-start
+                    gap: 12px
+                    padding: 40px 16px
+                    margin-bottom: 40px
+                    border-radius: 12px
+
+                .author_avatar
+                    flex-shrink: 0
+                    width: 56px
+                    height: 56px
+                    border-radius: 50%
+                    overflow: hidden
+                    background: var(--gray)
+
+                    @include media(540)
+                        width: 48px
+                        height: 48px
+
+                    img
+                        width: 100%
+                        height: 100%
+                        object-fit: cover
+                        display: block
+
+                .author_info
+                    min-width: 0
+
+                    h5
+                        font-size: 16px
+                        font-weight: 700
+                        color: var(--black)
+                        margin: 0 0 6px
+
+                        @include media(540)
+                            font-size: 15px
+
+                    p
+                        font-size: 14px
+                        line-height: 1.7
+                        color: var(--text)
+                        margin: 0 0 10px
+                        overflow-wrap: break-word
+
+                        @include media(540)
+                            font-size: 13px
+
+                    .author_link
+                        display: inline-block
+                        font-size: 13px
+                        font-weight: 600
+                        color: var(--primary)
+                        text-decoration: none
+
+                        &:hover
+                            text-decoration: underline
+
+            .comment_form_box
+                *
+                    box-sizing: border-box
+
+                h3
+                    font-size: 22px
+                    font-weight: 700
+                    color: var(--black)
+                    margin: 0 0 24px
+
+                    @include media(1024)
+                        margin: 0 0 20px
+
+                    @include media(768)
+                        font-size: 20px
+                        margin: 0 0 18px
+
+                    @include media(540)
+                        font-size: 18px
+                        margin: 0 0 40px
+
+                form
+                    .field-row
+                        display: grid
+                        grid-template-columns: 1fr 1fr
+                        gap: 16px
+                        margin-bottom: 18px
+
+                        @include media(991)
+                            gap: 0
+                            grid-template-columns: 1fr
+                            margin-bottom: 0
+
+                    .field
+                        position: relative
+                        margin-bottom: 18px
+                        width: 100%
+                        min-width: 0
+
+                        svg
+                            position: absolute
+                            left: 12px
+                            top: 50%
+                            transform: translateY(-50%)
+                            width: 16px
+                            height: 16px
+                            color: var(--text-light)
+                            pointer-events: none
+                            z-index: 1
+
+                        .field__input
+                            display: block
+                            width: 100%
+                            height: 50px
+                            padding: 0 16px
+                            color: var(--black)
+                            background: var(--gray-sec)
+                            border: 1.5px solid var(--border)
+                            border-radius: 12px
+                            outline: none
+                            font-family: inherit
+                            font-size: 14px
+                            line-height: normal
+                            transition: border-color .2s ease, background .2s ease
+
+                            @include media(540)
+                                height: 46px
+                                font-size: 13px
+
+                            &.has-icon
+                                padding-left: 38px
+
+                            &::placeholder
+                                color: transparent
+
+                            &:focus
+                                border-color: var(--primary)
+                                background: var(--white)
+
+                        .field__label
+                            position: absolute
+                            left: 16px
+                            top: 50%
+                            transform: translateY(-50%)
+                            margin: 0
+                            color: var(--text)
+                            font-size: 14px
+                            font-weight: 400
+                            pointer-events: none
+                            transition: all .18s ease
+                            z-index: 2
+
+                            @include media(540)
+                                font-size: 13px
+
+                            span
+                                margin-left: 2px
+                                color: #c0392b
+
+                        .field__input.has-icon ~ .field__label
+                            left: 38px
+
+                        .field__input:focus + .field__label,
+                        .field__input:not(:placeholder-shown) + .field__label
+                            top: 0
+                            left: 12px
+                            padding: 0 6px
+                            color: var(--primary)
+                            background: var(--white)
+                            transform: translateY(-50%)
+                            font-size: 11px
+                            font-weight: 600
+                            border-radius: 4px
+
+                        &--textarea
+                            .field__input
+                                height: auto
+                                min-height: 130px
+                                padding: 16px
+                                resize: vertical
+                                line-height: 1.6
+
+                                @include media(540)
+                                    min-height: 110px
+                                    padding: 14px
+
+                            .field__label
+                                top: 26px
+                                transform: none
+
+                            .field__input:focus + .field__label,
+                            .field__input:not(:placeholder-shown) + .field__label
+                                top: 0
+                                transform: translateY(-50%)
+
+                    .checkbox_field
+                        display: flex
+                        align-items: flex-start
+                        gap: 10px
+                        margin: 6px 0 24px
+                        cursor: pointer
+
+                        @include media(540)
+                            margin: 6px 0 40px
+
+                        input
+                            position: absolute
+                            width: 0
+                            height: 0
+                            opacity: 0
+
+                        .box
+                            position: relative
+                            flex-shrink: 0
+                            width: 18px
+                            height: 18px
+                            margin-top: 2px
+                            background: var(--white)
+                            border: 1.5px solid var(--border)
+                            border-radius: 4px
+                            transition: background .2s ease, border-color .2s ease
+
+                            &::after
+                                content: ""
+                                position: absolute
+                                left: 5px
+                                top: 1px
+                                width: 4px
+                                height: 9px
+                                border: solid var(--white)
+                                border-width: 0 2px 2px 0
+                                transform: rotate(45deg)
+                                opacity: 0
+
+                        input:checked ~ .box
+                            background: var(--primary)
+                            border-color: var(--primary)
+
+                            &::after
+                                opacity: 1
+
+                        .text
+                            display: block
+                            font-size: 12px
+                            line-height: 1.3
+                            color: var(--text)
+
+                            a
+                                color: var(--primary)
+                                font-weight: 600
+                                font-size: 12px
+                                text-decoration: none
+
+                                &:hover
+                                    text-decoration: underline
+
+                    .smt
+                        appearance: none
+                        -webkit-appearance: none
+                        display: inline-block
+                        width: auto
+                        padding: 15px 36px
+                        margin: 0
+                        color: var(--white) !important
+                        background: var(--gradient-a)
+                        border: none
+                        border-radius: 30px
+                        font-family: inherit
+                        font-size: 14px
+                        font-weight: 700
+                        letter-spacing: .5px
+                        text-transform: uppercase
+                        text-decoration: none
+                        line-height: normal
+                        cursor: pointer
+                        transition: transform .25s ease, box-shadow .25s ease
+
+                        @include media(540)
+                            width: 100%
+                            padding: 14px 30px
+                            font-size: 13px
+                            text-align: center
+
+                        &:hover, &:focus
+                            color: var(--white) !important
+                            transform: translateY(-2px)
+                            box-shadow: 0 10px 24px rgba(0,0,0,.15)
+
+    .form_wrapper
+        position: sticky
+        top: calc(var(--headerheight) + 30px)
+        height: fit-content
+
+        @media (max-width: 991px)
+            position: static
+
+        @include media(1024)
+            top: calc(var(--headerheight) + 20px)
+
+        .grid_card
+            display: flex
+            flex-direction: column
+            gap: 24px
+            min-width: 0
+
+            @include media(1024)
+                gap: 20px
+
+            @include media(768)
+                gap: 18px
+
+            @include media(540)
+                gap: 16px
+
+        .card
+            background: var(--white)
+            border: 1px solid var(--border)
+            border-radius: 16px
+            padding: 26px
+            box-shadow: 0 10px 30px rgba(0,0,0,.05)
+            min-width: 0
+
+            @include media(1024)
+                padding: 22px
+
+            @include media(991)
+                padding: 20px
+
+            @include media(540)
+                border-radius: 12px
+
+            h4
+                font-size: 18px
+                font-weight: 700
+                color: var(--black)
+                margin: 0
+
+                @include media(540)
+                    font-size: 16px
+
+            .divider
+                height: 1px
+                background: var(--border)
+                margin: 16px 0 20px
+
+                @include media(540)
+                    margin: 10px 0
+
+        .card--newsletter
+            .subscribe_row
+                display: flex
+                align-items: center
+                background: var(--gray-sec)
+                border: 1.5px solid var(--border)
+                border-radius: 50px
+                padding: 5px
+                margin-bottom: 16px
+
+
+                .subscribe_input
+                    flex: 1
+                    min-width: 0
+                    border: none
+                    background: transparent
+                    outline: none
+                    padding: 10px 16px
+                    font-size: 14px
+                    font-family: inherit
+                    color: var(--black)
+
+                    @include media(540)
+                        font-size: 13px
+                        padding: 8px 12px
+
+                    &::placeholder
+                        color: var(--text-light)
+
+                .subscribe_btn
+                    flex-shrink: 0
+                    border: none
+                    background: var(--gradient-a)
+                    color: var(--white)
+                    font-size: 13px
+                    font-weight: 700
+                    letter-spacing: .4px
+                    text-transform: uppercase
+                    padding: 12px 22px
+                    border-radius: 50px
+                    cursor: pointer
+                    transition: transform .25s ease, box-shadow .25s ease
+
+                    @include media(540)
+                        padding: 10px 16px
+                        font-size: 12px
+
+                    &:hover
+                        transform: translateY(-2px)
+                        box-shadow: 0 8px 18px rgba(0,0,0,.15)
+
+            .checkbox_field
+                display: flex
+                align-items: center
+                gap: 10px
+                cursor: pointer
+
+                input
+                    position: absolute
+                    width: 0
+                    height: 0
+                    opacity: 0
+
+                .box
+                    position: relative
+                    flex-shrink: 0
+                    width: 17px
+                    height: 17px
+                    background: var(--white)
+                    border: 1.5px solid var(--border)
+                    border-radius: 4px
+                    transition: background .2s ease, border-color .2s ease
+
+                    &::after
+                        content: ""
+                        position: absolute
+                        left: 4px
+                        top: 0
+                        width: 4px
+                        height: 9px
+                        border: solid var(--white)
+                        border-width: 0 2px 2px 0
+                        transform: rotate(45deg)
+                        opacity: 0
+
+                input:checked ~ .box
+                    background: var(--primary)
+                    border-color: var(--primary)
+
+                    &::after
+                        opacity: 1
+
+                .text
+                    font-size: 12.5px
+                    color: var(--text)
+
+                    @include media(540)
+                        font-size: 12px
+
+        .card--stories
+            .story_list
+                display: flex
+                flex-direction: column
+                gap: 18px
+
+                @include media(540)
+                    gap: 14px
+
+            .story_item
+                display: flex
+                gap: 12px
+                text-decoration: none
+                align-items: flex-start
+
+                .story_thumb
+                    flex-shrink: 0
+                    width: 68px
+                    height: 68px
+                    border-radius: 10px
+                    overflow: hidden
+
+                    @include media(540)
+                        width: 58px
+                        height: 58px
+
+                    img
+                        width: 100%
+                        height: 100%
+                        object-fit: cover
+                        display: block
+                        transition: transform .35s ease
+
+                .story_info
+                    flex: 1
+                    min-width: 0
+
+                    .story_title
+                        font-size: 14px
+                        font-weight: 600
+                        line-height: 1.45
+                        color: var(--black)
+                        margin: 0 0 6px
+                        transition: color .2s ease
+                        overflow-wrap: break-word
+
+                        @include media(540)
+                            font-size: 13px
+
+                    .story_views
+                        display: flex
+                        align-items: center
+                        gap: 5px
+                        font-size: 12px
+                        color: var(--text)
+
+                        i
+                            color: var(--primary)
+                            font-size: 12px
+
+                &:hover
+                    .story_thumb img
+                        transform: scale(1.08)
+
+                    .story_title
+                        color: var(--primary)

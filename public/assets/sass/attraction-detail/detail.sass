@@ -1,0 +1,2602 @@
+@import '../_common'
+
+header
+    background: var(--primary)
+
+// =========================================
+// Detail Banner (Gallery + Title Info)
+// =========================================
+
+.detail-banner
+    position: relative
+    padding: 30px 0 70px
+    margin-top: var(--headerheight)
+
+    @include media(1024)
+        padding: 25px 0 60px
+
+    @include media(768)
+        padding: 20px 0 50px
+
+    @include media(540)
+        padding: 18px 0 45px
+
+    @include media(420)
+        padding: 16px 0 40px
+
+    // ==========================================
+    // IMAGE GALLERY
+    // ==========================================
+
+    .grid
+        display: grid
+        grid-template-columns: repeat(4, 1fr)
+        grid-template-rows: repeat(2, 200px)
+        gap: 12px
+
+        @include media(1280)
+            grid-template-rows: repeat(2, 180px)
+
+        @include media(1024)
+            grid-template-rows: repeat(2, 170px)
+            gap: 10px
+
+        @include media(991)
+            grid-template-columns: repeat(4, 1fr)
+            grid-template-rows: repeat(2, 160px)
+
+        @include media(768)
+            grid-template-columns: repeat(2, 1fr)
+            grid-template-rows: 180px 130px 130px
+            gap: 8px
+            border-radius: 12px
+
+        @include media(540)
+            grid-template-rows: 175px 125px 125px
+
+        @include media(420)
+            grid-template-rows: 170px 115px 115px
+            gap: 6px
+            border-radius: 10px
+
+        .item
+            position: relative
+            overflow: hidden
+            cursor: pointer
+            border-radius: 10px
+
+            img
+                width: 100%
+                height: 100%
+                object-fit: cover
+                display: block
+                transition: transform .3s ease
+
+            &:hover
+                img
+                    transform: scale(1.05)
+
+            &:first-child
+                grid-column: 1 / 3
+                grid-row: 1 / 3
+
+                @include media(768)
+                    grid-column: 1 / 3
+                    grid-row: 1 / 2
+
+            // ------------------------------------------
+            // IMAGE TITLE OVERLAY
+            // ------------------------------------------
+
+            .image-overlay
+                position: absolute
+                left: 0
+                right: 0
+                bottom: 0
+                padding: 50px 18px 18px
+                color: var(--white)
+                background: linear-gradient(
+                    to top,
+                    rgba(0, 0, 0, .75),
+                    rgba(0, 0, 0, 0)
+                )
+
+                @include media(768)
+                    padding: 35px 12px 12px
+
+                @include media(420)
+                    padding: 30px 10px 10px
+
+                h3
+                    margin: 0 0 4px
+                    font-size: 18px
+                    line-height: 1.2
+                    font-weight: 700
+                    color: var(--white)
+
+                    @include media(768)
+                        font-size: 15px
+
+                    @include media(420)
+                        font-size: 14px
+                        margin-bottom: 2px
+
+                span
+                    display: block
+                    font-size: 12px
+                    line-height: 1.4
+                    color: rgba(255, 255, 255, .85)
+
+                    @include media(768)
+                        font-size: 11px
+
+                    @include media(420)
+                        font-size: 10px
+
+            // ------------------------------------------
+            // MORE IMAGES OVERLAY
+            // ------------------------------------------
+
+            &.more-images
+
+                .image-overlay
+                    position: absolute
+                    inset: 0
+                    display: flex
+                    flex-direction: column
+                    align-items: center
+                    justify-content: center
+                    padding: 0
+                    background: rgba(0, 0, 0, .55)
+                    text-align: center
+
+                    strong
+                        display: block
+                        margin-bottom: 6px
+                        font-size: 38px
+                        line-height: 1
+                        font-weight: 700
+                        color: var(--white)
+
+                        @include media(768)
+                            font-size: 30px
+
+                        @include media(420)
+                            font-size: 28px
+
+                    span
+                        font-size: 14px
+                        line-height: 1.4
+                        color: var(--white)
+
+                        @include media(768)
+                            font-size: 12px
+
+                        @include media(420)
+                            font-size: 11px
+
+    // ==========================================
+    // DETAIL CONTENT
+    // ==========================================
+
+    .detail_content
+
+        // ------------------------------------------
+        // BREADCRUMB
+        // ------------------------------------------
+
+        .Breadcrumb
+            display: flex
+            align-items: center
+            flex-wrap: wrap
+            list-style: none
+            padding: 0
+            margin: 0 0 18px
+
+            @include media(768)
+                margin-bottom: 15px
+
+            @include media(420)
+                margin-bottom: 12px
+
+            li
+                font-size: 12px
+                font-weight: 500
+                text-transform: capitalize
+                letter-spacing: .05em
+                color: var(--text)
+
+                @include media(768)
+                    font-size: 10px
+
+                @include media(420)
+                    font-size: 9px
+
+                a
+                    color: var(--text)
+                    text-decoration: none
+                    font-size: inherit
+
+                    &:hover
+                        color: var(--primary)
+
+                &:not(:last-child)
+
+                    &::after
+                        content: '/'
+                        margin: 0 8px
+                        color: var(--border)
+
+                        @include media(420)
+                            margin: 0 5px
+
+                &:last-child
+                    color: var(--black)
+                    font-weight: 600
+
+
+        // ------------------------------------------
+        // INFO ROW
+        // ------------------------------------------
+
+        .info-row
+            display: flex
+            justify-content: space-between
+            align-items: flex-start
+            flex-wrap: wrap
+            gap: 30px
+            padding-top: 20px
+            border-top: 1px solid var(--border)
+
+            @include media(991)
+                gap: 20px
+
+            @include media(768)
+                flex-direction: column
+                gap: 25px
+                padding-top: 18px
+
+            @include media(420)
+                gap: 20px
+                padding-top: 16px
+
+
+        // ------------------------------------------
+        // LEFT CONTENT
+        // ------------------------------------------
+
+        .info-left
+            flex: 1
+            max-width: 640px
+            min-width: 0
+
+            @include media(991)
+                max-width: 100%
+
+            @include media(768)
+                width: 100%
+                max-width: 100%
+
+            .title
+                margin: 0 0 8px
+                font-size: 40px
+                line-height: 1.15
+                font-weight: 700
+                color: var(--black)
+
+                @include media(1280)
+                    font-size: 37px
+
+                @include media(1024)
+                    font-size: 34px
+
+                @include media(768)
+                    font-size: 30px
+                    line-height: 1.2
+
+                @include media(540)
+                    font-size: 28px
+
+                @include media(420)
+                    font-size: 26px
+
+            .location
+                display: flex
+                align-items: center
+                gap: 6px
+                margin-bottom: 14px
+                color: var(--text)
+                font-size: 14px
+
+                @include media(768)
+                    font-size: 13px
+
+                @include media(420)
+                    font-size: 12px
+
+                span
+                    color: var(--text-light)
+
+            .rating
+                display: inline-flex
+                align-items: center
+                gap: 8px
+                margin-bottom: 18px
+                padding: 6px 14px
+                background: var(--gray-sec)
+                border-radius: 100px
+                font-size: 13px
+                font-weight: 600
+                color: var(--black)
+
+                @include media(768)
+                    margin-bottom: 14px
+
+                @include media(420)
+                    padding: 5px 11px
+                    font-size: 12px
+
+                .stars
+                    color: var(--primary)
+
+                .count
+                    color: var(--text)
+                    font-weight: 400
+                    font-size: 14px
+
+            .desc
+                margin: 0
+                font-size: 15px
+                line-height: 1.7
+                color: var(--text)
+
+                @include media(768)
+                    font-size: 14px
+                    line-height: 1.65
+
+                @include media(420)
+                    font-size: 13px
+
+
+        // ------------------------------------------
+        // RIGHT CONTENT
+        // ------------------------------------------
+
+        .info-right
+            width: 415px
+            display: flex
+            flex-direction: column
+            gap: 18px
+
+            @include media(1280)
+                width: 360px
+
+            @include media(1024)
+                width: 280px
+                min-width: 240px
+
+            @include media(768)
+                width: 100%
+                min-width: 0
+
+
+            // --------------------------------------
+            // FACTS
+            // --------------------------------------
+
+            .facts
+                display: flex
+                flex-direction: column
+                gap: 14px
+                padding: 18px 20px
+                background: var(--gray)
+                border-radius: 12px
+
+                @include media(768)
+                    width: 100%
+
+                @include media(420)
+                    padding: 16px
+
+                .facts-item
+                    display: flex
+                    justify-content: space-between
+                    align-items: flex-start
+                    gap: 10px
+
+                    .label
+                        font-size: 12px
+                        text-transform: capitalize
+                        color: var(--text)
+
+                        @include media(420)
+                            font-size: 11px
+
+                    .value
+                        font-size: 13px
+                        line-height: 1.4
+                        font-weight: 600
+                        color: var(--black)
+                        text-align: right
+
+                        @include media(420)
+                            font-size: 12px
+
+                    .tags
+                        display: flex
+                        flex-wrap: wrap
+                        justify-content: flex-end
+                        gap: 6px
+
+                        span
+                            padding: 3px 10px
+                            background: var(--white)
+                            border: 1px solid var(--border)
+                            border-radius: 100px
+                            color: var(--secondary)
+                            font-size: 11px
+                            font-weight: 500
+
+
+            // --------------------------------------
+            // ACTION BUTTONS
+            // --------------------------------------
+
+            .actions
+                display: flex
+                gap: 10px
+
+                @include media(768)
+                    width: 100%
+
+                @include media(420)
+                    flex-direction: column
+
+                .btn
+                    flex: 1
+                    display: flex
+                    align-items: center
+                    justify-content: center
+
+                    @include media(420)
+                        width: 100%
+
+
+// =========================================
+// Detail Section A — About
+// =========================================
+
+.detail-secA
+    background: var(--gray-sec)
+
+    .grid
+        display: grid
+        grid-template-columns: 0.9fr 1.1fr
+
+        @include media(991)
+            grid-template-columns: 1fr
+
+    .img
+        position: relative
+        min-height: 100%
+
+        img
+            width: 100%
+            height: 100%
+            min-height: 620px
+            object-fit: cover
+            display: block
+
+            @include media(1280)
+                min-height: 520px
+
+            @include media(1024)
+                min-height: 420px
+
+            @include media(991)
+                min-height: 280px
+
+            @include media(540)
+                min-height: 240px
+
+            @include media(420)
+                min-height: 220px
+
+        .img__tag
+            position: absolute
+            left: 20px
+            bottom: 20px
+            background: rgba(0,0,0,.5)
+            backdrop-filter: blur(6px)
+            color: var(--white)
+            font-size: 12px
+            font-weight: 600
+            padding: 8px 14px
+            border-radius: 100px
+
+            @include media(420)
+                left: 14px
+                bottom: 14px
+                padding: 6px 12px
+                font-size: 11px
+
+    .item-content
+        padding: 56px 52px
+
+        @include media(1280)
+            padding: 48px 40px
+
+        @include media(1024)
+            padding: 40px 30px
+
+        @include media(991)
+            padding: 36px 24px
+
+        @include media(540)
+            padding: 30px 20px
+
+        @include media(420)
+            padding: 26px 18px
+
+        .eyebrow
+            display: inline-flex
+            align-items: center
+            gap: 8px
+            font-size: 12px
+            font-weight: 700
+            text-transform: uppercase
+            letter-spacing: .08em
+            color: var(--primary)
+            margin-bottom: 14px
+
+            &::before
+                content: ''
+                width: 22px
+                height: 2px
+                background: var(--yellow)
+
+        h3
+            margin-bottom: 20px
+
+            @include media(991)
+                font-size: 28px
+
+            @include media(420)
+                margin-bottom: 16px
+
+
+        p
+            color: var(--text)
+            margin-bottom: 16px
+
+            &:last-of-type
+                margin-bottom: 0
+
+        .info-row
+            margin-top: 36px
+            padding-top: 32px
+            border-top: 1px solid var(--border)
+            display: grid
+            grid-template-columns: repeat(2, 1fr)
+            gap: 22px 20px
+
+            @include media(1024)
+                margin-top: 30px
+                padding-top: 26px
+
+            @include media(420)
+                grid-template-columns: 1fr
+                margin-top: 24px
+                padding-top: 22px
+                gap: 16px
+
+            .info-item
+                display: flex
+                align-items: flex-start
+                gap: 12px
+
+                .icon
+                    flex-shrink: 0
+                    width: 38px
+                    height: 38px
+                    border-radius: 10px
+                    background: var(--gray)
+                    display: flex
+                    align-items: center
+                    justify-content: center
+                    font-size: 16px
+
+                .label
+                    display: block
+                    font-size: 11px
+                    text-transform: uppercase
+                    letter-spacing: .05em
+                    color: var(--text-light)
+                    margin-bottom: 5px
+
+                .value
+                    font-size: 14px
+                    font-weight: 700
+                    color: var(--black)
+                    line-height: 1.4
+
+                    @include media(420)
+                        font-size: 13px
+
+
+// =========================================
+// Detail Section B — Why Visit
+// =========================================
+
+.detail-secB
+    padding: 70px 0
+
+    @include media(1280)
+        padding: 65px 0
+
+    @include media(1024)
+        padding: 60px 0
+
+    @include media(991)
+        padding: 55px 0
+
+    @include media(768)
+        padding: 50px 0
+
+    @include media(540)
+        padding: 45px 0
+
+    @include media(420)
+        padding: 40px 0
+
+    .heading
+        text-align: center
+        max-width: 620px
+        margin: 0 auto 56px
+
+        @include media(991)
+            margin-bottom: 40px
+
+        @include media(768)
+            margin-bottom: 32px
+
+        @include media(420)
+            margin-bottom: 26px
+
+        h3
+            margin-bottom: 10px
+
+            @include media(991)
+                font-size: 28px
+
+    .grid
+        display: grid
+        grid-template-columns: repeat(3, 1fr)
+        gap: 24px
+
+        @include media(1024)
+            gap: 20px
+
+        @include media(991)
+            grid-template-columns: repeat(2, 1fr)
+            gap: 18px
+
+        @include media(540)
+            grid-template-columns: 1fr
+            gap: 14px
+
+    .card
+        position: relative
+        background: var(--white)
+        border: 1px solid var(--border)
+        border-radius: 18px
+        padding: 34px 28px
+        transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease
+        overflow: hidden
+
+        @include media(1024)
+            padding: 28px 24px
+
+        @include media(540)
+            padding: 24px 20px
+            border-radius: 14px
+
+        &::before
+            content: ''
+            position: absolute
+            top: 0
+            left: 0
+            width: 100%
+            height: 3px
+            background: var(--primary)
+            transform: scaleX(0)
+            transform-origin: left
+            transition: transform .3s ease
+
+        &:hover
+            transform: translateY(-6px)
+            box-shadow: 0 20px 40px rgba(0,0,0,.08)
+            border-color: transparent
+
+            &::before
+                transform: scaleX(1)
+
+            .icon
+                background: var(--primary)
+
+                img
+                    filter: grayscale(1) brightness(10)
+
+        .icon
+            width: 56px
+            height: 56px
+            border-radius: 14px
+            background: var(--gray)
+            display: flex
+            align-items: center
+            justify-content: center
+            font-size: 24px
+            margin-bottom: 20px
+            transition: background .25s ease
+
+            @include media(540)
+                width: 48px
+                height: 48px
+                margin-bottom: 16px
+
+            svg,img
+                width: 30px
+                height: 30px
+
+                @include media(540)
+                    width: 26px
+                    height: 26px
+
+            span
+                transition: filter .25s ease
+
+        h4
+            font-size: 18px
+            font-weight: 700
+            color: var(--black)
+            margin-bottom: 10px
+
+            @include media(420)
+                font-size: 16px
+
+        p
+            font-size: 14px
+            line-height: 1.7
+            color: var(--text)
+            margin: 0
+
+            @include media(420)
+                font-size: 13px
+
+
+// =========================================
+// Detail Section C — Experiences to Explore
+// =========================================
+
+.detail-secC
+    padding: 70px 0
+    background: var(--gray-sec)
+
+    @include media(1280)
+        padding: 65px 0
+
+    @include media(1024)
+        padding: 60px 0
+
+    @include media(991)
+        padding: 55px 0
+
+    @include media(768)
+        padding: 50px 0
+
+    @include media(540)
+        padding: 45px 0
+
+    @include media(420)
+        padding: 40px 0
+
+    .heading
+        width: 100%
+        max-width: 550px
+        margin: 0 auto
+        text-align: center
+
+        @include media(768)
+            max-width: 100%
+            padding: 0 15px
+
+        h3
+            @include media(991)
+                font-size: 28px
+
+    .grid
+        display: grid
+        grid-template-columns: repeat(3, 1fr)
+        gap: 28px
+        margin-top: 56px
+
+        @include media(1024)
+            gap: 22px
+            margin-top: 44px
+
+        @include media(991)
+            grid-template-columns: repeat(2, 1fr)
+            gap: 20px
+
+        @include media(768)
+            margin-top: 34px
+
+        @include media(540)
+            grid-template-columns: 1fr
+            gap: 16px
+
+        @include media(420)
+            margin-top: 28px
+            gap: 14px
+
+    .card
+        background: var(--white)
+        border-radius: 18px
+        overflow: hidden
+        box-shadow: 0 10px 30px rgba(0,0,0,.05)
+        transition: transform .25s ease, box-shadow .25s ease
+        display: block
+        flex-direction: column
+
+        @include media(540)
+            border-radius: 14px
+
+        &:hover
+            transform: translateY(-6px)
+            box-shadow: 0 24px 44px rgba(0,0,0,.1)
+
+            .card__img img
+                transform: scale(1.06)
+
+        .card__img
+            position: relative
+            height: 220px
+            overflow: hidden
+
+            @include media(1024)
+                height: 200px
+
+            @include media(768)
+                height: 210px
+
+            @include media(540)
+                height: 190px
+
+            @include media(420)
+                height: 180px
+
+            img
+                width: 100%
+                height: 100%
+                object-fit: cover
+                display: block
+                transition: transform .4s ease
+
+            .num
+                position: absolute
+                top: 16px
+                left: 16px
+                width: 40px
+                height: 40px
+                border-radius: 10px
+                background: rgba(0,0,0,.45)
+                backdrop-filter: blur(6px)
+                color: var(--white)
+                font-size: 14px
+                font-weight: 700
+                display: flex
+                align-items: center
+                justify-content: center
+
+                @include media(420)
+                    top: 12px
+                    left: 12px
+                    width: 34px
+                    height: 34px
+                    font-size: 12px
+
+            .duration
+                position: absolute
+                bottom: 14px
+                right: 14px
+                background: var(--white)
+                color: var(--black)
+                font-size: 11px
+                font-weight: 700
+                letter-spacing: .02em
+                padding: 6px 12px
+                border-radius: 100px
+                display: flex
+                align-items: center
+                gap: 6px
+
+                @include media(420)
+                    bottom: 10px
+                    right: 10px
+                    padding: 5px 10px
+                    font-size: 10px
+
+                &::before
+                    content: ''
+                    width: 6px
+                    height: 6px
+                    border-radius: 50%
+                    background: var(--green)
+
+        .card__body
+            padding: 24px 22px 26px
+            display: flex
+            flex-direction: column
+            flex: 1
+
+            @include media(1024)
+                padding: 20px 18px 22px
+
+            @include media(420)
+                padding: 16px 14px 18px
+
+            h4
+                font-size: 18px
+                font-weight: 700
+                color: var(--black)
+                margin-bottom: 10px
+
+                @include media(420)
+                    font-size: 16px
+
+            p
+                font-size: 14px
+                line-height: 1.7
+                color: var(--text)
+                margin-bottom: 22px
+                flex: 1
+
+                @include media(420)
+                    font-size: 13px
+                    margin-bottom: 16px
+
+            .btn-add
+                align-self: flex-start
+                display: inline-flex
+                align-items: center
+                gap: 8px
+                padding: 11px 20px
+                border-radius: 10px
+                border: 1.5px solid var(--primary)
+                background: transparent
+                color: var(--primary)
+                font-size: 13px
+                font-weight: 700
+                cursor: pointer
+                transition: all .2s ease
+
+                &:hover
+                    background: var(--primary)
+                    color: var(--white)
+
+
+// =========================================
+// Detail Section E — Places Slider
+// =========================================
+
+.detail-secE
+    padding: 70px 0
+
+    @include media(1280)
+        padding: 65px 0
+
+    @include media(1024)
+        padding: 60px 0
+
+    @include media(991)
+        padding: 60px 0
+
+    @include media(768)
+        padding: 50px 0
+
+    @include media(480)
+        padding: 40px 0
+
+    // ==========================================
+    // SECTION HEADING
+    // ==========================================
+
+    .heading
+        width: 100%
+        text-align: center
+
+        h3
+            margin-bottom: 10px
+
+            @include media(480)
+                font-size: 24px
+
+
+    // ==========================================
+    // SWIPER
+    // ==========================================
+
+    .swiper-wrap
+        position: relative
+        margin-top: 50px
+
+        @include media(992)
+            margin-top: 45px
+
+        @include media(768)
+            margin-top: 35px
+
+        @include media(480)
+            margin-top: 30px
+
+        .placesSlider
+            margin: 0 20px
+            overflow: hidden
+
+            @include media(992)
+                margin: 0 
+
+
+        // ======================================
+        // NAVIGATION
+        // ======================================
+
+        .swiper-group
+            position: absolute
+            top: 50%
+            left: 50%
+            z-index: 5
+
+            width: calc(100% + 20px)
+
+            transform: translate(-50%, -50%)
+
+            display: flex
+            align-items: center
+            justify-content: space-between
+
+            pointer-events: none
+
+            @include media(768)
+                display: none
+
+            .swiper-button-lock
+                display: none !important
+
+            button
+                width: 45px
+                height: 45px
+
+                padding: 0
+                border: 0
+                border-radius: 50%
+
+                display: flex
+                align-items: center
+                justify-content: center
+
+                background: var(--white)
+                box-shadow: rgba(100, 100, 111, .2) 0px 7px 29px 0px
+
+                cursor: pointer
+                pointer-events: auto
+
+                transition: all .25s ease
+
+                @include media(1024)
+                    width: 40px
+                    height: 40px
+
+                svg
+                    width: 20px
+                    height: 20px
+
+                    path
+                        fill: var(--primary)
+                        transition: fill .25s ease
+
+                &:hover
+                    background: var(--primary)
+
+                    svg
+                        path
+                            fill: var(--white)
+
+                &:disabled
+                    opacity: .4
+                    cursor: not-allowed
+
+            .btn-next
+                // transform: rotate(180deg)
+
+
+    // ==========================================
+    // PLACE CARD
+    // ==========================================
+
+    .place-card
+        position: relative
+
+        display: block
+
+        height: 440px
+
+        border-radius: 20px
+        overflow: hidden
+
+        text-decoration: none
+
+        background: var(--black)
+
+        @include media(992)
+            height: 420px
+
+        @include media(768)
+            height: 400px
+            border-radius: 16px
+
+        @include media(540)
+            height: 390px
+
+        @include media(480)
+            height: 380px
+            border-radius: 14px
+
+
+        // --------------------------------------
+        // IMAGE
+        // --------------------------------------
+
+        .place-card__image
+            position: absolute
+            inset: 0
+            overflow: hidden
+
+            img
+                width: 100%
+                height: 100%
+
+                display: block
+
+                object-fit: cover
+
+                transition: transform .5s ease
+
+
+        // --------------------------------------
+        // DARK GRADIENT
+        // --------------------------------------
+
+        &::after
+            content: ''
+
+            position: absolute
+            inset: 0
+
+            z-index: 1
+
+            background: linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0) 30%,
+                rgba(0, 0, 0, .78) 100%
+            )
+
+            pointer-events: none
+
+
+        // --------------------------------------
+        // HOVER IMAGE
+        // --------------------------------------
+
+        &:hover
+            .place-card__image
+                img
+                    transform: scale(1.08)
+
+            .place-card__body
+                .arrow
+                    transform: translateX(5px)
+
+
+        // --------------------------------------
+        // CATEGORY TAG
+        // --------------------------------------
+
+        .place-card__tag
+            position: absolute
+
+            top: 18px
+            left: 18px
+
+            z-index: 3
+
+            padding: 6px 12px
+
+            border: 1px solid rgba(255, 255, 255, .35)
+            border-radius: 100px
+
+            background: rgba(255, 255, 255, .15)
+
+            backdrop-filter: blur(6px)
+
+            color: var(--white)
+
+            font-size: 11px
+            font-weight: 700
+
+            letter-spacing: .04em
+            text-transform: uppercase
+
+            @include media(768)
+                top: 14px
+                left: 14px
+                padding: 5px 10px
+                font-size: 10px
+
+            @include media(480)
+                top: 12px
+                left: 12px
+                padding: 5px 9px
+                font-size: 9px
+
+
+        // --------------------------------------
+        // CARD CONTENT
+        // --------------------------------------
+
+        .place-card__body
+            position: absolute
+
+            left: 0
+            right: 0
+            bottom: 0
+
+            z-index: 3
+
+            padding: 26px 24px
+
+            @include media(992)
+                padding: 22px 20px
+
+            @include media(768)
+                padding: 22px 18px
+
+            @include media(480)
+                padding: 20px 16px
+
+
+            h5
+                margin: 0 0 8px
+
+                font-size: 22px
+                line-height: 1.2
+                font-weight: 700
+
+                color: var(--white)
+
+                @include media(992)
+                    font-size: 20px
+
+                @include media(768)
+                    margin-bottom: 6px
+
+                @include media(480)
+                    font-size: 19px
+
+
+            p
+                margin: 0 0 16px
+
+                font-size: 13.5px
+                line-height: 1.65
+
+                color: rgba(255, 255, 255, .82)
+
+                @include media(992)
+                    font-size: 13px
+
+                @include media(768)
+                    margin-bottom: 14px
+                    font-size: 13px
+                    line-height: 1.55
+
+                @include media(480)
+                    font-size: 12px
+
+
+            .explore
+                display: inline-flex
+                align-items: center
+                gap: 6px
+
+                font-size: 13px
+                line-height: 1
+                font-weight: 700
+
+                color: var(--white)
+
+                @include media(768)
+                    font-size: 12px
+
+                @include media(480)
+                    font-size: 11px
+
+
+                .arrow
+                    display: inline-block
+
+                    transition: transform .25s ease
+
+
+    // ==========================================
+    // CENTER BUTTON
+    // ==========================================
+
+    .center-btn
+        margin-top: 40px
+
+        display: flex
+        justify-content: center
+        align-items: center
+
+        @include media(768)
+            margin-top: 30px
+
+        @include media(480)
+            margin-top: 24px
+
+
+// =========================================
+// Detail Section D — How Many Days
+// =========================================
+
+.detail-secD
+    padding: 70px 0
+    background: var(--gray-sec)
+
+    @include media(1280)
+        padding: 65px 0
+
+    @include media(1024)
+        padding: 60px 0
+
+    @include media(991)
+        padding: 60px 0
+
+    @include media(540)
+        padding: 50px 0
+
+    @include media(420)
+        padding: 40px 0
+
+    .heading
+        width: 100%
+        max-width: 335px
+        margin: 0 auto 56px
+        text-align: center
+
+        @include media(991)
+            margin-bottom: 40px
+
+        @include media(420)
+            margin-bottom: 30px
+
+        h3
+            margin-bottom: 10px
+
+    .grid
+        display: grid
+        grid-template-columns: repeat(3, 1fr)
+        gap: 24px
+
+        @include media(1024)
+            gap: 20px
+
+        @include media(991)
+            grid-template-columns: 1fr
+            gap: 18px
+
+    .plan-card
+        position: relative
+        background: var(--white)
+        border: 1.5px solid var(--border)
+        border-radius: 20px
+        padding: 32px 28px
+        cursor: pointer
+        transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease
+
+        @include media(1024)
+            padding: 26px 24px
+
+        @include media(420)
+            padding: 22px 20px
+            border-radius: 16px
+
+        &:hover
+            transform: translateY(-6px)
+            box-shadow: 0 20px 44px rgba(0,0,0,.08)
+
+        &.is-popular
+            border-color: var(--primary)
+
+            &::before
+                content: 'Most Popular'
+                position: absolute
+                top: -13px
+                left: 28px
+                background: var(--primary)
+                color: var(--white)
+                font-size: 11px
+                font-weight: 700
+                letter-spacing: .03em
+                padding: 5px 14px
+                border-radius: 100px
+
+                @include media(420)
+                    left: 22px
+
+        .plan-card__days
+            display: flex
+            align-items: baseline
+            gap: 6px
+            margin-bottom: 18px
+
+            @include media(420)
+                margin-bottom: 14px
+
+            .num
+                font-size: 42px
+                font-weight: 700
+                color: var(--black)
+                line-height: 1
+
+                @include media(420)
+                    font-size: 36px
+
+            .label
+                font-size: 13px
+                font-weight: 600
+                color: var(--text)
+
+        h4
+            font-size: 18px
+            font-weight: 700
+            color: var(--black)
+            margin-bottom: 18px
+            padding-bottom: 18px
+            border-bottom: 1px solid var(--border)
+
+            @include media(420)
+                font-size: 16px
+                margin-bottom: 14px
+                padding-bottom: 14px
+
+        .route
+            display: flex
+            flex-wrap: wrap
+            align-items: center
+            gap: 8px
+
+            span
+                font-size: 12.5px
+                font-weight: 600
+                color: var(--secondary)
+                background: var(--gray-sec)
+                padding: 6px 12px
+                border-radius: 100px
+
+                @include media(420)
+                    font-size: 12px
+                    padding: 5px 10px
+
+            .arrow
+                color: var(--text-light)
+                font-size: 12px
+                background: none
+                padding: 0
+
+    .cta
+        margin-top: 48px
+        display: flex
+        flex-direction: column
+        align-items: center
+        gap: 14px
+        text-align: center
+
+        @include media(420)
+            margin-top: 36px
+
+        p
+            font-size: 14px
+            color: var(--text)
+
+            @include media(420)
+                font-size: 13px
+
+        .btn-build
+            display: inline-flex
+            align-items: center
+            gap: 10px
+            padding: 16px 32px
+            border-radius: 12px
+            background: var(--primary)
+            color: var(--white)
+            font-size: 15px
+            font-weight: 700
+            border: none
+            cursor: pointer
+            transition: background .2s ease, box-shadow .2s ease, transform .2s ease
+
+            @include media(420)
+                width: 100%
+                justify-content: center
+                padding: 14px 24px
+                font-size: 14px
+
+            .arrow
+                transition: transform .2s ease
+
+            &:hover
+                background: var(--secondary)
+                box-shadow: 0 14px 30px rgba(17,76,158,.28)
+
+                .arrow
+                    transform: translateX(4px)
+
+
+// =========================================
+// Detail Section F — Travel Information
+// =========================================
+
+.detail-secF
+    padding: 100px 0
+
+    @include media(1280)
+        padding: 85px 0
+
+    @include media(1024)
+        padding: 70px 0
+
+    @include media(640)
+        padding: 60px 0
+
+    @include media(420)
+        padding: 40px 0
+
+    .heading
+        width: 100%
+        max-width: 560px
+        margin: 0 auto 60px
+        text-align: center
+
+        @include media(1024)
+            margin-bottom: 46px
+
+        @include media(640)
+            margin-bottom: 36px
+
+        @include media(420)
+            margin-bottom: 28px
+
+        h3
+            margin-bottom: 10px
+
+    // ============================================================
+    // 1. SEASON STRIP — Best Time to Visit
+    // ============================================================
+    .season-strip
+        margin-bottom: 64px
+
+        @include media(1024)
+            margin-bottom: 50px
+
+        @include media(640)
+            margin-bottom: 40px
+
+        @include media(420)
+            margin-bottom: 32px
+
+        .season-strip__label
+            display: flex
+            align-items: center
+            gap: 12px
+            margin-bottom: 24px
+
+            @include media(420)
+                margin-bottom: 18px
+
+            .icon
+                width: 40px
+                height: 40px
+                border-radius: 10px
+                background: var(--gray)
+                display: flex
+                align-items: center
+                justify-content: center
+                font-size: 18px
+
+                @include media(420)
+                    width: 36px
+                    height: 36px
+
+            h4
+                font-size: 17px
+                font-weight: 700
+                color: var(--black)
+
+                @include media(420)
+                    font-size: 15px
+
+        .season-grid
+            display: grid
+            grid-template-columns: repeat(4, 1fr)
+            gap: 16px
+
+            @include media(1024)
+                grid-template-columns: repeat(2, 1fr)
+
+            @include media(640)
+                grid-template-columns: 1fr
+                gap: 12px
+
+        .season-card
+            position: relative
+            background: var(--white)
+            border: 1px solid var(--border)
+            border-radius: 16px
+            padding: 22px 20px
+            transition: border-color .2s ease, transform .2s ease
+
+            @include media(420)
+                padding: 18px 16px
+                border-radius: 12px
+
+            &.is-active
+                border-color: var(--primary)
+
+                &::before
+                    content: 'Best Time'
+                    position: absolute
+                    top: -11px
+                    left: 20px
+                    background: var(--primary)
+                    color: var(--white)
+                    font-size: 10px
+                    font-weight: 700
+                    letter-spacing: .03em
+                    padding: 4px 10px
+                    border-radius: 100px
+
+            &:hover
+                transform: translateY(-4px)
+
+            .season-card__months
+                font-size: 11px
+                font-weight: 700
+                text-transform: uppercase
+                letter-spacing: .04em
+                color: var(--primary)
+                margin-bottom: 10px
+
+            h5
+                font-size: 16px
+                font-weight: 700
+                color: var(--black)
+                margin-bottom: 8px
+
+                @include media(420)
+                    font-size: 15px
+
+            p
+                font-size: 13px
+                line-height: 1.6
+                color: var(--text)
+                margin-bottom: 14px
+
+                @include media(420)
+                    font-size: 12px
+                    margin-bottom: 10px
+
+            .tags
+                display: flex
+                flex-wrap: wrap
+                gap: 6px
+
+                span
+                    font-size: 10.5px
+                    font-weight: 600
+                    color: var(--secondary)
+                    background: var(--gray-sec)
+                    padding: 4px 10px
+                    border-radius: 100px
+
+    // ============================================================
+    // 2. TICKET ROW — How to Reach
+    // ============================================================
+    .reach-block
+        margin-bottom: 64px
+
+        @include media(1024)
+            margin-bottom: 50px
+
+        @include media(640)
+            margin-bottom: 40px
+
+        @include media(420)
+            margin-bottom: 32px
+
+        .reach-block__label
+            display: flex
+            align-items: center
+            gap: 12px
+            margin-bottom: 24px
+
+            @include media(420)
+                margin-bottom: 18px
+
+            .icon
+                width: 40px
+                height: 40px
+                border-radius: 10px
+                background: var(--gray)
+                display: flex
+                align-items: center
+                justify-content: center
+                font-size: 18px
+
+                @include media(420)
+                    width: 36px
+                    height: 36px
+
+            h4
+                font-size: 17px
+                font-weight: 700
+                color: var(--black)
+
+                @include media(420)
+                    font-size: 15px
+
+        .ticket-grid
+            display: grid
+            grid-template-columns: repeat(3, 1fr)
+            gap: 20px
+
+            @include media(1024)
+                grid-template-columns: repeat(2, 1fr)
+
+            @include media(640)
+                grid-template-columns: 1fr
+                gap: 14px
+
+        .ticket
+            position: relative
+            background: var(--white)
+            border: 1px solid var(--border)
+            border-radius: 16px
+            overflow: hidden
+
+            @include media(420)
+                border-radius: 12px
+
+            .ticket__top
+                padding: 22px 22px 18px
+                display: flex
+                align-items: center
+                gap: 14px
+
+                @include media(420)
+                    padding: 18px 18px 14px
+                    gap: 12px
+
+                .mode-icon
+                    width: 44px
+                    height: 44px
+                    border-radius: 12px
+                    background: var(--gray-sec)
+                    display: flex
+                    align-items: center
+                    justify-content: center
+                    font-size: 20px
+                    flex-shrink: 0
+
+                    @include media(420)
+                        width: 38px
+                        height: 38px
+
+                .mode-name
+                    font-size: 15.5px
+                    font-weight: 700
+                    color: var(--black)
+                    margin-bottom: 3px
+
+                    @include media(420)
+                        font-size: 14px
+
+                .mode-sub
+                    font-size: 12px
+                    color: var(--text-light)
+
+            .ticket__divider
+                position: relative
+                height: 0
+                border-top: 1.5px dashed var(--border)
+                margin: 0 0
+
+                &::before,
+                &::after
+                    content: ''
+                    position: absolute
+                    top: -9px
+                    width: 18px
+                    height: 18px
+                    border-radius: 50%
+                    background: var(--gray-sec)
+
+                &::before
+                    left: -9px
+
+                &::after
+                    right: -9px
+
+            .ticket__body
+                padding: 18px 22px 22px
+
+                @include media(420)
+                    padding: 14px 18px 18px
+
+                p
+                    font-size: 13.5px
+                    line-height: 1.7
+                    color: var(--text)
+
+                    @include media(420)
+                        font-size: 13px
+
+    // ============================================================
+    // 3. PACKAGE PRICING CARDS — Estimated Budget
+    // ============================================================
+    .budget-block
+        margin-bottom: 64px
+
+        @include media(1024)
+            margin-bottom: 50px
+
+        @include media(640)
+            margin-bottom: 40px
+
+        @include media(420)
+            margin-bottom: 32px
+
+        .budget-block__label
+            display: flex
+            align-items: center
+            gap: 12px
+            margin-bottom: 24px
+
+            @include media(420)
+                margin-bottom: 18px
+
+            .icon
+                width: 40px
+                height: 40px
+                border-radius: 10px
+                background: var(--gray)
+                display: flex
+                align-items: center
+                justify-content: center
+                font-size: 18px
+
+                @include media(420)
+                    width: 36px
+                    height: 36px
+
+            h4
+                font-size: 17px
+                font-weight: 700
+                color: var(--black)
+
+                @include media(420)
+                    font-size: 15px
+
+        .pkg-grid
+            display: grid
+            grid-template-columns: repeat(3, 1fr)
+            gap: 20px
+            align-items: stretch
+
+            @include media(1024)
+                grid-template-columns: repeat(2, 1fr)
+
+            @include media(640)
+                grid-template-columns: 1fr
+                gap: 14px
+
+        .pkg-card
+            position: relative
+            background: var(--white)
+            border: 1.5px solid var(--border)
+            border-radius: 18px
+            padding: 30px 26px
+            display: flex
+            flex-direction: column
+            transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease
+
+            @include media(420)
+                padding: 24px 20px
+                border-radius: 14px
+
+            &:hover
+                transform: translateY(-6px)
+                box-shadow: 0 20px 40px rgba(0,0,0,.08)
+
+            &.is-recommended
+                border-color: var(--primary)
+                box-shadow: 0 20px 44px rgba(17,76,158,.1)
+
+                &::before
+                    content: 'Recommended'
+                    position: absolute
+                    top: -13px
+                    left: 26px
+                    background: var(--primary)
+                    color: var(--white)
+                    font-size: 11px
+                    font-weight: 700
+                    letter-spacing: .03em
+                    padding: 5px 14px
+                    border-radius: 100px
+
+                    @include media(420)
+                        left: 20px
+
+            .pkg-card__tier
+                font-size: 13px
+                font-weight: 700
+                text-transform: uppercase
+                letter-spacing: .04em
+                color: var(--text)
+                margin-bottom: 10px
+
+            .pkg-card__price
+                font-size: 26px
+                font-weight: 700
+                color: var(--black)
+                margin-bottom: 4px
+
+                @include media(420)
+                    font-size: 22px
+
+                span
+                    font-size: 13px
+                    font-weight: 500
+                    color: var(--text-light)
+
+            .pkg-card__note
+                font-size: 12.5px
+                color: var(--text-light)
+                margin-bottom: 22px
+                padding-bottom: 22px
+                border-bottom: 1px solid var(--border)
+
+                @include media(420)
+                    margin-bottom: 18px
+                    padding-bottom: 18px
+
+            .pkg-card__features
+                display: flex
+                flex-direction: column
+                gap: 12px
+                flex: 1
+
+                li
+                    display: flex
+                    align-items: flex-start
+                    gap: 10px
+                    font-size: 13.5px
+                    line-height: 1.5
+                    color: var(--text)
+
+                    @include media(420)
+                        font-size: 13px
+
+                    .check
+                        flex-shrink: 0
+                        width: 18px
+                        height: 18px
+                        border-radius: 50%
+                        background: var(--gray-sec)
+                        color: var(--green)
+                        font-size: 10px
+                        font-weight: 700
+                        display: flex
+                        align-items: center
+                        justify-content: center
+                        margin-top: 1px
+
+    // ============================================================
+    // 4. GROUPED CHECKLIST — What to Carry
+    // ============================================================
+    .carry-block
+        .carry-block__label
+            display: flex
+            align-items: center
+            gap: 12px
+            margin-bottom: 24px
+
+            @include media(420)
+                margin-bottom: 18px
+
+            .icon
+                width: 40px
+                height: 40px
+                border-radius: 10px
+                background: var(--gray)
+                display: flex
+                align-items: center
+                justify-content: center
+                font-size: 18px
+
+                @include media(420)
+                    width: 36px
+                    height: 36px
+
+            h4
+                font-size: 17px
+                font-weight: 700
+                color: var(--black)
+
+                @include media(420)
+                    font-size: 15px
+
+        .carry-grid
+            display: grid
+            grid-template-columns: repeat(3, 1fr)
+            gap: 20px
+
+            @include media(1024)
+                grid-template-columns: repeat(2, 1fr)
+
+            @include media(640)
+                grid-template-columns: 1fr
+                gap: 14px
+
+        .carry-group
+            background: var(--gray-sec)
+            border-radius: 16px
+            padding: 24px 22px
+
+            @include media(420)
+                padding: 20px 18px
+                border-radius: 12px
+
+            .carry-group__title
+                font-size: 13px
+                font-weight: 700
+                color: var(--secondary)
+                text-transform: uppercase
+                letter-spacing: .03em
+                margin-bottom: 16px
+
+            ul
+                display: flex
+                flex-direction: column
+                gap: 12px
+
+                li
+                    display: flex
+                    align-items: center
+                    gap: 10px
+                    font-size: 13.5px
+                    color: var(--black)
+                    font-weight: 500
+
+                    @include media(420)
+                        font-size: 13px
+
+                    .dot
+                        width: 6px
+                        height: 6px
+                        border-radius: 50%
+                        background: var(--primary)
+                        flex-shrink: 0
+
+
+// =========================================
+// Detail Section G — Map
+// =========================================
+
+.detail-secG
+    padding: 70px 0
+    margin-bottom: 70px
+    background: var(--gray-sec)
+
+    @include media(1024)
+        padding: 65px 0
+        margin-bottom: 65px
+
+    @include media(768)
+        padding: 60px 0
+        margin-bottom: 60px
+
+    @include media(420)
+        padding: 45px 0
+        margin-bottom: 45px
+
+    .heading
+        width: 100%
+        max-width: 560px
+        margin: 0 auto 45px
+        text-align: center
+
+        @include media(768)
+            margin-bottom: 34px
+
+        @include media(420)
+            margin-bottom: 26px
+
+        h3
+            margin-bottom: 10px
+
+        p
+            width: 100%
+            max-width: 340px
+            margin: 0 auto
+            text-align: center
+
+
+    .map-wrap
+        position: relative
+        border-radius: 24px
+        overflow: hidden
+        box-shadow: 0 20px 50px rgba(0,0,0,.08)
+        border: 1px solid var(--border)
+
+        @include media(420)
+            border-radius: 16px
+
+        iframe
+            width: 100%
+            height: 460px
+            display: block
+            border: 0
+            filter: grayscale(.15) contrast(1.02)
+
+            @include media(1024)
+                height: 400px
+
+            @include media(768)
+                height: 320px
+
+            @include media(420)
+                height: 260px
+
+    .map-footer
+        margin-top: 28px
+        display: flex
+        align-items: center
+        justify-content: space-between
+        gap: 20px
+        flex-wrap: wrap
+
+        @include media(768)
+            flex-direction: column
+            align-items: flex-start
+
+        @include media(540)
+            margin-top: 20px
+        
+        .btn
+            @include media(540)
+                width: 100%
+
+
+        .map-location
+            display: flex
+            align-items: center
+            gap: 10px
+
+            .pin
+                flex-shrink: 0
+                width: 40px
+                height: 40px
+                border-radius: 10px
+                background: var(--white)
+                border: 1px solid var(--border)
+                display: flex
+                align-items: center
+                justify-content: center
+                font-size: 17px
+
+                @include media(420)
+                    width: 36px
+                    height: 36px
+
+            p
+                font-size: 14.5px
+                font-weight: 600
+                color: var(--black)
+
+                @include media(420)
+                    font-size: 13px
+
+        .btn-directions
+            @include media(768)
+                width: 100%
+                justify-content: center
+
+
+// =========================================
+// Detail Section I — Related Attractions
+// =========================================
+
+.detail-secI
+    padding: 70px 0
+    background: var(--white)
+
+    @include media(1280)
+        padding: 65px 0
+
+    @include media(1024)
+        padding: 60px 0
+
+    @include media(991)
+        padding: 55px 0
+
+    @include media(768)
+        padding: 50px 0
+
+    @include media(420)
+        padding: 40px 0
+
+    .heading
+        width: 100%
+        max-width: 450px
+        margin: 0 auto 50px
+        text-align: center
+
+        @include media(768)
+            margin-bottom: 36px
+
+        @include media(420)
+            margin-bottom: 28px
+
+        h3
+            margin-bottom: 10px
+
+            @include media(991)
+                font-size: 28px
+
+    .center-btn
+        margin-top: 45px
+        display: flex
+        justify-content: center
+
+        @include media(420)
+            margin-top: 32px
+
+    .swiper-wrap
+        margin-top: 70px
+        position: relative
+
+        @include media(1024)
+            margin-top: 55px
+
+        @include media(768)
+            margin-top: 34px
+
+        @include media(420)
+            margin-top: 26px
+
+        .fourSilder
+            margin: 0 20px
+            padding: 10px
+
+            @include media(991)
+                margin: 0 
+                padding: 0
+
+
+            .journey_card
+                .content
+                    p
+                        &::before
+                            display: none
+
+        .swiper-group
+            position: absolute
+            width: 100%
+            top: 50%
+            left: 50%
+            transform: translate(-50%,-50%)
+            display: flex
+            justify-content: space-between
+            align-items: center
+            gap: 10px
+            z-index: 2
+
+            @include media(768)
+                display: none
+
+            .swiper-button-lock
+                display: none !important
+
+            button
+                width: 45px
+                height: 45px
+                border-radius: 50%
+                background: var(--white)
+                display: flex
+                justify-content: center
+                box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px
+                align-items: center
+
+                @include media(1024)
+                    width: 40px
+                    height: 40px
+
+                svg
+                    width: 20px
+                    height: 20px
+
+                    path
+                        fill: var(--primary)
+
+                &:hover
+                    background: var(--primary)
+
+                    svg
+                        path
+                            fill: var(--white)
+
+            .btn-next
+                transform: rotate(180deg)
+
+
+// =========================================
+// Attraction Accordion — Itinerary Timeline
+// =========================================
+
+.attraction_accordion
+    padding: 70px 0
+    background: var(--white)
+
+    @include media(1280)
+        padding: 65px 0
+
+    @include media(1024)
+        padding: 60px 0
+
+    @include media(768)
+        padding: 50px 0
+
+    @include media(420)
+        padding: 40px 0
+
+    .heading
+        width: 100%
+        max-width: 100%
+        margin: 0 auto
+        text-align: center
+        margin-bottom: 4rem
+
+        @include media(768)
+            margin-bottom: 3rem
+
+        @include media(420)
+            margin-bottom: 2.2rem
+
+        h3
+            @include media(991)
+                font-size: 28px
+
+    .accordion-wrapper
+        display: flex
+        flex-direction: column
+        width: 100%
+        max-width: 900px
+        margin: 0 auto
+
+    .accordion-item
+        display: flex
+        gap: 22px
+
+        @include media(540)
+            gap: 16px
+
+        &:last-child
+            .track-line
+                display: none
+
+        &.active
+            .day-marker
+                background: var(--primary) !important
+                color: #FFFFFF !important
+                box-shadow: 0 6px 16px -4px rgba(var(--primary-rgb, 17, 97, 73), .5)
+
+            .accordion-header h4
+                color: var(--primary)
+
+            .accordion-icon
+                background: var(--primary)
+                color: #FFFFFF
+
+        // ---------- timeline ----------
+        .timeline-track
+            display: flex
+            flex-direction: column
+            align-items: center
+            flex-shrink: 0
+            width: 44px
+
+            @include media(540)
+                width: 36px
+
+            .day-marker
+                width: 44px
+                height: 44px
+                border-radius: 50%
+                background: #F3F4F6
+                color: #6B7280
+                font-size: 14px
+                font-weight: 800
+                display: flex
+                align-items: center
+                justify-content: center
+                flex-shrink: 0
+                transition: .3s ease
+
+                @include media(540)
+                    width: 36px
+                    height: 36px
+                    font-size: 13px
+
+            .track-line
+                width: 2px
+                flex: 1
+                background: repeating-linear-gradient(180deg, rgba(0,0,0,.12) 0 4px, transparent 4px 8px)
+                margin: 6px 0
+
+        // ---------- body ----------
+        .accordion-body
+            flex: 1
+            padding-bottom: 30px
+            border-bottom: 1px solid rgba(0, 0, 0, .06)
+
+            @include media(420)
+                padding-bottom: 22px
+
+            .accordion-header
+                display: flex
+                align-items: center
+                justify-content: space-between
+                gap: 16px
+                cursor: pointer
+                padding-top: 8px
+
+                @include media(420)
+                    gap: 12px
+
+                h4
+                    font-size: 16px
+                    font-weight: 600
+                    color: #111827
+                    margin: 0
+                    line-height: 1.2
+
+                    @include media(576)
+                        font-size: 15px
+
+                    @include media(420)
+                        font-size: 14px
+
+                .accordion-icon
+                    flex-shrink: 0
+                    width: 30px
+                    height: 30px
+                    border-radius: 50%
+                    background: #F3F4F6
+                    color: #111827
+                    display: flex
+                    align-items: center
+                    justify-content: center
+                    font-size: 17px
+                    font-weight: 400
+                    line-height: 1
+                    transition: background .3s ease, color .3s ease
+
+                    @include media(420)
+                        width: 26px
+                        height: 26px
+                        font-size: 15px
+
+            .accordion-content
+                display: none
+                padding-top: 16px
+
+                p
+                    font-size: 14px
+                    line-height: 1.8
+                    color: #6B7280
+                    margin: 0
+                    max-width: 760px
+
+                    @include media(420)
+                        font-size: 13px
+                        line-height: 1.7
+
+
+// ==========================================
+// SEO / INTERNAL LINKING SECTION
+// ==========================================
+
+.internal-linking-sec
+    padding: 70px 0
+    background: var(--gray-sec)
+
+    @include media(1280)
+        padding: 65px 0
+
+    @include media(1024)
+        padding: 60px 0
+
+    @include media(768)
+        padding: 50px 0
+
+    @include media(420)
+        padding: 40px 0
+
+    .heading
+        width: 100%
+        max-width: 700px
+        margin: 0 auto 40px
+        text-align: center
+
+        @include media(768)
+            margin-bottom: 30px
+
+        @include media(420)
+            margin-bottom: 24px
+
+        .eyebrow
+            display: inline-block
+            margin-bottom: 10px
+            font-size: 11px
+            font-weight: 700
+            line-height: 1
+            letter-spacing: .08em
+            text-transform: uppercase
+            color: var(--primary)
+
+        h3
+            margin-bottom: 12px
+
+            @include media(991)
+                font-size: 26px
+
+        p
+            max-width: 620px
+            margin: 0 auto
+            font-size: 14px
+            line-height: 1.7
+            color: var(--text)
+
+            @include media(420)
+                font-size: 13px
+
+
+// =========================================
+// More About (uses comman heading/rte-content)
+// =========================================
+
+.more-about
+    background: var(--gray-sec)

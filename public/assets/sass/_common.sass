@@ -1,0 +1,3541 @@
+@import './_var'
+@import './_form'
+
+*,
+*::before,
+*::after
+    padding: 0
+    margin: 0
+    list-style: none
+    box-sizing: border-box
+
+$scrollwidth: 10px
+
+html
+    scroll-behavior: smooth
+    
+.mb-0
+    margin-bottom: 0 !important
+
+:root
+    --headerpadding: 35px
+    --headerheight: 80px
+    --headerfixed: 65px
+    --footerstrip: 66px
+    @include media(768)
+        --headerfixed: 50px
+        --headerheight: 60px
+
+    --primary: #114c9e
+    --secondary:#114c9e
+    --yellow: #ffcb2f
+    --text: #666666
+    --green: rgba(62, 131, 41, 1)
+    --white: #ffff
+    --text-light: #00000054
+    --black: #000000
+    --black-light: rgba(104, 104, 104, 1)
+    --border: rgba(0, 0, 0, .08)
+    --gray: #EFEAF9
+    --gray-sec: #F6F4FA
+    --gradient-a: linear-gradient(120deg, #26066f 0%, #7c3aed 100%)
+    --gradient-b: linear-gradient(120deg, #ff5200 0%, #f7ec0d 100%)
+    --container: 1280px
+    --containerfluid: 5rem
+
+    @include media(1366)
+        --containerfluid: 2.5rem
+    @include media(1280)
+        --container: 1180px
+
+    @include media(1024)
+        --container: 95%
+        --containerfluid: 2rem
+
+    @include media(991)
+        --container: 90%
+
+    @include media(768)
+        --container: 90%
+
+    @include media(640)
+        --container: 92%
+        --containerfluid: 2rem
+
+    @include media(540)
+        --container: 92%
+        --containerfluid: 1rem
+
+body
+    &::-webkit-scrollbar
+        width: $scrollwidth
+        background: #cecece
+    &::-webkit-scrollbar-track
+        box-shadow: none
+    &::-webkit-scrollbar-thumb
+        background-color: $white
+    &::-webkit-scrollbar-thumb
+        background: #0000005d !important
+    &::-webkit-scrollbar-thumb:hover
+        background: var(--bgcolor)
+    &.overflow-hidden
+        overflow: hidden
+        margin-right: $scrollwidth
+        @include media(991)
+            margin-right: 0
+        header
+            width: calc(100% - $scrollwidth)
+            @include media(991)
+                width: 100%
+
+a
+    text-decoration: none
+    color: var(--black)
+
+body
+    overflow-x: hidden
+
+body, html
+    font-size: 16px
+    line-height: 1.5
+    font-optical-sizing: auto
+    font-style: normal
+    font-weight: normal
+
+b
+    @include font(500)
+
+p
+    color: $text
+
+small
+    font-size: 14px
+    line-height: 22px
+    display: block
+
+.svg
+    path
+        transition: none
+        &[stroke],&[fill="none"]
+            stroke: currentColor
+        &[fill]
+            fill: currentColor
+
+.gray-bg
+    background: #F3F3F3
+
+.primary-bg
+    background: $primary
+
+.c-primary
+    color: $primary
+
+.c-text
+    color: $text
+
+.c-red
+    color: red
+
+.fw-medium
+    @include font(500)
+
+.fw-semibold
+    @include font(600)
+
+.fs-14
+    font-size: 14px
+
+.fs-18
+    font-size: 18px
+
+select
+    display: none
+
+a[href]
+    text-decoration: none
+    cursor: pointer
+    transition: .5s ease
+    &.logo
+        display: block
+        line-height: 0
+
+svg
+    path
+        transition: .5s ease
+
+.position-relative
+    position: relative
+
+.lh-normal
+    line-height: normal
+
+.container
+    @include container
+
+.container-fluid
+    padding: 0 var(--containerfluid)
+    display: block
+    margin: 0 auto
+
+.social-icons
+    user-select: none
+
+// --------------------
+// HEADINGS
+// --------------------
+
+h1
+    font-family: $Poppins
+    font-weight: 700
+    font-size: 60px
+    line-height: 1.2
+    // text-transform: uppercase
+
+    @include media(1280)
+        font-size: 45px
+
+    @include media(991)
+        font-size: 35px
+
+    @include media(540)
+        font-size: 30px
+
+h2
+    font-family: $Poppins
+    font-weight: 700
+    font-size: 48px
+    line-height: 1.2
+
+    @include media(1280)
+        font-size: 40px
+
+    @include media(1024)
+        font-size: 34px
+
+    @include media(540)
+        font-size: 30px
+
+h3
+    font-family: $Poppins
+    font-weight: 700
+    font-size: 48px
+    line-height: 1.2
+
+    @include media(1280)
+        font-size: 40px
+
+    @include media(991)
+        font-size: 34px
+
+    @include media(540)
+        font-size: 30px
+
+h4
+    font-family: $Poppins
+    font-weight: 500
+    font-size: 36px
+    line-height: 1.2
+
+    @include media(1280)
+        font-size: 32px
+
+    @include media(768)
+        font-size: 26px
+
+h5
+    font-family: $Poppins
+    font-weight: 700
+    font-size: 28px
+    line-height: 1.25
+
+    @include media(991)
+        font-size: 20px
+
+h6
+    font-family: $Poppins
+    font-weight: 600
+    font-size: 16px
+    line-height: 1.2
+
+    @include media(540)
+        font-size: 18px
+
+// --------------------
+// BODY TEXT
+// --------------------
+
+p, span, ul li, a
+    font-family: $Poppins
+    font-weight: 400
+    font-size: 16px
+    line-height: 1.3
+    color: var(--text)
+
+.heading
+    @include media(991)
+        text-align: center
+
+    h3
+        font-size: 36px
+        line-height: 1.2
+        font-family: $Poppins
+        font-weight: 600
+        color: var(--black)
+        @include media(1280)
+            font-size: 34px
+        @include media(991)
+            font-size: 30px
+        @include media(540)
+            font-size: 28px
+        span
+            font-size: inherit
+            font-weight: inherit
+            font-family: inherit
+            background: var(--primary)
+            -webkit-background-clip: text
+            -webkit-text-fill-color: transparent
+            background-clip: text
+            color: transparent
+            margin: 0 5px
+
+            @include media(768)
+                margin: 0 8px
+
+            @include media(540)
+                margin: 0 5px
+
+.text-center
+    text-align: center
+
+.text-left
+    text-align: left
+
+.text-right
+    text-align: right
+
+.text-uppercase
+    text-transform: uppercase
+
+.flex
+    @include flex
+
+.justify-between
+    justify-content: space-between
+
+.align-center
+    align-items: center
+
+.inline-flex
+    --gap: 12px
+    display: inline-flex
+    align-items: center
+    gap: 0 var(--gap)
+
+img
+    max-width: 100%
+
+button, select
+    font-family: inherit
+    font-size: inherit
+    cursor: pointer
+
+input
+    font-family: $Poppins
+    font-size: inherit
+    border-radius: 0
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button
+        -webkit-appearance: none
+        margin: 0
+    &[type=number]
+        -moz-appearance: textfield
+
+video
+    pointer-events: none
+    user-select: none
+    object-fit: cover
+    width: 100%
+    height: 100%
+
+button
+    border: none
+    background: none
+    appearance: none
+    cursor: pointer
+
+.tab-nav
+    cursor: default
+    [data-tab]
+        cursor: pointer
+        caret-color: transparent
+
+.tab-nav-content
+    position: relative
+    .tabs
+        &:not(.active)
+            position: absolute
+            top: 0
+            left: 0
+            right: 0
+            bottom: 0
+            pointer-events: none
+            user-select: none
+            opacity: 0
+            height: 0
+            overflow: hidden
+
+.item-md
+    position: relative
+    display: block
+    @include before
+    @include after
+    &::before,&::after
+        z-index: 1
+    &::after
+        content: none
+    figure, .figure
+        display: block
+        overflow: hidden
+        line-height: 0
+        height: 100%
+        img, video, iframe
+            height: 100%
+            width: 100%
+            object-fit: cover
+            transition: .5s ease
+    figcaption
+        position: absolute
+        bottom: 0
+        left: 0
+        right: 0
+        z-index: 2
+    .link-md
+        position: absolute
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        z-index: 3
+    &.center-item
+        figcaption
+            bottom: auto
+            top: 50%
+            translate: 0 -50%
+
+.overlay
+    position: fixed
+    left: 0
+    right: 0
+    bottom: 0
+    top: 0
+    z-index: 5
+    opacity: 0
+    background: #00000075
+    transform: translateY(100%)
+    transition: 0s ease .5s, opacity .5s ease
+    cursor: pointer
+    z-index: 20
+    &.is-open
+        transition: opacity 1s ease
+        opacity: 1
+        transform: translateY(0%)
+
+// Here is the Main btn
+
+.btn
+    padding: 10px 0
+    border-radius: 25px
+    width: fit-content
+    a, button
+        position: relative
+        display: inline-block
+        font-weight: 500
+        font-size: 16px
+        padding: 10px 24px
+        border-radius: 25px
+        overflow: hidden
+        z-index: 0
+        background: transparent
+        color: white
+        border: 1px solid white
+        transition: 0.5s ease
+        overflow: hidden
+        &::before
+            content: ""
+            position: absolute
+            background: white
+            width: 100%
+            height: 100%
+            bottom: -100%
+            left: 0
+            transition: 0.5s ease
+            z-index: -1
+        &:hover
+            color: black
+            &::before
+                bottom: 0
+
+.btn2
+    padding: 10px 0
+    border-radius: 25px
+    width: fit-content
+    margin: 30px 0
+    a, button
+        position: relative
+        display: inline-block
+        font-weight: 500
+        font-size: 16px
+        color: $white
+        padding: 10px 24px
+        border-radius: 25px
+        background: var(--gradient-b)
+        overflow: hidden
+        z-index: 0
+        transition: color 0.5s ease
+        @include media(768)
+            padding: 5px 24px
+        &::before
+            content: ""
+            position: absolute
+            top: 0
+            left: 0
+            right: 0
+            bottom: 0
+            border-radius: 25px
+            background: $gradient-a
+            z-index: -1
+            opacity: 0
+            transition: opacity 0.5s ease
+        &::after
+            content: ""
+            position: absolute
+            top: 0
+            left: 0
+            right: 0
+            width: 100%
+            height: 100%
+            z-index: -1
+            background: #00000033
+        &:hover
+            color: $white
+            &::before
+                opacity: 1
+
+.model
+    position: fixed
+    top: 0
+    bottom: 0
+    z-index: 70
+    background: $white
+    background-position: 0% 80%
+    background-size: 75%
+    max-width: 435px
+    width: 100%
+    .close
+        cursor: pointer
+        &:not(.btn, .close-video, .not-ab)
+            position: absolute
+            top: 0
+            right: 0
+            top: 25px
+            right: 25px
+            line-height: 0
+            z-index: 1
+            @include media(540)
+                top: 8px
+                right: 10px
+            path
+                stroke: $black
+
+.form-grid
+    --item: 1
+    --gaplr: 30px
+    --gaptb: 32px
+    display: grid
+    grid-template-columns: repeat(var(--item), calc((100% - (var(--gaplr) * (var(--item) - 1))) / var(--item)))
+    gap: var(--gaptb) var(--gaplr)
+    @include media(540)
+        --gaptb: 15px
+    .full
+        grid-column: span var(--item)
+
+// swiper
+
+.btn-div-btm
+    > *
+        &:not(:last-child)
+            margin-right: 14px
+            @include media(675)
+                margin-right: 8px
+    .btn
+        @include media(675)
+            --padding: 12px
+            font-size: 14px
+
+.swiper-slide
+    height: auto
+
+.swiper-nav
+    line-height: 0
+    &.center-full
+        position: absolute
+        top: 50%
+        left: 50%
+        translate: -50% -50%
+        z-index: 2
+        display: flex
+        align-items: center
+        justify-content: space-between
+        width: 100%
+        max-width: 100%
+        margin: 0 auto
+        pointer-events: none
+        user-select: none
+        @include media(540)
+            display: none
+        .swiper-prev, .swiper-next
+            pointer-events: all
+            user-select: auto
+    &.hide-btn-no-loop
+        .swiper-prev, .swiper-next
+            &.swiper-button-disabled
+                opacity: 0
+                pointer-events: none
+    &.swiper-group
+        display: inline-flex
+        align-items: center
+        gap: 10px
+
+.swiper-prev, .certificate-prev
+    svg, img
+        transform: scaleX(-1)
+
+.swiper-prev, .swiper-next
+    --size: 45px
+    height: var(--size)
+    width: var(--size)
+    border-radius: 50%
+    display: flex
+    align-items: center
+    justify-content: center
+    background: $secondary
+    border: 1px solid $secondary
+    transition: .5s ease
+    color: $white
+    &:not(.no-background)
+        path
+            &[stroke],&[fill="none"]
+                stroke: $black
+            &[fill]
+                fill: $black
+    &:hover
+        &:not(.swiper-button-disabled, .no-background)
+            background: $primary
+            border-color: $primary
+            color: $white
+    &.no-background
+        height: auto
+        width: auto
+        display: block
+        background: none
+        border: none
+        line-height: 0
+        &:hover
+            background: none
+    &.white
+        background: $white
+        border-color: $white
+        color: $secondary
+        &:hover
+            &:not(.swiper-button-disabled)
+                background: $secondary
+                border-color: $secondary
+                color: $white
+    &.secondary-border
+        border-color: $secondary
+        background: none
+        color: $secondary
+        &:hover
+            &:not(.swiper-button-disabled)
+                background: $secondary
+                color: $white
+    &.white-border
+        border-color: $white
+        background: none
+        color: $white
+        &:hover
+            &:not(.swiper-button-disabled)
+                background: $white
+                color: $secondary
+    &.gray-border
+        border-color: var(--black)
+        background: none
+        color: $text
+        &:hover
+            &:not(.swiper-button-disabled)
+                border-color: $primary
+                background: $primary
+                color: $white
+    &.green-border
+        border-color: var(--primary)
+        background: none
+        color: $text
+        &:hover
+            &:not(.swiper-button-disabled)
+                border-color: $primary
+                background: $primary
+                color: $white
+    &.gray-arrow
+        color: #888888
+    &.black-arrow
+        color: $black
+        &:hover
+            &:not(.swiper-button-disabled)
+                color: $secondary
+    &.swiper-button-disabled
+        cursor: no-drop
+        opacity: .4
+    &.swiper-button-lock
+        display: none !important
+
+.website-content
+    > :first-child
+        margin-top: 0 !important
+    > :last-child
+        margin-bottom: 0 !important
+    h1
+        font-size: 48px
+        margin-bottom: 45px
+        text-align: center
+        font-family: $Poppins
+        font-weight: normal
+        @include media(675)
+            font-size: 34px
+        @include media(520)
+            font-size: 30px
+            font-weight: bold
+    h2
+        font-size: 34px
+        @include font(500)
+        @include media(675)
+            font-size: 24px
+    h3
+        font-size: 28px
+        line-height: 1.21
+        @include font(500)
+        @include media(675)
+            font-size: 22px
+    h4
+        font-size: 24px
+        @include font(500)
+        @include media(675)
+            font-size: 20px
+    h5
+        font-size: 20px
+        line-height: 1.3
+        @include font(600)
+        @include media(675)
+            font-size: 18px
+    h6
+        font-size: 18px
+        line-height: 1.3
+        @include font(600)
+    h2, h3, h4
+        margin: 0px 0 18px
+    h5, h6
+        margin: 22px 0 18px
+    p, li
+        color: $text
+        text-align: justify
+        hyphens: auto
+        b
+            @include font(600)
+            color: $black
+    a
+        color: $black
+        &:hover
+            text-decoration: underline
+    p, ul
+        margin-bottom: 30px
+    ul
+        padding-left: 18px
+        @include media(675)
+            padding-left: 10px
+        li
+            position: relative
+            padding-left: 28px
+            @include media(675)
+                padding-left: 20px
+            &:not(:last-child)
+                margin-bottom: 6px
+            &::before
+                content: ''
+                position: absolute
+                top: 8px
+                left: 0
+                width: 10px
+                aspect-ratio: 1
+                border-radius: 50%
+                background: var(--secondary)
+                @include media(520)
+                    width: 6px
+    &.website-content-medium
+        h2, h3, h4
+            margin: 20px 0 18px
+            font-size: 20px
+            @include font(500)
+        h5, h6
+            font-size: 18px
+            @include font(500)
+        p, ul
+            margin-bottom: 20px
+
+[data-video],[data-model],[data-scrollTo]
+    cursor: pointer
+
+// banner
+
+.mt-hdr
+    margin-top: var(--headerheight)
+
+.mt-hdrfix
+    margin-top: var(--headerfixed)
+
+.banner
+    position: relative
+    &.center-banner
+        .banner-wrapper
+            bottom: 50%
+            translate: 0 50%
+    &.common-banner
+        padding: 90px 0
+    .bg
+        line-height: 0
+        height: 100vh
+        @include media(991)
+            height: 45vh
+        @include media(520)
+            height: 60vh
+        video, img
+            width: 100%
+            height: 100%
+            object-fit: cover
+    .banner-wrapper
+        position: absolute
+        left: 50%
+        transform: translateX(-50%)
+        bottom: 15%
+        z-index: 3
+        @include media(540)
+            bottom: 10%
+            width: 100%
+            max-width: 285px
+    .content
+        text-align: center
+        &.content-white
+            > *
+                &:not(.btn)
+                    color: $white
+        &.content-font2
+            h1
+                font-family: $Poppins
+                color: $black-light
+                @include font(600)
+                line-height: 1.25
+        &.ttl-m
+            h1
+                font-size: 36px
+        &.f-semibold
+            h1
+                @include font(600)
+        .ico
+            line-height: 0
+            margin-bottom: 30px
+            img
+                width: 68px
+        h1
+            font-weight: 600
+            font-size: 48px
+            max-width: 627px
+            font-family: $Poppins
+            color: var(--white)
+            text-align: center
+            @include font(600)
+            @include media(1152)
+                font-size: 42px
+            @include media(767)
+                font-size: 34px
+            &:has(~ *)
+                margin-bottom: 10px
+        p
+            @include font(500)
+            margin: 15px 0 30px
+            color: var(--white)
+            opacity: .8
+            @include media(520)
+                font-size: 14px
+        h6
+            font-size: 18px
+            line-height: 1.34
+            color: $text
+            margin-top: 12px
+            @include font(500)
+            @include media(520)
+                font-size: 14px
+            &:has(~ *)
+                margin-bottom: 10px
+        h4
+            font-size: 24px
+            &:has(~ *)
+                margin-bottom: 10px
+        h5
+            font-size: 20px
+            line-height: 1.5
+            color: $text
+            margin-bottom: 10px
+            &:has(~ *)
+                margin-bottom: 10px
+
+.swiper-pagination-bullets
+    --swiper-pagination-bullet-size: 13px
+    --swiper-pagination-color: var(--primary)
+    @include media(540)
+        --swiper-pagination-bullet-size: 10px
+
+.btn-div-wrap
+    > *
+        &:not(:last-child)
+            margin-right: 20px
+            @include media(675)
+                margin-right: 5px
+    .btn
+        @include media(675)
+            --padding: 10px
+
+.common-grid-wrap
+    display: grid
+    grid-template-columns: repeat(3, 1fr)
+    grid-gap: 30px 25px
+    @include media(991)
+        grid-template-columns: repeat(2, 1fr)
+    @include media(675)
+        grid-template-columns: 100%
+
+.slider-section
+    .upper-sec
+        position: relative
+        padding-top: 4rem
+        .swiper-nav
+            position: absolute
+            right: 0
+            bottom: 0
+            z-index: 2
+            @include media(675)
+                display: none
+
+.play-btn
+    --btnsize: 50px
+    --border: 1px
+    --bordercolor: var(--white)
+    --playbtncolor: var(--white)
+    width: 60px
+    height: 60px
+    height: var(--btnsize)
+    width: var(--btnsize)
+    border-radius: 50%
+    border: var(--border) solid var(--bordercolor)
+    position: relative
+    background: transparent
+    &::before
+        width: 100%
+        height: 100%
+        top: 50%
+        right: 0
+        bottom: 0
+        left: 50%
+        position: absolute
+        content: ""
+        transform: translateX(-50%) translateY(-50%)
+        background: var(--bordercolor)
+        border-radius: 50%
+        display: block
+        animation: pulse-border 1500ms ease-out infinite
+        @keyframes pulse-border
+            0%
+                transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1)
+                opacity: 0.5
+            100%
+                transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1.5)
+                opacity: 0
+    &::after
+        content: ''
+        position: absolute
+        top: 50%
+        left: 50%
+        translate: -50% -50%
+        width: 0
+        height: 0
+        border-top: calc(var(--btnsize) / 8) solid transparent
+        border-bottom: calc(var(--btnsize) / 8) solid transparent
+        border-left: calc(var(--btnsize) / 5.6) solid var(--playbtncolor)
+
+.news-col
+    display: flex
+    flex-direction: column
+    border-radius: 15px
+    overflow: hidden
+    box-shadow: 0px 3px 8px 0px #0000003D
+    &:has(.figure:is(a):hover, .figcaption .ttl:is(a):hover, .figcaption .read-more-btn:is(a):hover)
+        .figure
+            &::before
+                animation: shine 0.4s linear
+            img
+                transform: scale(1.04)
+                width: 100%
+        .figcaption
+            .ttl
+                color: $primary
+            .desc
+                color: $black
+            .date
+                color: $text
+            .read-more-btn
+                border-color: $primary
+                background: $primary
+                color: $black
+    .figure
+        height: 361px
+        line-height: 0
+        display: block
+        overflow: hidden
+        @include shine
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.65) 100%)
+        img
+            width: 100%
+            height: 100%
+            aspect-ratio: 1.2
+            transition: .5s ease
+            position: relative
+            z-index: -1
+            object-fit: cover
+    .figinfo
+        position: absolute
+        color: white
+        text-align: center
+        width: 100%
+        top: 80%
+        left: 50%
+        -ms-transform: translate(-50%, -50%)
+        transform: translate(-50%, -50%)
+        h5
+            font-weight: 700
+            font-size: 28px
+            line-height: 45px
+            margin-bottom: 10px
+        p
+            font-family: $Poppins
+            font-weight: 500
+            font-size: 16px
+            line-height: 16px
+            color: var(--white)
+            text-align: center
+    .figcaption
+        --pdt: 18px
+        --pdlr: 24px
+        --pdb: -40px
+        --btnsize: 40px
+        --btnmargin: 27px
+        padding: var(--pdt) var(--pdlr) calc(var(--pdb) + var(--btnmargin) + var(--btnsize))
+        position: relative
+        flex: 1
+        .btn-div
+            position: absolute
+            bottom: 0
+            left: 0
+            right: 0
+            bottom: 0
+            z-index: 1
+            padding: 0 var(--pdlr) var(--pdb)
+        .ttl
+            display: block
+            font-size: 22px
+            @include font(600)
+            line-height: 1.5
+            color: $black
+            margin-bottom: 10px
+        .desc, .date
+            @include font(500)
+            transition: .5s ease
+        .desc
+            color: rgb(0 0 0 / .7)
+            margin-bottom: 16px
+        .date
+            color: $primary
+            line-height: 1.375
+
+.product-item
+    &:has(.figure:is(a):hover, .figcaption .dtl-btn:is(a):hover)
+        .figure
+            img
+                transform: scale(1.04)
+        .figcaption
+            .dtl-btn
+                background: $black
+                color: $white
+    .figure
+        display: block
+        line-height: 0
+        img
+            width: 100%
+            transition: 1s ease
+    .figcaption
+        padding-top: 30px
+        text-align: center
+        h4
+            font-size: 32px
+        h5
+            font-size: 24px
+        h4, h5
+            line-height: 1.167
+            @include font(600)
+            margin-bottom: 2rem
+
+.breadcrumps
+    @include media(520)
+        white-space: nowrap
+        width: 100%
+        overflow: hidden
+    li
+        display: inline-block
+        vertical-align: middle
+        position: relative
+        &::before
+            content: '>'
+            position: absolute
+            left: 100%
+            top: 50%
+            translate: 0 -50%
+            font-size: 12px
+            font-family: monospace
+            color: $text
+        &:last-child
+            &::before
+                display: none
+        a
+            color: $text
+            font-size: 14px
+            @include font(500)
+            @include media(520)
+                font-size: 12px
+                text-overflow: ellipsis
+            &.active
+                color: $black
+        &:not(:last-child)
+            position: relative
+            padding-right: 20px
+            @include media(520)
+                padding-right: 8px
+        &:not(:first-child)
+            padding-left: 20px
+            @include media(520)
+                padding-left: 8px
+
+.bg-circle
+    @include bgCircleBlur
+
+.common-slider-1
+    .swiper
+        max-width: calc(100% - 45px)
+        @include media(540)
+            max-width: 100%
+
+.swiper-prev.has-shadow, .swiper-next.has-shadow
+    box-shadow: 0px 1px 3px 1px rgba(60, 64, 67, 0.1490196078), 0px 1px 2px 0px rgba(60, 64, 67, 0.3019607843)
+
+@keyframes scroll
+    0%
+        transform: translateY(10px)
+    50%
+        transform: translateY(20px)
+    100%
+        transform: translateY(10px)
+
+.sticky
+    position: sticky
+    top: 20px
+    z-index: 1
+    @include media(540)
+        position: static
+
+.flex-box
+    display: flex
+
+.grid-box
+    display: grid
+
+.bottom-video
+    position: relative
+    &::before
+        position: absolute
+        left: 0
+        top: 0
+        width: 100%
+        height: 100%
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0) 21.38%, rgba(0, 0, 0, 0.85) 85.52%)
+        content: ""
+    video
+        width: 100%
+        height: 100%
+        display: block
+    .content
+        position: absolute
+        top: 5%
+        left: 50%
+        transform: translateX(-50%)
+        width: 100%
+        text-align: center
+        h2
+            font-size: 12rem
+            color: var(--white)
+            font-family: $Poppins
+            text-transform: uppercase
+            @include media(1366)
+                font-size: 8rem
+            @include media(540)
+                font-size: 32px
+
+// =====================================================
+// BUTTON VARIABLES
+// =====================================================
+
+$btn-padding-y: 10px
+$btn-padding-x: 20px
+$btn-font-size: 14px
+$btn-border-radius: 40px
+$btn-icon-size: 15px
+$btn-gap: 10px
+$btn-transition: 0.25s ease
+
+
+// =====================================================
+// BASE BUTTON
+// =====================================================
+
+.btn
+    position: relative
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    gap: $btn-gap
+
+    padding: $btn-padding-y $btn-padding-x
+
+    font-family: $Poppins
+    font-size: $btn-font-size
+    font-weight: 600
+    line-height: 1
+
+    cursor: pointer
+
+    border-radius: $btn-border-radius
+    border: 1px solid transparent
+
+    overflow: hidden
+    z-index: 1
+
+    transition: color $btn-transition, background-color $btn-transition, border-color $btn-transition
+
+    white-space: nowrap
+    text-decoration: none
+    text-transform: capitalize
+
+    // ---------------------------------------------
+    // Mobile
+    // ---------------------------------------------
+
+    @include media(375)
+        font-size: 11px
+
+
+    // ---------------------------------------------
+    // Hover Background
+    // ---------------------------------------------
+
+    &::before
+        content: ''
+
+        position: absolute
+        inset: 0
+
+        width: 100%
+        height: 100%
+
+        border-radius: inherit
+
+        transform: scaleY(0)
+        transform-origin: bottom
+
+        transition: transform $btn-transition
+
+        z-index: -1
+
+
+    // ---------------------------------------------
+    // SVG ICON
+    // ---------------------------------------------
+
+    svg
+        width: $btn-icon-size
+        height: $btn-icon-size
+
+        flex-shrink: 0
+        display: block
+
+        transition: fill $btn-transition, stroke $btn-transition
+
+        path
+
+            transition: fill $btn-transition, stroke $btn-transition
+
+
+    // ---------------------------------------------
+    // Disabled
+    // ---------------------------------------------
+
+    &:disabled,
+    &.disabled
+        opacity: 0.6
+        cursor: not-allowed
+        pointer-events: none
+
+        &::before
+            transform: scaleY(0)
+
+
+// =====================================================
+// WHITE BUTTON
+// Normal: White background + Black text/icon
+// Hover: Secondary background + White text/icon
+// =====================================================
+
+.btn-white
+    background: var(--white)
+    color: var(--black)
+    border-color: var(--white)
+
+    &::before
+        background: var(--secondary)
+
+    &:hover
+        color: var(--white)
+        border-color: var(--secondary)
+
+        &::before
+            transform: scaleY(1)
+
+
+// =====================================================
+// PRIMARY BUTTON
+// Normal: Primary background + White text/icon
+// Hover: Secondary background + White text/icon
+// =====================================================
+
+.btn-primary
+    background: var(--primary)
+    color: var(--white)
+    border-color: var(--primary)
+
+    &::before
+        background: var(--secondary)
+
+    &:hover
+        color: var(--white)
+        border-color: var(--secondary)
+
+        &::before
+            transform: scaleY(1)
+
+
+// =====================================================
+// SECONDARY BUTTON
+// Normal: Transparent + Secondary text/icon
+// Hover: Secondary background + White text/icon
+// =====================================================
+
+.btn-secondary
+    background: transparent
+    color: var(--secondary)
+    border-color: var(--secondary)
+
+    &::before
+        background: var(--secondary)
+
+    &:hover
+        color: var(--white)
+        border-color: var(--secondary)
+
+        &::before
+            transform: scaleY(1)
+
+
+// =====================================================
+// OUTLINE PRIMARY
+// Normal: Transparent + Primary text/icon
+// Hover: Secondary background + White text/icon
+// =====================================================
+
+.btn-outline-primary
+    background: transparent
+    color: var(--primary)
+    border-color: var(--primary)
+
+    &::before
+        background: var(--secondary)
+
+    &:hover
+        color: var(--white)
+        border-color: var(--secondary)
+
+        &::before
+            transform: scaleY(1)
+
+
+// =====================================================
+// OUTLINE WHITE
+// Normal: Transparent + White text/icon
+// Hover: Secondary background + White text/icon
+// =====================================================
+
+.btn-outline-white
+    background: transparent
+    color: var(--white)
+    border-color: var(--white)
+
+    &::before
+        background: var(--secondary)
+
+    &:hover
+        color: var(--white)
+        border-color: var(--secondary)
+
+        &::before
+            transform: scaleY(1)
+
+
+// =====================================================
+// OUTLINE SECONDARY
+// Normal: Transparent + Text color
+// Hover: Secondary background + White text/icon
+// =====================================================
+
+.btn-outline-secondary
+    background: transparent
+    color: var(--text)
+    border-color: var(--border)
+
+    &::before
+        background: var(--secondary)
+
+    &:hover
+        color: var(--white)
+        border-color: var(--secondary)
+
+        &::before
+            transform: scaleY(1)
+
+
+.swiper-button-lock
+    display: none !important
+
+.blog_card
+    border-radius: 10px
+    overflow: hidden
+    box-shadow: 0px 8px 24px 0px rgba(149, 157, 165, 0.2)
+    background: var(--white)
+    transition: all 0.4s ease
+    display: block
+    height: 100%
+    &:hover
+        .img
+            img
+                transform: scale(1.09)
+    .img
+        position: relative
+        width: 100%
+        overflow: hidden
+        height: 250px
+        img
+            width: 100%
+            display: block
+            transition: all 0.4s ease
+            object-fit: cover
+            @include media(1280)
+                height: 240px
+            @include media(1024)
+                height: 220px
+            @include media(768)
+                height: 200px
+            @include media(540)
+                height: 200px
+       
+    .content
+        padding: 24px
+        @include media(1024)
+            padding: 20px
+        @include media(540)
+            padding: 16px
+        h6
+            font-size: 18px
+            font-weight: 500
+            color: var(--black)
+            margin: 15px 0
+            @include media(1024)
+                font-size: 16px
+                margin: 12px 0
+            @include media(540)
+                font-size: 15px
+                margin: 10px 0
+        p
+            color: var(--text)
+            @include media(540)
+                font-size: 14px
+        .tag
+            padding: 10px 24px
+            border: 1px solid var(--border)
+            border-radius: 50px
+            color: var(--text)
+            text-align: center
+            font-size: 14px
+            line-height: 1
+            width: fit-content
+            margin: 0
+            @include media(1024)
+                padding: 8px 20px
+            @include media(540)
+                padding: 7px 16px
+                font-size: 13px
+
+.speakToConsultant
+    padding: 70px 0
+    color: var(--white)
+    @include media(1024)
+        padding: 50px 0
+    @include media(768)
+        padding: 40px 0
+    .content
+        display: grid
+        grid-template-columns: 1fr 348px
+        gap: 30px
+        align-items: center
+        background: var(--primary)
+        border-radius: 10px
+        padding: 40px
+        @include media(1280)
+            grid-template-columns: 1fr 300px
+        @include media(1024)
+            grid-template-columns: 1fr 260px
+            padding: 30px
+            gap: 25px
+        @include media(768)
+            grid-template-columns: 100%
+            padding: 25px
+        @include media(540)
+        .text
+            h6
+                font-size: 20px
+                color: var(--white)
+                margin-bottom: 12px
+                @include media(540)
+                    font-size: 18px
+            p
+                color: var(--white)
+                opacity: .7
+                @include media(540)
+                    font-size: 14px
+        .btn
+            background: var(--white)
+            color: var(--primary)
+            border: none
+            margin-left: auto
+            @include media(768)
+                justify-content: center
+            @include media(540)
+                margin-left: 0
+                width: 100% !important
+            img
+                filter: none
+            &:hover
+                color: var(--white)
+                img
+                    filter: brightness(0) invert(1)
+
+.comman-banner
+    position: relative
+    color: white
+    overflow: hidden
+    height: 100vh
+    display: flex
+    flex-direction: column
+    justify-content: center
+    @include media(1280)
+        height: 90vh
+    @include media(991)
+        height: 80vh
+    @include media(768)
+        height: 70vh
+    @include media(540)
+        height: 65vh
+    @include media(420)
+        height: 60vh
+    &::before
+        content: ""
+        position: absolute
+        width: 100%
+        height: 100%
+        bottom: 0
+        left: 0
+        z-index: 2
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 14.43%, rgba(0, 0, 0, 0) 58.86%), linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 23.86%)
+    video, img:not(.btn > img)
+        object-fit: cover
+        position: absolute
+        inset: 0
+        width: 100%
+        height: 100%
+        transition: opacity 0.5s ease-in-out
+    .bg-content
+        position: absolute
+        left: 50%
+        bottom: 10%
+        transform: translateX(-50%)
+        width: 100%
+        max-width: 450px
+        margin: 0 auto
+        z-index: 2
+        display: flex
+        flex-direction: column
+        align-items: center
+        gap: 8px
+        padding: 0 16px
+        @include media(1024)
+            max-width: 400px
+        @include media(768)
+            max-width: 360px
+            bottom: 9%
+        @include media(540)
+            bottom: 8%
+            gap: 6px
+            max-width: 100%
+        h1
+            text-align: center
+            text-transform: capitalize
+            color: var(--white)
+            width: 100%
+            max-width: 100%
+            @include media(768)
+                font-size: 32px
+
+        p
+            text-align: center
+            text-transform: capitalize
+            color: var(--white)
+        .btn
+            margin-top: 24px
+            @include media(768)
+                margin-top: 16px
+            @include media(540)
+                margin-top: 10px
+
+
+//* From  */
+.formField
+    position: relative
+    width: 100%
+    input, textarea
+        font-size: 14px
+        height: 42px
+        width: 100%
+        border: none
+        border-bottom: 1px solid #D3D3D3
+        padding: 5px 0
+        background-color: transparent
+        outline: none
+        &:focus ~ .label,
+        &:not(:placeholder-shown) ~ .label
+            top: -12px
+            font-size: 12px
+            color: var(--text)
+            font-weight: 400
+    &::after
+        content: ''
+        position: absolute
+        bottom: 0
+        left: 0
+        height: 2px
+        width: 100%
+        background-color: var(--primary)
+        transform: scaleX(0)
+        transform-origin: left
+        transition: transform 0.3s ease
+    input:focus ~ &::after,
+    input:valid ~ &::after
+        transform: scaleX(1)
+    textarea
+        height: 100px
+    .label
+        position: absolute
+        top: 12px
+        left: 0
+        color: var(--text)
+        transition: all 0.3s ease
+        pointer-events: none
+        font-size: 15px
+ 
+
+.formDate
+    width: fit-content
+    gap: 0px !important
+    .date-range
+        width: fit-content !important
+        font-size: 14px !important
+        font-weight: 400
+        border: none
+        outline: none
+    input::placeholder
+        float: right
+
+.trip_card
+    position: relative
+    background: #FFFFFF
+    border-radius: 10px
+    overflow: hidden
+    display: block
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px
+    transition: transform 0.3s ease, box-shadow 0.3s ease
+
+    &:hover
+        transform: translateY(-4px)
+        box-shadow: 0 24px 48px -20px rgba(17, 24, 39, 0.26)
+
+    // ---------- image ----------
+    .img
+        position: relative
+        height: 200px
+        overflow: hidden
+        display: block
+
+        img
+            width: 100%
+            height: 100%
+            object-fit: cover
+            display: block
+            transition: transform 0.6s ease
+
+        .save
+            position: absolute
+            top: 14px
+            left: 14px
+            z-index: 1
+            padding: 6px 14px
+            border-radius: 999px
+            background: linear-gradient(90deg, #22C1DE 0%, #2E8CF0 100%)
+            color: #fff
+            font-size: 12px
+            font-weight: 700
+            letter-spacing: 0.01em
+            box-shadow: 0 8px 16px -6px rgba(46, 140, 240, 0.55)
+
+        .dots
+            position: absolute
+            bottom: 12px
+            left: 50%
+            transform: translateX(-50%)
+            display: flex
+            gap: 6px
+
+            span
+                width: 6px
+                height: 6px
+                border-radius: 50%
+                background: rgba(255, 255, 255, 0.55)
+
+                &.active
+                    background: #FFFFFF
+
+    &:hover .img img
+        transform: scale(1.05)
+
+    // ---------- content ----------
+    .content
+        padding: 20px 22px 22px
+
+        .rating
+            display: flex
+            align-items: center
+            justify-content: space-between
+            margin-bottom: 10px
+
+            > span
+                font-size: 12px
+                color: #6B7280
+
+            .star
+                display: inline-flex
+                align-items: center
+                gap: 4px
+                font-size: 12px
+                font-weight: 600
+
+                svg
+                    width: 16px
+                    height: 16px
+                    fill: #17A34A
+
+                span
+                    color: #17A34A
+                    font-size: 12px
+
+                em
+                    font-style: normal
+                    color: #9CA3AF
+                    font-weight: 400
+                    margin-left: 2px
+
+        h5 , h3,
+        h3 > a
+            font-size: 14px
+            line-height: 1.3
+            color: var(--text)
+            margin: 0 0 16px
+            font-weight: 500
+            text-align: left
+
+        .innerSave
+            display: flex
+            align-items: center
+            gap: 10px
+            margin-bottom: 4px
+
+            s
+                font-size: 14px
+                color: #9CA3AF
+
+            .saveChip
+                padding: 3px 10px
+                border-radius: 6px
+                background: #E9F9EF
+                color: #17A34A
+                font-size: 12px
+                font-weight: 600
+
+        .price
+            font-size: 18px
+            font-weight: 600
+            color: #111827
+            margin: 0 0 20px
+            text-align: left
+
+        .btns
+            display: flex
+            align-items: center
+            gap: 12px
+
+            .btn-outline-primary
+                // your existing .btn / .btn-outline-primary / .btn-primary
+                // base styles from earlier apply here unchanged
+
+.trip_card2
+  position: relative
+  border-radius: 14px
+  overflow: hidden
+  height: 420px
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px
+  transition: transform 0.3s ease, box-shadow 0.3s ease
+
+  &:hover
+    transform: translateY(-4px)
+    box-shadow: 0 24px 48px -20px rgba(17, 24, 39, 0.4)
+
+  // ---------- image (full-bleed background) ----------
+  .img
+    position: absolute
+    inset: 0
+    height: 100%
+    display: block
+    overflow: hidden
+
+    img
+      width: 100%
+      height: 100%
+      object-fit: cover
+      display: block
+      transition: transform 0.6s ease
+
+    &::after
+      content: ''
+      position: absolute
+      inset: 0
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, .55) 65%, rgba(0, 0, 0, .85) 100%)
+      z-index: 1
+
+    .save
+      position: absolute
+      top: 14px
+      left: 14px
+      z-index: 2
+      padding: 6px 14px
+      border-radius: 999px
+      background: linear-gradient(90deg, #22C1DE 0%, #2E8CF0 100%)
+      color: #fff
+      font-size: 12px
+      font-weight: 700
+      letter-spacing: 0.01em
+      box-shadow: 0 8px 16px -6px rgba(46, 140, 240, 0.55)
+
+    .dots
+      position: absolute
+      bottom: 12px
+      left: 50%
+      transform: translateX(-50%)
+      display: flex
+      gap: 6px
+      z-index: 2
+
+      span
+        width: 6px
+        height: 6px
+        border-radius: 50%
+        background: rgba(255, 255, 255, 0.55)
+
+        &.active
+          background: #FFFFFF
+
+  &:hover .img img
+    transform: scale(1.08)
+
+  // ---------- content (overlaid at bottom) ----------
+  .content
+    position: absolute
+    left: 0
+    right: 0
+    bottom: 0
+    z-index: 2
+    padding: 20px 22px 22px
+
+    .rating
+      display: flex
+      align-items: center
+      justify-content: space-between
+      margin-bottom: 10px
+
+      > span
+        font-size: 12px
+        color: rgba(255, 255, 255, .85)
+
+      .star
+        display: inline-flex
+        align-items: center
+        gap: 4px
+        font-size: 12px
+        font-weight: 600
+
+        svg
+          width: 16px
+          height: 16px
+          fill: #4ADE80
+
+        span
+          color: #4ADE80
+          font-size: 12px
+
+        em
+          font-style: normal
+          color: rgba(255, 255, 255, .7)
+          font-weight: 400
+          margin-left: 2px
+
+ 
+    h3,
+    h3 > a
+        font-size: 16px
+        line-height: 1.3
+        color: #FFFFFF
+        margin: 0 0 14px
+        font-weight: 600
+        text-align: left
+
+    h3
+        &:hover
+            a
+                color: var(--primary)
+
+    .innerSave
+      display: flex
+      align-items: center
+      gap: 10px
+      margin-bottom: 4px
+
+      s
+        font-size: 14px
+        color: rgba(255, 255, 255, .6)
+
+      .saveChip
+        padding: 3px 10px
+        border-radius: 6px
+        background: rgba(74, 222, 128, .15)
+        color: #4ADE80
+        font-size: 12px
+        font-weight: 600
+        backdrop-filter: blur(4px)
+
+    .price
+      font-size: 20px
+      font-weight: 700
+      color: #FFFFFF
+      margin: 0 0 18px
+      text-align: left
+
+    .btns
+      display: flex
+      align-items: center
+      gap: 12px
+
+      .btn-outline-primary
+        background: rgba(255, 255, 255, .12)
+        border: 1px solid rgba(255, 255, 255, .5)
+        backdrop-filter: blur(6px)
+
+        svg
+          stroke: #FFFFFF
+
+        &:hover
+          background: rgba(255, 255, 255, .22)
+
+      .btn-primary
+        background: var(--primary)
+        color: #FFFFFF
+        border: none
+
+
+.trip_card3
+  position: relative
+  border-radius: 18px
+  overflow: hidden
+  height: 360px
+  cursor: pointer
+  display: block
+  box-shadow: rgba(17, 24, 39, .1) 0px 6px 20px 0px
+  transition: transform .35s ease, box-shadow .35s ease
+
+  &:hover
+    transform: translateY(-6px)
+
+    .img img
+      transform: scale(1.06)
+
+    .arrow-btn
+      background: var(--primary)
+      border-color: var(--primary)
+
+      svg
+        color: #FFFFFF
+
+  // ---------- image: full, crisp, minimal darkening ----------
+  .img
+    position: absolute
+    inset: 0
+    width: 100%
+    height: 100%
+    overflow: hidden
+
+    img
+      width: 100%
+      height: 100%
+      object-fit: cover
+      object-position: center
+      display: block
+      transition: transform .6s ease
+
+    &::after
+      content: ''
+      position: absolute
+      inset: 0
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, .75) 100%)
+      z-index: 1
+
+  .rating-badge
+    position: absolute
+    top: 14px
+    right: 14px
+    z-index: 2
+    display: inline-flex
+    align-items: center
+    gap: 4px
+    background: #FFFFFF
+    color: #111827
+    font-size: 12px
+    font-weight: 700
+    padding: 6px 11px
+    border-radius: 30px
+    box-shadow: rgba(17, 24, 39, .15) 0px 4px 10px 0px
+
+    svg
+      width: 13px
+      height: 13px
+      color: #F2A93B
+
+  .content
+    position: absolute
+    left: 0
+    right: 0
+    bottom: 0
+    z-index: 2
+    padding: 20px
+
+    .type
+      font-size: 11px
+      font-weight: 600
+      color: rgba(255, 255, 255, .8)
+      text-transform: uppercase
+      letter-spacing: .6px
+      margin: 0 0 4px
+
+    .place
+      font-family: $Poppins
+      font-size: 24px
+      font-weight: 800
+      color: #FFFFFF
+      line-height: 1.15
+      text-shadow: 0 2px 8px rgba(0, 0, 0, .25)
+      @include font(800)
+
+    .foot
+      display: flex
+      align-items: center
+      justify-content: space-between
+      text-align: left
+      padding: 10px 0
+
+      .price
+        font-size: 16px
+        font-weight: 700
+        color: #FFFFFF
+        margin: 0
+
+        small
+          display: block
+          font-size: 11px
+          font-weight: 500
+          color: rgba(255, 255, 255, .75)
+          text-transform: uppercase
+          letter-spacing: .3px
+          margin-bottom: 2px
+
+      .arrow-btn
+        width: 38px
+        height: 38px
+        border-radius: 50%
+        border: 1.5px solid rgba(255, 255, 255, .6)
+        background: transparent
+        display: flex
+        align-items: center
+        justify-content: center
+        flex-shrink: 0
+        transition: .3s ease
+
+        svg
+          width: 15px
+          height: 15px
+          color: #FFFFFF
+          transition: color .3s ease
+
+.section-divider
+    width: 100%
+    height: 1px
+    margin-bottom: 30px
+    background: var(--border)
+
+
+.journey_card
+    position: relative
+    aspect-ratio: 3 / 3.8
+    border-radius: 20px
+    overflow: hidden
+    cursor: pointer
+    display: block
+    isolation: isolate
+
+    .img
+        position: absolute
+        inset: 0
+
+        img
+            display: block
+            width: 100%
+            height: 100%
+            object-fit: cover
+            transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1)
+
+    &::after
+        content: ""
+        position: absolute
+        inset: 0
+        z-index: 1
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.78) 100%)
+        transition: background 0.4s ease
+
+    &::before
+        content: ""
+        position: absolute
+        inset: 0
+        z-index: 3
+        border: 2px solid transparent
+        border-radius: inherit
+        pointer-events: none
+        transition: border-color 0.35s ease
+
+    .content
+        position: absolute
+        right: 0
+        bottom: 0
+        left: 0
+        z-index: 2
+
+        padding: 24px 22px
+
+        transform: translateY(8px)
+        transition: transform 0.4s ease
+
+        h5
+            margin: 0 0 6px
+            color: var(--white)
+            font-size: 22px
+            font-weight: 700
+            line-height: 1.3
+            letter-spacing: 0.2px
+
+        p
+            display: inline-flex
+            align-items: center
+            gap: 7px
+
+            margin: 0
+
+            color: rgba(255, 255, 255, 0.85)
+
+            font-size: 14px
+            font-weight: 500
+            line-height: 1.4
+
+            &::before
+                content: ""
+                width: 6px
+                height: 6px
+                flex-shrink: 0
+                border-radius: 50%
+                background: var(--primary)
+
+    &:hover
+        .img
+            img
+                transform: scale(1.08)
+
+        &::after
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.08) 25%, rgba(0, 0, 0, 0.88) 100%)
+
+        &::before
+            border-color: var(--primary)
+
+        .content
+            transform: translateY(0)
+
+
+
+.blog_card
+    position: relative
+    background: #fff
+    border-radius: 10px
+    overflow: hidden
+    transition: transform 0.3s ease, box-shadow 0.3s ease
+
+    &:hover
+        transform: translateY(-5px)
+
+        .img
+            img
+                transform: scale(1.05)
+
+        
+
+    .img
+        position: relative
+        overflow: hidden
+
+        img
+            display: block
+            width: 100%
+            height: 100%
+            object-fit: cover
+            transition: transform 0.5s ease
+
+        .tag
+            position: absolute
+            top: 14px
+            left: 14px
+
+            padding: 5px 12px
+
+            color: #1c1b19
+            background: rgba(255, 255, 255, 0.9)
+
+            border-radius: 30px
+
+            font-size: 11px
+            font-weight: 700
+            letter-spacing: 0.3px
+            text-transform: uppercase
+
+    .content
+        padding: 20px
+
+        h4
+            margin: 0 0 8px
+            color: var(--black)
+            font-weight: 700
+            font-size: 16px
+
+        p
+            margin: 5px 0 20px
+            color: var(--text)
+            font-size: 14px
+        .btn
+            img
+                filter: brightness(0) saturate(100%) invert(24%) sepia(85%) saturate(1350%) hue-rotate(190deg) brightness(88%) contrast(94%)
+
+            &:hover
+                img
+                    filter: brightness(0) invert(1)
+.bg-gray
+    background: var(--gray-sec)
+.btn-center
+    display: flex
+    justify-content: center
+    margin-top: 45px
+
+        
+
+.journey_card2
+    position: relative
+    display: flex
+    flex-direction: column
+    background: var(--white)
+    border-radius: 14px
+    overflow: hidden
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08)
+    transition: transform .35s ease, box-shadow .35s ease
+
+    &:hover
+        transform: translateY(-6px)
+
+        .img img
+            transform: scale(1.08)
+
+    .img
+        position: relative
+        width: 100%
+        height: 240px
+        overflow: hidden
+
+        img
+            width: 100%
+            height: 100%
+            object-fit: cover
+            object-position: center
+            transition: transform .5s ease
+
+        &::after
+            content: ''
+            position: absolute
+            inset: 0
+            background: linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0) 55%,
+                rgba(0, 0, 0, 0.35) 100%
+            )
+            pointer-events: none
+
+    .content
+        display: flex
+        flex-direction: column
+        padding: 20px 22px 24px
+
+        h5
+            margin: 0 0 8px
+            font-size: 19px
+            font-weight: 700
+            line-height: 1.3
+            color: var(--black)
+
+        .icon
+            display: flex
+            align-items: center
+            gap: 6px
+            margin-bottom: 12px
+
+            svg
+                flex: 0 0 auto
+                width: 15px
+                height: 15px
+                color: var(--primary)
+
+            p
+                margin: 0
+                font-size: 13px
+                font-weight: 500
+                color: var(--text-light)
+
+        > p
+            margin: 0
+            font-size: 14px
+            line-height: 1.6
+            color: var(--text-light)
+            display: -webkit-box
+            -webkit-line-clamp: 2
+            -webkit-box-orient: vertical
+            overflow: hidden
+.cta-btns
+    margin-top: 30px
+    display: flex
+    align-items: center
+    gap: 12px
+    @include media(540)
+        flex-direction: column
+    a
+        @include media(540)
+          width: 100% !important
+
+
+
+
+// Breadcrumb placement
+.breadcrumb
+    position: absolute
+    top: var(--headerheight)
+    left: 0
+    right: 0
+    z-index: 3
+    padding: 20px 0
+    font-size: 14px
+    line-height: 1.4
+    &.left
+        left: 120px
+
+    ul
+        display: flex
+        align-items: center
+        justify-content: flex-start
+        flex-wrap: wrap
+        gap: 8px
+        margin: 0
+        padding: 0
+        list-style: none
+
+    li
+        display: flex
+        align-items: center
+
+    a
+        color: rgba(255, 255, 255, .75)
+        text-decoration: none
+        font-size: 14px
+        transition: .25s ease
+
+        &:hover
+            color: var(--primary)
+
+        &.active
+            color: var(--primary)
+            font-weight: 600
+
+    .breadcrumb-separator
+        color: rgba(255, 255, 255, .6)
+
+
+    // White background / light breadcrumb
+    &.breadcrumb-light
+        a
+            color: #c6c6c7
+
+            &:hover
+                color: var(--white)
+
+            &.active
+                color: var(--white)
+                font-weight: 600
+
+        .breadcrumb-separator
+            color: #9CA3AF
+
+
+    // Dark background / dark theme
+    &.breadcrumb-dark
+        a
+            color: var(--text)
+
+            &:hover
+                color: var(--text)
+
+            &.active
+                color: var(--text)
+
+        .breadcrumb-separator
+            color: var(--text)
+
+
+    @include media(767)
+        padding: 15px 0
+        font-size: 12px
+        gap: 6px
+
+
+.more-about
+    padding: 70px 0
+
+    @include media(1366)
+        padding: 64px 0
+
+    @include media(1280)
+        padding: 58px 0
+
+    @include media(1024)
+        padding: 50px 0
+
+    @include media(991)
+        padding: 46px 0
+
+    @include media(768)
+        padding: 40px 0
+
+    @include media(540)
+        padding: 40px 0
+
+    &.more-about2
+        padding: 20px 0 0
+
+        @include media(540)
+            padding: 40px 0 0
+
+    .heading
+        width: 100%
+        max-width: 560px
+        margin: 0 auto 45px
+        text-align: center
+
+        @include media(1024)
+            margin: 0 auto 36px
+
+        @include media(768)
+            margin: 0 auto 30px
+
+        @include media(540)
+            margin: 0 auto 40px
+
+        h3
+            margin-bottom: 10px
+
+    .heading_2
+        margin-bottom: 30px
+
+        @include media(540)
+            margin-bottom: 40px
+
+        h3
+            font-size: 30px
+            margin-bottom: 10px
+
+            @include media(1366)
+                font-size: 28px
+
+            @include media(1280)
+                font-size: 26px
+
+            @include media(1024)
+                font-size: 24px
+
+          
+
+    .rte-content
+        max-width: 900px
+        margin: 0 auto
+        color: var(--text)
+        font-size: 15px
+        line-height: 1.8
+        word-wrap: break-word
+        overflow-wrap: break-word
+
+        @include media(540)
+            font-size: 14px
+
+        > *:first-child
+            margin-top: 0
+
+        > *:last-child
+            margin-bottom: 0
+
+        h1, h2, h3, h4, h5, h6
+            color: var(--black)
+            font-weight: 700
+            line-height: 1.3
+            margin: 34px 0 14px
+
+            @include media(768)
+                margin: 28px 0 12px
+
+            @include media(540)
+                margin: 24px 0 10px
+
+        h1
+            font-size: 30px
+
+            @include media(1366)
+                font-size: 28px
+
+            @include media(1024)
+                font-size: 26px
+
+            @include media(768)
+                font-size: 24px
+
+            @include media(540)
+                font-size: 20px
+
+        h2
+            font-size: 26px
+
+            @include media(1366)
+                font-size: 24px
+
+            @include media(1024)
+                font-size: 23px
+
+            @include media(768)
+                font-size: 21px
+
+            @include media(540)
+                font-size: 19px
+
+        h3
+            font-size: 22px
+
+            @include media(1024)
+                font-size: 21px
+
+            @include media(768)
+                font-size: 19px
+
+            @include media(540)
+                font-size: 18px
+
+        h4
+            font-size: 18px
+
+            @include media(768)
+                font-size: 17px
+
+            @include media(540)
+                font-size: 16px
+
+        h5
+            font-size: 16px
+
+            @include media(540)
+                font-size: 15px
+
+        h6
+            font-size: 15px
+            text-transform: uppercase
+            letter-spacing: .03em
+
+            @include media(540)
+                font-size: 14px
+
+        p , p > a
+            margin: 0 0 18px
+            color: var(--text)
+
+            @include media(540)
+                font-size: 14px
+                margin: 0 0 14px
+        p > a
+            color: var(--primary)
+        a
+            color: var(--primary)
+            font-weight: 600
+            text-decoration: underline
+            text-decoration-color: rgba(17,76,158,.3)
+            text-underline-offset: 2px
+            transition: color .2s ease
+            word-break: break-word
+
+            &:hover
+                color: var(--secondary)
+
+        strong, b
+            color: var(--black)
+            font-weight: 700
+
+        em, i
+            font-style: italic
+
+        small
+            font-size: 12px
+            color: var(--text-light)
+
+        mark
+            background: rgba(255, 214, 51, .35)
+            padding: 1px 4px
+            border-radius: 3px
+
+        ul, ol
+            margin: 0 0 20px
+            padding-left: 22px
+
+            @include media(540)
+                margin: 0 0 16px
+                padding-left: 18px
+
+            li
+                margin-bottom: 10px
+                padding-left: 4px
+
+            ul, ol
+                margin: 10px 0 0
+
+        ul
+            list-style: none
+            padding-left: 4px
+            li > a
+                @include media(540)
+                    font-size: 14px
+
+            li 
+                position: relative
+                padding-left: 20px
+
+                @include media(540)
+                    padding-left: 16px
+                    font-size: 14px
+
+                &::before
+                    content: ''
+                    position: absolute
+                    left: 0
+                    top: 9px
+                    width: 6px
+                    height: 6px
+                    border-radius: 50%
+                    background: var(--primary)
+
+        ol
+            list-style: none
+            counter-reset: rte-counter
+
+            li
+                counter-increment: rte-counter
+                position: relative
+                padding-left: 24px
+
+                @include media(540)
+                    padding-left: 20px
+
+                &::before
+                    content: counter(rte-counter) '.'
+                    position: absolute
+                    left: 0
+                    font-weight: 700
+                    color: var(--primary)
+                    font-size: 13px
+
+        blockquote
+            margin: 24px 0
+            padding: 18px 24px
+            border-left: 4px solid var(--primary)
+            background: var(--gray-sec)
+            border-radius: 0 12px 12px 0
+            font-style: italic
+            color: var(--black)
+
+            @include media(768)
+                padding: 16px 20px
+
+            @include media(540)
+                margin: 40px 0
+                padding: 14px 16px
+
+            p:last-child
+                margin-bottom: 0
+
+        hr
+            border: none
+            border-top: 1px solid var(--border)
+            margin: 32px 0
+
+            @include media(540)
+                margin: 40px 0
+
+        img
+            max-width: 100%
+            height: auto
+            display: block
+            border-radius: 14px
+            margin: 24px 0
+
+            @include media(540)
+                border-radius: 10px
+                margin: 40px 0
+
+        figure
+            margin: 24px 0
+
+            @include media(540)
+                margin: 40px 0
+
+            figcaption
+                margin-top: 8px
+                font-size: 12.5px
+                color: var(--text-light)
+                text-align: center
+
+        table
+            width: 100%
+            border-collapse: collapse
+            margin: 24px 0
+            font-size: 14px
+            overflow: hidden
+            border-radius: 12px
+            border: 1px solid var(--border)
+
+            @include media(540)
+                margin: 40px 0
+                font-size: 13px
+
+            th, td
+                padding: 12px 16px
+                text-align: left
+                border-bottom: 1px solid var(--border)
+
+                @include media(540)
+                    padding: 10px 12px
+
+            th
+                background: var(--gray)
+                font-weight: 700
+                color: var(--black)
+
+            tr:last-child td
+                border-bottom: none
+
+        code
+            background: var(--gray)
+            padding: 2px 6px
+            border-radius: 4px
+            font-size: 13px
+            color: var(--secondary)
+
+        pre
+            background: var(--black)
+            color: var(--white)
+            padding: 18px 20px
+            border-radius: 12px
+            overflow-x: auto
+            margin: 24px 0
+
+            @include media(540)
+                padding: 14px 16px
+                margin: 40px 0
+
+            code
+                background: none
+                color: inherit
+                padding: 0
+
+        .btn
+            display: inline-flex
+            margin: 8px 8px 8px 0
+
+        iframe
+            width: 100%
+            border: 0
+            border-radius: 12px
+            margin: 24px 0
+
+            @include media(540)
+                margin: 40px 0
+
+    @media (max-width: 640px)
+        padding: 60px 0
+
+        .rte-content
+            font-size: 14px
+
+            h1
+                font-size: 24px
+            h2
+                font-size: 21px
+            h3
+                font-size: 19px
+            h4
+                font-size: 16px
+
+            table
+                display: block
+                overflow-x: auto
+
+// ==========================================
+// TABLET
+// ==========================================
+
+@include media(1366)
+
+    .internal-linking-sec
+        padding: 65px 0
+
+@include media(1280)
+
+    .internal-linking-sec
+        padding: 62px 0
+
+@include media(1024)
+
+    .internal-linking-sec
+        padding: 60px 0
+
+        .internal-linking-content
+            padding: 32px
+
+@include media(991)
+
+    .internal-linking-sec
+        padding: 60px 0
+
+        .internal-linking-content
+            padding: 30px
+
+@include media(768)
+
+    .internal-linking-sec
+        padding: 50px 0
+
+        .internal-linking-content
+            padding: 26px 20px
+
+
+// ==========================================
+// MOBILE
+// ==========================================
+
+@include media(767)
+
+    .internal-linking-sec
+        padding: 50px 0
+
+        .heading
+            margin-bottom: 30px
+
+            h3
+                font-size: 25px
+
+            p
+                font-size: 13px
+
+        .internal-linking-content
+            padding: 25px 20px
+            border-radius: 14px
+
+            h2
+                font-size: 23px
+
+            h3
+                margin-top: 24px
+                font-size: 19px
+
+            p
+                font-size: 13px
+                line-height: 1.7
+
+            li
+                font-size: 13px
+
+@include media(540)
+
+    .internal-linking-sec
+        padding: 40px 0
+
+        .heading
+            margin-bottom: 40px
+
+        .internal-linking-content
+            padding: 40px 16px
+
+
+// ==========================================
+// SMALL MOBILE
+// ==========================================
+
+@include media(480)
+
+    .internal-linking-sec
+        padding: 40px 0
+
+        .heading
+            h3
+                font-size: 22px
+
+        .internal-linking-content
+            padding: 22px 16px
+
+            h2
+                font-size: 21px
+
+            h3
+                font-size: 18px
+
+@include media(420)
+
+    .internal-linking-sec
+        .heading
+            h3
+                font-size: 20px
+
+        .internal-linking-content
+            h2
+                font-size: 19px
+
+            h3
+                font-size: 17px
+
+
+
+.related-tour-package,.tour-package-near-h1
+    padding: 70px 0
+    background: var(--gray-sec)
+
+    @include media(1366)
+        padding: 64px 0
+
+    @include media(1280)
+        padding: 58px 0
+
+    @include media(1024)
+        padding: 50px 0
+
+    @include media(991)
+        padding: 46px 0
+
+    @include media(768)
+        padding: 40px 0
+
+    @include media(540)
+        padding: 40px 0
+
+    .heading
+        width: 100%
+        max-width: 480px
+        margin: 0 auto
+        text-align: center
+
+        h3
+            margin-bottom: 10px
+
+    .swiper-wrap
+        margin-top: 45px
+        position: relative
+
+        @include media(1024)
+            margin-top: 36px
+
+        @include media(768)
+            margin-top: 30px
+
+        @include media(540)
+            margin-top: 24px
+
+        .relatedPkgSlider
+            margin: 0 20px
+            padding: 10px
+
+            @include media(768)
+                margin: 0 10px
+
+            @include media(540)
+                margin: 0
+                padding: 6px
+
+        .swiper-group
+            position: absolute
+            width: 100%
+            top: 50%
+            left: 50%
+            transform: translate(-50%,-50%)
+            display: flex
+            justify-content: space-between
+            align-items: center
+            gap: 10px
+            z-index: 2
+
+            @include media(768)
+                display: none
+
+            .swiper-button-lock
+                display: none !important
+
+            button
+                width: 45px
+                height: 45px
+                border-radius: 50%
+                background: var(--white)
+                display: flex
+                justify-content: center
+                align-items: center
+                box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px
+
+                @include media(1024)
+                    width: 40px
+                    height: 40px
+
+                svg
+                    width: 20px
+                    height: 20px
+
+                    @include media(1024)
+                        width: 18px
+                        height: 18px
+
+                    path
+                        fill: var(--primary)
+
+                &:hover
+                    background: var(--primary)
+
+                    svg path
+                        fill: var(--white)
+
+            .btn-next
+                transform: rotate(180deg)
+
+    .center-btn
+        margin-top: 40px
+        display: flex
+        justify-content: center
+
+        @include media(768)
+            margin-top: 32px
+
+        @include media(540)
+            margin-top: 40px
+
+    @media (max-width: 640px)
+        padding: 50px 0
+
+.tour-package-near-h1
+    background: var(--white)
+// ================================================
+// GROUP OFFER BANNER — diagonal split promo
+// ================================================
+.group-offer-banner
+  padding: 70px 0
+
+  @include media(1280)
+    padding: 60px 0
+  @include media(1024)
+    padding: 50px 0
+  @include media(991)
+    padding: 45px 0
+  @include media(768)
+    padding: 30px 16px
+  @include media(540)
+    padding: 24px 14px
+  @include media(420)
+    padding: 20px 12px
+
+  &__inner
+    position: relative
+    display: flex
+    align-items: center
+    border-radius: 20px
+    overflow: hidden
+    min-height: 350px
+    background: var(--gradient-b)
+
+    @include media(1024)
+      min-height: 320px
+    @include media(991)
+      min-height: 300px
+    @include media(768)
+      flex-direction: column-reverse
+      align-items: stretch
+      min-height: 0
+      border-radius: 16px
+    @include media(540)
+      border-radius: 14px
+    @include media(420)
+      border-radius: 12px
+
+  &__content
+    position: relative
+    z-index: 3
+    flex: 0 0 50%
+    max-width: 540px
+    padding: 44px 40px
+
+    @include media(1024)
+      padding: 38px 32px
+    @include media(991)
+      flex: 0 0 55%
+      padding: 36px 30px
+    @include media(768)
+      flex: 1
+      max-width: 100%
+      padding: 32px 24px
+      text-align: center
+    @include media(540)
+      padding: 26px 20px
+    @include media(420)
+      padding: 22px 16px
+
+    &__badge
+      display: inline-flex
+      align-items: center
+      gap: 6px
+      padding: 6px 14px
+      border-radius: 50px
+      background: rgba(255, 255, 255, .15)
+      backdrop-filter: blur(4px)
+      color: var(--white) !important
+      font-size: 12px
+      font-weight: 700
+      letter-spacing: .4px
+      text-transform: uppercase
+      margin-bottom: 16px
+
+      @include media(768)
+        margin-bottom: 14px
+      @include media(540)
+        font-size: 11px
+        padding: 5px 12px
+        margin-bottom: 12px
+      @include media(420)
+        font-size: 10px
+        padding: 4px 10px
+
+      svg
+        width: 14px
+        height: 14px
+
+        @include media(540)
+          width: 12px
+          height: 12px
+
+    h3
+      font-size: 28px
+      font-weight: 800
+      line-height: 1.3
+      color: var(--white)
+      margin-bottom: 14px
+
+      @include media(1024)
+        font-size: 25px
+      @include media(991)
+        font-size: 23px
+      @include media(768)
+        font-size: 22px
+        margin-bottom: 12px
+      @include media(540)
+        font-size: 20px
+        margin-bottom: 10px
+      @include media(420)
+        font-size: 18px
+
+    p
+      font-size: 14.5px
+      line-height: 1.6
+      color: rgba(255, 255, 255, .92)
+      margin-bottom: 22px
+      max-width: 420px
+
+      @include media(991)
+        max-width: 380px
+      @include media(768)
+        max-width: 420px
+        margin-left: auto
+        margin-right: auto
+        margin-bottom: 18px
+      @include media(540)
+        font-size: 13px
+        margin-bottom: 16px
+      @include media(420)
+        font-size: 12.5px
+        margin-bottom: 14px
+
+    .group-offer-banner__perks
+      list-style: none
+      margin: 0 0 28px
+      padding: 0
+      display: flex
+      flex-direction: column
+      gap: 10px
+
+      @include media(768)
+        align-items: center
+        margin: 0 0 22px
+      @include media(540)
+        gap: 8px
+        margin: 0 0 18px
+      @include media(420)
+        gap: 6px
+        margin: 0 0 16px
+
+      li
+        position: relative
+        padding-left: 26px
+        font-size: 13.5px
+        font-weight: 600
+        color: var(--white)
+
+        @include media(540)
+          padding-left: 22px
+          font-size: 12.5px
+        @include media(420)
+          padding-left: 20px
+          font-size: 12px
+
+        &::before
+          content: ""
+          position: absolute
+          left: 0
+          top: 3px
+          width: 16px
+          height: 16px
+          border-radius: 50%
+          background: var(--white)
+          -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/%3E%3C/svg%3E") center / contain no-repeat
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/%3E%3C/svg%3E") center / contain no-repeat
+
+          @include media(540)
+            width: 14px
+            height: 14px
+            top: 2px
+
+    .group-offer-banner__actions
+      display: flex
+      align-items: center
+      gap: 14px
+      flex-wrap: wrap
+      margin-top: 30px
+
+      @include media(768)
+        justify-content: center
+      @include media(540)
+        gap: 10px
+        flex-direction: column
+      @include media(420)
+        gap: 8px
+
+      .btn
+        display: inline-flex
+        align-items: center
+        white-space: nowrap
+        @include media(540)
+          width: 100%
+
+
+
+  &__media
+    position: absolute
+    inset: 0
+    z-index: 1
+    display: flex
+    justify-content: flex-end
+
+    @include media(768)
+      position: relative
+      height: 220px
+
+
+  &__img
+    position: relative
+    height: 100%
+    overflow: hidden
+
+    img
+      width: 100%
+      height: 100%
+      object-fit: cover
+      display: block
+
+    // -------- main (left-ish) photo, clipped diagonally on the right edge --------
+    &--main
+      flex: 0 0 62%
+      clip-path: polygon(0 0, 100% 0, 88% 100%, 0% 100%)
+
+      @include media(991)
+        flex: 0 0 58%
+      @include media(768)
+        flex: 0 0 55%
+        clip-path: none
+
+    // -------- secondary photo, peeking from the right --------
+    &--secondary
+      flex: 0 0 38%
+      margin-left: -6%
+      clip-path: polygon(18% 0, 100% 0, 100% 100%, 0% 100%)
+
+      @include media(991)
+        flex:1
+      @include media(768)
+        margin-left: 0
+        clip-path: none
+
+// Standalone rule — kept as-is
+.group-offer-banner__badge
+  color: var(--white)
+  display: inline-block
+  margin-bottom: 5px
+
+  @include media(540)
+    margin-bottom: 4px
+
+
+.seo-links-sec
+  padding: 60px 0
+  background: var(--gray-sec)
+
+  @include media(991)
+    padding: 45px 0
+
+  @include media(767)
+    padding: 35px 0
+
+  .heading
+    max-width: 354px
+    margin: 0 auto 35px
+    text-align: center
+
+    h3
+      margin: 0 0 8px
+
+    p
+      max-width: 520px
+      margin: 0 auto
+      font-size: 13px
+      line-height: 1.6
+      color: #737373
+
+      @include media(576)
+        font-size: 12px
+
+
+  .seo-links-wrapper
+    max-width: 900px
+    margin: 0 auto
+    display: flex
+    flex-direction: column
+    gap: 24px
+
+
+    .seo-link-block
+      background: #fff
+      border: 1px solid rgba(0, 0, 0, .07)
+      border-radius: 12px
+      padding: 20px
+
+      @include media(576)
+        padding: 16px 15px
+
+      h4
+        margin: 0 0 14px
+        font-size: 15px
+        line-height: 1.4
+        font-weight: 600
+        color: #222
+
+        @include media(576)
+          font-size: 13px
+          margin-bottom: 10px
+
+
+    .seo-link-wrap
+      display: flex
+      flex-wrap: wrap
+      align-items: center
+      column-gap: 0
+      row-gap: 8px
+
+
+      a
+        position: relative
+        display: inline-block
+        padding-right: 14px
+        margin-right: 12px
+        font-size: 11px
+        line-height: 1.5
+        font-weight: 400
+        color: #777
+        text-decoration: none
+        transition: color .2s ease
+
+        &::after
+          content: ""
+          position: absolute
+          top: 50%
+          right: 0
+          width: 3px
+          height: 3px
+          border-radius: 50%
+          background: #aaa
+          transform: translateY(-50%)
+
+        &:hover
+          color: var(--primary)
+          text-decoration: underline
+
+        &:last-child
+          padding-right: 0
+          margin-right: 0
+
+          &::after
+            display: none
+
+
+  @include media(767)
+
+    .seo-links-wrapper
+      gap: 18px
+
+    .seo-links-wrapper
+      .seo-link-wrap
+        row-gap: 7px
+
+        a
+          font-size: 10px
+          padding-right: 11px
+          margin-right: 9px
+
+
+  @include media(480)
+
+    .seo-links-wrapper
+      .seo-link-wrap
+        display: block
+
+        a
+          display: inline
+          margin-right: 6px
+          padding-right: 9px
+          font-size: 10px
+
+          &::after
+            top: auto
+            right: 0
+            bottom: 3px
+            transform: none

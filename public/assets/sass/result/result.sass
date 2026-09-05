@@ -1,0 +1,2256 @@
+@import '../_common'
+
+header
+  background: var(--primary)
+main
+    overflow-x: clip
+    overflow-y: visible
+.search-result-page
+  .breadcrumb.left
+    @include media(991)
+      left: 18px
+
+
+  // ================= HERO =================
+  .sec-hero
+    position: relative
+    margin-top: calc(var(--headerheight) - 10px)
+    padding: 70px 0
+
+  .sec-hero-bg
+    position: absolute
+    inset: 0
+    z-index: 0
+
+    img
+      width: 100%
+      height: 100%
+      object-fit: cover
+
+  .sec-hero-overlay
+    position: absolute
+    inset: 0
+    background: linear-gradient(
+      180deg,
+      rgba(15, 23, 42, .78) 0%,
+      rgba(15, 23, 42, .55) 55%,
+      rgba(15, 23, 42, .82) 100%
+    )
+
+  .sec-hero .container
+    position: relative
+    z-index: 1
+
+  .sec-hero-head
+    margin-bottom: 18px
+
+    @include media(540)
+      margin-bottom: 14px
+
+    h1
+      margin: 0 0 6px
+      color: var(--white)
+      font-size: 24px
+      font-weight: 700
+      line-height: 1.3
+
+      @include media(540)
+        font-size: 21px
+
+      @include media(420)
+        font-size: 19px
+
+    p
+      margin: 0
+      max-width: 560px
+      color: rgba(255, 255, 255, .85)
+      font-size: 13.5px
+      line-height: 1.6
+
+      @include media(420)
+        font-size: 12.5px
+
+  .sec-hero-form
+    display: grid
+    grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr)) auto
+    align-items: center
+    gap: 12px
+
+    @include media(1024)
+      grid-template-columns: 1fr 1fr 1fr
+      gap: 10px
+
+    @include media(991)
+      grid-template-columns: 1fr 1fr
+      gap: 10px
+      display: none
+
+    @include media(576)
+      grid-template-columns: 1fr
+
+    @include media(420)
+      gap: 8px
+
+    .search-field
+      display: flex
+      align-items: center
+      gap: 8px
+      height: 48px
+      padding: 0 14px
+      border: 1px solid transparent
+      border-radius: 10px
+      background: var(--white)
+      box-shadow: 0 10px 30px -12px rgba(15, 23, 42, .4)
+
+      @include media(420)
+        height: 46px
+        padding: 0 12px
+
+      svg
+        flex-shrink: 0
+        color: var(--text)
+
+      input
+        width: 100%
+        height: 100%
+        padding: 0
+        border: 0
+        outline: none
+        background: transparent
+        color: var(--black)
+        font-family: inherit
+        font-size: 13.5px
+
+        @include media(420)
+          font-size: 13px
+
+    .select-field
+      --inputsize: 48px
+      height: 48px
+
+      @include media(420)
+        --inputsize: 46px
+        height: 46px
+
+      .custom-select
+        height: 100%
+        border-radius: 10px
+        box-shadow: 0 10px 30px -12px rgba(15, 23, 42, .4)
+        border-color: transparent
+
+  .sec-hero-search
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    gap: 8px
+    height: 48px
+    white-space: nowrap
+
+    @include media(576)
+      width: 100%
+
+    @include media(420)
+      height: 46px
+
+
+  // ================= RESULT HEADER =================
+  .sec-a
+    padding: 24px 0 22px
+    border-bottom: 1px solid var(--border)
+
+    @include media(420)
+      padding: 20px 0 18px
+
+  .sec-a-top
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 24px
+    flex-wrap: wrap
+
+    @include media(540)
+      gap: 16px
+
+  .sec-a-heading
+    h2
+      margin: 0 0 6px
+      color: var(--black)
+      font-size: 22px
+      font-weight: 700
+      line-height: 1.3
+
+      @include media(540)
+        font-size: 19px
+
+      @include media(420)
+        font-size: 18px
+
+    p
+      margin: 0
+      max-width: 560px
+      color: var(--text)
+      font-size: 13.5px
+      line-height: 1.6
+
+      @include media(420)
+        font-size: 12.5px
+
+  .sec-a-modify
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    gap: 8px
+    flex-shrink: 0
+    white-space: nowrap
+
+    @include media(540)
+      width: 100%
+      justify-content: flex-start
+
+  .sec-a-summary
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 16px
+    flex-wrap: wrap
+    margin-top: 18px
+
+    @include media(540)
+      margin-top: 14px
+
+  .result-count
+    margin: 0
+    color: var(--black)
+    font-size: 14px
+    font-weight: 600
+
+    @include media(420)
+      font-size: 13px
+
+  .search-tags
+    display: flex
+    align-items: center
+    gap: 8px
+    flex-wrap: wrap
+    margin: 0
+    padding: 0
+    list-style: none
+
+    li
+      display: inline-flex
+      align-items: center
+      padding: 6px 12px
+      border-radius: 30px
+      background: color-mix(in srgb, var(--primary) 8%, transparent)
+      color: var(--primary)
+      font-size: 12px
+      font-weight: 600
+      line-height: 1
+      white-space: nowrap
+
+      @include media(420)
+        padding: 5px 10px
+        font-size: 11px
+
+
+  // ================= CHIPS =================
+  .sec-b
+    padding: 14px 0
+    border-bottom: 1px solid var(--border)
+
+    @include media(420)
+      padding: 12px 0
+
+  .sec-b-row
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 16px
+
+    @include media(420)
+      gap: 10px
+
+  .chip-list
+    display: flex
+    align-items: center
+    gap: 8px
+    flex-wrap: wrap
+    margin: 0
+    padding: 0
+    list-style: none
+
+    @include media(576)
+      flex-wrap: nowrap
+      overflow-x: auto
+      padding-bottom: 2px
+      -webkit-overflow-scrolling: touch
+
+      &::-webkit-scrollbar
+        display: none
+
+  .chip
+    display: inline-flex
+    align-items: center
+    gap: 7px
+    min-height: 34px
+    padding: 7px 12px
+    border: 1px solid var(--border)
+    border-radius: 30px
+    background: var(--white)
+    color: var(--black)
+    font-size: 12.5px
+    font-weight: 500
+    line-height: 1
+    white-space: nowrap
+    cursor: pointer
+    transition: all .25s ease
+
+    @include media(420)
+      min-height: 30px
+      padding: 6px 10px
+      font-size: 11.5px
+
+    svg
+      width: 14px
+      height: 14px
+      flex-shrink: 0
+      color: var(--text)
+
+    &:hover
+      border-color: var(--primary)
+      color: var(--primary)
+
+      svg
+        color: var(--primary)
+
+  .clear-all-btn
+    flex-shrink: 0
+    padding: 0
+    border: 0
+    background: transparent
+    color: var(--primary)
+    font-size: 12.5px
+    font-weight: 600
+    white-space: nowrap
+    cursor: pointer
+
+    @include media(420)
+      font-size: 11.5px
+
+
+  // ================= MAIN LAYOUT =================
+  .sec-c
+    padding: 32px 0 60px
+
+    @include media(1024)
+      padding: 28px 0 50px
+
+    @include media(540)
+      padding: 24px 0 40px
+
+  .sec-c-layout
+    display: grid
+    grid-template-columns: 270px minmax(0, 1fr)
+    align-items: start
+    gap: 30px
+
+    @include media(1152)
+      grid-template-columns: 250px minmax(0, 1fr)
+      gap: 24px
+
+    @include media(991)
+      display: block
+
+  // ================= FILTER SIDEBAR — desktop sticky, mobile off-canvas drawer =================
+  .sec-c-sidebar
+    position: sticky
+    top: calc(var(--headerheight) + 20px)
+    min-width: 0
+
+    @include media(991)
+      position: fixed
+      top: 0
+      left: 0
+      z-index: 999999
+      display: flex
+      flex-direction: column
+      width: 100%
+      max-width: 360px
+      height: 100%
+      overflow: hidden
+      background: var(--white)
+      box-shadow: 0 0 40px rgba(0, 0, 0, .18)
+      transform: translateX(-100%)
+      transition: transform .4s ease
+      padding: 0
+
+      &.is-open
+        transform: translateX(0)
+
+    @include media(420)
+      max-width: 100%
+
+    .filter-panel
+      padding: 20px
+      border: 1px solid var(--border)
+      border-radius: 14px
+      background: var(--white)
+
+      @include media(991)
+        flex: 1
+        min-height: 0
+        overflow-y: auto
+        padding: 24px 22px
+        border: 0
+        border-radius: 0
+        background: transparent
+
+        @include scrollbar(6px, var(--white), #5e5e5e, 8px)
+
+      @include media(420)
+        padding: 20px 18px
+
+  .filter-panel-head
+    position: relative
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 12px
+    margin-bottom: 4px
+
+    h4
+      margin: 0
+      color: var(--black)
+      font-size: 16px
+      font-weight: 700
+      line-height: 1.3
+
+    @include media(991)
+      padding-bottom: 16px
+      margin-bottom: 12px
+      border-bottom: 1px solid var(--border)
+
+  .filter-panel-close
+    display: none
+
+    @include media(991)
+      display: flex
+      align-items: center
+      justify-content: center
+      width: 32px
+      height: 32px
+      flex-shrink: 0
+      padding: 0
+      border: 0
+      border-radius: 50%
+      background: var(--gray-sec)
+      color: var(--black)
+      cursor: pointer
+
+      svg
+        width: 18px
+        height: 18px
+
+  .filter-panel-apply
+    display: none
+
+    @include media(991)
+      display: block
+      flex-shrink: 0
+      width: 100%
+      padding: 16px 22px
+      background: var(--white)
+      border-top: 1px solid var(--border)
+
+      .btn
+        width: 100%
+
+    @include media(420)
+      padding: 14px 18px
+
+  .mobile-toolbar
+    display: none
+    align-items: center
+    gap: 10px
+    margin-bottom: 18px
+
+    @include media(991)
+      display: flex
+
+    @include media(420)
+      margin-bottom: 14px
+      gap: 8px
+
+  .mobile-toolbar-btn
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    gap: 7px
+    flex: 1
+    min-height: 42px
+    padding: 9px 12px
+    border: 1px solid var(--border)
+    border-radius: 10px
+    background: var(--white)
+    color: var(--black)
+    font-size: 13px
+    font-weight: 600
+    cursor: pointer
+
+    @include media(420)
+      min-height: 40px
+      font-size: 12.5px
+
+  .mobile-toolbar
+    .mobile-sort-field
+      flex: 1
+      display: flex
+      align-items: center
+
+      label
+        display: none
+
+      .select-field
+        flex: 1
+        --inputsize: 42px
+        --paddingleftright: 12px
+        --labelfontbefore: 12.5px
+
+        @include media(420)
+          --inputsize: 40px
+
+        .custom-select
+          height: var(--inputsize)
+          border-radius: 10px
+          background: var(--white)
+          border-color: var(--border)
+
+  // ================= SIDEBAR OVERLAY (mobile only) =================
+  .sidebar-overlay
+    position: fixed
+    inset: 0
+    z-index: 999998
+    background: rgba(0, 0, 0, .5)
+    opacity: 0
+    visibility: hidden
+    transition: opacity .35s ease, visibility .35s ease
+
+    &.is-open
+      opacity: 1
+      visibility: visible
+
+  .results-head
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 20px
+    margin-bottom: 20px
+
+    @include media(576)
+      align-items: flex-start
+      flex-direction: column
+      gap: 12px
+
+    @include media(420)
+      margin-bottom: 16px
+
+    .sort-field
+      @include media(991)
+        display: none
+
+  .results-count
+    margin: 0
+    color: var(--black)
+    font-size: 15px
+    font-weight: 700
+    line-height: 1.4
+
+    @include media(420)
+      font-size: 14px
+
+  .sort-field
+    position: relative
+    display: flex
+    align-items: center
+    gap: 8px
+
+    label
+      color: var(--text)
+      font-size: 13px
+      white-space: nowrap
+
+    select
+      display: none !important
+
+    .custom-select
+      --inputsize: 38px
+      min-width: 170px
+
+      @include media(420)
+        min-width: 150px
+
+
+  // ================= SELECT-FIELD / CUSTOM SELECT =================
+  .select-field
+    position: relative
+    flex: 1
+    --inputsize: 52px
+    --paddingleftright: 15px
+    --labelfontbefore: 14px
+    --font: 400
+
+    select
+      display: none !important
+
+    .custom-select
+      position: relative
+      width: 100%
+      height: var(--inputsize)
+      display: flex
+      align-items: center
+      padding: 0 var(--paddingleftright)
+      border: 1px solid var(--border)
+      border-radius: 8px
+      background: var(--gray-sec)
+      cursor: pointer
+      transition: all .25s ease
+
+      &::after
+        content: "\f107"
+        font-family: "Font Awesome 6 Free"
+        font-weight: 900
+        position: absolute
+        right: var(--paddingleftright)
+        top: 50%
+        transform: translateY(-50%)
+        font-size: 12px
+        color: var(--text-light)
+        pointer-events: none
+        transition: transform .2s ease
+
+      &.open
+        border-color: var(--primary)
+        background: var(--white)
+
+        &::after
+          transform: translateY(-50%) rotate(180deg)
+
+        .list
+          display: block
+
+      .current
+        width: 100%
+        font-size: var(--labelfontbefore)
+        font-weight: var(--font)
+        color: var(--black)
+        white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+        padding-right: 18px
+
+      .list
+        display: none
+        position: absolute
+        top: calc(100% + 6px)
+        left: 0
+        right: 0
+        z-index: 10
+        max-height: 240px
+        overflow-y: auto
+        margin: 0
+        padding: 6px
+        list-style: none
+        background: var(--white)
+        border: 1px solid var(--border)
+        border-radius: 8px
+        box-shadow: 0 15px 40px rgba(0, 0, 0, .18)
+
+        .option
+          padding: 10px 12px
+          font-size: 14px
+          color: var(--black)
+          border-radius: 6px
+          cursor: pointer
+          transition: background .15s ease
+
+          &:hover,
+          &.focus
+            background: var(--gray-sec)
+
+          &.selected
+            color: var(--primary)
+            font-weight: 600
+
+  // ================= PACKAGE LIST =================
+  .package-list
+    display: flex
+    flex-direction: column
+    gap: 20px
+
+    @include media(420)
+      gap: 16px
+
+
+  // ================= TRIP CARD =================
+  .trip-card
+    display: grid
+    grid-template-columns: 290px minmax(0, 1fr)
+    min-height: 250px
+    overflow: hidden
+    border: 1px solid var(--border)
+    border-radius: 16px
+    background: var(--white)
+    transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease
+
+    &.trip-card--hidden
+      display: none
+
+    &:hover
+      transform: translateY(-3px)
+      border-color: color-mix(in srgb, var(--primary) 25%, var(--border))
+      box-shadow: 0 16px 35px -18px rgba(15, 23, 42, .25)
+
+      .trip-card__media img
+        transform: scale(1.06)
+
+      .trip-card__title h5
+        color: var(--primary)
+
+    @include media(1024)
+      grid-template-columns: 240px minmax(0, 1fr)
+
+    @include media(768)
+      grid-template-columns: 1fr
+
+    @include media(420)
+      border-radius: 12px
+
+
+  .trip-card__media
+    position: relative
+    display: block
+    height: 270px
+    overflow: hidden
+    background: var(--gray-sec)
+
+    @include media(1024)
+      height: 100%
+      min-height: 100%
+
+    @include media(768)
+      height: 240px
+      min-height: 240px
+
+    @include media(576)
+      height: 210px
+      min-height: 210px
+
+    @include media(420)
+      height: 190px
+      min-height: 190px
+
+    img
+      display: block
+      width: 100%
+      height: 100%
+      object-fit: cover
+      object-position: center
+      transition: transform .5s ease
+
+    &::after
+      content: ""
+      position: absolute
+      inset: auto 0 0
+      height: 35%
+      background: linear-gradient(to top, rgba(0, 0, 0, .28), transparent)
+      pointer-events: none
+
+    .badge
+      position: absolute
+      top: 14px
+      left: 14px
+      z-index: 2
+      display: inline-flex
+      align-items: center
+      min-height: 26px
+      padding: 5px 10px
+      border-radius: 6px
+      background: var(--primary)
+      color: var(--white)
+      font-size: 10.5px
+      font-weight: 700
+      line-height: 1
+      letter-spacing: .2px
+      white-space: nowrap
+
+      &.badge-offer
+        background: #e6533c
+
+      &.badge-popular
+        background: #1b8a5a
+
+      @include media(420)
+        top: 10px
+        left: 10px
+        padding: 4px 8px
+        font-size: 10px
+
+
+  .trip-card__body
+    display: flex
+    flex-direction: column
+    min-width: 0
+    padding: 20px 22px
+
+    @include media(1024)
+      padding: 18px 20px
+
+    @include media(576)
+      padding: 18px
+
+    @include media(420)
+      padding: 14px 16px
+
+
+  .trip-card__top
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 15px
+    margin-bottom: 8px
+
+    @include media(576)
+      align-items: flex-start
+      flex-direction: column
+      gap: 7px
+
+    .rating
+      display: inline-flex
+      align-items: center
+      gap: 5px
+      flex-shrink: 0
+      color: var(--black)
+      font-size: 12px
+      font-weight: 700
+
+      svg
+        width: 14px
+        height: 14px
+        color: var(--primary)
+        fill: currentColor
+
+      em
+        color: var(--text)
+        font-weight: 500
+        font-style: normal
+
+
+  .trip-card__meta
+    display: flex
+    align-items: center
+    gap: 8px
+    flex-wrap: wrap
+    margin-bottom: 5px
+    color: var(--text)
+    font-size: 12px
+
+    span
+      font-size: 14px
+
+      @include media(420)
+        font-size: 12.5px
+
+    .location
+      display: inline-flex
+      align-items: center
+      gap: 5px
+      color: var(--black-light)
+      font-weight: 600
+
+      svg
+        width: 14px
+        height: 14px
+        flex-shrink: 0
+        color: var(--primary)
+
+    .divider
+      color: var(--border)
+
+
+  .trip-card__title
+    display: block
+    margin-bottom: 10px
+    text-decoration: none
+
+    h5
+      margin: 0
+      color: var(--black)
+      font-size: 18px
+      font-weight: 700
+      line-height: 1.3
+      transition: color .2s ease
+
+      @include media(420)
+        font-size: 16px
+
+
+  .trip-card__highlights
+    display: flex
+    flex-wrap: wrap
+    gap: 7px
+    margin: 0 0 14px
+    padding: 0
+    list-style: none
+
+    li
+      display: inline-flex
+      align-items: center
+      min-height: 26px
+      padding: 4px 9px
+      border: 1px solid var(--border)
+      border-radius: 5px
+      background: var(--gray-sec)
+      color: var(--black-light)
+      font-size: 11px
+      font-weight: 600
+      line-height: 1
+      white-space: nowrap
+
+      @include media(420)
+        min-height: 24px
+        padding: 4px 8px
+        font-size: 10.5px
+
+
+  .trip-card__info
+    display: flex
+    align-items: center
+    gap: 18px
+    flex-wrap: wrap
+    margin-bottom: 15px
+    padding-bottom: 15px
+    border-bottom: 1px dashed var(--border)
+
+    @include media(420)
+      gap: 12px
+      margin-bottom: 12px
+      padding-bottom: 12px
+
+    span
+      display: inline-flex
+      align-items: center
+      gap: 6px
+      color: var(--black-light)
+      font-size: 12px
+      font-weight: 600
+
+      @include media(420)
+        font-size: 11px
+
+      svg
+        width: 15px
+        height: 15px
+        flex-shrink: 0
+        color: var(--primary)
+
+
+  .trip-card__footer
+    display: flex
+    align-items: flex-end
+    justify-content: space-between
+    gap: 18px
+    margin-top: auto
+
+    @include media(1024)
+      flex-direction: column
+      align-items: baseline
+    @include media(576)
+      align-items: stretch
+      flex-direction: column
+      gap: 14px
+
+
+  .trip-card__price
+    min-width: 130px
+
+    .price-row
+      display: flex
+      align-items: center
+      gap: 8px
+      margin-bottom: 10px
+
+      s
+        color: var(--text-light)
+        font-size: 12px
+        font-weight: 500
+
+      .save-chip
+        display: inline-flex
+        align-items: center
+        min-height: 20px
+        padding: 3px 7px
+        border-radius: 20px
+        background: color-mix(in srgb, var(--primary) 10%, transparent)
+        color: var(--primary)
+        font-size: 10px
+        font-weight: 700
+        white-space: nowrap
+
+    .price
+      margin: 0
+      color: var(--black)
+      font-size: 22px
+      font-weight: 800
+      line-height: 1.15
+
+      @include media(420)
+        font-size: 19px
+
+      em
+        color: var(--text)
+        font-size: 11px
+        font-weight: 500
+        font-style: normal
+
+
+  .trip-card__actions
+    display: flex
+    align-items: center
+    gap: 8px
+    flex-shrink: 0
+
+    @include media(576)
+      width: 100%
+      flex-wrap: wrap
+      row-gap: 8px
+
+      > :nth-child(1)
+        order: 1
+        flex: 0 0 42px
+        display: none
+
+      > :nth-child(2)
+        order: 2
+        flex: 0 0 42px
+        display: none
+
+    .btns
+      width: 100%
+      display: flex
+      gap: 10px
+
+      @include media(540)
+        flex-direction: column
+
+      .btn
+        @include media(540)
+          width: 100%
+          flex: 1
+
+      .btn-icon
+        display: inline-flex
+        align-items: center
+        justify-content: center
+        flex: 0 0 40px
+        width: 40px
+        min-width: 40px
+        padding: 10px
+
+        svg
+          width: 17px
+          height: 17px
+
+        @include media(576)
+          flex: 0 0 42px
+          min-width: 42px
+
+
+  // ================= NO RESULTS =================
+  .no-results
+    padding: 70px 20px
+    text-align: center
+    color: var(--text)
+
+    @include media(420)
+      padding: 50px 16px
+
+    svg
+      margin-bottom: 14px
+      color: var(--border)
+
+    h4
+      margin: 0 0 8px
+      color: var(--black)
+      font-size: 19px
+      font-weight: 700
+
+      @include media(420)
+        font-size: 17px
+
+    p
+      max-width: 380px
+      margin: 0 auto 20px
+      color: var(--text)
+      font-size: 14px
+      line-height: 1.6
+
+      @include media(420)
+        font-size: 13px
+
+  .no-results-actions
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 12px
+
+    @include media(576)
+      flex-direction: column
+
+      .btn
+        width: 100%
+
+
+  // ================= LOAD MORE =================
+  .load-more-wrap
+    display: flex
+    align-items: center
+    flex-direction: column
+    gap: 10px
+    margin-top: 36px
+
+    @include media(420)
+      margin-top: 28px
+
+  .load-more-status
+    color: var(--text)
+    font-size: 13px
+
+    @include media(420)
+      font-size: 12px
+
+
+  // ================= DESTINATIONS SWIPER =================
+  .sec-e
+    position: relative
+    padding: 70px 0
+    background: var(--gray-sec)
+
+    @include media(1024)
+      padding: 60px 0
+
+    @include media(768)
+      padding: 50px 0
+
+    @include media(420)
+      padding: 40px 0
+
+    .center-btn
+      display: flex
+      justify-content: center
+      margin-top: 40px
+
+      @include media(420)
+        margin-top: 30px
+
+    .heading
+      width: 100%
+      max-width: 540px
+      margin: 0 auto
+      text-align: center
+
+      @include media(576)
+        max-width: 100%
+        padding: 0 15px
+
+      h3
+        margin-bottom: 10px
+
+        @include media(576)
+          font-size: 26px
+
+        span
+          color: var(--primary)
+
+      p
+        width: 100%
+        max-width: 400px
+        margin: 0 auto
+        text-align: center
+
+        @include media(420)
+          font-size: 13px
+
+    .swiper-wrap
+      position: relative
+      margin-top: 50px
+
+      @include media(768)
+        margin-top: 34px
+
+      @include media(420)
+        margin-top: 26px
+
+      .destSlider
+        margin: 0 20px
+        padding: 10px 10px 30px
+
+        @include media(768)
+          margin: 0
+          padding: 0
+
+      .swiper-group
+        position: absolute
+        top: 42%
+        left: 50%
+        z-index: 2
+        display: flex
+        align-items: center
+        justify-content: space-between
+        width: 100%
+        gap: 10px
+        transform: translate(-50%, -50%)
+
+        @include media(768)
+          display: none
+
+        .swiper-button-lock
+          display: none !important
+
+        button
+          display: flex
+          align-items: center
+          justify-content: center
+          width: 45px
+          height: 45px
+          flex-shrink: 0
+          border-radius: 50%
+          background: var(--white)
+          box-shadow: rgba(100, 100, 111, .2) 0 7px 29px 0
+          transition: background .25s ease
+
+          svg
+            width: 20px
+            height: 20px
+
+            path
+              fill: var(--primary)
+              transition: fill .25s ease
+
+          &:hover
+            background: var(--primary)
+
+            svg path
+              fill: var(--white)
+
+        .btn-next
+          transform: rotate(180deg)
+
+
+  .dest-card
+    position: relative
+    display: block
+    height: 380px
+    overflow: hidden
+    border-radius: 16px
+    box-shadow: 0 10px 26px -14px rgba(15, 23, 42, .28)
+    transition: transform .35s ease, box-shadow .35s ease
+
+    @include media(768)
+      height: 340px
+
+    @include media(420)
+      height: 300px
+      border-radius: 14px
+
+    &::after
+      content: ''
+      position: absolute
+      inset: 0
+      z-index: 1
+      background: linear-gradient(
+        180deg,
+        rgba(15, 23, 42, .04) 0%,
+        rgba(15, 23, 42, .1) 34%,
+        rgba(15, 23, 42, .68) 78%,
+        rgba(15, 23, 42, .92) 100%
+      )
+      transition: background .35s ease
+
+    &:hover
+      transform: translateY(-6px)
+      box-shadow: 0 22px 40px -18px rgba(15, 23, 42, .38)
+
+      .dest-card-img img
+        transform: scale(1.1)
+
+      .arrow-btn
+        background: var(--primary)
+        border-color: var(--primary)
+
+        svg
+          color: var(--white)
+          transform: translateX(2px)
+
+
+  .dest-card-img
+    position: absolute
+    inset: 0
+
+    img
+      display: block
+      width: 100%
+      height: 100%
+      object-fit: cover
+      transition: transform .6s ease
+
+
+  .dest-card-content
+    position: relative
+    z-index: 2
+    display: flex
+    flex-direction: column
+    justify-content: flex-end
+    height: 100%
+    padding: 22px
+
+    @include media(420)
+      padding: 16px
+
+    .pkg-count
+      display: inline-flex
+      align-items: center
+      gap: 5px
+      align-self: flex-start
+      margin-bottom: auto
+      padding: 6px 12px
+      border: 1px solid rgba(255, 255, 255, .3)
+      border-radius: 30px
+      background: rgba(255, 255, 255, .16)
+      backdrop-filter: blur(8px)
+      color: var(--white)
+      font-size: 11px
+      font-weight: 600
+      line-height: 1
+
+      @include media(420)
+        padding: 5px 10px
+        font-size: 10px
+
+      svg
+        width: 12px
+        height: 12px
+        flex-shrink: 0
+
+    .place
+      display: inline-flex
+      align-items: center
+      gap: 5px
+      margin-bottom: 4px
+      color: rgba(255, 255, 255, .8)
+      font-size: 12px
+      font-weight: 600
+      letter-spacing: .3px
+      text-transform: uppercase
+
+      @include media(420)
+        font-size: 11px
+
+      svg
+        width: 13px
+        height: 13px
+        flex-shrink: 0
+        color: var(--white)
+
+    h5
+      margin: 0 0 14px
+      color: var(--white)
+      font-size: 22px
+      font-weight: 700
+      line-height: 1.25
+
+      @include media(420)
+        margin-bottom: 10px
+        font-size: 19px
+
+    .foot
+      display: flex
+      align-items: center
+      justify-content: space-between
+      gap: 12px
+      padding-top: 14px
+      padding-left: 0
+      border-top: 1px solid rgba(255, 255, 255, .22)
+      text-align: left
+
+      @include media(420)
+        padding-top: 10px
+
+    .price
+      margin: 0
+      color: var(--white)
+      font-size: 17px
+      font-weight: 800
+      line-height: 1
+
+      @include media(420)
+        font-size: 15px
+
+      small
+        display: block
+        margin-bottom: 4px
+        color: rgba(255, 255, 255, .72)
+        font-size: 10.5px
+        font-weight: 500
+        letter-spacing: .3px
+        text-transform: uppercase
+
+    .arrow-btn
+      display: inline-flex
+      align-items: center
+      justify-content: center
+      width: 38px
+      height: 38px
+      flex-shrink: 0
+      border: 1px solid rgba(255, 255, 255, .4)
+      border-radius: 50%
+      background: rgba(255, 255, 255, .08)
+      backdrop-filter: blur(6px)
+      transition: all .25s ease
+
+      @include media(420)
+        width: 32px
+        height: 32px
+
+      svg
+        width: 16px
+        height: 16px
+        color: var(--white)
+        transition: transform .25s ease
+
+        @include media(420)
+          width: 14px
+          height: 14px
+
+
+  // ================= WHY BOOK WITH US =================
+  .sec-f
+    padding: 70px 0
+
+    @include media(1024)
+      padding: 60px 0
+
+    @include media(540)
+      padding: 45px 0
+
+    @include media(420)
+      padding: 40px 0
+
+    .heading
+      width: 100%
+      max-width: 500px
+      margin: 0 auto 45px
+      text-align: center
+
+      @include media(576)
+        max-width: 100%
+        padding: 0 15px
+        margin-bottom: 32px
+
+      h3
+        margin: 0 0 12px
+
+        @include media(576)
+          font-size: 26px
+
+      p
+        width: 100%
+        max-width: 400px
+        margin: 0 auto
+        color: var(--text)
+
+        @include media(420)
+          font-size: 13px
+
+
+  .usp-grid
+    display: grid
+    grid-template-columns: repeat(4, minmax(0, 1fr))
+    gap: 20px
+
+    @include media(991)
+      grid-template-columns: repeat(2, minmax(0, 1fr))
+
+    @include media(576)
+      grid-template-columns: 1fr
+      gap: 14px
+
+
+  .usp-item
+    padding: 26px 20px
+    border: 1px solid var(--border)
+    border-radius: 14px
+    background: var(--white)
+    text-align: center
+    transition: border-color .25s ease, transform .25s ease
+
+    @include media(420)
+      padding: 20px 16px
+      border-radius: 12px
+
+    &:hover
+      border-color: var(--primary)
+      transform: translateY(-3px)
+
+    h5
+      margin: 0 0 6px
+      color: var(--black)
+      font-size: 15px
+      font-weight: 700
+      line-height: 1.3
+
+    p
+      margin: 0
+      color: var(--text)
+      font-size: 12.5px
+      line-height: 1.6
+
+
+  .usp-icon
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    width: 54px
+    height: 54px
+    margin-bottom: 14px
+    border-radius: 50%
+    background: color-mix(in srgb, var(--primary) 8%, transparent)
+    color: var(--primary)
+
+    @include media(420)
+      width: 46px
+      height: 46px
+      margin-bottom: 10px
+
+    svg
+      width: 24px
+      height: 24px
+
+      @include media(420)
+        width: 20px
+        height: 20px
+
+
+// ================= FILTER SIDEBAR / PANEL — desktop base =================
+.filter-panel
+  padding: 20px
+  border: 1px solid var(--border)
+  border-radius: 14px
+  background: var(--white)
+
+.filter-panel-head
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 12px
+  margin-bottom: 4px
+
+  h4
+    margin: 0
+    color: var(--black)
+    font-size: 16px
+    font-weight: 700
+    line-height: 1.3
+
+.reset-link
+  padding: 0
+  border: 0
+  background: transparent
+  color: var(--text)
+  font-size: 12px
+  font-weight: 600
+  cursor: pointer
+  text-decoration: underline
+
+  &:hover
+    color: var(--primary)
+
+  @include media(991)
+    margin-right: 40px
+
+
+.filter-group
+  padding: 16px 0
+  border-bottom: 1px solid var(--border)
+
+  &:first-child
+    padding-top: 14px
+
+  &:last-child
+    padding-bottom: 0
+    border-bottom: 0
+
+  h5
+    display: flex
+    align-items: center
+    justify-content: space-between
+    margin: 0 0 10px
+    color: var(--black)
+    font-size: 13px
+    font-weight: 700
+    line-height: 1.4
+    cursor: pointer
+
+    &::after
+      content: ''
+      width: 8px
+      height: 8px
+      flex-shrink: 0
+      border-right: 1.5px solid var(--text)
+      border-bottom: 1.5px solid var(--text)
+      transform: rotate(45deg)
+      transition: transform .2s ease
+
+  &.is-collapsed
+    h5
+      margin-bottom: 0
+
+      &::after
+        transform: rotate(-45deg)
+
+    .filter-group-body
+      display: none
+
+
+.filter-group-body
+  display: flex
+  flex-direction: column
+
+
+.filter-check
+  display: flex
+  align-items: center
+  gap: 9px
+  padding: 5px 0
+  color: var(--black-light)
+  font-size: 13px
+  line-height: 1.4
+  cursor: pointer
+  user-select: none
+
+  input
+    display: none
+
+  .box
+    position: relative
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 17px
+    height: 17px
+    flex: 0 0 17px
+    border: 1.5px solid var(--border)
+    border-radius: 4px
+    transition: all .2s ease
+
+    &.radio
+      border-radius: 50%
+
+    &::after
+      content: ''
+      width: 4px
+      height: 8px
+      border: solid var(--white)
+      border-width: 0 2px 2px 0
+      transform: rotate(45deg)
+      opacity: 0
+
+    &.radio::after
+      width: 7px
+      height: 7px
+      border: 0
+      border-radius: 50%
+      background: var(--white)
+      transform: none
+
+  input:checked + .box
+    border-color: var(--primary)
+    background: var(--primary)
+
+    &::after
+      opacity: 1
+
+
+// ================= PRICE RANGE =================
+.price-range
+  position: relative
+  display: flex
+  align-items: center
+  height: 30px
+  margin: 8px 5px 12px
+
+.range-track
+  position: absolute
+  left: 0
+  right: 0
+  height: 3px
+  border-radius: 10px
+  background: var(--border)
+
+.range-fill
+  position: absolute
+  left: 0
+  height: 3px
+  border-radius: 10px
+  background: var(--primary)
+
+.range-handle
+  position: absolute
+  top: 50%
+  width: 18px
+  height: 18px
+  padding: 0
+  border: 2px solid var(--primary)
+  border-radius: 50%
+  background: var(--white)
+  transform: translate(-50%, -50%)
+  cursor: grab
+
+  &:active
+    cursor: grabbing
+
+.price-values
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 10px
+  color: var(--black)
+  font-size: 12px
+  font-weight: 600
+
+
+// ================= DRAWER (Modify Search etc — unchanged base) =================
+.drawer
+  position: fixed
+  inset: 0
+  z-index: 100
+  visibility: hidden
+  pointer-events: none
+
+  &.is-open
+    visibility: visible
+    pointer-events: auto
+
+    .drawer-overlay
+      opacity: 1
+
+    .drawer-panel
+      transform: translateX(0)
+
+
+.drawer-overlay
+  position: absolute
+  inset: 0
+  background: rgba(15, 23, 42, .5)
+  opacity: 0
+  transition: opacity .3s ease
+
+
+.drawer-panel
+  position: absolute
+  top: 0
+  right: 0
+  display: flex
+  flex-direction: column
+  width: 420px
+  max-width: 92vw
+  height: 100%
+  background: var(--white)
+  transform: translateX(100%)
+  transition: transform .35s ease
+
+  @include media(576)
+    width: 100%
+    max-width: 100%
+
+
+.drawer-head
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 16px
+  padding: 18px 22px
+  border-bottom: 1px solid var(--border)
+  flex-shrink: 0
+
+  h4
+    margin: 0
+    color: var(--black)
+    font-size: 17px
+    font-weight: 700
+    line-height: 1.3
+
+
+.drawer-close
+  display: flex
+  align-items: center
+  justify-content: center
+  width: 32px
+  height: 32px
+  flex-shrink: 0
+  padding: 0
+  border: 0
+  border-radius: 50%
+  background: var(--gray-sec)
+  color: var(--black)
+  cursor: pointer
+
+
+.drawer-body
+  flex: 1
+  overflow-y: auto
+  padding: 20px 22px
+
+  .filter-group
+    &:first-child
+      padding-top: 0
+
+
+.drawer-foot
+  display: flex
+  align-items: center
+  gap: 12px
+  padding: 16px 22px
+  border-top: 1px solid var(--border)
+  flex-shrink: 0
+
+  .btn
+    flex: 1
+
+
+// ================= DRAWER FORM / MODAL FIELDS =================
+.field-group
+  margin-bottom: 18px
+
+  label
+    display: block
+    margin-bottom: 8px
+    color: var(--black)
+    font-size: 12.5px
+    font-weight: 700
+
+  input[type="text"]
+    display: block
+    width: 100%
+    height: 44px
+    padding: 0 14px
+    border: 1px solid var(--border)
+    border-radius: 10px
+    outline: none
+    background: var(--white)
+    color: var(--black)
+    font-family: inherit
+    font-size: 14px
+    transition: border-color .2s ease, box-shadow .2s ease
+
+    &:focus
+      border-color: var(--primary)
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 10%, transparent)
+
+  .select-field
+    --inputsize: 44px
+
+
+.field-row
+  display: grid
+  grid-template-columns: repeat(2, minmax(0, 1fr))
+  gap: 14px
+
+  @include media(576)
+    grid-template-columns: 1fr
+
+
+.stepper
+  display: flex
+  align-items: center
+  gap: 10px
+  min-height: 44px
+  padding: 6px 10px
+  border: 1px solid var(--border)
+  border-radius: 10px
+
+  button
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 27px
+    height: 27px
+    flex-shrink: 0
+    padding: 0
+    border: 1.5px solid var(--border)
+    border-radius: 50%
+    background: var(--white)
+    color: var(--primary)
+    font-size: 15px
+    line-height: 1
+    cursor: pointer
+
+  input
+    flex: 1
+    width: 100%
+    min-width: 0
+    padding: 0
+    border: 0
+    outline: none
+    background: transparent
+    color: var(--black)
+    font-size: 14px
+    font-weight: 600
+    text-align: center
+
+
+.drawer-submit
+  width: 100%
+  margin-top: 4px
+
+
+// ================= TESTIMONIALS =================
+.about-secI
+  padding: 70px 0
+  margin-bottom: 70px
+  background: var(--gray-sec)
+
+  @include media(1024)
+    padding: 60px 0
+    margin-bottom: 60px
+
+  @include media(540)
+    padding: 45px 0
+    margin-bottom: 45px
+
+  @include media(420)
+    padding: 40px 0
+    margin-bottom: 40px
+
+  .heading
+    width: 100%
+    max-width: 550px
+    margin: 0 auto 4rem
+    text-align: center
+
+    @include media(576)
+      max-width: 100%
+      padding: 0 15px
+      margin-bottom: 2.4rem
+
+    h3
+      margin-bottom: 10px
+
+      @include media(576)
+        font-size: 26px
+
+  .card
+    height: 100%
+    padding: 28px 26px
+    border-radius: 20px
+    background: #FFFFFF
+
+    @include media(420)
+      padding: 22px 20px
+      border-radius: 16px
+
+    .header
+      display: flex
+      align-items: flex-start
+      gap: 12px
+      margin-bottom: 18px
+
+      img
+        width: 48px
+        height: 48px
+        flex-shrink: 0
+        border-radius: 50%
+        object-fit: cover
+
+        @include media(420)
+          width: 42px
+          height: 42px
+
+      .name
+        flex: 1
+
+        h6
+          margin: 0 0 2px
+          color: #111827
+          font-size: 16px
+          font-weight: 700
+
+          @include media(420)
+            font-size: 15px
+
+        p
+          margin: 0
+          color: #6B7280
+          font-size: 13px
+
+      .quotes
+        flex-shrink: 0
+        margin-top: 4px
+
+        svg
+          width: 34px
+          height: 26px
+
+    .quote
+      margin: 0 0 20px
+      color: #4B5563
+      font-size: 15px
+      font-style: italic
+      line-height: 1.7
+
+      @include media(420)
+        font-size: 14px
+        margin-bottom: 16px
+
+    .stars
+      display: flex
+      gap: 4px
+
+      svg
+        width: 16px
+        height: 16px
+        color: #F2A93B
+
+
+// ================= SELECT-FIELD / CUSTOM SELECT =================
+
+.select-field
+  position: relative
+  flex: 1
+  min-width: 0
+  --inputsize: 52px
+  --paddingleftright: 15px
+  --labelfontbefore: 14px
+  --font: 400
+
+  select
+    display: none !important
+
+  .custom-select
+    position: relative
+    display: flex
+    align-items: center
+    width: 100%
+    height: var(--inputsize)
+    padding: 0 var(--paddingleftright)
+    border: 1px solid var(--border)
+    border-radius: 8px
+    background: var(--gray-sec)
+    cursor: pointer
+    transition: border-color .25s ease, background .25s ease, box-shadow .25s ease
+
+    &::after
+      content: "\f107"
+      position: absolute
+      top: 50%
+      right: var(--paddingleftright)
+      font-family: "Font Awesome 6 Free"
+      font-size: 12px
+      font-weight: 900
+      color: var(--text-light)
+      pointer-events: none
+      transform: translateY(-50%)
+      transition: transform .2s ease
+
+    &:hover
+      border-color: color-mix(in srgb,var(--primary) 35%,var(--border))
+
+    &.open
+      border-color: var(--primary)
+      background: var(--white)
+      box-shadow: 0 0 0 3px color-mix(in srgb,var(--primary) 8%,transparent)
+
+      &::after
+        transform: translateY(-50%) rotate(180deg)
+
+      .list
+        display: block
+        opacity: 1
+        visibility: visible
+        transform: translateY(0)
+
+    .current
+      display: block
+      width: 100%
+      padding-right: 25px
+      overflow: hidden
+      color: var(--black)
+      font-size: var(--labelfontbefore)
+      font-weight: var(--font)
+      line-height: 1.3
+      white-space: nowrap
+      text-overflow: ellipsis
+
+    .list
+      position: absolute
+      top: calc(100% + 7px)
+      left: 0
+      right: 0
+      z-index: 50
+      display: none
+      width: 100%
+      max-height: 240px
+      margin: 0
+      padding: 8px
+      overflow-x: hidden
+      overflow-y: auto
+      list-style: none
+      border: 1px solid rgba(15,23,42,.06)
+      border-radius: 10px
+      background: var(--white)
+      box-shadow: 0 14px 35px rgba(15,23,42,.16)
+      opacity: 0
+      visibility: hidden
+      transform: translateY(-4px)
+      transition: opacity .2s ease, visibility .2s ease, transform .2s ease
+
+      scrollbar-width: thin
+      scrollbar-color: var(--border) transparent
+
+      &::-webkit-scrollbar
+        width: 5px
+
+      &::-webkit-scrollbar-track
+        background: transparent
+
+      &::-webkit-scrollbar-thumb
+        border-radius: 10px
+        background: var(--border)
+
+      .list-title
+        display: block
+        padding: 11px 14px 9px
+        color: var(--black)
+        font-size: 15px
+        font-weight: 500
+        line-height: 1.3
+        cursor: default
+
+      .option
+        display: flex
+        align-items: center
+        min-height: 42px
+        margin: 1px 0
+        padding: 9px 14px
+        border-radius: 7px
+        color: var(--black)
+        font-size: 14px
+        font-weight: 400
+        line-height: 1.3
+        cursor: pointer
+        transition: background .18s ease, color .18s ease
+
+        &:hover,
+        &.focus
+          background: var(--gray-sec)
+          color: var(--black)
+
+        &.selected
+          background: color-mix(in srgb,var(--primary) 7%,transparent)
+          color: var(--primary)
+          font-weight: 600
+
+        &:active
+          background: color-mix(in srgb,var(--primary) 12%,transparent)
+
+
+// ================= SEARCH HERO SELECT =================
+
+.sec-hero
+  .select-field
+    --inputsize: 48px
+
+    .custom-select
+      height: 100%
+      border-color: transparent
+      border-radius: 10px
+      background: var(--white)
+      box-shadow: 0 10px 30px -12px rgba(15,23,42,.4)
+
+      &:hover
+        border-color: color-mix(in srgb,var(--primary) 25%,transparent)
+
+      &.open
+        border-color: var(--primary)
+        background: var(--white)
+        box-shadow: 0 10px 30px -12px rgba(15,23,42,.4)
+
+
+// ================= SORT SELECT =================
+
+.sort-field
+  position: relative
+  display: flex
+  align-items: center
+  gap: 8px
+
+  label
+    flex-shrink: 0
+    color: var(--text)
+    font-size: 13px
+    white-space: nowrap
+
+  select
+    display: none !important
+
+  .select-field
+    flex: 0 0 auto
+    width: 170px
+    --inputsize: 38px
+    --paddingleftright: 12px
+    --labelfontbefore: 12.5px
+
+    @include media(420)
+      width: 150px
+
+    .custom-select
+      height: var(--inputsize)
+      border-radius: 8px
+      background: var(--white)
+
+
+// ================= DRAWER SELECT =================
+
+.field-group
+  .select-field
+    --inputsize: 44px
+    --paddingleftright: 14px
+    --labelfontbefore: 13px
+
+    .custom-select
+      height: var(--inputsize)
+      border-radius: 10px
+      background: var(--white)
+
+      .list
+        top: calc(100% + 5px)
+        border-radius: 10px
+
+
+// ================= MOBILE SELECT =================
+
+@include media(576)
+
+  .select-field
+    .custom-select
+      .list
+        max-height: 220px
+        padding: 7px
+
+        .list-title
+          padding: 10px 13px 8px
+          font-size: 14px
+
+        .option
+          min-height: 40px
+          padding: 9px 13px
+          font-size: 13.5px

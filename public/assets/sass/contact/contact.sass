@@ -1,0 +1,685 @@
+@import "../_common"
+
+// =========================
+// Banner
+// =========================
+.banner
+    .bg
+        position: relative
+
+        &::before
+            content: ''
+            position: absolute
+            inset: 0
+            background: linear-gradient(
+                360deg,
+                rgba(0, 0, 0, 0.74) 12%,
+                rgba(0, 0, 0, 0) 55%,
+                rgba(0, 0, 0, 0.74) 100%
+            )
+            z-index: 1
+            pointer-events: none
+
+        .content
+            width: 100%
+            max-width: 440px
+
+            @include media(768)
+                max-width: 100%
+
+
+.contact-secA
+    padding: 70px 0
+
+    @include media(1366)
+        padding: 64px 0
+
+    @include media(1280)
+        padding: 58px 0
+
+    @include media(1024)
+        padding: 50px 0
+
+    @include media(991)
+        padding: 46px 0
+
+    @include media(768)
+        padding: 40px 0
+
+    @include media(540)
+        padding: 34px 0
+
+    @include media(420)
+        padding: 28px 0
+
+.grid
+    display: grid
+    grid-template-columns: 1.4fr 1fr
+    align-items: flex-start
+    gap: 24px
+
+    @include media(991)
+        grid-template-columns: 1fr
+        gap: 20px
+
+    @include media(540)
+        gap: 16px
+
+.form_wrapper
+    background: #fff
+    border-radius: 18px
+    padding: 40px
+    box-shadow: 0 14px 34px rgba(15, 30, 24, .08)
+
+    @include media(1024)
+        padding: 34px
+
+    @include media(768)
+        padding: 28px
+
+    @include media(540)
+        padding: 22px
+        border-radius: 14px
+
+    @include media(420)
+        padding: 18px
+
+    h3
+        margin: 0 0 26px
+        color: #0d1b17
+        font-size: 26px
+        font-weight: 700
+
+        @include media(1024)
+            font-size: 24px
+
+        @include media(768)
+            font-size: 22px
+
+        @include media(540)
+            font-size: 20px
+            margin: 0 0 20px
+
+        @include media(420)
+            font-size: 18px
+
+.field-row
+    display: grid
+    grid-template-columns: 1fr 1fr
+    gap: 10px
+    margin-bottom: 14px
+
+    &--phone
+        grid-template-columns: 70px 1fr
+        align-items: start
+        gap: 8px
+        margin-bottom: 0
+
+    // sirf plain .field-row ko stack karo — phone-row apna khud ka layout rakhega
+    @include media(420)
+        &:not(.field-row--phone)
+            grid-template-columns: 1fr
+
+        &--phone
+            grid-template-columns: 62px 1fr
+            gap: 6px
+
+.field
+    position: relative
+    margin-bottom: 14px
+
+    svg
+        position: absolute
+        left: 12px
+        top: 50%
+        transform: translateY(-50%)
+        width: 16px
+        height: 16px
+        color: #9aa5a1
+        pointer-events: none
+        z-index: 1
+
+    &__input
+        width: 100%
+        height: 48px
+        padding: 0 14px
+        color: #0d1b17
+        background: #f8f9f9
+        border: 1.5px solid #e6eae8
+        border-radius: 11px
+        outline: none
+        font-family: inherit
+        font-size: 14px
+        transition: border-color .2s ease, background .2s ease
+
+        @include media(540)
+            height: 44px
+            font-size: 13px
+
+        &.has-icon
+            padding-left: 36px
+
+        &::placeholder
+            color: transparent
+
+        &:focus
+            border-color: var(--primary)
+            background: #fff
+
+    &__label
+        position: absolute
+        left: 14px
+        top: 50%
+        transform: translateY(-50%)
+        color: #8a9791
+        font-size: 14px
+        pointer-events: none
+        transition: all .18s ease
+
+        @include media(540)
+            font-size: 13px
+
+        span
+            margin-left: 2px
+            color: #c0392b
+
+    &__input.has-icon ~ &__label
+        left: 36px
+
+    &__input:focus + &__label,
+    &__input:not(:placeholder-shown) + &__label
+        top: 0
+        left: 12px !important
+        padding: 0 6px
+        color: var(--primary)
+        background: #fff
+        transform: translateY(-50%)
+        font-size: 11px
+        font-weight: 600
+
+    &--textarea
+        .field__input
+            height: auto
+            min-height: 120px
+            padding-top: 14px
+            resize: vertical
+            line-height: 1.5
+
+            @include media(540)
+                min-height: 100px
+
+        .field__label
+            top: 26px
+            transform: none
+
+        .field__input:focus + .field__label,
+        .field__input:not(:placeholder-shown) + .field__label
+            top: 0
+            transform: translateY(-50%)
+
+.code-select
+    position: relative
+    height: 48px
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 4px
+    color: #0d1b17
+    background: #f8f9f9
+    border: 1.5px solid #e6eae8
+    border-radius: 11px
+    font-size: 13.5px
+    font-weight: 600
+    cursor: pointer
+    white-space: nowrap
+
+    @include media(540)
+        height: 44px
+        font-size: 12.5px
+
+    @include media(420)
+        font-size: 11.5px
+        gap: 3px
+        padding: 0 4px
+
+    i
+        color: #8a9791
+        font-size: 9px
+
+        @include media(420)
+            font-size: 8px
+
+.checkbox_field
+    display: flex
+    align-items: flex-start
+    gap: 12px
+    margin: 6px 0 22px
+    cursor: pointer
+
+    @include media(540)
+        gap: 10px
+        margin: 6px 0 18px
+
+    input
+        position: absolute
+        width: 0
+        height: 0
+        opacity: 0
+
+    .box
+        position: relative
+        flex-shrink: 0
+        width: 18px
+        height: 18px
+        margin-top: 2px
+        background: #fff
+        border: 1.5px solid #cfc9ba
+        border-radius: 4px
+        transition: background .2s ease, border-color .2s ease
+
+        &::after
+            content: ""
+            position: absolute
+            left: 5px
+            top: 1px
+            width: 4px
+            height: 9px
+            border: solid #fff
+            border-width: 0 2px 2px 0
+            transform: rotate(45deg)
+            opacity: 0
+
+    input:checked ~ .box
+        background: var(--primary)
+        border-color: var(--primary)
+
+        &::after
+            opacity: 1
+
+    .text
+        display: block
+        color: #6f6a62
+        font-size: 13px
+        line-height: 1.6
+
+        @include media(540)
+            font-size: 12px
+
+        strong
+            display: block
+            margin-bottom: 4px
+            color: #0d1b17
+            font-size: 14px
+            font-weight: 700
+
+            @include media(540)
+                font-size: 13px
+
+.smt
+    width: 100%
+    padding: 15px 0
+    color: #fff
+    background: var(--primary)
+    border: none
+    border-radius: 30px
+    font-size: 15px
+    font-weight: 600
+    cursor: pointer
+    transition: background .25s ease, transform .25s ease
+
+    @include media(540)
+        padding: 13px 0
+        font-size: 14px
+
+
+.detail-grid
+    display: flex
+    flex-direction: column
+    gap: 24px
+
+    @include media(540)
+        gap: 18px
+
+.detail_card
+    padding: 32px
+    background: #fff
+    border-radius: 18px
+    box-shadow: 0 14px 34px rgba(15, 30, 24, .08)
+
+    @include media(1024)
+        padding: 28px
+
+    @include media(768)
+        padding: 24px
+
+    @include media(540)
+        padding: 20px
+        border-radius: 14px
+
+    @include media(420)
+        padding: 16px
+
+    h4
+        margin: 0 0 12px
+        color: #0d1b17
+        font-size: 19px
+        font-weight: 700
+
+        @include media(768)
+            font-size: 18px
+
+        @include media(540)
+            font-size: 16px
+
+    p
+        margin: 0 0 15px
+        color: #6f6a62
+        font-size: 14px
+
+        @include media(540)
+            font-size: 13px
+
+    .btn
+        margin-top: 14px
+
+.contact_list
+    display: flex
+    flex-direction: column
+    gap: 14px
+    margin: 20px 0 0
+    padding: 0
+    list-style: none
+
+    @include media(540)
+        gap: 12px
+        margin: 16px 0 0
+
+    li
+        display: flex
+        align-items: center
+        gap: 12px
+
+        svg
+            width: 18px
+            height: 18px
+            flex-shrink: 0
+            color: var(--primary)
+
+            @include media(540)
+                width: 16px
+                height: 16px
+
+        a
+            color: #0d1b17
+            font-size: 14.5px
+            font-weight: 600
+            text-decoration: none
+            transition: color .2s ease
+
+            @include media(540)
+                font-size: 13.5px
+
+            &:hover
+                color: var(--primary)
+
+.hours_block
+    margin-top: 18px
+
+    &:first-of-type
+        margin-top: 16px
+
+    .range
+        display: block
+        margin-bottom: 8px
+        color: var(--primary)
+        font-size: 13px
+        font-weight: 700
+        letter-spacing: .4px
+        text-transform: uppercase
+
+        @include media(540)
+            font-size: 12px
+
+    p
+        margin: 0
+        color: #0d1b17
+        font-size: 14px
+        line-height: 1.7
+
+        @include media(540)
+            font-size: 13px
+
+        strong
+            font-weight: 600
+
+
+.map
+    padding: 40px 0 70px
+
+    @include media(1024)
+        padding: 34px 0 56px
+
+    @include media(768)
+        padding: 28px 0 46px
+
+    @include media(540)
+        padding: 22px 0 36px
+
+    @include media(420)
+        padding: 18px 0 30px
+
+    .map_wrap
+        border-radius: 12px
+        overflow: hidden
+
+        @include media(540)
+            border-radius: 10px
+
+        iframe
+            border-radius: 12px
+            width: 100%
+
+            @include media(768)
+                height: 360px
+
+            @include media(540)
+                height: 280px
+                border-radius: 10px
+
+            @include media(420)
+                height: 240px
+
+
+.contact-secB
+    padding: 70px 0
+    background: var(--gray-sec)
+    margin-bottom: 70px
+
+    @include media(1366)
+        padding: 64px 0
+        margin-bottom: 64px
+
+    @include media(1280)
+        padding: 58px 0
+        margin-bottom: 58px
+
+    @include media(1024)
+        padding: 50px 0
+        margin-bottom: 50px
+
+    @include media(991)
+        padding: 46px 0
+        margin-bottom: 46px
+
+    @include media(768)
+        padding: 40px 0
+        margin-bottom: 40px
+
+    @include media(540)
+        padding: 34px 0
+        margin-bottom: 34px
+
+    @include media(420)
+        padding: 28px 0
+        margin-bottom: 28px
+
+    .heading
+        width: 100%
+        max-width: 410px
+        margin: 0 auto
+        text-align: center
+        margin-bottom: 4rem
+
+        @include media(1024)
+            margin-bottom: 3rem
+
+        @include media(768)
+            margin-bottom: 2.4rem
+
+        @include media(540)
+            margin-bottom: 2rem
+            max-width:  310px
+
+    .accordion-wrapper
+        display: flex
+        flex-direction: column
+        width: 100%
+        max-width: 900px
+        margin: 0 auto
+
+    .accordion-item
+        display: flex
+        gap: 22px
+
+        @include media(540)
+            gap: 14px
+
+        &:last-child
+            .track-line
+                display: none
+
+        &.active
+            .day-marker
+                background: var(--primary) !important
+                color: #FFFFFF !important
+                box-shadow: 0 6px 16px -4px rgba(var(--primary-rgb, 17, 97, 73), .5)
+
+            .accordion-header h4
+                color: var(--primary)
+
+            .accordion-icon
+                background: var(--primary)
+                color: #FFFFFF
+
+        // ---------- timeline ----------
+        .timeline-track
+            display: flex
+            flex-direction: column
+            align-items: center
+            flex-shrink: 0
+            width: 44px
+
+            @include media(540)
+                width: 34px
+
+            .day-marker
+                width: 44px
+                height: 44px
+                border-radius: 50%
+                background: #F3F4F6
+                color: #6B7280
+                font-size: 14px
+                font-weight: 800
+                display: flex
+                align-items: center
+                justify-content: center
+                flex-shrink: 0
+                transition: .3s ease
+
+                @include media(540)
+                    width: 34px
+                    height: 34px
+                    font-size: 12px
+
+            .track-line
+                width: 2px
+                flex: 1
+                background: repeating-linear-gradient(180deg, rgba(0,0,0,.12) 0 4px, transparent 4px 8px)
+                margin: 6px 0
+
+        // ---------- body ----------
+        .accordion-body
+            flex: 1
+            padding-bottom: 30px
+            border-bottom: 1px solid rgba(0, 0, 0, .06)
+
+            @include media(768)
+                padding-bottom: 24px
+
+            @include media(540)
+                padding-bottom: 18px
+
+            .accordion-header
+                display: flex
+                align-items: center
+                justify-content: space-between
+                gap: 16px
+                cursor: pointer
+                padding-top: 8px
+
+                @include media(540)
+                    gap: 12px
+
+                h4
+                    font-size: 16px
+                    font-weight: 600
+                    color: #111827
+                    margin: 0
+                    line-height: 1.2
+
+                    @include media(540)
+                        font-size: 15px
+
+                    @include media(420)
+                        font-size: 14px
+
+                .accordion-icon
+                    flex-shrink: 0
+                    width: 30px
+                    height: 30px
+                    border-radius: 50%
+                    background: #F3F4F6
+                    color: #111827
+                    display: flex
+                    align-items: center
+                    justify-content: center
+                    font-size: 17px
+                    font-weight: 400
+                    line-height: 1
+                    transition: background .3s ease, color .3s ease
+
+                    @include media(540)
+                        width: 26px
+                        height: 26px
+                        font-size: 15px
+
+            // hidden by default so there's no flash of all items open
+            // before JS runs; jQuery's show/hide/slideDown/slideUp
+            // override this with inline styles once the accordion initializes
+            .accordion-content
+                display: none
+                padding-top: 16px
+
+                @include media(540)
+                    padding-top: 12px
+
+                p
+                    font-size: 14px
+                    line-height: 1.8
+                    color: #6B7280
+                    margin: 0
+                    max-width: 760px
+
+                    @include media(540)
+                        font-size: 13px
+                        line-height: 1.7

@@ -3,7 +3,8 @@
 use App\Http\Controllers\Admin\{
     DashboardController,
     ProfileSettingController,
-    LogoutController
+    LogoutController,
+    DestinationController
 
 };
 
@@ -14,7 +15,9 @@ use App\Http\Controllers\FrontController;
 
 // ── (unchanged — front + customer routes, no admin permission needed here) ──
 Route::controller(FrontController::class)->group(function () {
-    Route::get('/', 'home')->name('home');
+    Route::get('/', 'destinations')->name('home');
+    Route::get('/destinations', 'destinations')->name('destinations');
+    Route::get('/destination/{destination}',  'destinationDetail')->name('destination.show');
 });
 
 
@@ -30,6 +33,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('/profile-setting', ProfileSettingController::class);
         Route::post('/resetpassword', [ProfileSettingController::class, 'resetPassword'])->name('reset.password');
         Route::get('/logout', [LogoutController::class, 'logout']);
+
+        Route::resource('destinations', DestinationController::class);
+
+        // Cascading dropdown endpoints (Country -> State -> City)
+        Route::get('destinations/states/{country}', [DestinationController::class, 'getStates'])
+            ->name('destinations.states');
+
+        Route::get('destinations/cities/{state}', [DestinationController::class, 'getCities'])
+            ->name('destinations.cities');
 
     });
 

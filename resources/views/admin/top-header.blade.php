@@ -4,11 +4,11 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-  <meta name="description" content="Web Mingo Single Vendor E-Commerce Package Starts 24,999/-">
-  <meta name="keywords" content="Web Mingo E-Commerce Admin">
+  <meta name="description" content="Indo Tours & Adventures Single Vendor E-Commerce Package Starts 24,999/-">
+  <meta name="keywords" content="Indo Tours & Adventures Admin">
   <meta name="author" content="Webmingo">
   <meta name="csrf-token" content="{{ csrf_token() }}" />
-  <title>Admin Dashboard | Web Mingo</title>
+  <title>Admin Dashboard | Indo Tours & Adventures</title>
 
   @php
       $favicon = '';
@@ -232,11 +232,11 @@ body {
                 @if($dashboardLogo)
                     <img src="{{ asset('storage/' . $dashboardLogo) }}" alt="Admin Logo">
                 @else
-                    <img src="{{ asset('assets/img/corporate/wm-ecommerce/wmecommerce.webp') }}" alt="WebMingo">
+                    <img src="{{ asset('assets/images/logo.png') }}" alt="Indo Tours & Adventures">
                 @endif
 
                 <div class="admin-logo-text">
-                    <span class="admin-logo-brand">Web Mingo</span>
+                    <span class="admin-logo-brand">Indo Tours & Adventures</span>
                     <span class="admin-logo-sub">Admin Panel</span>
                 </div>
             </div>
