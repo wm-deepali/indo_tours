@@ -374,6 +374,12 @@
                         <button type="button" class="cat-tab" data-tab="places">Places</button>
                         <button type="button" class="cat-tab" data-tab="banner">Offer Banner</button>
                         <button type="button" class="cat-tab" data-tab="activities">Activities</button>
+                        <button type="button" class="cat-tab" data-tab="routes">Routes</button>
+                        <button type="button" class="cat-tab" data-tab="journey">Sample Itinerary</button>
+                        <button type="button" class="cat-tab" data-tab="season">Season</button>
+                        <button type="button" class="cat-tab" data-tab="budget">Budget</button>
+                        <button type="button" class="cat-tab" data-tab="more-about">More About</button>
+                        <button type="button" class="cat-tab" data-tab="faqs">FAQs</button>
                         <button type="button" class="cat-tab" data-tab="seo">SEO / Open Graph</button>
                     </div>
 
@@ -942,6 +948,341 @@
                         </button>
                     </div>
 
+                    {{-- ============ ROUTES ============ --}}
+                    <div class="cat-tab-panel" data-panel="routes">
+                        <div class="seo-section-title">Route Options</div>
+                        <div class="hint" style="margin-bottom:14px;">Tick the checkbox to remove a row on save.</div>
+
+                        @foreach($destination->routes as $routeItem)
+                            <div class="gallery-row" style="grid-template-columns: 80px 1fr 1fr 1fr auto;">
+                                <input type="hidden" name="existing_route[{{ $routeItem->id }}][id]"
+                                    value="{{ $routeItem->id }}">
+                                <div class="form-field" style="margin:0">
+                                    <label>Days</label>
+                                    <input type="number" name="existing_route[{{ $routeItem->id }}][days]"
+                                        class="form-control-styled" value="{{ $routeItem->days }}" min="1">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Label</label>
+                                    <input type="text" name="existing_route[{{ $routeItem->id }}][label]"
+                                        class="form-control-styled" value="{{ $routeItem->label }}">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Subtitle</label>
+                                    <input type="text" name="existing_route[{{ $routeItem->id }}][subtitle]"
+                                        class="form-control-styled" value="{{ $routeItem->subtitle }}">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Path (comma-separated)</label>
+                                    <input type="text" name="existing_route[{{ $routeItem->id }}][path]"
+                                        class="form-control-styled"
+                                        value="{{ $routeItem->path ? implode(', ', $routeItem->path) : '' }}">
+                                </div>
+                                <label class="gallery-remove"
+                                    style="display:flex;align-items:center;justify-content:center;">
+                                    <input type="checkbox" name="remove_route_ids[]" value="{{ $routeItem->id }}"
+                                        style="margin:0">
+                                </label>
+                            </div>
+                            <div class="form-field">
+                                <label>Note</label>
+                                <textarea name="existing_route[{{ $routeItem->id }}][note]" rows="2"
+                                    class="form-control-styled">{{ $routeItem->note }}</textarea>
+                            </div>
+                        @endforeach
+
+                        <div id="route-wrapper"></div>
+
+                        <button type="button" class="add-gallery-btn" onclick="addRouteRow()">
+                            <i class="fa fa-plus"></i> Add New Route
+                        </button>
+                    </div>
+
+                    {{-- ============ SAMPLE ITINERARY ============ --}}
+                    <div class="cat-tab-panel" data-panel="journey">
+                        <div class="seo-section-title">Day-by-Day Itinerary</div>
+                        <div class="hint" style="margin-bottom:14px;">Tick the checkbox to remove a row on save.</div>
+
+                        @foreach($destination->journeyDays as $dayItem)
+                            <div class="gallery-row" style="grid-template-columns: 90px 1fr 1fr auto;">
+                                <input type="hidden" name="existing_journey[{{ $dayItem->id }}][id]"
+                                    value="{{ $dayItem->id }}">
+                                <div class="form-field" style="margin:0">
+                                    <label>Day #</label>
+                                    <input type="number" name="existing_journey[{{ $dayItem->id }}][day_number]"
+                                        class="form-control-styled" value="{{ $dayItem->day_number }}" min="1">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Title</label>
+                                    <input type="text" name="existing_journey[{{ $dayItem->id }}][title]"
+                                        class="form-control-styled" value="{{ $dayItem->title }}">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Image</label>
+                                    @if($dayItem->image)
+                                        <img src="{{ asset('storage/' . $dayItem->image) }}" class="gallery-existing-thumb"
+                                            alt="">
+                                    @endif
+                                    <input type="file" name="existing_journey[{{ $dayItem->id }}][image]"
+                                        class="form-control-styled" accept="image/*">
+                                </div>
+                                <label class="gallery-remove"
+                                    style="display:flex;align-items:center;justify-content:center;">
+                                    <input type="checkbox" name="remove_journey_ids[]" value="{{ $dayItem->id }}"
+                                        style="margin:0">
+                                </label>
+                            </div>
+                            <div class="form-field">
+                                <label>Flow</label>
+                                <input type="text" name="existing_journey[{{ $dayItem->id }}][flow_text]"
+                                    class="form-control-styled" value="{{ $dayItem->flow_text }}">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <label>Stay</label>
+                                    <input type="text" name="existing_journey[{{ $dayItem->id }}][stay_text]"
+                                        class="form-control-styled" value="{{ $dayItem->stay_text }}">
+                                </div>
+                                <div class="form-field">
+                                    <label>Taste</label>
+                                    <input type="text" name="existing_journey[{{ $dayItem->id }}][food_text]"
+                                        class="form-control-styled" value="{{ $dayItem->food_text }}">
+                                </div>
+                                <div class="form-field toggle-row" style="align-self:end; margin-bottom:18px;">
+                                    <label class="switch">
+                                        <input type="checkbox" name="existing_journey[{{ $dayItem->id }}][is_departure]"
+                                            value="1" {{ $dayItem->is_departure ? 'checked' : '' }}>
+                                        <span class="switch-slider"></span>
+                                    </label>
+                                    <label style="margin:0">Departure day</label>
+                                </div>
+                            </div>
+                        @endforeach
+
+                        <div id="journey-wrapper"></div>
+
+                        <button type="button" class="add-gallery-btn" onclick="addJourneyRow()">
+                            <i class="fa fa-plus"></i> Add New Day
+                        </button>
+                    </div>
+
+                    {{-- ============ SEASON ============ --}}
+                    <div class="cat-tab-panel" data-panel="season">
+                        <div class="seo-section-title">Seasons</div>
+
+                        <div id="season-wrapper">
+                            @foreach($destination->seasons as $i => $seasonItem)
+                                <div class="gallery-row" style="grid-template-columns: 1fr 1fr 2fr auto;">
+                                    <div class="form-field" style="margin:0">
+                                        <label>Range</label>
+                                        <input type="text" name="season[{{ $i }}][range_text]" class="form-control-styled"
+                                            value="{{ $seasonItem->range_text }}">
+                                    </div>
+                                    <div class="form-field" style="margin:0">
+                                        <label>Name</label>
+                                        <input type="text" name="season[{{ $i }}][name]" class="form-control-styled"
+                                            value="{{ $seasonItem->name }}">
+                                    </div>
+                                    <div class="form-field" style="margin:0">
+                                        <label>Description</label>
+                                        <input type="text" name="season[{{ $i }}][description]" class="form-control-styled"
+                                            value="{{ $seasonItem->description }}">
+                                    </div>
+                                    <button type="button" class="gallery-remove"
+                                        onclick="this.closest('.gallery-row').remove()">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <button type="button" class="add-gallery-btn" onclick="addSeasonRow()">
+                            <i class="fa fa-plus"></i> Add Season
+                        </button>
+
+                        <div class="seo-section-title" style="margin-top:24px;">Summary Highlights</div>
+
+                        <div id="season-highlight-wrapper">
+                            @foreach(($destination->season_highlights ?? []) as $i => $highlight)
+                                <div class="gallery-row" style="grid-template-columns: 1fr 1fr auto;">
+                                    <div class="form-field" style="margin:0">
+                                        <label>Label</label>
+                                        <input type="text" name="season_highlight[{{ $i }}][label]"
+                                            class="form-control-styled" value="{{ $highlight['label'] ?? '' }}">
+                                    </div>
+                                    <div class="form-field" style="margin:0">
+                                        <label>Value</label>
+                                        <input type="text" name="season_highlight[{{ $i }}][value]"
+                                            class="form-control-styled" value="{{ $highlight['value'] ?? '' }}">
+                                    </div>
+                                    <button type="button" class="gallery-remove"
+                                        onclick="this.closest('.gallery-row').remove()">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <button type="button" class="add-gallery-btn" onclick="addSeasonHighlightRow()">
+                            <i class="fa fa-plus"></i> Add Highlight
+                        </button>
+                    </div>
+
+                    {{-- ============ BUDGET ============ --}}
+                    <div class="cat-tab-panel" data-panel="budget">
+                        <div class="seo-section-title">Budget Tiers</div>
+
+                        <div id="budget-tier-wrapper">
+                            @foreach($destination->budgetTiers as $i => $tierItem)
+                                <div class="gallery-row" style="grid-template-columns: 1fr 1fr 1fr 1fr auto;">
+                                    <div class="form-field" style="margin:0">
+                                        <label>Name</label>
+                                        <input type="text" name="budget_tier[{{ $i }}][name]" class="form-control-styled"
+                                            value="{{ $tierItem->name }}">
+                                    </div>
+                                    <div class="form-field" style="margin:0">
+                                        <label>Price From</label>
+                                        <input type="text" name="budget_tier[{{ $i }}][price_from]"
+                                            class="form-control-styled" value="{{ $tierItem->price_from }}">
+                                    </div>
+                                    <div class="form-field" style="margin:0">
+                                        <label>Price To</label>
+                                        <input type="text" name="budget_tier[{{ $i }}][price_to]"
+                                            class="form-control-styled" value="{{ $tierItem->price_to }}">
+                                    </div>
+                                    <div class="form-field" style="margin:0">
+                                        <label>Suffix</label>
+                                        <input type="text" name="budget_tier[{{ $i }}][price_suffix]"
+                                            class="form-control-styled" value="{{ $tierItem->price_suffix }}">
+                                    </div>
+                                    <button type="button" class="gallery-remove"
+                                        onclick="this.closest('div').parentElement.remove()">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-field">
+                                        <label>Description</label>
+                                        <input type="text" name="budget_tier[{{ $i }}][description]"
+                                            class="form-control-styled" value="{{ $tierItem->description }}">
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Badge Text</label>
+                                        <input type="text" name="budget_tier[{{ $i }}][badge_text]"
+                                            class="form-control-styled" value="{{ $tierItem->badge_text }}">
+                                    </div>
+                                    <div class="form-field toggle-row" style="align-self:end; margin-bottom:18px;">
+                                        <label class="switch">
+                                            <input type="checkbox" name="budget_tier[{{ $i }}][is_featured]" value="1" {{ $tierItem->is_featured ? 'checked' : '' }}>
+                                            <span class="switch-slider"></span>
+                                        </label>
+                                        <label style="margin:0">Featured</label>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <button type="button" class="add-gallery-btn" onclick="addBudgetTierRow()">
+                            <i class="fa fa-plus"></i> Add Tier
+                        </button>
+
+                        <div class="seo-section-title" style="margin-top:24px;">Budget Breakdown</div>
+
+                        <div id="budget-breakdown-wrapper">
+                            @foreach($destination->budgetBreakdown as $i => $rowItem)
+                                <div class="gallery-row" style="grid-template-columns: 1fr 1fr auto;">
+                                    <div class="form-field" style="margin:0">
+                                        <label>Label</label>
+                                        <input type="text" name="budget_breakdown[{{ $i }}][label]"
+                                            class="form-control-styled" value="{{ $rowItem->label }}">
+                                    </div>
+                                    <div class="form-field" style="margin:0">
+                                        <label>Percent</label>
+                                        <input type="number" name="budget_breakdown[{{ $i }}][percent]"
+                                            class="form-control-styled" value="{{ $rowItem->percent }}" min="0" max="100">
+                                    </div>
+                                    <button type="button" class="gallery-remove"
+                                        onclick="this.closest('.gallery-row').remove()">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <button type="button" class="add-gallery-btn" onclick="addBudgetBreakdownRow()">
+                            <i class="fa fa-plus"></i> Add Breakdown Row
+                        </button>
+
+                        <div class="seo-section-title" style="margin-top:24px;">Section Text</div>
+
+                        <div class="form-field">
+                            <label for="budget_intro_text">Subheading</label>
+                            <input type="text" id="budget_intro_text" name="budget_intro_text"
+                                class="form-control-styled"
+                                value="{{ old('budget_intro_text', $destination->budget_intro_text) }}">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="budget_note">Note</label>
+                            <textarea id="budget_note" name="budget_note" rows="2"
+                                class="form-control-styled">{{ old('budget_note', $destination->budget_note) }}</textarea>
+                        </div>
+                    </div>
+
+                    {{-- ============ MORE ABOUT ============ --}}
+                    <div class="cat-tab-panel" data-panel="more-about">
+                        <div class="seo-section-title">More About Section</div>
+                        <div class="hint" style="margin-bottom:14px;">Long-form SEO content shown near the bottom of the
+                            page.</div>
+
+                        <div class="form-field">
+                            <label for="more_about_intro">Subtitle</label>
+                            <input type="text" id="more_about_intro" name="more_about_intro" class="form-control-styled"
+                                value="{{ old('more_about_intro', $destination->more_about_intro) }}">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="more_about_content">Content</label>
+                            <textarea id="more_about_content" name="more_about_content"
+                                class="form-control-styled @error('more_about_content') is-invalid @enderror">{{ old('more_about_content', $destination->more_about_content) }}</textarea>
+                            @error('more_about_content')
+                            <div class="form-error">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+
+                    {{-- ============ FAQS ============ --}}
+                    <div class="cat-tab-panel" data-panel="faqs">
+                        <div class="seo-section-title">Frequently Asked Questions</div>
+                        <div class="hint" style="margin-bottom:14px;">Tick the checkbox to remove a row on save.</div>
+
+                        @foreach($destination->faqs as $faqItem)
+                            <div class="gallery-row" style="grid-template-columns: 1fr 1fr auto;">
+                                <input type="hidden" name="existing_faq[{{ $faqItem->id }}][id]" value="{{ $faqItem->id }}">
+                                <div class="form-field" style="margin:0">
+                                    <label>Question</label>
+                                    <input type="text" name="existing_faq[{{ $faqItem->id }}][question]"
+                                        class="form-control-styled" value="{{ $faqItem->question }}">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Answer</label>
+                                    <textarea name="existing_faq[{{ $faqItem->id }}][answer]" rows="2"
+                                        class="form-control-styled">{{ $faqItem->answer }}</textarea>
+                                </div>
+                                <label class="gallery-remove"
+                                    style="display:flex;align-items:center;justify-content:center;">
+                                    <input type="checkbox" name="remove_faq_ids[]" value="{{ $faqItem->id }}"
+                                        style="margin:0">
+                                </label>
+                            </div>
+                        @endforeach
+
+                        <div id="faq-wrapper"></div>
+
+                        <button type="button" class="add-gallery-btn" onclick="addFaqRow()">
+                            <i class="fa fa-plus"></i> Add New FAQ
+                        </button>
+                    </div>
+
                     {{-- ============ SEO ============ --}}
                     <div class="cat-tab-panel" data-panel="seo">
 
@@ -1021,6 +1362,21 @@
     </div>
 </div>
 
+<script src="https://cdn.ckeditor.com/ckeditor5/41.3.1/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#more_about_content'), {
+            toolbar: [
+                'heading', '|',
+                'bold', 'italic', 'link', '|',
+                'bulletedList', 'numberedList', '|',
+                'blockQuote', 'undo', 'redo'
+            ]
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>
 <script>
     // ---- Tabs ----
     document.querySelectorAll('#destination-tabs .cat-tab').forEach(function (tabBtn) {
@@ -1051,6 +1407,13 @@
     let highlightIndex = 0;
     let placeIndex = 0;
     let activityIndex = 0;
+    let routeIndex = 0;
+    let journeyIndex = 0;
+    let seasonIndex = {{ $destination->seasons->count() }};
+    let seasonHighlightIndex = {{ count($destination->season_highlights ?? []) }};
+    let budgetTierIndex = {{ $destination->budgetTiers->count() }};
+    let budgetBreakdownIndex = {{ $destination->budgetBreakdown->count() }};
+    let faqIndex = 0;
 
     // ---- Cascading Country -> State -> City (re-fetch only if user changes country) ----
     const countrySelect = document.getElementById('country_id');
@@ -1273,6 +1636,226 @@
         wrapper.appendChild(row);
         activityIndex++;
     }
+
+    function addRouteRow() {
+        const wrapper = document.getElementById('route-wrapper');
+        const row = document.createElement('div');
+        row.innerHTML = `
+        <div class="gallery-row" style="grid-template-columns: 80px 1fr 1fr 1fr auto;">
+            <div class="form-field" style="margin:0">
+                <label>Days</label>
+                <input type="number" name="route[${routeIndex}][days]" class="form-control-styled" min="1">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label>Label</label>
+                <input type="text" name="route[${routeIndex}][label]" class="form-control-styled" placeholder="e.g. Classic Kashmir">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label>Subtitle</label>
+                <input type="text" name="route[${routeIndex}][subtitle]" class="form-control-styled" placeholder="e.g. Most picked">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label>Path (comma-separated)</label>
+                <input type="text" name="route[${routeIndex}][path]" class="form-control-styled" placeholder="Srinagar, Gulmarg, Pahalgam, Srinagar">
+            </div>
+            <button type="button" class="gallery-remove" onclick="this.closest('div').parentElement.remove()">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+        <div class="form-field">
+            <label>Note (used instead of Path)</label>
+            <textarea name="route[${routeIndex}][note]" rows="2" class="form-control-styled"></textarea>
+        </div>
+    `;
+        wrapper.appendChild(row);
+        routeIndex++;
+    }
+
+    function addJourneyRow() {
+        const wrapper = document.getElementById('journey-wrapper');
+        const row = document.createElement('div');
+        row.innerHTML = `
+        <div class="gallery-row" style="grid-template-columns: 90px 1fr 1fr auto;">
+            <div class="form-field" style="margin:0">
+                <label>Day #</label>
+                <input type="number" name="journey[${journeyIndex}][day_number]" class="form-control-styled" min="1">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label>Title</label>
+                <input type="text" name="journey[${journeyIndex}][title]" class="form-control-styled" placeholder="e.g. Gulmarg">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label>Image</label>
+                <input type="file" name="journey[${journeyIndex}][image]" class="form-control-styled" accept="image/*">
+            </div>
+            <button type="button" class="gallery-remove" onclick="this.closest('div').parentElement.remove()">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+        <div class="form-field">
+            <label>Flow</label>
+            <input type="text" name="journey[${journeyIndex}][flow_text]" class="form-control-styled">
+        </div>
+        <div class="form-row">
+            <div class="form-field">
+                <label>Stay</label>
+                <input type="text" name="journey[${journeyIndex}][stay_text]" class="form-control-styled">
+            </div>
+            <div class="form-field">
+                <label>Taste</label>
+                <input type="text" name="journey[${journeyIndex}][food_text]" class="form-control-styled">
+            </div>
+            <div class="form-field toggle-row" style="align-self:end; margin-bottom:18px;">
+                <label class="switch">
+                    <input type="checkbox" name="journey[${journeyIndex}][is_departure]" value="1">
+                    <span class="switch-slider"></span>
+                </label>
+                <label style="margin:0">Departure day</label>
+            </div>
+        </div>
+    `;
+        wrapper.appendChild(row);
+        journeyIndex++;
+    }
+
+    function addSeasonRow() {
+        const wrapper = document.getElementById('season-wrapper');
+        const row = document.createElement('div');
+        row.className = 'gallery-row';
+        row.style.gridTemplateColumns = '1fr 1fr 2fr auto';
+        row.innerHTML = `
+        <div class="form-field" style="margin:0">
+            <label>Range</label>
+            <input type="text" name="season[${seasonIndex}][range_text]" class="form-control-styled" placeholder="e.g. May – June">
+        </div>
+        <div class="form-field" style="margin:0">
+            <label>Name</label>
+            <input type="text" name="season[${seasonIndex}][name]" class="form-control-styled" placeholder="e.g. Summer">
+        </div>
+        <div class="form-field" style="margin:0">
+            <label>Description</label>
+            <input type="text" name="season[${seasonIndex}][description]" class="form-control-styled">
+        </div>
+        <button type="button" class="gallery-remove" onclick="this.closest('.gallery-row').remove()">
+            <i class="fa fa-times"></i>
+        </button>
+    `;
+        wrapper.appendChild(row);
+        seasonIndex++;
+    }
+
+    function addSeasonHighlightRow() {
+        const wrapper = document.getElementById('season-highlight-wrapper');
+        const row = document.createElement('div');
+        row.className = 'gallery-row';
+        row.style.gridTemplateColumns = '1fr 1fr auto';
+        row.innerHTML = `
+        <div class="form-field" style="margin:0">
+            <label>Label</label>
+            <input type="text" name="season_highlight[${seasonHighlightIndex}][label]" class="form-control-styled" placeholder="e.g. Best for snow">
+        </div>
+        <div class="form-field" style="margin:0">
+            <label>Value</label>
+            <input type="text" name="season_highlight[${seasonHighlightIndex}][value]" class="form-control-styled" placeholder="e.g. December – February">
+        </div>
+        <button type="button" class="gallery-remove" onclick="this.closest('.gallery-row').remove()">
+            <i class="fa fa-times"></i>
+        </button>
+    `;
+        wrapper.appendChild(row);
+        seasonHighlightIndex++;
+    }
+
+    function addBudgetTierRow() {
+        const wrapper = document.getElementById('budget-tier-wrapper');
+        const row = document.createElement('div');
+        row.innerHTML = `
+        <div class="gallery-row" style="grid-template-columns: 1fr 1fr 1fr 1fr auto;">
+            <div class="form-field" style="margin:0">
+                <label>Name</label>
+                <input type="text" name="budget_tier[${budgetTierIndex}][name]" class="form-control-styled" placeholder="e.g. Premium">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label>Price From</label>
+                <input type="text" name="budget_tier[${budgetTierIndex}][price_from]" class="form-control-styled">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label>Price To</label>
+                <input type="text" name="budget_tier[${budgetTierIndex}][price_to]" class="form-control-styled">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label>Suffix</label>
+                <input type="text" name="budget_tier[${budgetTierIndex}][price_suffix]" class="form-control-styled" placeholder="e.g. +">
+            </div>
+            <button type="button" class="gallery-remove" onclick="this.closest('div').parentElement.remove()">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+        <div class="form-row">
+            <div class="form-field">
+                <label>Description</label>
+                <input type="text" name="budget_tier[${budgetTierIndex}][description]" class="form-control-styled">
+            </div>
+            <div class="form-field">
+                <label>Badge Text</label>
+                <input type="text" name="budget_tier[${budgetTierIndex}][badge_text]" class="form-control-styled">
+            </div>
+            <div class="form-field toggle-row" style="align-self:end; margin-bottom:18px;">
+                <label class="switch">
+                    <input type="checkbox" name="budget_tier[${budgetTierIndex}][is_featured]" value="1">
+                    <span class="switch-slider"></span>
+                </label>
+                <label style="margin:0">Featured</label>
+            </div>
+        </div>
+    `;
+        wrapper.appendChild(row);
+        budgetTierIndex++;
+    }
+
+    function addBudgetBreakdownRow() {
+        const wrapper = document.getElementById('budget-breakdown-wrapper');
+        const row = document.createElement('div');
+        row.className = 'gallery-row';
+        row.style.gridTemplateColumns = '1fr 1fr auto';
+        row.innerHTML = `
+        <div class="form-field" style="margin:0">
+            <label>Label</label>
+            <input type="text" name="budget_breakdown[${budgetBreakdownIndex}][label]" class="form-control-styled" placeholder="e.g. Activities">
+        </div>
+        <div class="form-field" style="margin:0">
+            <label>Percent</label>
+            <input type="number" name="budget_breakdown[${budgetBreakdownIndex}][percent]" class="form-control-styled" min="0" max="100">
+        </div>
+        <button type="button" class="gallery-remove" onclick="this.closest('.gallery-row').remove()">
+            <i class="fa fa-times"></i>
+        </button>
+    `;
+        wrapper.appendChild(row);
+        budgetBreakdownIndex++;
+    }
+
+    function addFaqRow() {
+    const wrapper = document.getElementById('faq-wrapper');
+    const row = document.createElement('div');
+    row.className = 'gallery-row';
+    row.style.gridTemplateColumns = '1fr 1fr auto';
+    row.innerHTML = `
+        <div class="form-field" style="margin:0">
+            <label>Question</label>
+            <input type="text" name="faq[${faqIndex}][question]" class="form-control-styled" placeholder="e.g. Where should I stay?">
+        </div>
+        <div class="form-field" style="margin:0">
+            <label>Answer</label>
+            <textarea name="faq[${faqIndex}][answer]" rows="2" class="form-control-styled"></textarea>
+        </div>
+        <button type="button" class="gallery-remove" onclick="this.closest('.gallery-row').remove()">
+            <i class="fa fa-times"></i>
+        </button>
+    `;
+    wrapper.appendChild(row);
+    faqIndex++;
+}
 
 </script>
 

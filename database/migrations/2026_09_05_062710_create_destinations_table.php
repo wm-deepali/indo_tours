@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('destinations', function (Blueprint $table) {
@@ -25,12 +24,21 @@ return new class extends Migration
             // Descriptions
             $table->string('short_description')->nullable(); // shown on listing page card
             $table->longText('description')->nullable();     // long description on detail page
+            $table->string('more_about_intro')->nullable(); // the subtitle line under "More About X"
+            $table->longText('more_about_content')->nullable(); // the HTML block itself
+            $table->string('verdict_title')->nullable();
+            $table->string('recommended_for')->nullable();
+            $table->string('why_visit_image')->nullable();
+            $table->string('why_visit_media_tag')->nullable();
 
             // Facts panel
             $table->string('duration_text')->nullable();   // "5-7 Days"
             $table->string('best_time_text')->nullable();  // "March - October"
             $table->string('budget_text')->nullable();     // "₹25K - ₹60K+"
             $table->json('best_for_tags')->nullable();     // ["Couples","Families","Nature","Adventure"]
+            $table->json('season_highlights')->nullable(); // [{label, value}, ...] — "Best overall: March–October" etc
+            $table->string('budget_intro_text')->nullable(); // e.g. "Estimated per-person budget for a 7-day trip"
+            $table->text('budget_note')->nullable();
 
             // Status & ordering
             $table->boolean('is_featured')->default(false);

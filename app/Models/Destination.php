@@ -21,6 +21,8 @@ class Destination extends Model
         'image',
         'short_description',
         'description',
+        'more_about_intro',
+        'more_about_content',
         'verdict_title',
         'recommended_for',
         'why_visit_image',
@@ -30,6 +32,9 @@ class Destination extends Model
         'budget_text',
         'best_for_tags',
         'is_featured',
+        'season_highlights',
+        'budget_intro_text',
+        'budget_note',
         'sort_order',
         'status',
         'h1',
@@ -46,7 +51,29 @@ class Destination extends Model
     protected $casts = [
         'best_for_tags' => 'array',
         'is_featured' => 'boolean',
+        'season_highlights' => 'array'
     ];
+
+    // e.g. Destination::published()->get()
+    public function scopePublished($query)
+    {
+        return $query->where('status', 'published');
+    }
+
+    // Breadcrumb-style location string: "Srinagar, Jammu & Kashmir, India"
+    public function getLocationTextAttribute(): string
+    {
+        return collect([
+            $this->city?->name,
+            $this->state?->name,
+            $this->country?->name,
+        ])->filter()->implode(', ');
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     public function matches(): HasMany
     {
@@ -88,27 +115,6 @@ class Destination extends Model
         return $this->hasMany(DestinationGallery::class)->orderBy('sort_order');
     }
 
-    // e.g. Destination::published()->get()
-    public function scopePublished($query)
-    {
-        return $query->where('status', 'published');
-    }
-
-    // Breadcrumb-style location string: "Srinagar, Jammu & Kashmir, India"
-    public function getLocationTextAttribute(): string
-    {
-        return collect([
-            $this->city?->name,
-            $this->state?->name,
-            $this->country?->name,
-        ])->filter()->implode(', ');
-    }
-
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
-    }
-
     public function banner(): HasOne
     {
         return $this->hasOne(DestinationBanner::class);
@@ -118,4 +124,35 @@ class Destination extends Model
     {
         return $this->hasMany(DestinationActivity::class)->orderBy('sort_order');
     }
+
+    public function routes(): HasMany
+    {
+        return $this->hasMany(DestinationRoute::class)->orderBy('sort_order');
+    }
+
+    public function journeyDays(): HasMany
+    {
+        return $this->hasMany(DestinationJourneyDay::class)->orderBy('sort_order');
+    }
+
+    public function seasons(): HasMany
+    {
+        return $this->hasMany(DestinationSeason::class)->orderBy('sort_order');
+    }
+
+    public function budgetTiers(): HasMany
+    {
+        return $this->hasMany(DestinationBudgetTier::class)->orderBy('sort_order');
+    }
+
+    public function budgetBreakdown(): HasMany
+    {
+        return $this->hasMany(DestinationBudgetBreakdown::class)->orderBy('sort_order');
+    }
+
+    public function faqs(): HasMany
+    {
+        return $this->hasMany(DestinationFaq::class)->orderBy('sort_order');
+    }
+
 }

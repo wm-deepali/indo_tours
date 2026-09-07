@@ -4,14 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
-        Schema::table('destinations', function (Blueprint $table) {
-            $table->string('why_visit_image')->nullable()->after('recommended_for');
-            $table->string('why_visit_media_tag')->nullable()->after('why_visit_image');
-        });
 
         Schema::create('destination_areas', function (Blueprint $table) {
             $table->id();
@@ -41,8 +36,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('destination_highlights');
         Schema::dropIfExists('destination_areas');
-        Schema::table('destinations', function (Blueprint $table) {
-            $table->dropColumn(['why_visit_image', 'why_visit_media_tag']);
-        });
     }
 };

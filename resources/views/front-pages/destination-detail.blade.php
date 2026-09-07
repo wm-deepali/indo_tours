@@ -14,6 +14,7 @@
 
 @section('content')
 
+    {{-- Hero Section --}}
     <section class="detail-banner">
         <div class="container">
             <div class="grid">
@@ -131,6 +132,7 @@
         </div>
     </section>
 
+    {{-- Tour Packages Section --}}
     <section class="tour-package-near-h1">
         <div class="container">
             <div class="heading">
@@ -347,6 +349,7 @@
         </div>
     </section>
 
+    {{-- Verdict Section --}}
     <section class="detail-secA">
         <div class="container">
             <div class="grid">
@@ -392,6 +395,7 @@
         </div>
     </section>
 
+    {{-- Stay Section --}}
     <section class="detail-secB">
         <div class="container">
             <div class="heading">
@@ -453,6 +457,7 @@
         </div>
     </section>
 
+    {{-- Why Visit Section --}}
     <section class="detail-secC">
         <div class="container">
             <div class="heading">
@@ -491,6 +496,7 @@
         </div>
     </section>
 
+    {{-- Places Section --}}
     <section class="detail-secD places">
         <div class="container">
             <div class="heading">
@@ -597,82 +603,50 @@
         </div>
     </section>
 
+    {{-- Routes --}}
     <section class="detail-secF routes">
         <div class="container">
             <div class="heading">
-                <h3>Choose Your <span>Kashmir Route</span></h3>
+                <h3>Choose Your <span>{{ $destination->name }} Route</span></h3>
                 <p>From a quick escape to a slow, complete exploration</p>
             </div>
 
             <div class="routes__box">
-                <input type="radio" name="route" id="route-3" class="routes__radio" checked />
-                <input type="radio" name="route" id="route-5" class="routes__radio" />
-                <input type="radio" name="route" id="route-7" class="routes__radio" />
-                <input type="radio" name="route" id="route-10" class="routes__radio" />
+                @foreach ($destination->routes as $index => $route)
+                    <input type="radio" name="route" id="route-{{ $route->days }}" class="routes__radio" @if($index === 0) checked
+                    @endif />
+                @endforeach
 
                 <div class="routes__tabs">
-                    <label for="route-3" class="routes__tab">
-                        <span class="routes__tab-days">3</span>
-                        <span class="routes__tab-info">
-                            <strong>Quick Escape</strong>
-                            <small>Weekend trip</small>
-                        </span>
-                    </label>
-
-                    <label for="route-5" class="routes__tab">
-                        <span class="routes__tab-days">5</span>
-                        <span class="routes__tab-info">
-                            <strong>Highlights</strong>
-                            <small>Balanced pace</small>
-                        </span>
-                    </label>
-
-                    <label for="route-7" class="routes__tab">
-                        <span class="routes__tab-days">7</span>
-                        <span class="routes__tab-info">
-                            <strong>Classic Kashmir</strong>
-                            <small>Most picked</small>
-                        </span>
-                    </label>
-
-                    <label for="route-10" class="routes__tab">
-                        <span class="routes__tab-days">10</span>
-                        <span class="routes__tab-info">
-                            <strong>Slow Explorer</strong>
-                            <small>Build your own</small>
-                        </span>
-                    </label>
+                    @foreach ($destination->routes as $route)
+                        <label for="route-{{ $route->days }}" class="routes__tab">
+                            <span class="routes__tab-days">{{ $route->days }}</span>
+                            <span class="routes__tab-info">
+                                <strong>{{ $route->label }}</strong>
+                                <small>{{ $route->subtitle }}</small>
+                            </span>
+                        </label>
+                    @endforeach
                 </div>
 
                 <div class="routes__panels">
-                    <div class="routes__panel routes__panel-3">
-                        <span class="routes__panel-tag">3 Days · Quick Escape</span>
-                        <div class="routes__path">
-                            <span>Srinagar</span><i>→</i><span>Gulmarg</span><i>→</i><span>Srinagar</span>
-                        </div>
-                    </div>
+                    @foreach ($destination->routes as $route)
+                        <div class="routes__panel routes__panel-{{ $route->days }}">
+                            <span class="routes__panel-tag">{{ $route->days }} Days · {{ $route->label }}</span>
 
-                    <div class="routes__panel routes__panel-5">
-                        <span class="routes__panel-tag">5 Days · Highlights</span>
-                        <div class="routes__path">
-                            <span>Srinagar</span><i>→</i><span>Gulmarg</span><i>→</i><span>Pahalgam</span><i>→</i><span>Srinagar</span>
-                        </div>
-                    </div>
+                            @if (!empty($route->path))
+                                <div class="routes__path">
+                                    @foreach ($route->path as $place)
+                                        <span>{{ $place }}</span>@if(!$loop->last)<i>→</i>@endif
+                                    @endforeach
+                                </div>
+                            @endif
 
-                    <div class="routes__panel routes__panel-7">
-                        <span class="routes__panel-tag">7 Days · Classic Kashmir</span>
-                        <div class="routes__path">
-                            <span>Srinagar</span><i>→</i><span>Gulmarg</span><i>→</i><span>Pahalgam</span><i>→</i><span>Sonamarg</span><i>→</i><span>Srinagar</span>
+                            @if ($route->note)
+                                <p class="routes__note">{{ $route->note }}</p>
+                            @endif
                         </div>
-                    </div>
-
-                    <div class="routes__panel routes__panel-10">
-                        <span class="routes__panel-tag">10 Days · Slow Explorer</span>
-                        <p class="routes__note">
-                            Add Doodhpathri, Yusmarg and additional experiences at your
-                            own pace.
-                        </p>
-                    </div>
+                    @endforeach
 
                     <div class="routes__action">
                         <button type="button">Customize Route</button>
@@ -682,316 +656,140 @@
         </div>
     </section>
 
+    {{-- Journey --}}
     <section class="detail-secG journey">
         <div class="container">
             <div class="heading">
-                <h3>A Sample <span>7-Day Kashmir Trip</span></h3>
+                <h3>A Sample <span>{{ $destination->journeyDays->where('is_departure', false)->count() + 1 }}-Day
+                        {{ $destination->name }} Trip</span></h3>
                 <p>Where you'll go, stay, and eat — day by day</p>
             </div>
 
             <div class="journey__spine">
-                <!-- DAY 1 -->
-                <div class="journey__day">
-                    <div class="journey__img">
-                        <img loading="lazy" src="assets/images/attraction/kashmir1.jpg" alt="Srinagar Dal Lake" />
-                    </div>
-
-                    <div class="journey__card">
-                        <span class="journey__daytag">Day 1</span>
-
-                        <h4>Srinagar</h4>
-
-                        <p class="journey__flow">
-                            Arrival → Hotel check-in → Dal Lake → Shikara Ride
-                        </p>
-
-                        <div class="journey__chips">
-                            <span class="journey__chip journey__chip--stay">
-                                <img loading="lazy" src="assets/icon/hotel.png" alt="" />
-                                Stay: Srinagar
-                            </span>
-
-                            <span class="journey__chip journey__chip--food">
-                                <img loading="lazy" src="assets/icon/food2.png" alt="" />
-                                Taste: Kahwa
-                            </span>
+                @foreach ($destination->journeyDays as $index => $day)
+                    @if ($day->is_departure)
+                        <div class="journey__end">
+                            <span class="journey__daytag journey__daytag--end">Day {{ $day->day_number }}</span>
+                            <h4>{{ $day->title }}</h4>
+                            <p>{{ $day->flow_text }}</p>
                         </div>
-                    </div>
-                </div>
+                    @else
+                        <div class="journey__day @if($index % 2 === 1) journey__day--rev @endif">
+                            <div class="journey__img">
+                                <img loading="lazy"
+                                    src="{{ $day->image ? asset('storage/' . $day->image) : asset('assets/images/blog/default.jpg') }}"
+                                    alt="{{ $day->title }}" />
+                            </div>
 
-                <!-- DAY 2 -->
-                <div class="journey__day journey__day--rev">
-                    <div class="journey__img">
-                        <img loading="lazy" src="assets/images/attraction/kashmir2.jpg" alt="Srinagar Mughal Gardens" />
-                    </div>
+                            <div class="journey__card">
+                                <span class="journey__daytag">Day {{ $day->day_number }}</span>
+                                <h4>{{ $day->title }}</h4>
+                                <p class="journey__flow">{{ $day->flow_text }}</p>
 
-                    <div class="journey__card">
-                        <span class="journey__daytag">Day 2</span>
+                                <div class="journey__chips">
+                                    @if ($day->stay_text)
+                                        <span class="journey__chip journey__chip--stay">
+                                            <img loading="lazy" src="{{ asset('assets/icon/hotel.png') }}" alt="" />
+                                            Stay: {{ $day->stay_text }}
+                                        </span>
+                                    @endif
 
-                        <h4>Srinagar</h4>
-
-                        <p class="journey__flow">
-                            Mughal Gardens → Old City → Local Market
-                        </p>
-
-                        <div class="journey__chips">
-                            <span class="journey__chip journey__chip--stay">
-                                <img loading="lazy" src="assets/icon/hotel.png" alt="" />
-                                Stay: Srinagar
-                            </span>
-
-                            <span class="journey__chip journey__chip--food">
-                                <img loading="lazy" src="assets/icon/food2.png" alt="" />
-                                Taste: Yakhni
-                            </span>
+                                    @if ($day->food_text)
+                                        <span class="journey__chip journey__chip--food">
+                                            <img loading="lazy" src="{{ asset('assets/icon/food2.png') }}" alt="" />
+                                            Taste: {{ $day->food_text }}
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- DAY 3 -->
-                <div class="journey__day">
-                    <div class="journey__img">
-                        <img loading="lazy" src="assets/images/attraction/kashmir3.jpg" alt="Gulmarg Kashmir" />
-                    </div>
-
-                    <div class="journey__card">
-                        <span class="journey__daytag">Day 3</span>
-
-                        <h4>Gulmarg</h4>
-
-                        <p class="journey__flow">
-                            Transfer → Gondola Ride → Mountain Experiences
-                        </p>
-
-                        <div class="journey__chips">
-                            <span class="journey__chip journey__chip--stay">
-                                <img loading="lazy" src="assets/icon/hotel.png" alt="" />
-                                Stay: Gulmarg
-                            </span>
-
-                            <span class="journey__chip journey__chip--food">
-                                <img loading="lazy" src="assets/icon/food2.png" alt="" />
-                                Taste: Rogan Josh
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- DAY 4 -->
-                <div class="journey__day journey__day--rev">
-                    <div class="journey__img">
-                        <img loading="lazy" src="assets/images/attraction/kashmir4.jpg" alt="Pahalgam Kashmir" />
-                    </div>
-
-                    <div class="journey__card">
-                        <span class="journey__daytag">Day 4</span>
-
-                        <h4>Pahalgam</h4>
-
-                        <p class="journey__flow">Transfer → Scenic Stops → Pahalgam</p>
-
-                        <div class="journey__chips">
-                            <span class="journey__chip journey__chip--stay">
-                                <img loading="lazy" src="assets/icon/hotel.png" alt="" />
-                                Stay: Pahalgam
-                            </span>
-
-                            <span class="journey__chip journey__chip--food">
-                                <img loading="lazy" src="assets/icon/food2.png" alt="" />
-                                Taste: Wazwan
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- DAY 5 -->
-                <div class="journey__day">
-                    <div class="journey__img">
-                        <img loading="lazy" src="assets/images/attraction/kashmir5.jpg" alt="Pahalgam Valley" />
-                    </div>
-
-                    <div class="journey__card">
-                        <span class="journey__daytag">Day 5</span>
-
-                        <h4>Pahalgam</h4>
-
-                        <p class="journey__flow">
-                            Valleys → Nature Trails → Local Experiences
-                        </p>
-
-                        <div class="journey__chips">
-                            <span class="journey__chip journey__chip--stay">
-                                <img loading="lazy" src="assets/icon/hotel.png" alt="" />
-                                Stay: Pahalgam
-                            </span>
-
-                            <span class="journey__chip journey__chip--food">
-                                <img loading="lazy" src="assets/icon/food2.png" alt="" />
-                                Taste: Rogan Josh
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- DAY 6 -->
-                <div class="journey__day journey__day--rev">
-                    <div class="journey__img">
-                        <img loading="lazy" src="assets/images/attraction/kashmir3.jpg" alt="Sonamarg Kashmir" />
-                    </div>
-
-                    <div class="journey__card">
-                        <span class="journey__daytag">Day 6</span>
-
-                        <h4>Sonamarg</h4>
-
-                        <p class="journey__flow">
-                            Mountain Excursion → Scenic Views → Srinagar
-                        </p>
-
-                        <div class="journey__chips">
-                            <span class="journey__chip journey__chip--stay">
-                                <img loading="lazy" src="assets/icon/hotel.png" alt="" />
-                                Stay: Srinagar
-                            </span>
-
-                            <span class="journey__chip journey__chip--food">
-                                <img loading="lazy" src="assets/icon/food2.png" alt="" />
-                                Taste: Kahwa
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- DAY 7 -->
-                <div class="journey__end">
-                    <span class="journey__daytag journey__daytag--end"> Day 7 </span>
-
-                    <h4>Departure</h4>
-
-                    <p>Breakfast → Airport Transfer → End of Trip</p>
-                </div>
+                    @endif
+                @endforeach
             </div>
 
             <div class="journey__action">
-                <button type="button" class="btn btn-primary">
-                    Customize This Itinerary
-                </button>
-
-                <button type="button" class="btn btn-outline-primary">
-                    Explore Restaurants
-                </button>
+                <button type="button" class="btn btn-primary">Customize This Itinerary</button>
+                <button type="button" class="btn btn-outline-primary">Explore Restaurants</button>
             </div>
         </div>
     </section>
 
-    <!-- 11. Best Time to Visit -->
+    <!-- Best Time to Visit -->
     <section class="detail-secH season">
         <div class="container">
             <div class="heading">
-                <h3>When Should You <span>Visit Kashmir?</span></h3>
-                <p>Each season shows Kashmir differently</p>
+                <h3>When Should You <span>Visit {{ $destination->name }}?</span></h3>
+                <p>Each season shows {{ $destination->name }} differently</p>
             </div>
 
             <div class="season__grid">
-                <div class="season__item">
-                    <span class="season__range">March – April</span>
-                    <h4>Spring</h4>
-                    <p>Gardens, flowers and pleasant weather.</p>
-                </div>
-
-                <div class="season__item">
-                    <span class="season__range">May – June</span>
-                    <h4>Summer</h4>
-                    <p>Great for sightseeing and exploring valleys.</p>
-                </div>
-
-                <div class="season__item">
-                    <span class="season__range">Sept – Nov</span>
-                    <h4>Autumn</h4>
-                    <p>Cool weather and beautiful landscapes.</p>
-                </div>
-
-                <div class="season__item">
-                    <span class="season__range">Dec – Feb</span>
-                    <h4>Winter</h4>
-                    <p>Snow, skiing and winter experiences.</p>
-                </div>
+                @foreach ($destination->seasons as $season)
+                    <div class="season__item">
+                        <span class="season__range">{{ $season->range_text }}</span>
+                        <h4>{{ $season->name }}</h4>
+                        <p>{{ $season->description }}</p>
+                    </div>
+                @endforeach
             </div>
 
-            <div class="season__highlights">
-                <span>Best overall: <strong>March – October</strong></span>
-                <span class="season__sep"></span>
-                <span>Best for snow: <strong>December – February</strong></span>
-            </div>
+            @if (!empty($destination->season_highlights))
+                <div class="season__highlights">
+                    @foreach ($destination->season_highlights as $highlight)
+                        <span>{{ $highlight['label'] }}: <strong>{{ $highlight['value'] }}</strong></span>
+                        @if (!$loop->last)<span class="season__sep"></span>@endif
+                    @endforeach
+                </div>
+            @endif
         </div>
     </section>
 
-    <!-- 12. Trip Budget -->
+    <!-- Trip Budget -->
     <section class="detail-secI budget">
         <div class="container">
             <div class="heading">
-                <h3>What Will Your <span>Kashmir Trip Cost?</span></h3>
-                <p>Estimated per-person budget for a 7-day trip</p>
+                <h3>What Will Your <span>{{ $destination->name }} Trip Cost?</span></h3>
+                <p>{{ $destination->budget_intro_text ?: 'Estimated per-person budget for your trip' }}</p>
             </div>
 
             <div class="budget__tiers">
-                <div class="budget__tier">
-                    <span class="budget__name">Budget</span>
-                    <span class="budget__price">₹25,000<small>–35,000</small></span>
-                    <p>Basic stays, shared travel, local food.</p>
-                </div>
-
-                <div class="budget__tier budget__tier--featured">
-                    <span class="budget__badge">Popular</span>
-                    <span class="budget__name">Comfort</span>
-                    <span class="budget__price">₹35,000<small>–60,000</small></span>
-                    <p>3-star stays, private cabs, curated experiences.</p>
-                </div>
-
-                <div class="budget__tier">
-                    <span class="budget__name">Premium</span>
-                    <span class="budget__price">₹60,000<small>+</small></span>
-                    <p>Luxury stays, private transport, top experiences.</p>
-                </div>
+                @foreach ($destination->budgetTiers as $tier)
+                    <div class="budget__tier @if($tier->is_featured) budget__tier--featured @endif">
+                        @if ($tier->badge_text)
+                            <span class="budget__badge">{{ $tier->badge_text }}</span>
+                        @endif
+                        <span class="budget__name">{{ $tier->name }}</span>
+                        <span class="budget__price">
+                            ₹{{ $tier->price_from }}@if($tier->price_to)<small>–{{ $tier->price_to }}</small>@elseif($tier->price_suffix)<small>{{ $tier->price_suffix }}</small>@endif
+                        </span>
+                        <p>{{ $tier->description }}</p>
+                    </div>
+                @endforeach
             </div>
 
-            <div class="budget__breakdown">
-                <div class="budget__row">
-                    <span>Stay</span>
-                    <div class="budget__track">
-                        <div class="budget__fill" style="width: 40%"></div>
-                    </div>
+            @if ($destination->budgetBreakdown->isNotEmpty())
+                <div class="budget__breakdown">
+                    @foreach ($destination->budgetBreakdown as $row)
+                        <div class="budget__row">
+                            <span>{{ $row->label }}</span>
+                            <div class="budget__track">
+                                <div class="budget__fill" style="width: {{ $row->percent }}%"></div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
-                <div class="budget__row">
-                    <span>Transport</span>
-                    <div class="budget__track">
-                        <div class="budget__fill" style="width: 25%"></div>
-                    </div>
-                </div>
-                <div class="budget__row">
-                    <span>Food</span>
-                    <div class="budget__track">
-                        <div class="budget__fill" style="width: 20%"></div>
-                    </div>
-                </div>
-                <div class="budget__row">
-                    <span>Activities</span>
-                    <div class="budget__track">
-                        <div class="budget__fill" style="width: 15%"></div>
-                    </div>
-                </div>
-            </div>
+            @endif
 
-            <!-- <p class="budget__note">Prices vary depending on season, hotel category, transportation and activities.</p> -->
+            @if ($destination->budget_note)
+                <p class="budget__note">{{ $destination->budget_note }}</p>
+            @endif
 
             <div class="budget__action">
-                <button type="button" class="btn btn-primary">
-                    Plan My Budget
-                </button>
+                <button type="button" class="btn btn-primary">Plan My Budget</button>
             </div>
         </div>
     </section>
 
+    {{-- Related Packages --}}
     <section class="related-tour-package">
         <div class="container">
             <div class="heading">
@@ -1008,7 +806,7 @@
                         <div class="swiper-slide">
                             <div class="trip_card">
                                 <a href="listing-detail.html" target="_blank" class="img">
-                                    <img loading="lazy" src="assets/images/attraction/kashmir5.jpg"
+                                    <img loading="lazy" src="{{ asset('assets/images/attraction/kashmir5.jpg')}}"
                                         alt="Leh Ladakh Tour Package" />
                                     <span class="save">Save INR 18,000</span>
                                 </a>
@@ -1054,7 +852,7 @@
                         <div class="swiper-slide">
                             <div class="trip_card">
                                 <a href="listing-detail.html" target="_blank" class="img">
-                                    <img loading="lazy" src="assets/images/destinaiton/ride.jpg"
+                                    <img loading="lazy" src="{{ asset('assets/images/destinaiton/ride.jpg') }}"
                                         alt="Manali Tour Package" />
                                     <span class="save">Save INR 10,500</span>
                                 </a>
@@ -1100,7 +898,7 @@
                         <div class="swiper-slide">
                             <div class="trip_card">
                                 <a href="listing-detail.html" target="_blank" class="img">
-                                    <img loading="lazy" src="assets/images/destinaiton/garder.jpg"
+                                    <img loading="lazy" src="{{ asset('assets/images/destinaiton/garder.jpg') }}"
                                         alt="Shimla Tour Package" />
                                     <span class="save">Save INR 8,200</span>
                                 </a>
@@ -1146,7 +944,7 @@
                         <div class="swiper-slide">
                             <div class="trip_card">
                                 <a href="listing-detail.html" target="_blank" class="img">
-                                    <img loading="lazy" src="assets/images/attraction/kashmir5.jpg"
+                                    <img loading="lazy" src="{{ asset('assets/images/attraction/kashmir5.jpg') }}"
                                         alt="Leh Ladakh Tour Package" />
                                     <span class="save">Save INR 18,000</span>
                                 </a>
@@ -1210,246 +1008,48 @@
         </div>
     </section>
 
+    {{-- More About Destination --}}
     <section class="more-about">
         <div class="container">
             <div class="heading">
-                <h3>More About <span>Kashmir</span></h3>
-                <p>
-                    Explore more places, packages and experiences for your Kashmir
-                    trip.
+                <h3>More About <span>{{ $destination->name }}</span></h3>
+                <p>{{ $destination->more_about_intro ?: 'Explore more places, packages and experiences for your ' . $destination->name . ' trip.' }}
                 </p>
             </div>
 
             <div class="rte-content">
-                <h4>Plan Your Kashmir Holiday</h4>
-
-                <p>
-                    Kashmir is known for its beautiful valleys, peaceful lakes,
-                    mountain landscapes and memorable travel experiences. Explore our
-                    <a href="javascript:void(0)">Kashmir Tour Packages</a>
-                    to find itineraries for different trip durations and travel
-                    styles.
-                </p>
-
-                <h4>Explore Popular Places in Kashmir</h4>
-
-                <p>
-                    Discover the best places to include in your itinerary, from scenic
-                    valleys to peaceful mountain destinations.
-                </p>
-
-                <ul>
-                    <li>
-                        <a href="javascript:void(0)">Srinagar</a>
-                        — Explore Dal Lake, Shikara rides, Mughal Gardens and local
-                        markets.
-                    </li>
-
-                    <li>
-                        <a href="javascript:void(0)">Gulmarg</a>
-                        — Enjoy mountain views, Gondola rides, snow and outdoor
-                        activities.
-                    </li>
-
-                    <li>
-                        <a href="javascript:void(0)">Pahalgam</a>
-                        — Discover beautiful valleys, rivers, forests and peaceful
-                        surroundings.
-                    </li>
-
-                    <li>
-                        <a href="javascript:void(0)">Sonamarg</a>
-                        — Experience spectacular mountain scenery and alpine landscapes.
-                    </li>
-
-                    <li>
-                        <a href="javascript:void(0)">Doodhpathri</a>
-                        — Visit peaceful meadows surrounded by beautiful natural
-                        scenery.
-                    </li>
-                </ul>
-
-                <h4>Kashmir Tour Packages</h4>
-
-                <p>
-                    Choose a package based on your interests, travel duration and
-                    budget. Explore our
-                    <a href="javascript:void(0)">Family Tour Packages</a>,
-                    <a href="javascript:void(0)">Honeymoon Packages</a>,
-                    <a href="javascript:void(0)">Adventure Tour Packages</a>
-                    and
-                    <a href="javascript:void(0)">Weekend Getaways</a>
-                    for more travel options.
-                </p>
-
-                <ul>
-                    <li>
-                        <a href="javascript:void(0)">Kashmir Family Packages</a>
-                        — Comfortable holidays for families.
-                    </li>
-
-                    <li>
-                        <a href="javascript:void(0)">Kashmir Honeymoon Packages</a>
-                        — Romantic stays and experiences for couples.
-                    </li>
-
-                    <li>
-                        <a href="javascript:void(0)">Kashmir Adventure Packages</a>
-                        — Outdoor activities and exciting experiences.
-                    </li>
-
-                    <li>
-                        <a href="javascript:void(0)">Kashmir Group Packages</a>
-                        — Flexible travel options for groups and friends.
-                    </li>
-                </ul>
-
-                <h4>Things to Do in Kashmir</h4>
-
-                <p>
-                    Make your holiday more memorable with unique local experiences and
-                    sightseeing activities. Explore
-                    <a href="javascript:void(0)">Kashmir Activities</a>
-                    including Shikara rides, Gondola rides, sightseeing, snow
-                    experiences and local food experiences.
-                </p>
-
-                <ol>
-                    <li>Enjoy a traditional Shikara ride on Dal Lake.</li>
-                    <li>Take the Gondola ride in Gulmarg.</li>
-                    <li>Explore the valleys of Pahalgam.</li>
-                    <li>Visit beautiful Mughal Gardens in Srinagar.</li>
-                    <li>Experience traditional Kashmiri food and culture.</li>
-                </ol>
-
-                <h4>Combine Kashmir With Other Destinations</h4>
-
-                <p>
-                    Planning a longer holiday? You can combine Kashmir with other
-                    popular Himalayan destinations. Explore our
-                    <a href="javascript:void(0)">Leh Ladakh Tour Packages</a>,
-                    <a href="javascript:void(0)">Himachal Tour Packages</a>,
-                    <a href="javascript:void(0)">Manali Tour Packages</a>
-                    and
-                    <a href="javascript:void(0)">Shimla Tour Packages</a>
-                    for more options.
-                </p>
-
-                <h4>Explore More Travel Options</h4>
-
-                <p>
-                    Looking for more destinations and experiences? Browse our
-                    <a href="javascript:void(0)">India Tour Packages</a>,
-                    <a href="javascript:void(0)">Destinations</a>,
-                    <a href="javascript:void(0)">Attractions</a>
-                    and
-                    <a href="javascript:void(0)">Travel Experiences</a>
-                    to discover your next journey.
-                </p>
+                {!! $destination->more_about_content !!}
             </div>
         </div>
     </section>
 
-    <section class="attraction_accordion">
-        <div class="container">
-            <div class="heading">
-                <h3>Frequently Asked <span>Questions</span></h3>
-            </div>
-
-            <div class="accordion-wrapper">
-                <!-- FAQ 1 -->
-                <div class="accordion-item">
-                    <div class="accordion-body">
-                        <div class="accordion-header active">
-                            <h4>How many days are enough for Kashmir?</h4>
-                            <span class="accordion-icon">−</span>
-                        </div>
-
-                        <div class="accordion-content">
-                            <p>
-                                5–7 days is ideal for a first-time visit and allows you to
-                                experience major destinations such as Srinagar, Gulmarg and
-                                Pahalgam.
-                            </p>
-                        </div>
-                    </div>
+    {{-- FAQ --}}
+    @if ($destination->faqs->isNotEmpty())
+        <section class="attraction_accordion">
+            <div class="container">
+                <div class="heading">
+                    <h3>Frequently Asked <span>Questions</span></h3>
                 </div>
 
-                <!-- FAQ 2 -->
-                <div class="accordion-item">
-                    <div class="accordion-body">
-                        <div class="accordion-header">
-                            <h4>Where should I stay in Kashmir?</h4>
-                            <span class="accordion-icon">+</span>
-                        </div>
+                <div class="accordion-wrapper">
+                    @foreach ($destination->faqs as $faq)
+                        <div class="accordion-item">
+                            <div class="accordion-body">
+                                <div class="accordion-header @if($loop->first) active @endif">
+                                    <h4>{{ $faq->question }}</h4>
+                                    <span class="accordion-icon">@if($loop->first)−@else+@endif</span>
+                                </div>
 
-                        <div class="accordion-content">
-                            <p>
-                                Srinagar is a good base for exploring Kashmir, while adding
-                                Gulmarg and Pahalgam gives you a more complete experience of
-                                the region.
-                            </p>
+                                <div class="accordion-content">
+                                    <p>{{ $faq->answer }}</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- FAQ 3 -->
-                <div class="accordion-item">
-                    <div class="accordion-body">
-                        <div class="accordion-header">
-                            <h4>What is the best time to visit Kashmir?</h4>
-                            <span class="accordion-icon">+</span>
-                        </div>
-
-                        <div class="accordion-content">
-                            <p>
-                                March–October is popular for sightseeing and pleasant
-                                weather, while winter is best for experiencing snow and
-                                winter activities.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- FAQ 4 -->
-                <div class="accordion-item">
-                    <div class="accordion-body">
-                        <div class="accordion-header">
-                            <h4>How do I travel between destinations?</h4>
-                            <span class="accordion-icon">+</span>
-                        </div>
-
-                        <div class="accordion-content">
-                            <p>
-                                Private cars and taxis are convenient options for travelling
-                                between most destinations in Kashmir, especially when
-                                visiting multiple places during one trip.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- FAQ 5 -->
-                <div class="accordion-item">
-                    <div class="accordion-body">
-                        <div class="accordion-header">
-                            <h4>Can I create my own Kashmir itinerary?</h4>
-                            <span class="accordion-icon">+</span>
-                        </div>
-
-                        <div class="accordion-content">
-                            <p>
-                                Yes. Select your preferred destinations, stays and
-                                experiences to create a Kashmir itinerary that matches your
-                                travel style and trip duration.
-                            </p>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
-        </div>
-    </section>
-
+        </section>
+    @endif
 
 @endsection
 

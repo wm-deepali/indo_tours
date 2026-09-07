@@ -365,6 +365,12 @@
                         <button type="button" class="cat-tab" data-tab="places">Places</button>
                         <button type="button" class="cat-tab" data-tab="banner">Offer Banner</button>
                         <button type="button" class="cat-tab" data-tab="activities">Activities</button>
+                        <button type="button" class="cat-tab" data-tab="routes">Routes</button>
+                        <button type="button" class="cat-tab" data-tab="journey">Sample Itinerary</button>
+                        <button type="button" class="cat-tab" data-tab="season">Season</button>
+                        <button type="button" class="cat-tab" data-tab="budget">Budget</button>
+                        <button type="button" class="cat-tab" data-tab="more-about">More About</button>
+                        <button type="button" class="cat-tab" data-tab="faqs">FAQs</button>
                         <button type="button" class="cat-tab" data-tab="seo">SEO / Open Graph</button>
                     </div>
 
@@ -844,6 +850,321 @@
                         </button>
                     </div>
 
+                    {{-- ============ ROUTES ============ --}}
+                    <div class="cat-tab-panel" data-panel="routes">
+                        <div class="seo-section-title">Route Options</div>
+                        <div class="hint" style="margin-bottom:14px;">Each row is one tab in the "Choose Your Route"
+                            picker. Give either a Path (for a fixed route) or a Note (for open-ended routes like "Slow
+                            Explorer").</div>
+
+                        <div id="route-wrapper">
+                            <div class="gallery-row" style="grid-template-columns: 80px 1fr 1fr 1fr auto;">
+                                <div class="form-field" style="margin:0">
+                                    <label>Days</label>
+                                    <input type="number" name="route[0][days]" class="form-control-styled"
+                                        placeholder="3" min="1">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Label</label>
+                                    <input type="text" name="route[0][label]" class="form-control-styled"
+                                        placeholder="e.g. Quick Escape">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Subtitle</label>
+                                    <input type="text" name="route[0][subtitle]" class="form-control-styled"
+                                        placeholder="e.g. Weekend trip">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Path (comma-separated)</label>
+                                    <input type="text" name="route[0][path]" class="form-control-styled"
+                                        placeholder="Srinagar, Gulmarg, Srinagar">
+                                </div>
+                                <button type="button" class="gallery-remove"
+                                    onclick="this.closest('.gallery-row').remove()">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="form-field">
+                                <label>Note (used instead of Path, e.g. for open-ended routes)</label>
+                                <textarea name="route[0][note]" rows="2" class="form-control-styled"
+                                    placeholder="Add Doodhpathri, Yusmarg and additional experiences at your own pace."></textarea>
+                            </div>
+                        </div>
+
+                        <button type="button" class="add-gallery-btn" onclick="addRouteRow()">
+                            <i class="fa fa-plus"></i> Add Route
+                        </button>
+                    </div>
+
+                    {{-- ============ SAMPLE ITINERARY ============ --}}
+                    <div class="cat-tab-panel" data-panel="journey">
+                        <div class="seo-section-title">Day-by-Day Itinerary</div>
+                        <div class="hint" style="margin-bottom:14px;">Mark the last day "Departure" to render it as the
+                            closing card instead of a full image+chips card.</div>
+
+                        <div id="journey-wrapper">
+                            <div class="gallery-row" style="grid-template-columns: 90px 1fr 1fr auto;">
+                                <div class="form-field" style="margin:0">
+                                    <label>Day #</label>
+                                    <input type="number" name="journey[0][day_number]" class="form-control-styled"
+                                        placeholder="1" min="1">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Title</label>
+                                    <input type="text" name="journey[0][title]" class="form-control-styled"
+                                        placeholder="e.g. Srinagar">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Image</label>
+                                    <input type="file" name="journey[0][image]" class="form-control-styled"
+                                        accept="image/*">
+                                </div>
+                                <button type="button" class="gallery-remove"
+                                    onclick="this.closest('.gallery-row').remove()">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="form-field">
+                                <label>Flow (e.g. "Arrival → Hotel check-in → Dal Lake")</label>
+                                <input type="text" name="journey[0][flow_text]" class="form-control-styled">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <label>Stay</label>
+                                    <input type="text" name="journey[0][stay_text]" class="form-control-styled"
+                                        placeholder="e.g. Srinagar">
+                                </div>
+                                <div class="form-field">
+                                    <label>Taste</label>
+                                    <input type="text" name="journey[0][food_text]" class="form-control-styled"
+                                        placeholder="e.g. Kahwa">
+                                </div>
+                                <div class="form-field toggle-row" style="align-self:end; margin-bottom:18px;">
+                                    <label class="switch">
+                                        <input type="checkbox" name="journey[0][is_departure]" value="1">
+                                        <span class="switch-slider"></span>
+                                    </label>
+                                    <label style="margin:0">Departure day</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="add-gallery-btn" onclick="addJourneyRow()">
+                            <i class="fa fa-plus"></i> Add Day
+                        </button>
+                    </div>
+
+                    {{-- ============ SEASON ============ --}}
+                    <div class="cat-tab-panel" data-panel="season">
+                        <div class="seo-section-title">Seasons</div>
+
+                        <div id="season-wrapper">
+                            <div class="gallery-row" style="grid-template-columns: 1fr 1fr 2fr auto;">
+                                <div class="form-field" style="margin:0">
+                                    <label>Range</label>
+                                    <input type="text" name="season[0][range_text]" class="form-control-styled"
+                                        placeholder="e.g. March – April">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Name</label>
+                                    <input type="text" name="season[0][name]" class="form-control-styled"
+                                        placeholder="e.g. Spring">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Description</label>
+                                    <input type="text" name="season[0][description]" class="form-control-styled"
+                                        placeholder="e.g. Gardens, flowers and pleasant weather.">
+                                </div>
+                                <button type="button" class="gallery-remove"
+                                    onclick="this.closest('.gallery-row').remove()">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="button" class="add-gallery-btn" onclick="addSeasonRow()">
+                            <i class="fa fa-plus"></i> Add Season
+                        </button>
+
+                        <div class="seo-section-title" style="margin-top:24px;">Summary Highlights</div>
+                        <div class="hint" style="margin-bottom:14px;">Shown as the "Best overall / Best for snow" line
+                            below the season grid.</div>
+
+                        <div id="season-highlight-wrapper">
+                            <div class="gallery-row" style="grid-template-columns: 1fr 1fr auto;">
+                                <div class="form-field" style="margin:0">
+                                    <label>Label</label>
+                                    <input type="text" name="season_highlight[0][label]" class="form-control-styled"
+                                        placeholder="e.g. Best overall">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Value</label>
+                                    <input type="text" name="season_highlight[0][value]" class="form-control-styled"
+                                        placeholder="e.g. March – October">
+                                </div>
+                                <button type="button" class="gallery-remove"
+                                    onclick="this.closest('.gallery-row').remove()">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="button" class="add-gallery-btn" onclick="addSeasonHighlightRow()">
+                            <i class="fa fa-plus"></i> Add Highlight
+                        </button>
+                    </div>
+
+                    {{-- ============ BUDGET ============ --}}
+                    <div class="cat-tab-panel" data-panel="budget">
+                        <div class="seo-section-title">Budget Tiers</div>
+
+                        <div id="budget-tier-wrapper">
+                            <div class="gallery-row" style="grid-template-columns: 1fr 1fr 1fr 1fr auto;">
+                                <div class="form-field" style="margin:0">
+                                    <label>Name</label>
+                                    <input type="text" name="budget_tier[0][name]" class="form-control-styled"
+                                        placeholder="e.g. Budget">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Price From</label>
+                                    <input type="text" name="budget_tier[0][price_from]" class="form-control-styled"
+                                        placeholder="e.g. 25,000">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Price To</label>
+                                    <input type="text" name="budget_tier[0][price_to]" class="form-control-styled"
+                                        placeholder="e.g. 35,000">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Suffix (if no "To")</label>
+                                    <input type="text" name="budget_tier[0][price_suffix]" class="form-control-styled"
+                                        placeholder="e.g. +">
+                                </div>
+                                <button type="button" class="gallery-remove"
+                                    onclick="this.closest('.gallery-row').remove()">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <label>Description</label>
+                                    <input type="text" name="budget_tier[0][description]" class="form-control-styled"
+                                        placeholder="e.g. Basic stays, shared travel, local food.">
+                                </div>
+                                <div class="form-field">
+                                    <label>Badge Text (optional)</label>
+                                    <input type="text" name="budget_tier[0][badge_text]" class="form-control-styled"
+                                        placeholder="e.g. Popular">
+                                </div>
+                                <div class="form-field toggle-row" style="align-self:end; margin-bottom:18px;">
+                                    <label class="switch">
+                                        <input type="checkbox" name="budget_tier[0][is_featured]" value="1">
+                                        <span class="switch-slider"></span>
+                                    </label>
+                                    <label style="margin:0">Featured</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="add-gallery-btn" onclick="addBudgetTierRow()">
+                            <i class="fa fa-plus"></i> Add Tier
+                        </button>
+
+                        <div class="seo-section-title" style="margin-top:24px;">Budget Breakdown</div>
+                        <div class="hint" style="margin-bottom:14px;">Should add up to 100% — shown as the progress
+                            bars.</div>
+
+                        <div id="budget-breakdown-wrapper">
+                            <div class="gallery-row" style="grid-template-columns: 1fr 1fr auto;">
+                                <div class="form-field" style="margin:0">
+                                    <label>Label</label>
+                                    <input type="text" name="budget_breakdown[0][label]" class="form-control-styled"
+                                        placeholder="e.g. Stay">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Percent</label>
+                                    <input type="number" name="budget_breakdown[0][percent]" class="form-control-styled"
+                                        placeholder="e.g. 40" min="0" max="100">
+                                </div>
+                                <button type="button" class="gallery-remove"
+                                    onclick="this.closest('.gallery-row').remove()">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="button" class="add-gallery-btn" onclick="addBudgetBreakdownRow()">
+                            <i class="fa fa-plus"></i> Add Breakdown Row
+                        </button>
+
+                        <div class="seo-section-title" style="margin-top:24px;">Section Text</div>
+
+                        <div class="form-field">
+                            <label for="budget_intro_text">Subheading</label>
+                            <input type="text" id="budget_intro_text" name="budget_intro_text"
+                                class="form-control-styled" value="{{ old('budget_intro_text') }}"
+                                placeholder="e.g. Estimated per-person budget for a 7-day trip">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="budget_note">Note</label>
+                            <textarea id="budget_note" name="budget_note" rows="2" class="form-control-styled"
+                                placeholder="e.g. Prices vary depending on season, hotel category, transportation and activities.">{{ old('budget_note') }}</textarea>
+                        </div>
+                    </div>
+
+                    {{-- ============ MORE ABOUT ============ --}}
+                    <div class="cat-tab-panel" data-panel="more-about">
+                        <div class="seo-section-title">More About Section</div>
+                        <div class="hint" style="margin-bottom:14px;">Long-form SEO content shown near the bottom of the
+                            page.</div>
+
+                        <div class="form-field">
+                            <label for="more_about_intro">Subtitle</label>
+                            <input type="text" id="more_about_intro" name="more_about_intro" class="form-control-styled"
+                                value="{{ old('more_about_intro') }}"
+                                placeholder="e.g. Explore more places, packages and experiences for your Kashmir trip.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="more_about_content">Content</label>
+                            <textarea id="more_about_content" name="more_about_content"
+                                class="form-control-styled @error('more_about_content') is-invalid @enderror">{{ old('more_about_content') }}</textarea>
+                            @error('more_about_content')
+                            <div class="form-error">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+
+                    {{-- ============ FAQS ============ --}}
+                    <div class="cat-tab-panel" data-panel="faqs">
+                        <div class="seo-section-title">Frequently Asked Questions</div>
+                        <div class="hint" style="margin-bottom:14px;">These also generate FAQ schema for search engines.
+                        </div>
+
+                        <div id="faq-wrapper">
+                            <div class="gallery-row" style="grid-template-columns: 1fr 1fr auto;">
+                                <div class="form-field" style="margin:0">
+                                    <label>Question</label>
+                                    <input type="text" name="faq[0][question]" class="form-control-styled"
+                                        placeholder="e.g. How many days are enough?">
+                                </div>
+                                <div class="form-field" style="margin:0">
+                                    <label>Answer</label>
+                                    <textarea name="faq[0][answer]" rows="2" class="form-control-styled"
+                                        placeholder="e.g. 5–7 days is ideal for a first-time visit..."></textarea>
+                                </div>
+                                <button type="button" class="gallery-remove"
+                                    onclick="this.closest('.gallery-row').remove()">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="button" class="add-gallery-btn" onclick="addFaqRow()">
+                            <i class="fa fa-plus"></i> Add FAQ
+                        </button>
+                    </div>
+
                     {{-- ============ SEO ============ --}}
                     <div class="cat-tab-panel" data-panel="seo">
 
@@ -923,7 +1244,21 @@
         </div>
     </div>
 </div>
-
+<script src="https://cdn.ckeditor.com/ckeditor5/41.3.1/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#more_about_content'), {
+            toolbar: [
+                'heading', '|',
+                'bold', 'italic', 'link', '|',
+                'bulletedList', 'numberedList', '|',
+                'blockQuote', 'undo', 'redo'
+            ]
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>
 <script>
     // ---- Tabs ----
     document.querySelectorAll('#destination-tabs .cat-tab').forEach(function (tabBtn) {
@@ -956,6 +1291,14 @@
     let highlightIndex = 1;
     let placeIndex = 1;
     let activityIndex = 1;
+    let routeIndex = 1;
+    let journeyIndex = 1;
+    let seasonIndex = 1;
+    let seasonHighlightIndex = 1;
+    let budgetTierIndex = 1;
+    let budgetBreakdownIndex = 1;
+    let faqIndex = 1;
+
 
     document.getElementById('h1').addEventListener('input', () => h1Edited = true);
     document.getElementById('og_title').addEventListener('input', () => ogTitleEdited = true);
@@ -1188,10 +1531,10 @@
         placeIndex++;
     }
 
-function addActivityRow() {
-    const wrapper = document.getElementById('activity-wrapper');
-    const row = document.createElement('div');
-    row.innerHTML = `
+    function addActivityRow() {
+        const wrapper = document.getElementById('activity-wrapper');
+        const row = document.createElement('div');
+        row.innerHTML = `
         <div class="gallery-row" style="grid-template-columns: 1fr 1fr 1fr 1fr auto;">
             <div class="form-field" style="margin:0">
                 <label>Image</label>
@@ -1221,9 +1564,229 @@ function addActivityRow() {
             <label style="margin:0">Featured (large card)</label>
         </div>
     `;
-    wrapper.appendChild(row);
-    activityIndex++;
-}
+        wrapper.appendChild(row);
+        activityIndex++;
+    }
+
+    function addRouteRow() {
+        const wrapper = document.getElementById('route-wrapper');
+        const row = document.createElement('div');
+        row.innerHTML = `
+        <div class="gallery-row" style="grid-template-columns: 80px 1fr 1fr 1fr auto;">
+            <div class="form-field" style="margin:0">
+                <label>Days</label>
+                <input type="number" name="route[${routeIndex}][days]" class="form-control-styled" min="1">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label>Label</label>
+                <input type="text" name="route[${routeIndex}][label]" class="form-control-styled" placeholder="e.g. Classic Kashmir">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label>Subtitle</label>
+                <input type="text" name="route[${routeIndex}][subtitle]" class="form-control-styled" placeholder="e.g. Most picked">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label>Path (comma-separated)</label>
+                <input type="text" name="route[${routeIndex}][path]" class="form-control-styled" placeholder="Srinagar, Gulmarg, Pahalgam, Srinagar">
+            </div>
+            <button type="button" class="gallery-remove" onclick="this.closest('div').parentElement.remove()">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+        <div class="form-field">
+            <label>Note (used instead of Path)</label>
+            <textarea name="route[${routeIndex}][note]" rows="2" class="form-control-styled"></textarea>
+        </div>
+    `;
+        wrapper.appendChild(row);
+        routeIndex++;
+    }
+
+    function addJourneyRow() {
+        const wrapper = document.getElementById('journey-wrapper');
+        const row = document.createElement('div');
+        row.innerHTML = `
+        <div class="gallery-row" style="grid-template-columns: 90px 1fr 1fr auto;">
+            <div class="form-field" style="margin:0">
+                <label>Day #</label>
+                <input type="number" name="journey[${journeyIndex}][day_number]" class="form-control-styled" min="1">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label>Title</label>
+                <input type="text" name="journey[${journeyIndex}][title]" class="form-control-styled" placeholder="e.g. Gulmarg">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label>Image</label>
+                <input type="file" name="journey[${journeyIndex}][image]" class="form-control-styled" accept="image/*">
+            </div>
+            <button type="button" class="gallery-remove" onclick="this.closest('div').parentElement.remove()">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+        <div class="form-field">
+            <label>Flow</label>
+            <input type="text" name="journey[${journeyIndex}][flow_text]" class="form-control-styled">
+        </div>
+        <div class="form-row">
+            <div class="form-field">
+                <label>Stay</label>
+                <input type="text" name="journey[${journeyIndex}][stay_text]" class="form-control-styled">
+            </div>
+            <div class="form-field">
+                <label>Taste</label>
+                <input type="text" name="journey[${journeyIndex}][food_text]" class="form-control-styled">
+            </div>
+            <div class="form-field toggle-row" style="align-self:end; margin-bottom:18px;">
+                <label class="switch">
+                    <input type="checkbox" name="journey[${journeyIndex}][is_departure]" value="1">
+                    <span class="switch-slider"></span>
+                </label>
+                <label style="margin:0">Departure day</label>
+            </div>
+        </div>
+    `;
+        wrapper.appendChild(row);
+        journeyIndex++;
+    }
+
+    function addSeasonRow() {
+        const wrapper = document.getElementById('season-wrapper');
+        const row = document.createElement('div');
+        row.className = 'gallery-row';
+        row.style.gridTemplateColumns = '1fr 1fr 2fr auto';
+        row.innerHTML = `
+        <div class="form-field" style="margin:0">
+            <label>Range</label>
+            <input type="text" name="season[${seasonIndex}][range_text]" class="form-control-styled" placeholder="e.g. May – June">
+        </div>
+        <div class="form-field" style="margin:0">
+            <label>Name</label>
+            <input type="text" name="season[${seasonIndex}][name]" class="form-control-styled" placeholder="e.g. Summer">
+        </div>
+        <div class="form-field" style="margin:0">
+            <label>Description</label>
+            <input type="text" name="season[${seasonIndex}][description]" class="form-control-styled">
+        </div>
+        <button type="button" class="gallery-remove" onclick="this.closest('.gallery-row').remove()">
+            <i class="fa fa-times"></i>
+        </button>
+    `;
+        wrapper.appendChild(row);
+        seasonIndex++;
+    }
+
+    function addSeasonHighlightRow() {
+        const wrapper = document.getElementById('season-highlight-wrapper');
+        const row = document.createElement('div');
+        row.className = 'gallery-row';
+        row.style.gridTemplateColumns = '1fr 1fr auto';
+        row.innerHTML = `
+        <div class="form-field" style="margin:0">
+            <label>Label</label>
+            <input type="text" name="season_highlight[${seasonHighlightIndex}][label]" class="form-control-styled" placeholder="e.g. Best for snow">
+        </div>
+        <div class="form-field" style="margin:0">
+            <label>Value</label>
+            <input type="text" name="season_highlight[${seasonHighlightIndex}][value]" class="form-control-styled" placeholder="e.g. December – February">
+        </div>
+        <button type="button" class="gallery-remove" onclick="this.closest('.gallery-row').remove()">
+            <i class="fa fa-times"></i>
+        </button>
+    `;
+        wrapper.appendChild(row);
+        seasonHighlightIndex++;
+    }
+
+    function addBudgetTierRow() {
+        const wrapper = document.getElementById('budget-tier-wrapper');
+        const row = document.createElement('div');
+        row.innerHTML = `
+        <div class="gallery-row" style="grid-template-columns: 1fr 1fr 1fr 1fr auto;">
+            <div class="form-field" style="margin:0">
+                <label>Name</label>
+                <input type="text" name="budget_tier[${budgetTierIndex}][name]" class="form-control-styled" placeholder="e.g. Premium">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label>Price From</label>
+                <input type="text" name="budget_tier[${budgetTierIndex}][price_from]" class="form-control-styled">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label>Price To</label>
+                <input type="text" name="budget_tier[${budgetTierIndex}][price_to]" class="form-control-styled">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label>Suffix</label>
+                <input type="text" name="budget_tier[${budgetTierIndex}][price_suffix]" class="form-control-styled" placeholder="e.g. +">
+            </div>
+            <button type="button" class="gallery-remove" onclick="this.closest('div').parentElement.remove()">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+        <div class="form-row">
+            <div class="form-field">
+                <label>Description</label>
+                <input type="text" name="budget_tier[${budgetTierIndex}][description]" class="form-control-styled">
+            </div>
+            <div class="form-field">
+                <label>Badge Text</label>
+                <input type="text" name="budget_tier[${budgetTierIndex}][badge_text]" class="form-control-styled">
+            </div>
+            <div class="form-field toggle-row" style="align-self:end; margin-bottom:18px;">
+                <label class="switch">
+                    <input type="checkbox" name="budget_tier[${budgetTierIndex}][is_featured]" value="1">
+                    <span class="switch-slider"></span>
+                </label>
+                <label style="margin:0">Featured</label>
+            </div>
+        </div>
+    `;
+        wrapper.appendChild(row);
+        budgetTierIndex++;
+    }
+
+    function addBudgetBreakdownRow() {
+        const wrapper = document.getElementById('budget-breakdown-wrapper');
+        const row = document.createElement('div');
+        row.className = 'gallery-row';
+        row.style.gridTemplateColumns = '1fr 1fr auto';
+        row.innerHTML = `
+        <div class="form-field" style="margin:0">
+            <label>Label</label>
+            <input type="text" name="budget_breakdown[${budgetBreakdownIndex}][label]" class="form-control-styled" placeholder="e.g. Activities">
+        </div>
+        <div class="form-field" style="margin:0">
+            <label>Percent</label>
+            <input type="number" name="budget_breakdown[${budgetBreakdownIndex}][percent]" class="form-control-styled" min="0" max="100">
+        </div>
+        <button type="button" class="gallery-remove" onclick="this.closest('.gallery-row').remove()">
+            <i class="fa fa-times"></i>
+        </button>
+    `;
+        wrapper.appendChild(row);
+        budgetBreakdownIndex++;
+    }
+
+    function addFaqRow() {
+        const wrapper = document.getElementById('faq-wrapper');
+        const row = document.createElement('div');
+        row.className = 'gallery-row';
+        row.style.gridTemplateColumns = '1fr 1fr auto';
+        row.innerHTML = `
+        <div class="form-field" style="margin:0">
+            <label>Question</label>
+            <input type="text" name="faq[${faqIndex}][question]" class="form-control-styled" placeholder="e.g. Where should I stay?">
+        </div>
+        <div class="form-field" style="margin:0">
+            <label>Answer</label>
+            <textarea name="faq[${faqIndex}][answer]" rows="2" class="form-control-styled"></textarea>
+        </div>
+        <button type="button" class="gallery-remove" onclick="this.closest('.gallery-row').remove()">
+            <i class="fa fa-times"></i>
+        </button>
+    `;
+        wrapper.appendChild(row);
+        faqIndex++;
+    }
 
 </script>
 

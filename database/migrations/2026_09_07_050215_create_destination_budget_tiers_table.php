@@ -10,30 +10,30 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('destination_activities', function (Blueprint $table) {
+        // destination_budget_tiers
+        Schema::create('destination_budget_tiers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('destination_id')->constrained()->cascadeOnDelete();
-            $table->string('image')->nullable();
-            $table->string('tag')->nullable();
-            $table->string('title');
+            $table->string('name');           // "Budget", "Comfort", "Premium"
+            $table->string('price_from');     // stored as text so admin can format freely: "25,000"
+            $table->string('price_to')->nullable();
+            $table->string('price_suffix')->nullable(); // "+" for "60,000+"
             $table->text('description')->nullable();
             $table->boolean('is_featured')->default(false);
+            $table->string('badge_text')->nullable(); // "Popular"
             $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
         });
 
-        Schema::create('destination_routes', function (Blueprint $table) {
+        // destination_budget_breakdown
+        Schema::create('destination_budget_breakdowns', function (Blueprint $table) {
             $table->id();
             $table->foreignId('destination_id')->constrained()->cascadeOnDelete();
-            $table->unsignedInteger('days'); // e.g. 3, 5, 7, 10 — drives the CSS selector suffix
-            $table->string('label');         // e.g. "Quick Escape"
-            $table->string('subtitle')->nullable(); // e.g. "Weekend trip"
-            $table->json('path')->nullable();       // ["Srinagar","Gulmarg","Srinagar"]
-            $table->text('note')->nullable();       // used instead of path for open-ended routes
+            $table->string('label');   // "Stay", "Transport"...
+            $table->unsignedTinyInteger('percent');
             $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
         });
-
     }
 
     /**
@@ -41,7 +41,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('destination_activities');
-        Schema::dropIfExists('destination_routes');
+        Schema::dropIfExists('destination_budget_tiers');
+        Schema::dropIfExists('destination_budget_breakdowns');
     }
 };

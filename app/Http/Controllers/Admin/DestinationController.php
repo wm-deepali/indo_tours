@@ -58,6 +58,7 @@ class DestinationController extends Controller
         $validated['best_for_tags'] = $this->parseTags($request->input('best_for_tags'));
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['status'] = $request->input('status', 'draft');
+        $validated['season_highlights'] = $this->parseSeasonHighlights($request);
 
         $destination = Destination::create($validated);
 
@@ -68,6 +69,12 @@ class DestinationController extends Controller
         $this->syncAreas($request, $destination);
         $this->syncHighlights($request, $destination);
         $this->syncPlaces($request, $destination);
+        $this->syncRoutes($request, $destination);
+        $this->syncJourneyDays($request, $destination);
+        $this->syncSeasons($request, $destination);
+        $this->syncBudgetTiers($request, $destination);
+        $this->syncBudgetBreakdown($request, $destination);
+        $this->syncFaqs($request, $destination);
 
         return redirect()
             ->route('admin.destinations.index')
@@ -79,7 +86,7 @@ class DestinationController extends Controller
         $countries = Country::where('status', 'active')->orderBy('sort_order')->get();
         $states = State::where('country_id', $destination->country_id)->orderBy('sort_order')->get();
         $cities = City::where('state_id', $destination->state_id)->orderBy('sort_order')->get();
-        $destination->load('galleries', 'matches', 'areas', 'highlights', 'places');
+        $destination->load('galleries', 'matches', 'areas', 'highlights', 'places', 'banner', 'activities', 'routes', 'journeyDays', 'seasons', 'budgetTiers', 'budgetBreakdown', 'faqs');
 
         return view('admin.destination.edit', compact('destination', 'countries', 'states', 'cities'));
     }
@@ -113,6 +120,7 @@ class DestinationController extends Controller
         $validated['best_for_tags'] = $this->parseTags($request->input('best_for_tags'));
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['status'] = $request->input('status', $destination->status);
+        $validated['season_highlights'] = $this->parseSeasonHighlights($request);
 
         $destination->update($validated);
 
@@ -152,6 +160,28 @@ class DestinationController extends Controller
                 ->delete();
         }
 
+        if ($request->filled('remove_route_ids')) {
+            \App\Models\DestinationRoute::where('destination_id', $destination->id)
+                ->whereIn('id', $request->input('remove_route_ids'))
+                ->delete();
+        }
+
+        if ($request->filled('remove_journey_ids')) {
+            \App\Models\DestinationJourneyDay::where('destination_id', $destination->id)
+                ->whereIn('id', $request->input('remove_journey_ids'))
+                ->delete();
+        }
+
+        if ($request->filled('remove_faq_ids')) {
+            \App\Models\DestinationFaq::where('destination_id', $destination->id)
+                ->whereIn('id', $request->input('remove_faq_ids'))
+                ->delete();
+        }
+
+        $this->updateExistingRoutes($request, $destination);
+        $this->syncRoutes($request, $destination);
+        $this->updateExistingJourneyDays($request, $destination);
+        $this->syncJourneyDays($request, $destination);
         $this->syncBanner($request, $destination);
         $this->updateExistingActivities($request, $destination);
         $this->syncActivities($request, $destination);
@@ -165,6 +195,11 @@ class DestinationController extends Controller
         $this->syncAreas($request, $destination);
         $this->syncHighlights($request, $destination);
         $this->syncPlaces($request, $destination);
+        $this->syncSeasons($request, $destination);
+        $this->syncBudgetTiers($request, $destination);
+        $this->syncBudgetBreakdown($request, $destination);
+        $this->updateExistingFaqs($request, $destination);
+        $this->syncFaqs($request, $destination);
 
         return redirect()
             ->route('admin.destinations.index')
@@ -209,11 +244,15 @@ class DestinationController extends Controller
             'image' => 'nullable|image|max:2048',
             'short_description' => 'nullable|string|max:500',
             'description' => 'nullable|string',
+            'more_about_intro' => 'nullable|string|max:255',
+            'more_about_content' => 'nullable|string',
             'verdict_title' => 'nullable|string|max:255',
             'recommended_for' => 'nullable|string|max:255',
             'duration_text' => 'nullable|string|max:100',
             'best_time_text' => 'nullable|string|max:100',
             'budget_text' => 'nullable|string|max:100',
+            'budget_intro_text' => 'nullable|string|max:255',
+            'budget_note' => 'nullable|string',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
             'h1' => 'nullable|string|max:255',
@@ -641,6 +680,251 @@ class DestinationController extends Controller
                 ->update($bannerData);
         } elseif (array_filter($bannerData)) {
             $destination->banner()->create($bannerData);
+        }
+    }
+
+    // ---- Routes ----
+    private function updateExistingRoutes(Request $request, Destination $destination): void
+    {
+        if (!$request->has('existing_route')) {
+            return;
+        }
+
+        $removeIds = $request->input('remove_route_ids', []);
+
+        foreach ($request->input('existing_route') as $routeId => $item) {
+            if (in_array($routeId, $removeIds)) {
+                continue;
+            }
+
+            $route = $destination->routes()->find($routeId);
+
+            if (!$route) {
+                continue;
+            }
+
+            $route->update([
+                'days' => $item['days'] ?? $route->days,
+                'label' => $item['label'] ?? $route->label,
+                'subtitle' => $item['subtitle'] ?? null,
+                'path' => !empty($item['path']) ? array_map('trim', explode(',', $item['path'])) : null,
+                'note' => $item['note'] ?? null,
+            ]);
+        }
+    }
+
+    private function syncRoutes(Request $request, Destination $destination): void
+    {
+        if (!$request->has('route')) {
+            return;
+        }
+
+        foreach ($request->input('route') as $index => $item) {
+            if (empty($item['days']) || empty($item['label'])) {
+                continue; // skip empty rows
+            }
+
+            $destination->routes()->create([
+                'days' => $item['days'],
+                'label' => $item['label'],
+                'subtitle' => $item['subtitle'] ?? null,
+                'path' => !empty($item['path']) ? array_map('trim', explode(',', $item['path'])) : null,
+                'note' => $item['note'] ?? null,
+                'sort_order' => $destination->routes()->count() + $index,
+            ]);
+        }
+    }
+
+    // ---- Journey days ----
+    private function updateExistingJourneyDays(Request $request, Destination $destination): void
+    {
+        if (!$request->has('existing_journey')) {
+            return;
+        }
+
+        $removeIds = $request->input('remove_journey_ids', []);
+
+        foreach ($request->input('existing_journey') as $dayId => $item) {
+            if (in_array($dayId, $removeIds)) {
+                continue;
+            }
+
+            $day = $destination->journeyDays()->find($dayId);
+
+            if (!$day) {
+                continue;
+            }
+
+            $data = [
+                'day_number' => $item['day_number'] ?? $day->day_number,
+                'title' => $item['title'] ?? $day->title,
+                'flow_text' => $item['flow_text'] ?? null,
+                'stay_text' => $item['stay_text'] ?? null,
+                'food_text' => $item['food_text'] ?? null,
+                'is_departure' => isset($item['is_departure']),
+            ];
+
+            if ($request->hasFile("existing_journey.$dayId.image")) {
+                $data['image'] = $request->file("existing_journey.$dayId.image")->store('destinations/journey', 'public');
+            }
+
+            $day->update($data);
+        }
+    }
+
+    private function syncJourneyDays(Request $request, Destination $destination): void
+    {
+        if (!$request->has('journey')) {
+            return;
+        }
+
+        foreach ($request->input('journey') as $index => $item) {
+            if (empty($item['title'])) {
+                continue;
+            }
+
+            $imagePath = null;
+
+            if ($request->hasFile("journey.$index.image")) {
+                $imagePath = $request->file("journey.$index.image")->store('destinations/journey', 'public');
+            }
+
+            $destination->journeyDays()->create([
+                'day_number' => $item['day_number'] ?? null,
+                'title' => $item['title'],
+                'image' => $imagePath,
+                'flow_text' => $item['flow_text'] ?? null,
+                'stay_text' => $item['stay_text'] ?? null,
+                'food_text' => $item['food_text'] ?? null,
+                'is_departure' => isset($item['is_departure']),
+                'sort_order' => $destination->journeyDays()->count() + $index,
+            ]);
+        }
+    }
+
+    private function syncSeasons(Request $request, Destination $destination): void
+    {
+        if (!$request->has('season')) {
+            return;
+        }
+
+        $destination->seasons()->delete();
+
+        foreach ($request->input('season') as $index => $item) {
+            if (empty($item['name'])) {
+                continue;
+            }
+
+            $destination->seasons()->create([
+                'range_text' => $item['range_text'] ?? null,
+                'name' => $item['name'],
+                'description' => $item['description'] ?? null,
+                'sort_order' => $index,
+            ]);
+        }
+    }
+
+    private function parseSeasonHighlights(Request $request): ?array
+    {
+        if (!$request->has('season_highlight')) {
+            return null;
+        }
+
+        return collect($request->input('season_highlight'))
+            ->filter(fn($item) => !empty($item['label']) && !empty($item['value']))
+            ->values()
+            ->all();
+    }
+
+    private function syncBudgetTiers(Request $request, Destination $destination): void
+    {
+        if (!$request->has('budget_tier')) {
+            return;
+        }
+
+        $destination->budgetTiers()->delete();
+
+        foreach ($request->input('budget_tier') as $index => $item) {
+            if (empty($item['name'])) {
+                continue;
+            }
+
+            $destination->budgetTiers()->create([
+                'name' => $item['name'],
+                'price_from' => $item['price_from'] ?? null,
+                'price_to' => $item['price_to'] ?? null,
+                'price_suffix' => $item['price_suffix'] ?? null,
+                'description' => $item['description'] ?? null,
+                'is_featured' => !empty($item['is_featured']),
+                'badge_text' => $item['badge_text'] ?? null,
+                'sort_order' => $index,
+            ]);
+        }
+    }
+
+    private function syncBudgetBreakdown(Request $request, Destination $destination): void
+    {
+        if (!$request->has('budget_breakdown')) {
+            return;
+        }
+
+        $destination->budgetBreakdown()->delete();
+
+        foreach ($request->input('budget_breakdown') as $index => $item) {
+            if (empty($item['label']) || $item['percent'] === null) {
+                continue;
+            }
+
+            $destination->budgetBreakdown()->create([
+                'label' => $item['label'],
+                'percent' => $item['percent'],
+                'sort_order' => $index,
+            ]);
+        }
+    }
+
+    private function updateExistingFaqs(Request $request, Destination $destination): void
+    {
+        if (!$request->has('existing_faq')) {
+            return;
+        }
+
+        $removeIds = $request->input('remove_faq_ids', []);
+
+        foreach ($request->input('existing_faq') as $faqId => $item) {
+            if (in_array($faqId, $removeIds)) {
+                continue;
+            }
+
+            $faq = $destination->faqs()->find($faqId);
+
+            if (!$faq) {
+                continue;
+            }
+
+            $faq->update([
+                'question' => $item['question'] ?? $faq->question,
+                'answer' => $item['answer'] ?? $faq->answer,
+            ]);
+        }
+    }
+
+    private function syncFaqs(Request $request, Destination $destination): void
+    {
+        if (!$request->has('faq')) {
+            return;
+        }
+
+        foreach ($request->input('faq') as $index => $item) {
+            if (empty($item['question']) || empty($item['answer'])) {
+                continue; // skip empty rows
+            }
+
+            $destination->faqs()->create([
+                'question' => $item['question'],
+                'answer' => $item['answer'],
+                'sort_order' => $destination->faqs()->count() + $index,
+            ]);
         }
     }
 
