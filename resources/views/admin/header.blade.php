@@ -48,6 +48,24 @@
                 <i class="fa-solid fa-map-location-dot"></i> Destinations
             </a>
         </li>
-        
+
+        <li class="{{ request()->routeIs('admin.attractions.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.attractions.index') }}">
+                <i class="fa-solid fa-map-location-dot"></i> Attractions
+            </a>
+        </li>
+
+        <li class="{{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+            <a href="#"><i class="fa-solid fa-gear"></i> Settings</a>
+            <ul>
+                <li><a href="{{ route('admin.settings.index', ['tab' => 'general']) }}">General Setting</a></li>
+                <li><a href="{{ route('admin.settings.index', ['tab' => 'smtp']) }}">SMTP</a></li>
+                <li><a href="{{ route('admin.settings.index', ['tab' => 'sms']) }}">SMS</a></li>
+                <li><a href="{{ route('admin.settings.index', ['tab' => 'tracking']) }}"> Google Tracking & Pixels</a>
+                </li>
+                <li><a href="{{ route('admin.seo-setting.index') }}"> SEO Settings</a></li>
+            </ul>
+        </li>
+
     </ul>
 </div>

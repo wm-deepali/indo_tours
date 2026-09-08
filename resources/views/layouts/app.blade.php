@@ -36,7 +36,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/animate.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/fancybox.css') }}" />
 
-      @stack('styles')
+    @stack('styles')
 </head>
 
 <body>
@@ -472,9 +472,8 @@
         </div>
     </header>
 
-    <main>
-        @yield('content')
-    </main>
+    @yield('content')
+
 
     <footer>
         <!-- Top strip: trust badges -->
@@ -603,7 +602,8 @@
             <div class="footer-middle">
                 <div class="container">
                     <div class="colA">
-                        <img loading="lazy" class="logo" src="{{ asset('assets/images/logo.png') }}" alt="TripPlanner" />
+                        <img loading="lazy" class="logo" src="{{ asset('assets/images/logo.png') }}"
+                            alt="TripPlanner" />
 
                         <div class="form">
                             <div class="form-group">
