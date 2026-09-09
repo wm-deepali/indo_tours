@@ -48,9 +48,34 @@ class FrontController extends Controller
     {
         abort_unless($attraction->status === 'published', 404);
 
-        $attraction->load(['country', 'state', 'city']);
+        $attraction->load([
+            'galleries',
+            'highlights',
+            'experiences',
+            'places',
+            'itineraries.stops',
+            'seasons',
+            'transports',
+            'budgetTiers',
+            'carryGroups',
+            'faqs',
+            'country',
+            'state',
+            'city',
+        ]);
 
-        return view('front-pages.attraction-detail', compact('attraction'));
+        $relatedAttractions = Attraction::where('status', 'published')
+            ->where('id', '!=', $attraction->id)
+            ->with('country')
+            ->when($attraction->country_id, function ($query) use ($attraction) {
+                $query->orderByRaw('country_id = ? DESC', [$attraction->country_id]);
+            })
+            ->orderBy('sort_order')
+            ->latest()
+            ->take(8)
+            ->get();
+
+        return view('front-pages.attraction-detail', compact('attraction', 'relatedAttractions'));
     }
-
+    
 }
