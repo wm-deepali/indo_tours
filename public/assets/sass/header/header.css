@@ -660,7 +660,7 @@ svg path {
 h1 {
   font-family: "Poppins";
   font-weight: 700;
-  font-size: 60px;
+  font-size: 46px;
   line-height: 1.2;
 }
 @media only screen and (max-width: 1280px) {
@@ -4513,7 +4513,7 @@ input:focus ~ .formField::after, input:valid ~ .formField::after {
   }
 }
 .seo-links-sec .heading {
-  max-width: 354px;
+  max-width: 554px;
   margin: 0 auto 35px;
   text-align: center;
 }
@@ -8796,15 +8796,4 @@ header .menu {
 
 main {
   overflow-x: hidden;
-}
-
-@media only screen and (max-width: 991px) {
-  section:not(:first-child) {
-    padding: 50px 0 !important;
-  }
-}
-@media only screen and (max-width: 540px) {
-  section:not(:first-child) {
-    padding: 40px 0 !important;
-  }
 }/*# sourceMappingURL=header.css.map */

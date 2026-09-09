@@ -1864,6 +1864,7 @@
 
 .home-secF {
   padding: 40px 0 70px;
+  background: var(--gray-sec);
 }
 @media only screen and (max-width: 1280px) {
   .home-secF {

@@ -660,7 +660,7 @@ svg path {
 h1 {
   font-family: "Poppins";
   font-weight: 700;
-  font-size: 60px;
+  font-size: 46px;
   line-height: 1.2;
 }
 @media only screen and (max-width: 1280px) {
@@ -4513,7 +4513,7 @@ input:focus ~ .formField::after, input:valid ~ .formField::after {
   }
 }
 .seo-links-sec .heading {
-  max-width: 354px;
+  max-width: 554px;
   margin: 0 auto 35px;
   text-align: center;
 }
@@ -5298,7 +5298,7 @@ svg path {
 h1 {
   font-family: "Poppins";
   font-weight: 700;
-  font-size: 60px;
+  font-size: 46px;
   line-height: 1.2;
 }
 @media only screen and (max-width: 1280px) {
@@ -9151,7 +9151,7 @@ input:focus ~ .formField::after, input:valid ~ .formField::after {
   }
 }
 .seo-links-sec .heading {
-  max-width: 354px;
+  max-width: 554px;
   margin: 0 auto 35px;
   text-align: center;
 }
@@ -10341,7 +10341,7 @@ main {
 }
 .categories-sec .heading {
   width: 100%;
-  max-width: 100%;
+  max-width: 450px;
   margin: 0 auto;
   text-align: center;
 }

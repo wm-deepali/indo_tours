@@ -1,0 +1,1502 @@
+@import '../_common'
+
+.listing-banner
+  position: relative
+
+  .bg
+    position: relative
+    height: 100vh
+    overflow: hidden
+
+    @include media(1366)
+      height: 90vh
+    @include media(1024)
+      height: 85vh
+    @include media(991)
+      height: 80vh
+    @include media(768)
+      height: auto
+      min-height: 560px
+    @include media(540)
+      min-height: 480px
+    @include media(420)
+      min-height: 420px
+
+    &::before
+      content: ''
+      position: absolute
+      inset: 0
+      background: linear-gradient(360deg, rgba(0, 0, 0, 0.74) 12%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.74) 100%)
+      z-index: 1
+      pointer-events: none
+
+    .listSlider
+      position: absolute
+      inset: 0
+      width: 100%
+      height: 100%
+      z-index: 0
+
+      .swiper-slide
+        img
+          width: 100%
+          height: 100%
+          object-fit: cover
+
+    .container
+      position: relative
+      z-index: 2
+      height: 100%
+
+    .bg-wrapper
+      position: relative
+      display: flex
+      align-items: center
+      justify-content: center
+      height: 100%
+
+      @include media(991)
+        height: auto
+        padding: 200px 0 30px
+
+      @include media(768)
+        padding: 170px 0 26px
+
+
+    .content
+      position: absolute
+      bottom: 120px
+      text-align: center
+      color: $white
+      width: 100%
+      max-width: 100%
+      padding: 0 20px
+      margin: 0 auto
+
+      @include media(1366)
+        bottom: 100px
+      @include media(1024)
+        bottom: 90px
+      @include media(991)
+        position: relative
+        bottom: auto
+      @include media(768)
+        padding: 0 16px
+      @include media(540)
+        padding: 0 14px
+      @include media(420)
+        padding: 0 12px
+
+      .offer-tag
+        display: inline-block
+        font-size: 16px
+        font-weight: 500
+        margin-bottom: 10px
+        color: var(--white)
+
+        @include media(1024)
+          font-size: 15px
+        @include media(768)
+          font-size: 14px
+          margin-bottom: 8px
+        @include media(540)
+          font-size: 13px
+        @include media(420)
+          font-size: 12px
+          margin-bottom: 6px
+
+      h1
+        font-weight: 800
+        margin: 0 auto 16px
+        font-family: $Poppins
+        color: var(--white)
+        width: 100%
+        max-width: 100%
+
+        @include font(800)
+
+        @include media(1366)
+          font-size: 48px
+        @include media(1024)
+          font-size: 44px
+        @include media(991)
+          font-size: 40px
+          margin: 0 auto 14px
+        @include media(768)
+          font-size: 34px
+          margin: 0 auto 12px
+        @include media(540)
+          font-size: 28px
+          margin: 0 auto 10px
+        @include media(420)
+          font-size: 24px
+
+      .divider
+        display: block
+        width: 100px
+        height: 2px
+        background: $white
+        margin: 0 auto 20px
+
+        @include media(768)
+          width: 80px
+          margin: 0 auto 16px
+        @include media(540)
+          width: 60px
+          margin: 0 auto 14px
+        @include media(420)
+          width: 50px
+          margin: 0 auto 12px
+
+      p
+        opacity: .9
+        margin-bottom: 22px
+        max-width: 740px
+        color: var(--white)
+        margin-left: auto
+        margin-right: auto
+
+        @include media(1366)
+          max-width: 680px
+        @include media(1024)
+          max-width: 620px
+        @include media(991)
+          max-width: 540px
+        @include media(768)
+          max-width: 460px
+          font-size: 14px
+          margin-bottom: 18px
+        @include media(540)
+          max-width: 100%
+          font-size: 13px
+          margin-bottom: 16px
+        @include media(420)
+          margin-bottom: 14px
+
+      .price-row
+        display: flex
+        align-items: center
+        justify-content: center
+        flex-wrap: wrap
+        gap: 10px
+        margin-bottom: 28px
+
+        @include media(1024)
+          margin-bottom: 26px
+        @include media(991)
+          margin-bottom: 24px
+        @include media(768)
+          gap: 8px
+          margin-bottom: 20px
+        @include media(540)
+          gap: 6px
+          margin-bottom: 16px
+        @include media(420)
+          gap: 5px
+          margin-bottom: 14px
+
+        span
+          font-size: 16px
+          opacity: .7
+          color: var(--white)
+
+          @include media(1024)
+            font-size: 15px
+          @include media(768)
+            font-size: 14px
+          @include media(540)
+            font-size: 13px
+
+        .old-price
+          font-size: 18px
+          font-weight: 500
+          opacity: .9
+          color: var(--white)
+          text-decoration: line-through
+
+          @include media(1024)
+            font-size: 16px
+          @include media(768)
+            font-size: 14px
+          @include media(540)
+            font-size: 13px
+
+        h3
+          font-weight: 600
+          font-size: 24px
+          margin: 0
+
+          @include font(800)
+
+          @include media(1024)
+            font-size: 23px
+          @include media(768)
+            font-size: 22px
+          @include media(540)
+            font-size: 19px
+          @include media(420)
+            font-size: 17px
+
+        sup
+          font-size: 18px
+          top: -14px
+
+          @include media(1024)
+            font-size: 16px
+          @include media(768)
+            font-size: 15px
+          @include media(540)
+            font-size: 13px
+            top: -10px
+
+        small
+          font-size: 16px
+          font-weight: 400
+          opacity: .85
+
+          @include media(1024)
+            font-size: 15px
+          @include media(768)
+            font-size: 14px
+          @include media(540)
+            font-size: 12px
+
+
+.listing-secG
+  padding: 70px 0
+
+  @include media(1366)
+    padding: 64px 0
+  @include media(1280)
+    padding: 60px 0
+  @include media(1024)
+    padding: 50px 0
+  @include media(991)
+    padding: 45px 0
+  @include media(768)
+    padding: 40px 0
+
+  .grid
+    position: relative
+    background: var(--gradient-a)
+    border-radius: 24px
+    padding: 50px 60px
+    display: grid
+    grid-template-columns: 1.4fr 1fr
+    align-items: center
+    gap: 40px
+    overflow: hidden
+
+    @include media(1366)
+      padding: 46px 54px
+      gap: 36px
+    @include media(1280)
+      padding: 44px 50px
+      gap: 32px
+    @include media(1024)
+      padding: 38px 40px
+      gap: 28px
+    @include media(991)
+      grid-template-columns: 1fr
+      padding: 40px 30px
+      text-align: center
+      gap: 26px
+    @include media(768)
+      padding: 34px 26px
+      border-radius: 20px
+      gap: 22px
+    @include media(540)
+      padding: 28px 20px
+      border-radius: 16px
+      gap: 20px
+    @include media(420)
+      padding: 24px 16px
+
+    .glow
+      position: absolute
+      top: -80px
+      right: -80px
+      width: 260px
+      height: 260px
+      background: rgba(255, 255, 255, .12)
+      border-radius: 50%
+      filter: blur(10px)
+      pointer-events: none
+
+      @include media(1024)
+        width: 220px
+        height: 220px
+      @include media(768)
+        width: 200px
+        height: 200px
+        top: -60px
+        right: -60px
+      @include media(540)
+        width: 160px
+        height: 160px
+
+  .promo-left
+    position: relative
+    z-index: 1
+
+    .promo-badge
+      display: inline-flex
+      align-items: center
+      gap: 6px
+      background: rgba(255, 255, 255, .15)
+      backdrop-filter: blur(6px)
+      color: var(--white)
+      font-size: 12px
+      font-weight: 700
+      text-transform: uppercase
+      letter-spacing: .5px
+      padding: 6px 14px
+      border-radius: 30px
+      margin-bottom: 16px
+
+      @include media(768)
+        margin-bottom: 12px
+      @include media(540)
+        font-size: 11px
+        padding: 5px 12px
+        margin-bottom: 10px
+
+      svg
+        width: 20px
+        height: 20px
+        display: inline-block
+
+        @include media(540)
+          width: 16px
+          height: 16px
+
+    h3
+      font-family: $Poppins
+      font-weight: 800
+      font-size: 32px
+      line-height: 1.3
+      color: var(--white)
+      margin: 0 0 14px
+
+      @include font(800)
+
+      @include media(1024)
+        font-size: 28px
+      @include media(768)
+        font-size: 24px
+        margin: 0 0 12px
+      @include media(540)
+        font-size: 20px
+        margin: 0 0 10px
+      @include media(420)
+        font-size: 18px
+
+      span
+        background: linear-gradient(90deg, #FFD36E 0%, #FF8A5C 100%)
+        -webkit-background-clip: text
+        -webkit-text-fill-color: transparent
+        background-clip: text
+
+    p
+      font-size: 15px
+      color: rgba(255, 255, 255, .75)
+      max-width: 460px
+      margin: 0 0 26px
+      line-height: 1.6
+
+      @include media(991)
+        margin-left: auto
+        margin-right: auto
+      @include media(768)
+        font-size: 14px
+        margin-bottom: 20px
+      @include media(540)
+        font-size: 13px
+        margin-bottom: 18px
+
+    .btn-promo
+      display: inline-flex
+      align-items: center
+      gap: 8px
+      background: var(--white)
+      color: #111827
+      font-weight: 700
+      font-size: 14px
+      padding: 14px 28px
+      border-radius: 10px
+      transition: .3s ease
+
+      @include media(768)
+        padding: 12px 24px
+      @include media(540)
+        font-size: 13px
+        padding: 11px 20px
+        gap: 6px
+
+      .icon-arrow
+        width: 14px
+        height: 14px
+        background: url('../images/icon/arrow-right-dark.svg') center/contain no-repeat
+
+      &:hover
+        transform: translateY(-3px)
+        box-shadow: 0 12px 24px -8px rgba(0, 0, 0, .4)
+
+        @include media(768)
+          transform: none
+
+  .promo-right
+    position: relative
+    z-index: 1
+    display: flex
+    flex-direction: column
+    align-items: flex-end
+
+    @include media(991)
+      align-items: center
+
+    .countdown-label
+      font-size: 14px
+      color: rgba(255, 255, 255, .75)
+      margin-bottom: 16px
+
+      @include media(768)
+        font-size: 13px
+      @include media(540)
+        font-size: 12px
+        margin-bottom: 12px
+
+  .countdown
+    display: flex
+    align-items: center
+    gap: 10px
+
+    @include media(768)
+      gap: 9px
+    @include media(540)
+      gap: 8px
+    @include media(420)
+      gap: 6px
+
+    .sep
+      color: rgba(255, 255, 255, .35)
+      font-size: 26px
+      font-weight: 700
+      margin-bottom: 24px
+
+      @include media(1024)
+        font-size: 22px
+      @include media(768)
+        font-size: 20px
+      @include media(540)
+        display: none
+
+  .time-block
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: 8px
+
+    @include media(540)
+      gap: 6px
+
+    .unit-label
+      font-size: 11px
+      text-transform: uppercase
+      letter-spacing: .5px
+      color: rgba(255, 255, 255, .6)
+      font-weight: 600
+
+      @include media(420)
+        font-size: 10px
+
+  .flip
+    position: relative
+    width: 60px
+    height: 64px
+    background: rgba(255, 255, 255, .08)
+    border: 1px solid rgba(255, 255, 255, .15)
+    border-radius: 12px
+    display: flex
+    align-items: center
+    justify-content: center
+    backdrop-filter: blur(4px)
+    overflow: hidden
+
+    @include media(1024)
+      width: 56px
+      height: 60px
+    @include media(768)
+      width: 54px
+      height: 58px
+      border-radius: 10px
+    @include media(540)
+      width: 48px
+      height: 52px
+    @include media(420)
+      width: 42px
+      height: 46px
+      border-radius: 8px
+
+    &::after
+      content: ''
+      position: absolute
+      left: 0
+      right: 0
+      top: 50%
+      height: 1px
+      background: rgba(255, 255, 255, .12)
+
+    .digit
+      font-family: $Poppins
+      font-size: 28px
+      font-weight: 800
+      color: var(--white)
+
+      @include font(800)
+
+      @include media(1024)
+        font-size: 26px
+      @include media(768)
+        font-size: 24px
+      @include media(540)
+        font-size: 22px
+      @include media(420)
+        font-size: 19px
+
+    &.flash
+      animation: flipPulse .4s ease
+
+@keyframes flipPulse
+  0%
+    transform: scale(1)
+  50%
+    transform: scale(1.08)
+    background: rgba(255, 255, 255, .16)
+  100%
+    transform: scale(1)
+
+
+// =========================================================
+// ACTIVITIES PAGE — ALL SECTIONS
+// (.trip_card above and .seo-links-sec elsewhere are reused,
+// not touched further here)
+// =========================================================
+
+%section-eyebrow
+  display: inline-flex
+  align-items: center
+  gap: 6px
+  font-size: 12px
+  font-weight: 700
+  text-transform: uppercase
+  letter-spacing: .6px
+  color: var(--primary)
+  margin-bottom: 12px
+
+  &::before
+    content: ''
+    width: 16px
+    height: 2px
+    background: var(--primary)
+    border-radius: 2px
+
+
+// ===========================
+// DESTINATION INTRODUCTION
+// ===========================
+.activities-intro
+  padding: 70px 0
+  text-align: center
+
+  @include media(1366)
+    padding: 64px 0
+  @include media(1280)
+    padding: 60px 0
+  @include media(1024)
+    padding: 56px 0
+  @include media(991)
+    padding: 48px 0
+  @include media(768)
+    padding: 42px 0
+  @include media(540)
+    padding: 34px 0
+  @include media(420)
+    padding: 40px 0
+
+  .intro-eyebrow
+    @extend %section-eyebrow
+    justify-content: center
+
+  .heading
+    width: 100%
+    max-width: 460px
+    margin: 0 auto
+    text-align: center
+
+    @include media(768)
+      max-width: 400px
+    @include media(540)
+      max-width: 100%
+
+    h3
+      margin-bottom: 10px
+
+      @include media(540)
+        margin-bottom: 8px
+
+
+// ===========================
+// ACTIVITY CATEGORIES (tab-nav)
+// ===========================
+.activities-categories
+  padding: 0 0 40px
+
+  @include media(1024)
+    padding: 0 0 34px
+  @include media(768)
+    padding: 0 0 28px
+  @include media(540)
+    padding: 0 0 24px
+
+  .tab-nav
+    display: flex
+    align-items: center
+    gap: 10px
+    overflow-x: auto
+    list-style: none
+    margin: 0
+    padding: 10px
+    background: var(--gray-light, #F5F6F8)
+    border-radius: 40px
+    scrollbar-width: none
+    -webkit-overflow-scrolling: touch
+
+    &::-webkit-scrollbar
+      display: none
+
+    @include media(768)
+      border-radius: 16px
+      padding: 8px
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, black 24px, black calc(100% - 24px), transparent 100%)
+      mask-image: linear-gradient(90deg, transparent 0, black 24px, black calc(100% - 24px), transparent 100%)
+
+    li
+      flex: 0 0 auto
+      display: inline-flex
+      align-items: center
+      padding: 11px 20px
+      border-radius: 30px
+      background: transparent
+      font-size: 13px
+      font-weight: 600
+      white-space: nowrap
+      color: var(--text)
+      opacity: .8
+      cursor: pointer
+      transition: background .25s ease, color .25s ease, opacity .25s ease, box-shadow .25s ease
+
+      @include media(768)
+        padding: 10px 18px
+      @include media(540)
+        font-size: 12px
+        padding: 9px 16px
+
+      &:hover
+        background: var(--white)
+        opacity: 1
+        box-shadow: 0 6px 16px -6px rgba(0, 0, 0, .15)
+
+      &.active
+        background: var(--primary)
+        color: var(--white)
+        opacity: 1
+        box-shadow: 0 8px 18px -6px rgba(0, 0, 0, .25)
+
+
+// ===========================
+// TAB CONTENT PANELS
+// ===========================
+.tab-nav-content
+  .tabs
+    display: none
+
+    &.active
+      display: block
+      animation: tabFadeIn .35s ease
+
+@keyframes tabFadeIn
+  from
+    opacity: 0
+    transform: translateY(6px)
+  to
+    opacity: 1
+    transform: translateY(0)
+
+
+// ===========================
+// MAIN ACTIVITIES LISTING
+// ===========================
+.activities-listing
+  padding: 0 0 80px
+
+  @include media(1366)
+    padding: 0 0 70px
+  @include media(1024)
+    padding: 0 0 60px
+  @include media(768)
+    padding: 0 0 46px
+  @include media(540)
+    padding: 0 0 40px
+
+  .activities-listing-head
+    display: flex
+    align-items: flex-end
+    justify-content: space-between
+    gap: 20px
+    flex-wrap: wrap
+    margin-bottom: 34px
+    padding-bottom: 22px
+    border-bottom: 1px solid rgba(0, 0, 0, .08)
+
+    @include media(1024)
+      margin-bottom: 28px
+      padding-bottom: 18px
+    @include media(768)
+      margin-bottom: 24px
+      padding-bottom: 16px
+    @include media(540)
+      margin-bottom: 20px
+
+    .head-left
+      .eyebrow
+        @extend %section-eyebrow
+
+      h2
+        font-family: $Poppins
+        font-weight: 800
+        font-size: 27px
+        margin: 0 0 6px
+        color: var(--black)
+
+        @include font(800)
+
+        @include media(1024)
+          font-size: 24px
+        @include media(768)
+          font-size: 21px
+        @include media(540)
+          font-size: 19px
+
+      p
+        font-size: 14px
+        opacity: .7
+        margin: 0
+        max-width: 480px
+        color: var(--text)
+
+    .head-right
+      display: flex
+      align-items: center
+      gap: 18px
+      flex-wrap: wrap
+
+      @include media(540)
+        width: 100%
+        justify-content: flex-start
+
+      .results-count
+        font-size: 13px
+        font-weight: 700
+        color: var(--primary)
+        background: rgba(var(--primary-rgb, 0, 0, 0), .08)
+        padding: 8px 14px
+        border-radius: 30px
+        white-space: nowrap
+
+  // Grid wrapper only — .trip_card itself is styled above
+  .activities-grid
+    display: grid
+    grid-template-columns: repeat(4, 1fr)
+    gap: 30px
+
+    @include media(1366)
+      gap: 26px
+    @include media(1280)
+      gap: 24px
+    @include media(1200)
+      gap: 24px
+    @include media(1024)
+      grid-template-columns: repeat(4, 1fr)
+      gap: 22px
+    @include media(991)
+      grid-template-columns: repeat(3, 1fr)
+      gap: 20px
+    @include media(768)
+      grid-template-columns: repeat(2, 1fr)
+      gap: 18px
+    @include media(540)
+      grid-template-columns: 1fr
+      gap: 16px
+
+
+// ===========================
+// MUST-TRY / FEATURED ACTIVITIES
+// ===========================
+.activities-featured
+  position: relative
+  padding: 80px 0
+  background: var(--gray-sec)
+  overflow: hidden
+
+  @include media(1366)
+    padding: 72px 0
+  @include media(1024)
+    padding: 60px 0
+  @include media(991)
+    padding: 52px 0
+  @include media(768)
+    padding: 46px 0
+  @include media(540)
+    padding: 40px 0
+
+  &::before
+    content: ''
+    position: absolute
+    top: -100px
+    left: -100px
+    width: 300px
+    height: 300px
+    border-radius: 50%
+    background: rgba(var(--primary-rgb, 0, 0, 0), .06)
+    filter: blur(20px)
+    pointer-events: none
+
+    @include media(768)
+      width: 220px
+      height: 220px
+
+  &::after
+    content: ''
+    position: absolute
+    bottom: -120px
+    right: -100px
+    width: 320px
+    height: 320px
+    border-radius: 50%
+    background: rgba(var(--primary-rgb, 0, 0, 0), .05)
+    filter: blur(24px)
+    pointer-events: none
+
+    @include media(768)
+      width: 240px
+      height: 240px
+
+  .container
+    position: relative
+    z-index: 1
+
+  .featured-head
+    text-align: center
+    max-width: 640px
+    margin: 0 auto 40px
+
+    @include media(1024)
+      margin: 0 auto 32px
+    @include media(768)
+      margin: 0 auto 26px
+
+    .eyebrow
+      @extend %section-eyebrow
+      justify-content: center
+
+    .heading
+      width: 100%
+      max-width: 460px
+      margin: 0 auto
+      text-align: center
+
+      @include media(768)
+        max-width: 400px
+      @include media(540)
+        max-width: 100%
+
+      h3
+        margin-bottom: 10px
+
+        @include media(540)
+          margin-bottom: 8px
+
+  .activities-featured-grid
+    display: grid
+    grid-template-columns: repeat(4, 1fr)
+    gap: 26px
+
+    @include media(1280)
+      gap: 22px
+    @include media(1024)
+      grid-template-columns: repeat(3, 1fr)
+      gap: 20px
+    @include media(768)
+      grid-template-columns: repeat(2, 1fr)
+      gap: 18px
+    @include media(540)
+      grid-template-columns: 1fr
+      gap: 16px
+
+
+// ===========================
+// ACTIVITY PLANNING GUIDE
+// ===========================
+.activities-planning
+  padding: 80px 0
+
+  @include media(1366)
+    padding: 72px 0
+  @include media(1024)
+    padding: 60px 0
+  @include media(991)
+    padding: 52px 0
+  @include media(768)
+    padding: 46px 0
+  @include media(540)
+    padding: 40px 0
+
+  .planning-head
+    max-width: 640px
+    margin: 0 0 36px
+
+    @include media(1024)
+      margin: 0 0 30px
+    @include media(768)
+      margin: 0 0 24px
+
+    .eyebrow
+      @extend %section-eyebrow
+
+    h2
+      font-family: $Poppins
+      font-weight: 800
+      font-size: 30px
+      margin: 0
+      color: var(--black)
+
+      @include font(800)
+
+      @include media(1024)
+        font-size: 26px
+      @include media(768)
+        font-size: 23px
+      @include media(540)
+        font-size: 20px
+
+  h3
+    position: relative
+    display: inline-flex
+    align-items: center
+    gap: 10px
+    font-size: 17px
+    font-weight: 700
+    margin: 30px 0 10px
+    padding-top: 26px
+    border-top: 1px solid rgba(0, 0, 0, .07)
+    color: var(--text)
+
+    @include media(768)
+      margin: 24px 0 10px
+      padding-top: 20px
+
+    &::before
+      content: ''
+      width: 8px
+      height: 8px
+      border-radius: 50%
+      background: var(--primary)
+      flex-shrink: 0
+
+    &:first-of-type
+      margin-top: 0
+      padding-top: 0
+      border-top: none
+
+  p
+    font-size: 14px
+    opacity: .78
+    line-height: 1.75
+    margin: 0 0 4px
+    max-width: 760px
+    color: var(--text)
+
+  ul
+    margin: 10px 0 0
+    padding-left: 4px
+    list-style: none
+    max-width: 760px
+
+    li
+      position: relative
+      font-size: 14px
+      opacity: .78
+      line-height: 1.7
+      margin-bottom: 10px
+      padding-left: 22px
+      color: var(--text)
+
+      &::before
+        content: ''
+        position: absolute
+        left: 0
+        top: 8px
+        width: 6px
+        height: 6px
+        border-radius: 50%
+        background: var(--primary)
+
+
+// ===========================
+// WHY BOOK WITH US
+// ===========================
+.activities-benefits
+  padding: 80px 0
+  background: var(--gray-sec)
+
+  @include media(1366)
+    padding: 72px 0
+  @include media(1024)
+    padding: 60px 0
+  @include media(991)
+    padding: 52px 0
+  @include media(768)
+    padding: 46px 0
+  @include media(540)
+    padding: 40px 0
+
+  .heading
+    width: 100%
+    max-width: 460px
+    margin: 0 auto 45px
+    text-align: center
+
+    @include media(1024)
+      margin: 0 auto 36px
+    @include media(768)
+      max-width: 400px
+      margin: 0 auto 28px
+    @include media(540)
+      max-width: 100%
+      margin: 0 auto 24px
+
+    h3
+      margin-bottom: 10px
+
+      @include media(540)
+        margin-bottom: 8px
+
+  .activities-benefits-grid
+    display: grid
+    grid-template-columns: repeat(4, 1fr)
+    gap: 24px
+
+    @include media(1024)
+      gap: 20px
+    @include media(991)
+      grid-template-columns: repeat(2, 1fr)
+    @include media(540)
+      gap: 16px
+
+  .benefit-item
+    text-align: center
+    background: var(--white)
+    border: 1px solid rgba(0, 0, 0, .06)
+    border-radius: 16px
+    padding: 34px 22px
+    transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease
+
+    @include media(1024)
+      padding: 28px 20px
+    @include media(768)
+      padding: 26px 18px
+
+    &:hover
+      transform: translateY(-6px)
+      box-shadow: 0 16px 32px -12px rgba(0, 0, 0, .16)
+      border-color: transparent
+
+      @include media(768)
+        transform: none
+
+    .benefit-icon
+      display: inline-flex
+      align-items: center
+      justify-content: center
+      width: 60px
+      height: 60px
+      border-radius: 50%
+      background: var(--gradient-a)
+      color: var(--white)
+      margin-bottom: 18px
+
+      @include media(768)
+        width: 50px
+        height: 50px
+        margin-bottom: 14px
+
+        svg
+          width: 22px
+          height: 22px
+
+    h3
+      font-size: 16px
+      font-weight: 700
+      margin: 0 0 8px
+      color: var(--text)
+
+    p
+      font-size: 13px
+      opacity: .7
+      margin: 0
+      line-height: 1.6
+      color: var(--text)
+
+
+// ===========================
+// DESTINATION SEO CONTENT
+// ===========================
+.activities-seo-content
+  padding: 80px 0
+
+  @include media(1366)
+    padding: 72px 0
+  @include media(1024)
+    padding: 60px 0
+  @include media(991)
+    padding: 52px 0
+  @include media(768)
+    padding: 46px 0
+  @include media(540)
+    padding: 40px 0
+
+  h2
+    font-family: $Poppins
+    font-weight: 800
+    font-size: 30px
+    margin: 0 0 30px
+    color: var(--black)
+
+    @include font(800)
+
+    @include media(1024)
+      font-size: 26px
+      margin: 0 0 24px
+    @include media(768)
+      font-size: 23px
+      margin: 0 0 22px
+
+  h3
+    position: relative
+    display: flex
+    align-items: center
+    gap: 10px
+    font-size: 17px
+    font-weight: 700
+    margin: 28px 0 10px
+    padding-top: 24px
+    border-top: 1px solid rgba(0, 0, 0, .07)
+    color: var(--text)
+
+    @include media(768)
+      margin: 22px 0 10px
+      padding-top: 20px
+
+    &::before
+      content: ''
+      width: 8px
+      height: 8px
+      border-radius: 50%
+      background: var(--primary)
+      flex-shrink: 0
+
+    &:first-of-type
+      margin-top: 0
+      padding-top: 0
+      border-top: none
+
+  p
+    font-size: 14px
+    opacity: .78
+    line-height: 1.75
+    margin: 0 0 4px
+    max-width: 780px
+    color: var(--text)
+
+
+// ===========================
+// FINAL CTA
+// ===========================
+.activities-cta
+  position: relative
+  padding: 80px 0
+  text-align: center
+  background: var(--gradient-a)
+  border-radius: 24px
+  margin: 70px auto 80px
+  max-width: 1200px
+  overflow: hidden
+
+  @include media(1366)
+    margin: 60px 20px 70px
+    padding: 70px 30px
+  @include media(1024)
+    margin: 0 24px 60px
+    padding: 60px 30px
+  @include media(768)
+    padding: 46px 20px
+    border-radius: 18px
+    margin: 0 16px 46px
+  @include media(540)
+    padding: 40px 18px
+
+  &::before
+    content: ''
+    position: absolute
+    top: -80px
+    right: -80px
+    width: 260px
+    height: 260px
+    background: rgba(255, 255, 255, .12)
+    border-radius: 50%
+    filter: blur(10px)
+    pointer-events: none
+
+    @include media(768)
+      width: 180px
+      height: 180px
+      top: -60px
+      right: -60px
+
+  &::after
+    content: ''
+    position: absolute
+    bottom: -90px
+    left: -90px
+    width: 240px
+    height: 240px
+    background: rgba(255, 255, 255, .08)
+    border-radius: 50%
+    filter: blur(12px)
+    pointer-events: none
+
+    @include media(768)
+      width: 180px
+      height: 180px
+
+  .container
+    position: relative
+    z-index: 1
+
+  h2
+    color: var(--white)
+    font-family: $Poppins
+    font-weight: 800
+    font-size: 30px
+    margin: 0 0 14px
+
+    @include font(800)
+
+    @include media(1024)
+      font-size: 25px
+    @include media(768)
+      font-size: 22px
+
+  p
+    color: rgba(255, 255, 255, .85)
+    max-width: 560px
+    margin: 0 auto 30px
+    font-size: 15px
+    line-height: 1.7
+
+    @include media(768)
+      font-size: 14px
+      margin: 0 auto 24px
+
+  .activities-cta-actions
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 14px
+    flex-wrap: wrap
+
+    .btn-outline
+      border: 1px solid var(--white)
+      color: var(--white)
+      transition: .3s ease
+
+      &:hover
+        background: var(--white)
+        color: var(--black)
+
+        @include media(768)
+          background: transparent
+          color: var(--white)
+
+.categories-sec
+    padding: 70px 0
+    position: relative
+    background: var(--gray-sec)
+
+    @include media(1366)
+        padding: 64px 0
+
+    @include media(1280)
+        padding: 58px 0
+
+    @include media(1024)
+        padding: 52px 0
+
+    @include media(991)
+        padding: 46px 0
+
+    @include media(768)
+        padding: 42px 0
+
+    @include media(540)
+        padding: 40px 0
+
+    @include media(420)
+        padding: 40px 0
+
+    .heading
+        width: 100%
+        max-width: 450px
+        margin: 0 auto
+        text-align: center
+
+        h3
+            margin-bottom: 10px
+
+            span
+                color: var(--primary)
+
+        p
+            font-size: 15px
+            line-height: 1.6
+            color: var(--text-light)
+
+            @include media(768)
+                font-size: 13px
+
+    .category-grid
+        margin-top: 50px
+        display: grid
+        grid-template-columns: repeat(3, 1fr)
+        gap: 24px
+
+        @include media(991)
+            gap: 18px
+
+        @include media(540)
+            margin-top: 34px
+            grid-template-columns: 1fr 1fr
+            gap: 14px
+
+    .category_card
+        position: relative
+        display: flex
+        align-items: flex-end
+        min-height: 280px
+        border-radius: 16px
+        overflow: hidden
+        text-decoration: none
+        cursor: pointer
+        transition: transform .35s ease, box-shadow .35s ease
+
+        @include media(991)
+            min-height: 260px
+
+        @include media(768)
+            min-height: 220px
+
+            &:hover
+                transform: none
+
+        &:hover
+            transform: translateY(-6px)
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2)
+
+            img
+                transform: scale(1.1)
+
+            .content
+                padding-bottom: 30px
+
+            .pill
+                background: var(--primary)
+                color: var(--white)
+
+        img
+            position: absolute
+            inset: 0
+            width: 100%
+            height: 100%
+            object-fit: cover
+            object-position: center
+            transition: transform .5s ease
+            z-index: 0
+
+        &::before
+            content: ''
+            position: absolute
+            inset: 0
+            z-index: 1
+            pointer-events: none
+            background: linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.9) 0%,
+                rgba(0, 0, 0, 0.5) 45%,
+                rgba(0, 0, 0, 0.05) 75%,
+                rgba(0, 0, 0, 0) 100%
+            )
+
+        .content
+            position: relative
+            z-index: 2
+            width: 100%
+            padding: 24px 22px
+            transition: padding-bottom .35s ease
+
+            @include media(768)
+                padding: 18px
+            @include media(540)
+               padding: 10px
+           
+
+            .pill
+                display: inline-block
+                margin-bottom: 10px
+                padding: 5px 14px
+                border-radius: 20px
+                background: rgba(255, 255, 255, 0.14)
+                backdrop-filter: blur(6px)
+                font-size: 12px
+                font-weight: 700
+                letter-spacing: .3px
+                color: var(--white)
+                transition: background .3s ease, color .3s ease
+
+                @include media(768)
+                    font-size: 11px
+                    padding: 3px 6px
+                @include media(540)
+                    padding: 3px 6px
+                    font-size: 10px
+
+            .desc
+                margin: 0
+                font-size: 13px
+                line-height: 1.6
+                color: rgba(255, 255, 255, 0.85)
+
+                @include media(768)
+                    font-size: 12px
+                @include media(540)
+                  font-size: 10px
