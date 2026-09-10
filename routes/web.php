@@ -7,7 +7,10 @@ use App\Http\Controllers\Admin\{
     DestinationController,
     AdminSettingController,
     SeoSettingController,
-    AttractionController
+    AttractionController,
+    LocationController,
+    HotelController,
+    CategoryController
 
 };
 
@@ -19,10 +22,11 @@ use App\Http\Controllers\FrontController;
 // ── (unchanged — front + customer routes, no admin permission needed here) ──
 Route::controller(FrontController::class)->group(function () {
     Route::get('/', 'home')->name('home');
+    Route::get('/category/{slug}', 'categoryDetail')->name('category.show');
     Route::get('/destinations', 'destinations')->name('destinations');
-    Route::get('/destination/{destination}', 'destinationDetail')->name('destination.show');
+    Route::get('/destination/{slug}', 'destinationDetail')->name('destination.show');
     Route::get('/attractions', 'attractions')->name('attractions');
-    Route::get('/attraction/{attraction}', 'attractionDetail')->name('attraction.show');
+    Route::get('/attraction/{slug}', 'attractionDetail')->name('attraction.show');
 });
 
 
@@ -40,6 +44,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/resetpassword', [ProfileSettingController::class, 'resetPassword'])->name('reset.password');
         Route::get('/logout', [LogoutController::class, 'logout']);
 
+        Route::get('location/states/{country}', [LocationController::class, 'getStates'])->name('location.states');
+        Route::get('location/cities/{state}', [LocationController::class, 'getCities'])->name('location.cities');
+
         Route::resource('destinations', DestinationController::class);
         Route::get('destinations/states/{country}', [DestinationController::class, 'getStates'])->name('destinations.states');
         Route::get('destinations/cities/{state}', [DestinationController::class, 'getCities'])->name('destinations.cities');
@@ -47,6 +54,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('attractions', AttractionController::class);
         Route::get('attractions/states/{country}', [AttractionController::class, 'getStates'])->name('attractions.states');
         Route::get('attractions/cities/{state}', [AttractionController::class, 'getCities'])->name('attractions.cities');
+
+        Route::resource('hotels', HotelController::class);
+        Route::resource('categories', CategoryController::class);
 
         // Admin Settings routes
         Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');

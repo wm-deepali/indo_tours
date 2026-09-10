@@ -105,7 +105,7 @@
 
                 <div class="destination-grid">
                     @forelse ($destinations as $destination)
-                        <a href="{{ route('destination.show', $destination) }}" target="_blank" class="destination_card">
+                        <a href="{{ route('destination.show', $destination->slug) }}" target="_blank" class="destination_card">
                             <div class="img">
                                 <img loading="lazy"
                                     src="{{ $destination->image ? asset('storage/' . $destination->image) : asset('assets/images/blog/default.jpg') }}"

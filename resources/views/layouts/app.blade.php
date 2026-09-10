@@ -687,6 +687,18 @@
                     <div class="colB">
                         <div class="qck-links">
                             <div class="col">
+                                <h5>Categories</h5>
+                                <ul>
+                                    @foreach($footerCategories as $category)
+                                        <li>
+                                            <a href="{{ route('category.show', $category->slug) }}">
+                                                {{ $category->menu_name ?? $category->name }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            <div class="col">
                                 <h5>Company</h5>
                                 <ul>
                                     <li><a href="about.html" target="_blank">About Us</a></li>
@@ -697,16 +709,11 @@
                                 </ul>
                             </div>
                             <div class="col">
-                                <h5>Policies</h5>
+                                <h5>Support & Policies</h5>
                                 <ul>
                                     <li><a href="term-conditon.html" target="_blank">Terms & Conditions</a></li>
                                     <li><a href="privacy-policy.html" target="_blank">Privacy Policies</a></li>
                                     <li><a href="javascript:void()">Copyright Policies</a></li>
-                                </ul>
-                            </div>
-                            <div class="col">
-                                <h5>Support</h5>
-                                <ul>
                                     <li><a href="javascript:void()">Help Center</a></li>
                                     <li><a href="term-conditon.html">Terms & Conditions</a></li>
                                     <li><a href="privacy-policy.html">Privacy Policy</a></li>

@@ -49,9 +49,24 @@
             </a>
         </li>
 
+        {{-- ATTRACTIONS --}}
         <li class="{{ request()->routeIs('admin.attractions.*') ? 'active' : '' }}">
             <a href="{{ route('admin.attractions.index') }}">
-                <i class="fa-solid fa-map-location-dot"></i> Attractions
+                <i class="fa-solid fa-landmark"></i> Attractions
+            </a>
+        </li>
+
+        {{-- HOTELS --}}
+        <li class="{{ request()->routeIs('admin.hotels.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.hotels.index') }}">
+                <i class="fa-solid fa-hotel"></i> Hotels
+            </a>
+        </li>
+
+        {{-- CATEGORIES --}}
+        <li class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.categories.index') }}">
+                <i class="fa-solid fa-tags"></i> Categories
             </a>
         </li>
 

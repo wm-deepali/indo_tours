@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Destination;
+use App\Models\Category;
 use App\Models\Attraction;
 
 class FrontController extends Controller
@@ -14,6 +15,11 @@ class FrontController extends Controller
         return view('front-pages.home');
     }
 
+    public function categoryDetail($slug)
+    {
+        $category = Category::with(['facts', 'ctaPerks', 'faqs', 'destinationLinks.destination', 'attractionLinks.attraction'])->where('slug', $slug)->firstOrFail();
+        return view('front-pages.category-detail', compact('category'));
+    }
 
     public function destinations(Request $request)
     {
@@ -25,9 +31,9 @@ class FrontController extends Controller
         return view('front-pages.destination', compact('destinations'));
     }
 
-    public function destinationDetail(Destination $destination)
+    public function destinationDetail($slug)
     {
-        $destination->load('galleries', 'country', 'state', 'city');
+        $destination = Destination::with(['galleries', 'country', 'state', 'city'])->where('slug', $slug)->firstOrFail();
 
         return view('front-pages.destination-detail', compact('destination'));
     }
@@ -44,11 +50,9 @@ class FrontController extends Controller
         return view('front-pages.attractions', compact('mustVisitAttractions'));
     }
 
-    public function attractionDetail(Attraction $attraction)
+    public function attractionDetail($slug)
     {
-        abort_unless($attraction->status === 'published', 404);
-
-        $attraction->load([
+        $attraction = Attraction::with([
             'galleries',
             'highlights',
             'experiences',
@@ -62,7 +66,7 @@ class FrontController extends Controller
             'country',
             'state',
             'city',
-        ]);
+        ])->where('slug', $slug)->firstOrFail();
 
         $relatedAttractions = Attraction::where('status', 'published')
             ->where('id', '!=', $attraction->id)
@@ -77,5 +81,5 @@ class FrontController extends Controller
 
         return view('front-pages.attraction-detail', compact('attraction', 'relatedAttractions'));
     }
-    
+
 }

@@ -517,7 +517,7 @@
         <div class="attraction-list">
           @forelse($mustVisitAttractions as $attraction)
             <div class="attraction_row">
-              <a href="{{ route('attraction.show', $attraction->id) }}" target="_blank" class="img">
+              <a href="{{ route('attraction.show', $attraction->slug) }}" target="_blank" class="img">
                 @if($attraction->image)
                   <img loading="lazy" src="{{ asset('storage/' . $attraction->image) }}" alt="{{ $attraction->name }}">
                 @else
@@ -540,7 +540,7 @@
                     <span class="category">{{ implode(' • ', array_slice($attraction->best_for_tags, 0, 2)) }}</span>
                   @endif
                 </div>
-                <h4><a href="{{ route('attraction.show', $attraction->id) }}" target="_blank">{{ $attraction->name }}</a></h4>
+                <h4><a href="{{ route('attraction.show', $attraction->slug) }}" target="_blank">{{ $attraction->name }}</a></h4>
                 <p class="desc">
                   {{ $attraction->short_description }}
                 </p>
