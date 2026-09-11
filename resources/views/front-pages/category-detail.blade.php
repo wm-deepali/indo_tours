@@ -113,372 +113,64 @@
             </div>
         </section>
 
-        <section class="listing-secA">
-            <div class="container">
-                <div class="heading">
-                    <h3>Europe <span>Honeymoon Packages</span></h3>
-                    <p>
-                        Choose from our handpicked travel experiences, designed to make every journey unforgettable.
-                    </p>
-                </div>
-
-                <div class="trip-grid">
-                    <div class="trip_card">
-                        <a href="listing-detail.html" target="_blank" class="img">
-                            <img loading="lazy"
-                                src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=600&q=80"
-                                alt="Paris" />
-                            <span class="save">Save INR 45,900</span>
-                        </a>
-
-                        <div class="content">
-                            <div class="rating">
-                                <span>6 days &amp; 5 nights</span>
-                                <div class="star">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                    </svg>
-                                    <span>4.7</span>
-                                    <em>(21)</em>
-                                </div>
-                            </div>
-
-                            <h3>
-                                <a href="listing-detail.html" target="_blank">Romantic Paris Honeymoon Escape</a>
-                            </h3>
-
-                            <div class="innerSave">
-                                <s>INR 1,39,719</s>
-                                <span class="saveChip">Save INR 45,900</span>
-                            </div>
-                            <p class="price">INR 93,819</p>
-
-                            <div class="btns">
-                                <a href="tel:+91 000 000 00" class="btn btn-outline-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                        <path
-                                            d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                    </svg>
-                                </a>
-                                <button data-model=".enquire-pop" class="btn btn-primary">Enquire Now</button>
-                            </div>
-                        </div>
+        <!-- SUBCATEGORIES SECTION -->
+        @if($category->subCategories->isNotEmpty())
+            <section class="listing-secA">
+                <div class="container">
+                    <div class="heading">
+                        <h3>{{ $category->name }} <span>Packages</span></h3>
+                        <p>
+                            Choose from our handpicked travel experiences, designed to make every journey unforgettable.
+                        </p>
                     </div>
 
-                    <div class="trip_card">
-                        <a href="listing-detail.html" target="_blank" class="img">
-                            <img loading="lazy"
-                                src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=600&q=80"
-                                alt="Switzerland" />
-                            <span class="save">Save INR 62,300</span>
-                        </a>
+                    <div class="trip-grid">
+                        @foreach($category->subCategories as $subCategory)
+                            <div class="trip_card">
+                                <a href="{{ route('subcategory.show', $subCategory->slug) }}" target="_blank" class="img">
+                                    @if($subCategory->banner_image_one)
+                                        <img loading="lazy" src="{{ asset('storage/' . $subCategory->banner_image_one) }}"
+                                            alt="{{ $subCategory->name }}" />
+                                    @endif
+                                    @if($subCategory->offer_tag_text)
+                                        <span class="save">{{ $subCategory->offer_tag_text }}</span>
+                                    @endif
+                                </a>
 
-                        <div class="content">
-                            <div class="rating">
-                                <span>7 days &amp; 6 nights</span>
-                                <div class="star">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                    </svg>
-                                    <span>4.8</span>
-                                    <em>(34)</em>
+                                <div class="content">
+                                    <h3>
+                                        <a href="{{ route('subcategory.show', $subCategory->slug) }}"
+                                            target="_blank">{{ $subCategory->name }}</a>
+                                    </h3>
+
+                                    @if($subCategory->intro_text)
+                                        <p class="price">{{ Str::limit($subCategory->intro_text, 90) }}</p>
+                                    @endif
+
+                                    <div class="btns">
+                                        <a href="tel:+91 000 000 00" class="btn btn-outline-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+                                                <path
+                                                    d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
+                                            </svg>
+                                        </a>
+                                        <a href="{{ route('subcategory.show', $subCategory->slug) }}" target="_blank"
+                                            class="btn btn-primary">
+                                            View Packages
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-
-                            <h3>
-                                <a href="listing-detail.html" target="_blank">Switzerland Alps Honeymoon Retreat</a>
-                            </h3>
-
-                            <div class="innerSave">
-                                <s>INR 1,86,300</s>
-                                <span class="saveChip">Save INR 62,300</span>
-                            </div>
-                            <p class="price">INR 1,24,000</p>
-
-                            <div class="btns">
-                                <a href="tel:+91 000 000 00" class="btn btn-outline-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                        <path
-                                            d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                    </svg>
-                                </a>
-                                <button data-model=".enquire-pop" class="btn btn-primary">Enquire Now</button>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
 
-                    <div class="trip_card">
-                        <a href="listing-detail.html" target="_blank" class="img">
-                            <img loading="lazy"
-                                src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=600&q=80"
-                                alt="Italy" />
-                            <span class="save">Save INR 58,700</span>
-                        </a>
-
-                        <div class="content">
-                            <div class="rating">
-                                <span>8 days &amp; 7 nights</span>
-                                <div class="star">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                    </svg>
-                                    <span>4.6</span>
-                                    <em>(18)</em>
-                                </div>
-                            </div>
-
-                            <h3>
-                                <a href="listing-detail.html" target="_blank">Italy Romance: Venice, Rome &amp; Florence</a>
-                            </h3>
-
-                            <div class="innerSave">
-                                <s>INR 1,78,700</s>
-                                <span class="saveChip">Save INR 58,700</span>
-                            </div>
-                            <p class="price">INR 1,20,000</p>
-
-                            <div class="btns">
-                                <a href="tel:+91 000 000 00" class="btn btn-outline-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                        <path
-                                            d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                    </svg>
-                                </a>
-                                <button data-model=".enquire-pop" class="btn btn-primary">Enquire Now</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="trip_card">
-                        <a href="listing-detail.html" target="_blank" class="img">
-                            <img loading="lazy"
-                                src="https://images.unsplash.com/photo-1516550893923-42d28e5677af?auto=format&fit=crop&w=600&q=80"
-                                alt="Austria" />
-                            <span class="save">Save INR 39,500</span>
-                        </a>
-
-                        <div class="content">
-                            <div class="rating">
-                                <span>6 days &amp; 5 nights</span>
-                                <div class="star">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                    </svg>
-                                    <span>4.5</span>
-                                    <em>(12)</em>
-                                </div>
-                            </div>
-
-                            <h3>
-                                <a href="listing-detail.html" target="_blank">Austria Honeymoon: Vienna &amp; Salzburg</a>
-                            </h3>
-
-                            <div class="innerSave">
-                                <s>INR 1,29,500</s>
-                                <span class="saveChip">Save INR 39,500</span>
-                            </div>
-                            <p class="price">INR 90,000</p>
-
-                            <div class="btns">
-                                <a href="tel:+91 000 000 00" class="btn btn-outline-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                        <path
-                                            d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                    </svg>
-                                </a>
-                                <button data-model=".enquire-pop" class="btn btn-primary">Enquire Now</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="trip_card">
-                        <a href="listing-detail.html" target="_blank" class="img">
-                            <img loading="lazy"
-                                src="https://images.unsplash.com/photo-1534351590666-13e3e96b5017?auto=format&fit=crop&w=600&q=80"
-                                alt="Amsterdam" />
-                            <span class="save">Save INR 33,200</span>
-                        </a>
-
-                        <div class="content">
-                            <div class="rating">
-                                <span>5 days &amp; 4 nights</span>
-                                <div class="star">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                    </svg>
-                                    <span>4.4</span>
-                                    <em>(9)</em>
-                                </div>
-                            </div>
-
-                            <h3>
-                                <a href="listing-detail.html" target="_blank">Amsterdam &amp; Tulip Fields Getaway</a>
-                            </h3>
-
-                            <div class="innerSave">
-                                <s>INR 1,08,200</s>
-                                <span class="saveChip">Save INR 33,200</span>
-                            </div>
-                            <p class="price">INR 75,000</p>
-
-                            <div class="btns">
-                                <a href="tel:+91 000 000 00" class="btn btn-outline-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                        <path
-                                            d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                    </svg>
-                                </a>
-                                <button data-model=".enquire-pop" class="btn btn-primary">Enquire Now</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="trip_card">
-                        <a href="listing-detail.html" target="_blank" class="img">
-                            <img loading="lazy"
-                                src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=600&q=80"
-                                alt="Paris" />
-                            <span class="save">Save INR 45,900</span>
-                        </a>
-
-                        <div class="content">
-                            <div class="rating">
-                                <span>6 days &amp; 5 nights</span>
-                                <div class="star">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                    </svg>
-                                    <span>4.7</span>
-                                    <em>(21)</em>
-                                </div>
-                            </div>
-
-                            <h3>
-                                <a href="listing-detail.html" target="_blank">Romantic Paris Honeymoon Escape</a>
-                            </h3>
-
-                            <div class="innerSave">
-                                <s>INR 1,39,719</s>
-                                <span class="saveChip">Save INR 45,900</span>
-                            </div>
-                            <p class="price">INR 93,819</p>
-
-                            <div class="btns">
-                                <a href="tel:+91 000 000 00" class="btn btn-outline-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                        <path
-                                            d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                    </svg>
-                                </a>
-                                <button data-model=".enquire-pop" class="btn btn-primary">Enquire Now</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="trip_card">
-                        <a href="listing-detail.html" target="_blank" class="img">
-                            <img loading="lazy"
-                                src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=600&q=80"
-                                alt="Switzerland" />
-                            <span class="save">Save INR 62,300</span>
-                        </a>
-
-                        <div class="content">
-                            <div class="rating">
-                                <span>7 days &amp; 6 nights</span>
-                                <div class="star">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                    </svg>
-                                    <span>4.8</span>
-                                    <em>(34)</em>
-                                </div>
-                            </div>
-
-                            <h3>
-                                <a href="listing-detail.html" target="_blank">Switzerland Alps Honeymoon Retreat</a>
-                            </h3>
-
-                            <div class="innerSave">
-                                <s>INR 1,86,300</s>
-                                <span class="saveChip">Save INR 62,300</span>
-                            </div>
-                            <p class="price">INR 1,24,000</p>
-
-                            <div class="btns">
-                                <a href="tel:+91 000 000 00" class="btn btn-outline-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                        <path
-                                            d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                    </svg>
-                                </a>
-                                <button data-model=".enquire-pop" class="btn btn-primary">Enquire Now</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="trip_card">
-                        <a href="listing-detail.html" target="_blank" class="img">
-                            <img loading="lazy"
-                                src="https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=600&q=80"
-                                alt="Prague" />
-                            <span class="save">Save INR 28,900</span>
-                        </a>
-
-                        <div class="content">
-                            <div class="rating">
-                                <span>5 days &amp; 4 nights</span>
-                                <div class="star">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                    </svg>
-                                    <span>4.5</span>
-                                    <em>(15)</em>
-                                </div>
-                            </div>
-
-                            <h3><a href="listing-detail.html" target="_blank">Prague Fairytale Honeymoon</a></h3>
-
-                            <div class="innerSave">
-                                <s>INR 98,900</s>
-                                <span class="saveChip">Save INR 28,900</span>
-                            </div>
-                            <p class="price">INR 70,000</p>
-
-                            <div class="btns">
-                                <a href="tel:+91 000 000 00" class="btn btn-outline-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                        <path
-                                            d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                    </svg>
-                                </a>
-                                <button data-model=".enquire-pop" class="btn btn-primary">Enquire Now</button>
-                            </div>
-                        </div>
+                    <div class="center-btn">
+                        <a href="{{ route('category.show', $category->slug) }}" class="btn btn-outline-primary">View All</a>
                     </div>
                 </div>
-
-                <div class="center-btn">
-                    <a href="javascript:void()" class="btn btn-outline-primary">View All</a>
-                </div>
-            </div>
-        </section>
+            </section>
+        @endif
 
         <!-- OFFER BANNER SECTION -->
         <section class="group-offer-banner">

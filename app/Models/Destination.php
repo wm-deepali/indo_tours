@@ -155,4 +155,9 @@ class Destination extends Model
         return $this->hasMany(DestinationFaq::class)->orderBy('sort_order');
     }
 
+    public function subCategoryLinks(): HasMany
+    {
+        return $this->hasMany(SubCategoryDestination::class);
+    }
+    
 }

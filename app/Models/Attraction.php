@@ -121,4 +121,9 @@ class Attraction extends Model
         return $this->hasMany(AttractionFaq::class)->orderBy('sort_order');
     }
 
+    public function subCategoryLinks()
+    {
+        return $this->hasMany(SubCategoryAttraction::class);
+    }
+
 }

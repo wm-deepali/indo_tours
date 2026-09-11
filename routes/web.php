@@ -10,7 +10,9 @@ use App\Http\Controllers\Admin\{
     AttractionController,
     LocationController,
     HotelController,
-    CategoryController
+    CategoryController,
+    SubCategoryController,
+    TourPackageController
 
 };
 
@@ -22,9 +24,14 @@ use App\Http\Controllers\FrontController;
 // ── (unchanged — front + customer routes, no admin permission needed here) ──
 Route::controller(FrontController::class)->group(function () {
     Route::get('/', 'home')->name('home');
+    
     Route::get('/category/{slug}', 'categoryDetail')->name('category.show');
+    Route::get('/subcategory/{slug}', 'subcategoryDetail')->name('subcategory.show');
+    Route::get('/tour-package/{slug}', 'tourPackageDetail')->name('tourpackage.show');
+
     Route::get('/destinations', 'destinations')->name('destinations');
     Route::get('/destination/{slug}', 'destinationDetail')->name('destination.show');
+
     Route::get('/attractions', 'attractions')->name('attractions');
     Route::get('/attraction/{slug}', 'attractionDetail')->name('attraction.show');
 });
@@ -57,6 +64,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::resource('hotels', HotelController::class);
         Route::resource('categories', CategoryController::class);
+        Route::resource('subcategories', SubCategoryController::class);
+        Route::resource('tourpackages', TourPackageController::class);
 
         // Admin Settings routes
         Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');

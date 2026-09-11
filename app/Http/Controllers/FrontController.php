@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Destination;
 use App\Models\Category;
+use App\Models\SubCategory;
 use App\Models\Attraction;
+use App\Models\TourPackage;
 
 class FrontController extends Controller
 {
@@ -17,8 +19,59 @@ class FrontController extends Controller
 
     public function categoryDetail($slug)
     {
-        $category = Category::with(['facts', 'ctaPerks', 'faqs', 'destinationLinks.destination', 'attractionLinks.attraction'])->where('slug', $slug)->firstOrFail();
+        $category = Category::with([
+            'facts',
+            'ctaPerks',
+            'faqs',
+            'destinationLinks.destination',
+            'attractionLinks.attraction',
+            'subCategories' => fn($query) => $query->where('status', 'published'),
+        ])->where('slug', $slug)->firstOrFail();
+
         return view('front-pages.category-detail', compact('category'));
+    }
+
+    public function subcategoryDetail($slug)
+    {
+        $subCategory = SubCategory::with([
+            'highlights',
+            'ctaPerks',
+            'faqs',
+            'category',
+            'destinationLinks.destination',
+            'attractionLinks.attraction',
+            'tourPackages' => fn($query) => $query->where('status', 'published')->latest(),
+        ])
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        return view('front-pages.subcategory-detail', compact('subCategory'));
+    }
+
+    // FrontController.php
+    public function tourPackageDetail(string $slug)
+    {
+        $tourPackage = TourPackage::where('slug', $slug)
+            ->where('status', 'published')
+            ->with([
+                'subCategory',
+                'country',
+                'state',
+                'city',
+                'features',
+                'durationOptions',
+                'routeStops',
+                'highlights',
+                'itineraryDays',
+                'hotelStays.hotel',
+                'includes',
+                'excludes',
+                'policies',
+                'faqs',
+            ])
+            ->firstOrFail();
+
+        return view('package-detail', compact('tourPackage'));
     }
 
     public function destinations(Request $request)

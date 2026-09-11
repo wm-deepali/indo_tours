@@ -55,6 +55,11 @@ class Category extends Model
         'promo_end_at' => 'datetime',
     ];
 
+    public function subCategories()
+    {
+        return $this->hasMany(SubCategory::class);
+    }
+
     public function facts()
     {
         return $this->hasMany(CategoryFact::class)->orderBy('sort_order');
