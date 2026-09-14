@@ -1,23 +1,37 @@
 <?php
-// app/Http/Controllers/Admin/TourPackageController.php
 
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Country;
-use App\Models\Hotel;
-use App\Models\State;
 use App\Models\City;
+use App\Models\State;
+use App\Models\Hotel;
+use App\Models\Country;
+use App\Models\Activity;
+use App\Models\Attraction;
+use App\Models\Destination;
+use Illuminate\Support\Str;
 use App\Models\SubCategory;
 use App\Models\TourPackage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class TourPackageController extends Controller
 {
     private array $relations = [
-        'features', 'durationOptions', 'routeStops', 'highlights',
-        'itineraryDays', 'hotelStays.hotel', 'includes', 'excludes', 'policies', 'faqs',
+        'features',
+        'durationOptions',
+        'routeStops',
+        'highlights',
+        'itineraryDays',
+        'hotelStays.hotel',
+        'includes',
+        'excludes',
+        'policies',
+        'faqs',
+        'destinations',
+        'attractions',
+        'activities',
     ];
 
     public function index()
@@ -31,8 +45,18 @@ class TourPackageController extends Controller
         $subCategories = SubCategory::orderBy('name')->get(['id', 'name']);
         $hotels = Hotel::orderBy('name')->get(['id', 'name']);
         $countries = Country::orderBy('name')->get(['id', 'name']);
+        $destinations = Destination::orderBy('name')->get(['id', 'name']);
+        $attractions = Attraction::orderBy('name')->get(['id', 'name']);
+        $activities = Activity::orderBy('name')->get(['id', 'name']);
 
-        return view('admin.tourpackage.create', compact('subCategories', 'hotels', 'countries'));
+        return view('admin.tourpackage.create', compact(
+            'subCategories',
+            'hotels',
+            'countries',
+            'destinations',
+            'attractions',
+            'activities'
+        ));
     }
 
     public function store(Request $request)
@@ -42,7 +66,7 @@ class TourPackageController extends Controller
         $validated['slug'] = Str::slug($request->name);
         $validated['status'] = $request->status ?? 'draft';
 
-        foreach (['main_image', 'top_image', 'bottom_left_image', 'bottom_right_image', 'og_image'] as $field) {
+        foreach (['main_image', 'top_image', 'bottom_left_image', 'bottom_right_image', 'og_image', 'group_offer_image'] as $field) {
             if ($request->hasFile($field)) {
                 $validated[$field] = $request->file($field)->store('tourpackages/' . $field, 'public');
             }
@@ -61,6 +85,9 @@ class TourPackageController extends Controller
         $subCategories = SubCategory::orderBy('name')->get(['id', 'name']);
         $hotels = Hotel::orderBy('name')->get(['id', 'name']);
         $countries = Country::orderBy('name')->get(['id', 'name']);
+        $destinations = Destination::orderBy('name')->get(['id', 'name']);
+        $attractions = Attraction::orderBy('name')->get(['id', 'name']);
+        $activities = Activity::orderBy('name')->get(['id', 'name']);
 
         $states = $tourpackage->country_id
             ? State::where('country_id', $tourpackage->country_id)->orderBy('name')->get(['id', 'name'])
@@ -77,6 +104,9 @@ class TourPackageController extends Controller
             'countries' => $countries,
             'states' => $states,
             'cities' => $cities,
+            'destinations' => $destinations,
+            'attractions' => $attractions,
+            'activities' => $activities,
         ]);
     }
 
@@ -86,8 +116,11 @@ class TourPackageController extends Controller
 
         $validated['status'] = $request->status ?? $tourpackage->status;
 
-        foreach (['main_image', 'top_image', 'bottom_left_image', 'bottom_right_image', 'og_image'] as $field) {
+        foreach (['main_image', 'top_image', 'bottom_left_image', 'bottom_right_image', 'og_image', 'group_offer_image'] as $field) {
             if ($request->hasFile($field)) {
+                if ($tourpackage->{$field}) {
+                    Storage::disk('public')->delete($tourpackage->{$field});
+                }
                 $validated[$field] = $request->file($field)->store('tourpackages/' . $field, 'public');
             }
         }
@@ -100,7 +133,28 @@ class TourPackageController extends Controller
 
     public function destroy(TourPackage $tourpackage)
     {
+        $tourpackage->load(['features', 'durationOptions']);
+
+        foreach (['main_image', 'top_image', 'bottom_left_image', 'bottom_right_image', 'og_image', 'group_offer_image'] as $field) {
+            if ($tourpackage->{$field}) {
+                Storage::disk('public')->delete($tourpackage->{$field});
+            }
+        }
+
+        foreach ($tourpackage->features as $feature) {
+            if ($feature->icon_image) {
+                Storage::disk('public')->delete($feature->icon_image);
+            }
+        }
+
+        foreach ($tourpackage->durationOptions as $option) {
+            if ($option->image) {
+                Storage::disk('public')->delete($option->image);
+            }
+        }
+
         $tourpackage->delete();
+
         return redirect()->route('admin.tourpackages.index')->with('success', 'Tour Package deleted successfully.');
     }
 
@@ -116,6 +170,7 @@ class TourPackageController extends Controller
         $this->saveSimpleTextList($tp, $request, 'excludes', 'exclude_texts', 'exclude_ids', 'deleted_excludes');
         $this->savePolicies($tp, $request);
         $this->saveFaqs($tp, $request);
+        $this->syncLinkedEntities($tp, $request);
     }
 
     private function rules(): array
@@ -131,10 +186,10 @@ class TourPackageController extends Controller
 
             'banner_tag_text' => 'nullable|string|max:255',
             'banner_intro' => 'nullable|string',
-            'main_image' => 'nullable|image|max:3072',
-            'top_image' => 'nullable|image|max:3072',
-            'bottom_left_image' => 'nullable|image|max:3072',
-            'bottom_right_image' => 'nullable|image|max:3072',
+            'main_image' => 'nullable|image',
+            'top_image' => 'nullable|image',
+            'bottom_left_image' => 'nullable|image',
+            'bottom_right_image' => 'nullable|image',
             'video_url' => 'nullable|string|max:255',
 
             'duration_text' => 'nullable|string|max:100',
@@ -146,6 +201,20 @@ class TourPackageController extends Controller
             'overview_content' => 'nullable|string',
             'map_embed_url' => 'nullable|string',
 
+            'group_offer_badge_text' => 'nullable|string|max:100',
+            'group_offer_title' => 'nullable|string|max:255',
+            'group_offer_description' => 'nullable|string',
+            'group_offer_button1_text' => 'nullable|string|max:100',
+            'group_offer_button1_url' => 'nullable|string|max:255',
+            'group_offer_image' => 'nullable|image|max:2048',
+
+            'promo_badge_text' => 'nullable|string|max:100',
+            'promo_title' => 'nullable|string|max:255',
+            'promo_description' => 'nullable|string',
+            'promo_button_text' => 'nullable|string|max:100',
+            'promo_button_url' => 'nullable|string|max:255',
+            'promo_end_at' => 'nullable|date',
+
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
             'og_title' => 'nullable|string|max:255',
@@ -154,108 +223,182 @@ class TourPackageController extends Controller
             'canonical_url' => 'nullable|string|max:255',
 
             // Features
-            'feature_ids' => 'nullable|array', 'feature_ids.*' => 'nullable|integer',
-            'feature_texts' => 'nullable|array', 'feature_texts.*' => 'nullable|string|max:100',
-            'feature_images' => 'nullable|array', 'feature_images.*' => 'nullable|image|max:1024',
+            'feature_ids' => 'nullable|array',
+            'feature_ids.*' => 'nullable|integer',
+            'feature_texts' => 'nullable|array',
+            'feature_texts.*' => 'nullable|string|max:100',
+            'feature_images' => 'nullable|array',
+            'feature_images.*' => 'nullable|image|max:1024',
             'deleted_features' => 'nullable|string',
 
             // Duration options
-            'duropt_ids' => 'nullable|array', 'duropt_ids.*' => 'nullable|integer',
-            'duropt_labels' => 'nullable|array', 'duropt_labels.*' => 'nullable|string|max:50',
-            'duropt_prices' => 'nullable|array', 'duropt_prices.*' => 'nullable|numeric',
-            'duropt_images' => 'nullable|array', 'duropt_images.*' => 'nullable|image|max:1024',
+            'duropt_ids' => 'nullable|array',
+            'duropt_ids.*' => 'nullable|integer',
+            'duropt_labels' => 'nullable|array',
+            'duropt_labels.*' => 'nullable|string|max:50',
+            'duropt_prices' => 'nullable|array',
+            'duropt_prices.*' => 'nullable|numeric',
+            'duropt_images' => 'nullable|array',
+            'duropt_images.*' => 'nullable|image|max:1024',
             'deleted_duration_options' => 'nullable|string',
 
             // Route stops
-            'stop_ids' => 'nullable|array', 'stop_ids.*' => 'nullable|integer',
-            'stop_names' => 'nullable|array', 'stop_names.*' => 'nullable|string|max:100',
+            'stop_ids' => 'nullable|array',
+            'stop_ids.*' => 'nullable|integer',
+            'stop_names' => 'nullable|array',
+            'stop_names.*' => 'nullable|string|max:100',
             'deleted_stops' => 'nullable|string',
 
             // Highlights (check-list)
-            'highlight_ids' => 'nullable|array', 'highlight_ids.*' => 'nullable|integer',
-            'highlight_texts' => 'nullable|array', 'highlight_texts.*' => 'nullable|string|max:255',
+            'highlight_ids' => 'nullable|array',
+            'highlight_ids.*' => 'nullable|integer',
+            'highlight_texts' => 'nullable|array',
+            'highlight_texts.*' => 'nullable|string|max:255',
             'deleted_highlights' => 'nullable|string',
 
             // Itinerary
-            'itin_ids' => 'nullable|array', 'itin_ids.*' => 'nullable|integer',
-            'itin_day_numbers' => 'nullable|array', 'itin_day_numbers.*' => 'nullable|integer',
-            'itin_titles' => 'nullable|array', 'itin_titles.*' => 'nullable|string|max:255',
-            'itin_contents' => 'nullable|array', 'itin_contents.*' => 'nullable|string',
+            'itin_ids' => 'nullable|array',
+            'itin_ids.*' => 'nullable|integer',
+            'itin_day_numbers' => 'nullable|array',
+            'itin_day_numbers.*' => 'nullable|integer',
+            'itin_titles' => 'nullable|array',
+            'itin_titles.*' => 'nullable|string|max:255',
+            'itin_contents' => 'nullable|array',
+            'itin_contents.*' => 'nullable|string',
             'deleted_itinerary' => 'nullable|string',
 
             // Hotel stays — now linked to real Hotel records
-            'hotel_stay_ids' => 'nullable|array', 'hotel_stay_ids.*' => 'nullable|integer',
-            'hotel_ids' => 'nullable|array', 'hotel_ids.*' => 'nullable|exists:hotels,id',
-            'hotel_day_labels' => 'nullable|array', 'hotel_day_labels.*' => 'nullable|string|max:50',
-            'hotel_titles' => 'nullable|array', 'hotel_titles.*' => 'nullable|string|max:255',
-            'hotel_check_ins' => 'nullable|array', 'hotel_check_ins.*' => 'nullable|string|max:50',
-            'hotel_check_outs' => 'nullable|array', 'hotel_check_outs.*' => 'nullable|string|max:50',
-            'hotel_breakfast' => 'nullable|array', 'hotel_breakfast.*' => 'nullable|in:0,1',
-            'hotel_lunch' => 'nullable|array', 'hotel_lunch.*' => 'nullable|in:0,1',
-            'hotel_dinner' => 'nullable|array', 'hotel_dinner.*' => 'nullable|in:0,1',
+            'hotel_stay_ids' => 'nullable|array',
+            'hotel_stay_ids.*' => 'nullable|integer',
+            'hotel_ids' => 'nullable|array',
+            'hotel_ids.*' => 'nullable|exists:hotels,id',
+            'hotel_day_labels' => 'nullable|array',
+            'hotel_day_labels.*' => 'nullable|string|max:50',
+            'hotel_titles' => 'nullable|array',
+            'hotel_titles.*' => 'nullable|string|max:255',
+            'hotel_check_ins' => 'nullable|array',
+            'hotel_check_ins.*' => 'nullable|string|max:50',
+            'hotel_check_outs' => 'nullable|array',
+            'hotel_check_outs.*' => 'nullable|string|max:50',
+            'hotel_breakfast' => 'nullable|array',
+            'hotel_breakfast.*' => 'nullable|in:0,1',
+            'hotel_lunch' => 'nullable|array',
+            'hotel_lunch.*' => 'nullable|in:0,1',
+            'hotel_dinner' => 'nullable|array',
+            'hotel_dinner.*' => 'nullable|in:0,1',
             'deleted_hotels' => 'nullable|string',
 
             // Includes / Excludes
-            'include_ids' => 'nullable|array', 'include_ids.*' => 'nullable|integer',
-            'include_texts' => 'nullable|array', 'include_texts.*' => 'nullable|string|max:255',
+            'include_ids' => 'nullable|array',
+            'include_ids.*' => 'nullable|integer',
+            'include_texts' => 'nullable|array',
+            'include_texts.*' => 'nullable|string|max:255',
             'deleted_includes' => 'nullable|string',
-            'exclude_ids' => 'nullable|array', 'exclude_ids.*' => 'nullable|integer',
-            'exclude_texts' => 'nullable|array', 'exclude_texts.*' => 'nullable|string|max:255',
+            'exclude_ids' => 'nullable|array',
+            'exclude_ids.*' => 'nullable|integer',
+            'exclude_texts' => 'nullable|array',
+            'exclude_texts.*' => 'nullable|string|max:255',
             'deleted_excludes' => 'nullable|string',
 
             // Policies
-            'policy_ids' => 'nullable|array', 'policy_ids.*' => 'nullable|integer',
-            'policy_titles' => 'nullable|array', 'policy_titles.*' => 'nullable|string|max:255',
-            'policy_contents' => 'nullable|array', 'policy_contents.*' => 'nullable|string',
+            'policy_ids' => 'nullable|array',
+            'policy_ids.*' => 'nullable|integer',
+            'policy_titles' => 'nullable|array',
+            'policy_titles.*' => 'nullable|string|max:255',
+            'policy_contents' => 'nullable|array',
+            'policy_contents.*' => 'nullable|string',
             'deleted_policies' => 'nullable|string',
 
             // FAQs
-            'faq_ids' => 'nullable|array', 'faq_ids.*' => 'nullable|integer',
-            'faq_questions' => 'nullable|array', 'faq_questions.*' => 'nullable|string|max:255',
-            'faq_answers' => 'nullable|array', 'faq_answers.*' => 'nullable|string',
+            'faq_ids' => 'nullable|array',
+            'faq_ids.*' => 'nullable|integer',
+            'faq_questions' => 'nullable|array',
+            'faq_questions.*' => 'nullable|string|max:255',
+            'faq_answers' => 'nullable|array',
+            'faq_answers.*' => 'nullable|string',
             'deleted_faqs' => 'nullable|string',
+
+            'destination_ids' => 'nullable|array',
+            'destination_ids.*' => 'nullable|exists:destinations,id',
+            'attraction_ids' => 'nullable|array',
+            'attraction_ids.*' => 'nullable|exists:attractions,id',
+            'activity_ids' => 'nullable|array',
+            'activity_ids.*' => 'nullable|exists:activities,id',
+
         ];
     }
 
-    private function deleteMarked($relation, ?string $csv): void
+    private function deleteMarked($relation, ?string $csv, ?string $imageColumn = null): void
     {
-        if (!$csv) return;
+        if (!$csv)
+            return;
         $ids = array_filter(explode(',', $csv));
-        if (!empty($ids)) $relation->whereIn('id', $ids)->delete();
+        if (empty($ids))
+            return;
+
+        if ($imageColumn) {
+            $relation->whereIn('id', $ids)->get()->each(function ($row) use ($imageColumn) {
+                if ($row->{$imageColumn}) {
+                    Storage::disk('public')->delete($row->{$imageColumn});
+                }
+            });
+        }
+
+        $relation->whereIn('id', $ids)->delete();
     }
 
     private function saveFeatures(TourPackage $tp, Request $request): void
     {
-        $this->deleteMarked($tp->features(), $request->deleted_features);
-        if (!$request->filled('feature_texts')) return;
+        $this->deleteMarked($tp->features(), $request->deleted_features, 'icon_image');
+        if (!$request->filled('feature_texts'))
+            return;
 
         foreach ($request->feature_texts as $i => $text) {
-            if (!$text) continue;
+            if (!$text)
+                continue;
             $data = ['text' => $text, 'sort_order' => $i];
+            $id = $request->feature_ids[$i] ?? null;
+
             if ($request->hasFile("feature_images.$i")) {
+                if ($id) {
+                    $existing = $tp->features()->find($id);
+                    if ($existing && $existing->icon_image) {
+                        Storage::disk('public')->delete($existing->icon_image);
+                    }
+                }
                 $data['icon_image'] = $request->file("feature_images.$i")->store('tourpackages/features', 'public');
             }
-            $id = $request->feature_ids[$i] ?? null;
+
             $id ? $tp->features()->where('id', $id)->update($data) : $tp->features()->create($data);
         }
     }
 
     private function saveDurationOptions(TourPackage $tp, Request $request): void
     {
-        $this->deleteMarked($tp->durationOptions(), $request->deleted_duration_options);
-        if (!$request->filled('duropt_labels')) return;
+        $this->deleteMarked($tp->durationOptions(), $request->deleted_duration_options, 'image');
+        if (!$request->filled('duropt_labels'))
+            return;
 
         foreach ($request->duropt_labels as $i => $label) {
-            if (!$label) continue;
+            if (!$label)
+                continue;
             $data = [
                 'days_label' => $label,
                 'price' => $request->duropt_prices[$i] ?? null,
                 'sort_order' => $i,
             ];
+            $id = $request->duropt_ids[$i] ?? null;
+
             if ($request->hasFile("duropt_images.$i")) {
+                if ($id) {
+                    $existing = $tp->durationOptions()->find($id);
+                    if ($existing && $existing->image) {
+                        Storage::disk('public')->delete($existing->image);
+                    }
+                }
                 $data['image'] = $request->file("duropt_images.$i")->store('tourpackages/duration-options', 'public');
             }
-            $id = $request->duropt_ids[$i] ?? null;
+
             $id ? $tp->durationOptions()->where('id', $id)->update($data) : $tp->durationOptions()->create($data);
         }
     }
@@ -263,10 +406,12 @@ class TourPackageController extends Controller
     private function saveRouteStops(TourPackage $tp, Request $request): void
     {
         $this->deleteMarked($tp->routeStops(), $request->deleted_stops);
-        if (!$request->filled('stop_names')) return;
+        if (!$request->filled('stop_names'))
+            return;
 
         foreach ($request->stop_names as $i => $name) {
-            if (!$name) continue;
+            if (!$name)
+                continue;
             $data = ['name' => $name, 'sort_order' => $i];
             $id = $request->stop_ids[$i] ?? null;
             $id ? $tp->routeStops()->where('id', $id)->update($data) : $tp->routeStops()->create($data);
@@ -276,10 +421,12 @@ class TourPackageController extends Controller
     private function saveHighlights(TourPackage $tp, Request $request): void
     {
         $this->deleteMarked($tp->highlights(), $request->deleted_highlights);
-        if (!$request->filled('highlight_texts')) return;
+        if (!$request->filled('highlight_texts'))
+            return;
 
         foreach ($request->highlight_texts as $i => $text) {
-            if (!$text) continue;
+            if (!$text)
+                continue;
             $data = ['text' => $text, 'sort_order' => $i];
             $id = $request->highlight_ids[$i] ?? null;
             $id ? $tp->highlights()->where('id', $id)->update($data) : $tp->highlights()->create($data);
@@ -289,11 +436,13 @@ class TourPackageController extends Controller
     private function saveItineraryDays(TourPackage $tp, Request $request): void
     {
         $this->deleteMarked($tp->itineraryDays(), $request->deleted_itinerary);
-        if (!$request->filled('itin_titles')) return;
+        if (!$request->filled('itin_titles'))
+            return;
 
         foreach ($request->itin_titles as $i => $title) {
             $content = $request->itin_contents[$i] ?? '';
-            if (!$title && !$content) continue;
+            if (!$title && !$content)
+                continue;
             $data = [
                 'day_number' => $request->itin_day_numbers[$i] ?? ($i + 1),
                 'title' => $title,
@@ -308,10 +457,12 @@ class TourPackageController extends Controller
     private function saveHotelStays(TourPackage $tp, Request $request): void
     {
         $this->deleteMarked($tp->hotelStays(), $request->deleted_hotels);
-        if (!$request->filled('hotel_ids')) return;
+        if (!$request->filled('hotel_ids'))
+            return;
 
         foreach ($request->hotel_ids as $i => $hotelId) {
-            if (!$hotelId) continue;
+            if (!$hotelId)
+                continue;
             $data = [
                 'hotel_id' => $hotelId,
                 'day_label' => $request->hotel_day_labels[$i] ?? null,
@@ -332,10 +483,12 @@ class TourPackageController extends Controller
     private function saveSimpleTextList(TourPackage $tp, Request $request, string $relation, string $textKey, string $idKey, string $deletedKey): void
     {
         $this->deleteMarked($tp->{$relation}(), $request->{$deletedKey});
-        if (!$request->filled($textKey)) return;
+        if (!$request->filled($textKey))
+            return;
 
         foreach ($request->{$textKey} as $i => $text) {
-            if (!$text) continue;
+            if (!$text)
+                continue;
             $data = ['text' => $text, 'sort_order' => $i];
             $id = $request->{$idKey}[$i] ?? null;
             $id ? $tp->{$relation}()->where('id', $id)->update($data) : $tp->{$relation}()->create($data);
@@ -345,11 +498,13 @@ class TourPackageController extends Controller
     private function savePolicies(TourPackage $tp, Request $request): void
     {
         $this->deleteMarked($tp->policies(), $request->deleted_policies);
-        if (!$request->filled('policy_titles')) return;
+        if (!$request->filled('policy_titles'))
+            return;
 
         foreach ($request->policy_titles as $i => $title) {
             $content = $request->policy_contents[$i] ?? '';
-            if (!$title && !$content) continue;
+            if (!$title && !$content)
+                continue;
             $data = ['title' => $title, 'content' => $content, 'sort_order' => $i];
             $id = $request->policy_ids[$i] ?? null;
             $id ? $tp->policies()->where('id', $id)->update($data) : $tp->policies()->create($data);
@@ -359,14 +514,36 @@ class TourPackageController extends Controller
     private function saveFaqs(TourPackage $tp, Request $request): void
     {
         $this->deleteMarked($tp->faqs(), $request->deleted_faqs);
-        if (!$request->filled('faq_questions')) return;
+        if (!$request->filled('faq_questions'))
+            return;
 
         foreach ($request->faq_questions as $i => $question) {
             $answer = $request->faq_answers[$i] ?? '';
-            if (!$question && !$answer) continue;
+            if (!$question && !$answer)
+                continue;
             $data = ['question' => $question, 'answer' => $answer, 'sort_order' => $i];
             $id = $request->faq_ids[$i] ?? null;
             $id ? $tp->faqs()->where('id', $id)->update($data) : $tp->faqs()->create($data);
         }
     }
+
+    private function syncLinkedEntities(TourPackage $tp, Request $request): void
+    {
+        $tp->destinations()->sync($this->buildSyncPayload($request->destination_ids ?? []));
+        $tp->attractions()->sync($this->buildSyncPayload($request->attraction_ids ?? []));
+        $tp->activities()->sync($this->buildSyncPayload($request->activity_ids ?? []));
+    }
+
+    private function buildSyncPayload(array $ids): array
+    {
+        $payload = [];
+        $order = 0;
+        foreach ($ids as $id) {
+            if (!$id)
+                continue;
+            $payload[$id] = ['sort_order' => $order++];
+        }
+        return $payload;
+    }
+
 }

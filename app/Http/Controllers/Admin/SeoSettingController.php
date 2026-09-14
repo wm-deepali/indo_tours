@@ -6,12 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\SeoSetting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SeoSettingController extends Controller
 {
-    /**
-     * List all pages with SEO settings.
-     */
     public function index()
     {
         $seo_settings = SeoSetting::orderBy('page_label')->get();
@@ -19,17 +17,11 @@ class SeoSettingController extends Controller
         return view('admin.seo.index', compact('seo_settings'));
     }
 
-    /**
-     * Show the edit form for a single page's SEO settings.
-     */
     public function edit(SeoSetting $seo_setting)
     {
         return view('admin.seo.edit', compact('seo_setting'));
     }
 
-    /**
-     * Update a single page's SEO settings.
-     */
     public function update(Request $request, SeoSetting $seo_setting): RedirectResponse
     {
         $data = $request->validate([
@@ -47,12 +39,18 @@ class SeoSettingController extends Controller
         ]);
 
         if ($request->hasFile('og_image')) {
+            if ($seo_setting->og_image) {
+                Storage::disk('public')->delete($seo_setting->og_image);
+            }
             $data['og_image'] = $request->file('og_image')->store('seo', 'public');
         } else {
             unset($data['og_image']);
         }
 
         if ($request->hasFile('twitter_image')) {
+            if ($seo_setting->twitter_image) {
+                Storage::disk('public')->delete($seo_setting->twitter_image);
+            }
             $data['twitter_image'] = $request->file('twitter_image')->store('seo', 'public');
         } else {
             unset($data['twitter_image']);

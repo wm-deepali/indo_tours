@@ -83,6 +83,11 @@
                         <i class="fa-solid fa-landmark"></i> Attractions
                     </a>
                 </li>
+                <li class="{{ request()->routeIs('admin.activities.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.activities.index') }}">
+                        <i class="fa-solid fa-landmark"></i> Activities
+                    </a>
+                </li>
             </ul>
         </li>
 

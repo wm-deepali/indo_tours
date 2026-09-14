@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Category;
 use App\Models\Destination;
 use App\Models\Attraction;
@@ -24,9 +25,7 @@ class SubCategoryController extends Controller
     public function create()
     {
         $categories = Category::orderBy('name')->get(['id', 'name']);
-        $destinations = Destination::orderBy('name')->get(['id', 'name']);
-        $attractions = Attraction::orderBy('name')->get(['id', 'name']);
-        return view('admin.subcategory.create', compact('categories', 'destinations', 'attractions'));
+        return view('admin.subcategory.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -53,23 +52,17 @@ class SubCategoryController extends Controller
         $this->saveHighlights($subCategory, $request);
         $this->saveCtaPerks($subCategory, $request);
         $this->saveFaqs($subCategory, $request);
-        $this->saveDestinations($subCategory, $request);
-        $this->saveAttractions($subCategory, $request);
 
         return redirect()->route('admin.subcategories.index')->with('success', 'Sub Category added successfully.');
     }
 
     public function edit(SubCategory $subcategory)
     {
-        $subcategory->load(['highlights', 'ctaPerks', 'faqs', 'destinationLinks.destination', 'attractionLinks.attraction']);
+        $subcategory->load(['highlights', 'ctaPerks', 'faqs']);
         $categories = Category::orderBy('name')->get(['id', 'name']);
-        $destinations = Destination::orderBy('name')->get(['id', 'name']);
-        $attractions = Attraction::orderBy('name')->get(['id', 'name']);
         return view('admin.subcategory.edit', [
             'subCategory' => $subcategory,
             'categories' => $categories,
-            'destinations' => $destinations,
-            'attractions' => $attractions,
         ]);
     }
 
@@ -80,15 +73,19 @@ class SubCategoryController extends Controller
         $validated['status'] = $request->status ?? $subcategory->status;
 
         if ($request->hasFile('banner_image_one')) {
+            $this->deleteOldImage($subcategory->banner_image_one);
             $validated['banner_image_one'] = $request->file('banner_image_one')->store('subcategories/banner', 'public');
         }
         if ($request->hasFile('banner_image_two')) {
+            $this->deleteOldImage($subcategory->banner_image_two);
             $validated['banner_image_two'] = $request->file('banner_image_two')->store('subcategories/banner', 'public');
         }
         if ($request->hasFile('cta_image')) {
+            $this->deleteOldImage($subcategory->cta_image);
             $validated['cta_image'] = $request->file('cta_image')->store('subcategories/cta', 'public');
         }
         if ($request->hasFile('og_image')) {
+            $this->deleteOldImage($subcategory->og_image);
             $validated['og_image'] = $request->file('og_image')->store('subcategories/og', 'public');
         }
 
@@ -96,16 +93,26 @@ class SubCategoryController extends Controller
         $this->saveHighlights($subcategory, $request);
         $this->saveCtaPerks($subcategory, $request);
         $this->saveFaqs($subcategory, $request);
-        $this->saveDestinations($subcategory, $request);
-        $this->saveAttractions($subcategory, $request);
 
         return redirect()->route('admin.subcategories.index')->with('success', 'Sub Category updated successfully.');
     }
 
     public function destroy(SubCategory $subcategory)
     {
+        $this->deleteOldImage($subcategory->banner_image_one);
+        $this->deleteOldImage($subcategory->banner_image_two);
+        $this->deleteOldImage($subcategory->cta_image);
+        $this->deleteOldImage($subcategory->og_image);
+
         $subcategory->delete();
         return redirect()->route('admin.subcategories.index')->with('success', 'Sub Category deleted successfully.');
+    }
+
+    private function deleteOldImage(?string $path): void
+    {
+        if ($path && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
     }
 
     private function rules(): array
@@ -179,18 +186,6 @@ class SubCategoryController extends Controller
             'faq_answers' => 'nullable|array',
             'faq_answers.*' => 'nullable|string',
             'deleted_faqs' => 'nullable|string',
-
-            'dest_link_ids' => 'nullable|array',
-            'dest_link_ids.*' => 'nullable|integer',
-            'dest_destination_ids' => 'nullable|array',
-            'dest_destination_ids.*' => 'nullable|exists:destinations,id',
-            'deleted_destinations' => 'nullable|string',
-
-            'attr_link_ids' => 'nullable|array',
-            'attr_link_ids.*' => 'nullable|integer',
-            'attr_attraction_ids' => 'nullable|array',
-            'attr_attraction_ids.*' => 'nullable|exists:attractions,id',
-            'deleted_attractions' => 'nullable|string',
         ];
     }
 
@@ -198,8 +193,13 @@ class SubCategoryController extends Controller
     {
         if ($request->filled('deleted_highlights')) {
             $ids = array_filter(explode(',', $request->deleted_highlights));
-            if (!empty($ids))
+            if (!empty($ids)) {
+                $toDelete = $subCategory->highlights()->whereIn('id', $ids)->get();
+                foreach ($toDelete as $h) {
+                    $this->deleteOldImage($h->icon_image);
+                }
                 $subCategory->highlights()->whereIn('id', $ids)->delete();
+            }
         }
 
         if (!$request->filled('highlight_titles') && !$request->filled('highlight_values'))
@@ -219,11 +219,17 @@ class SubCategoryController extends Controller
                 'sort_order' => $i,
             ];
 
+            $highlightId = $request->highlight_ids[$i] ?? null;
+
             if ($request->hasFile("highlight_images.$i")) {
+                if ($highlightId) {
+                    $existing = $subCategory->highlights()->find($highlightId);
+                    if ($existing) {
+                        $this->deleteOldImage($existing->icon_image);
+                    }
+                }
                 $data['icon_image'] = $request->file("highlight_images.$i")->store('subcategories/highlights', 'public');
             }
-
-            $highlightId = $request->highlight_ids[$i] ?? null;
 
             if ($highlightId) {
                 $subCategory->highlights()->where('id', $highlightId)->update($data);
@@ -298,63 +304,4 @@ class SubCategoryController extends Controller
         }
     }
 
-    private function saveDestinations(SubCategory $subCategory, Request $request): void
-    {
-        if ($request->filled('deleted_destinations')) {
-            $ids = array_filter(explode(',', $request->deleted_destinations));
-            if (!empty($ids))
-                $subCategory->destinationLinks()->whereIn('id', $ids)->delete();
-        }
-
-        if (!$request->filled('dest_destination_ids'))
-            return;
-
-        foreach ($request->dest_destination_ids as $i => $destinationId) {
-            if (!$destinationId)
-                continue;
-
-            $data = [
-                'destination_id' => $destinationId,
-                'sort_order' => $i,
-            ];
-
-            $linkId = $request->dest_link_ids[$i] ?? null;
-
-            if ($linkId) {
-                $subCategory->destinationLinks()->where('id', $linkId)->update($data);
-            } else {
-                $subCategory->destinationLinks()->create($data);
-            }
-        }
-    }
-
-    private function saveAttractions(SubCategory $subCategory, Request $request): void
-    {
-        if ($request->filled('deleted_attractions')) {
-            $ids = array_filter(explode(',', $request->deleted_attractions));
-            if (!empty($ids))
-                $subCategory->attractionLinks()->whereIn('id', $ids)->delete();
-        }
-
-        if (!$request->filled('attr_attraction_ids'))
-            return;
-
-        foreach ($request->attr_attraction_ids as $i => $attractionId) {
-            if (!$attractionId)
-                continue;
-
-            $data = [
-                'attraction_id' => $attractionId,
-                'sort_order' => $i,
-            ];
-
-            $linkId = $request->attr_link_ids[$i] ?? null;
-
-            if ($linkId) {
-                $subCategory->attractionLinks()->where('id', $linkId)->update($data);
-            } else {
-                $subCategory->attractionLinks()->create($data);
-            }
-        }
-    }
 }

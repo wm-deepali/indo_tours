@@ -298,8 +298,6 @@
                         <button type="button" class="cat-tab" data-tab="cta">CTA Section</button>
                         <button type="button" class="cat-tab" data-tab="promo">Promo Banner</button>
                         <button type="button" class="cat-tab" data-tab="faqsection">FAQ Section</button>
-                        <button type="button" class="cat-tab" data-tab="destinations">Destinations</button>
-                        <button type="button" class="cat-tab" data-tab="attractions">Attractions</button>
                         <button type="button" class="cat-tab" data-tab="seo">SEO / Open Graph</button>
                     </div>
 
@@ -370,7 +368,8 @@
                             <div class="form-field">
                                 <label for="banner_image_one">Banner Image 1</label>
                                 @if($subCategory->banner_image_one)
-                                    <img src="{{ asset($subCategory->banner_image_one) }}" class="current-img-preview">
+                                    <img src="{{ asset('storage/' . $subCategory->banner_image_one) }}"
+                                        class="current-img-preview">
                                 @endif
                                 <input type="file" id="banner_image_one" name="banner_image_one"
                                     class="form-control-styled" accept="image/*">
@@ -379,7 +378,8 @@
                             <div class="form-field">
                                 <label for="banner_image_two">Banner Image 2</label>
                                 @if($subCategory->banner_image_two)
-                                    <img src="{{ asset($subCategory->banner_image_two) }}" class="current-img-preview">
+                                    <img src="{{ asset('storage/' . $subCategory->banner_image_two) }}"
+                                        class="current-img-preview">
                                 @endif
                                 <input type="file" id="banner_image_two" name="banner_image_two"
                                     class="form-control-styled" accept="image/*">
@@ -455,7 +455,8 @@
                                             <div class="form-field">
                                                 <label>Icon Image</label>
                                                 @if($highlight->icon_image)
-                                                    <img src="{{ asset($highlight->icon_image) }}" class="current-icon-preview">
+                                                    <img src="{{ asset('storage/' . $highlight->icon_image) }}"
+                                                        class="current-icon-preview">
                                                 @endif
                                                 <input type="file" name="highlight_images[{{ $loop->index }}]"
                                                     class="form-control-styled" accept="image/*">
@@ -541,7 +542,7 @@
                         <div class="form-field">
                             <label for="cta_image">CTA Image</label>
                             @if($subCategory->cta_image)
-                                <img src="{{ asset($subCategory->cta_image) }}" class="current-img-preview">
+                                <img src="{{ asset('storage/' . $subCategory->cta_image) }}" class="current-img-preview">
                             @endif
                             <input type="file" id="cta_image" name="cta_image" class="form-control-styled"
                                 accept="image/*">
@@ -684,86 +685,6 @@
 
                     </div>
 
-                    {{-- ============ DESTINATIONS ============ --}}
-                    <div class="cat-tab-panel" data-panel="destinations">
-
-                        <div class="form-field">
-                            <label>Nearby Destinations</label>
-
-                            <input type="hidden" name="deleted_destinations" id="deleted_destinations" value="">
-
-                            <div id="existing-dest-rows">
-                                @foreach($subCategory->destinationLinks as $link)
-                                    <div class="gallery-row existing-dest-row" data-id="{{ $link->id }}">
-                                        <input type="hidden" name="dest_link_ids[{{ $loop->index }}]"
-                                            value="{{ $link->id }}">
-                                        <div class="form-field">
-                                            <label>Destination</label>
-                                            <select name="dest_destination_ids[{{ $loop->index }}]"
-                                                class="form-control-styled">
-                                                <option value="">Select Destination</option>
-                                                @foreach($destinations as $d)
-                                                    <option value="{{ $d->id }}" {{ $link->destination_id == $d->id ? 'selected' : '' }}>{{ $d->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <button type="button" class="btn-secondary-dash remove-dest-row"
-                                            data-id="{{ $link->id }}">
-                                            <i class="fa fa-trash"></i> Remove
-                                        </button>
-                                    </div>
-                                @endforeach
-                            </div>
-
-                            <div id="new-dest-rows"></div>
-
-                            <button type="button" class="btn-secondary-dash" id="add-dest-row">
-                                <i class="fa fa-plus"></i> Add Destination
-                            </button>
-                        </div>
-
-                    </div>
-
-                    {{-- ============ ATTRACTIONS ============ --}}
-                    <div class="cat-tab-panel" data-panel="attractions">
-
-                        <div class="form-field">
-                            <label>More Attractions</label>
-
-                            <input type="hidden" name="deleted_attractions" id="deleted_attractions" value="">
-
-                            <div id="existing-attr-rows">
-                                @foreach($subCategory->attractionLinks as $link)
-                                    <div class="gallery-row existing-attr-row" data-id="{{ $link->id }}">
-                                        <input type="hidden" name="attr_link_ids[{{ $loop->index }}]"
-                                            value="{{ $link->id }}">
-                                        <div class="form-field">
-                                            <label>Attraction</label>
-                                            <select name="attr_attraction_ids[{{ $loop->index }}]"
-                                                class="form-control-styled">
-                                                <option value="">Select Attraction</option>
-                                                @foreach($attractions as $a)
-                                                    <option value="{{ $a->id }}" {{ $link->attraction_id == $a->id ? 'selected' : '' }}>{{ $a->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <button type="button" class="btn-secondary-dash remove-attr-row"
-                                            data-id="{{ $link->id }}">
-                                            <i class="fa fa-trash"></i> Remove
-                                        </button>
-                                    </div>
-                                @endforeach
-                            </div>
-
-                            <div id="new-attr-rows"></div>
-
-                            <button type="button" class="btn-secondary-dash" id="add-attr-row">
-                                <i class="fa fa-plus"></i> Add Attraction
-                            </button>
-                        </div>
-
-                    </div>
-
                     {{-- ============ SEO ============ --}}
                     <div class="cat-tab-panel" data-panel="seo">
 
@@ -794,7 +715,7 @@
                         <div class="form-field">
                             <label for="og_image">OG Image</label>
                             @if($subCategory->og_image)
-                                <img src="{{ asset($subCategory->og_image) }}" class="current-img-preview">
+                                <img src="{{ asset('storage/' . $subCategory->og_image) }}" class="current-img-preview">
                             @endif
                             <input type="file" id="og_image" name="og_image" class="form-control-styled"
                                 accept="image/*">
@@ -928,76 +849,7 @@
         row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
     });
 
-    const destinationOptions = @json($destinations->map(fn($d) => ['id' => $d->id, 'name' => $d->name]));
-
-    function destOptionsHtml(selectedId = '') {
-        return '<option value="">Select Destination</option>' + destinationOptions.map(d =>
-            `<option value="${d.id}" ${d.id == selectedId ? 'selected' : ''}>${d.name}</option>`
-        ).join('');
-    }
-
-    const deletedDestinations = [];
-    document.querySelectorAll('.remove-dest-row').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            deletedDestinations.push(this.dataset.id);
-            document.getElementById('deleted_destinations').value = deletedDestinations.join(',');
-            this.closest('.existing-dest-row').remove();
-        });
-    });
-
-    let destIndex = {{ $subCategory->destinationLinks->count() }};
-    document.getElementById('add-dest-row').addEventListener('click', function () {
-        const row = document.createElement('div');
-        row.className = 'gallery-row';
-        row.innerHTML = `
-        <div class="form-field">
-            <label>Destination</label>
-            <select name="dest_destination_ids[${destIndex}]" class="form-control-styled">
-                ${destOptionsHtml()}
-            </select>
-        </div>
-        <button type="button" class="btn-secondary-dash remove-new-row"><i class="fa fa-trash"></i> Remove</button>
-    `;
-        document.getElementById('new-dest-rows').appendChild(row);
-        destIndex++;
-        row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
-    });
-
-    const attractionOptions = @json($attractions->map(fn($a) => ['id' => $a->id, 'name' => $a->name]));
-
-    function attrOptionsHtml(selectedId = '') {
-        return '<option value="">Select Attraction</option>' + attractionOptions.map(a =>
-            `<option value="${a.id}" ${a.id == selectedId ? 'selected' : ''}>${a.name}</option>`
-        ).join('');
-    }
-
-    const deletedAttractions = [];
-    document.querySelectorAll('.remove-attr-row').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            deletedAttractions.push(this.dataset.id);
-            document.getElementById('deleted_attractions').value = deletedAttractions.join(',');
-            this.closest('.existing-attr-row').remove();
-        });
-    });
-
-    let attrIndex = {{ $subCategory->attractionLinks->count() }};
-    document.getElementById('add-attr-row').addEventListener('click', function () {
-        const row = document.createElement('div');
-        row.className = 'gallery-row';
-        row.innerHTML = `
-        <div class="form-field">
-            <label>Attraction</label>
-            <select name="attr_attraction_ids[${attrIndex}]" class="form-control-styled">
-                ${attrOptionsHtml()}
-            </select>
-        </div>
-        <button type="button" class="btn-secondary-dash remove-new-row"><i class="fa fa-trash"></i> Remove</button>
-    `;
-        document.getElementById('new-attr-rows').appendChild(row);
-        attrIndex++;
-        row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
-    });
-
+    
 </script>
 
 @include('admin.footer')

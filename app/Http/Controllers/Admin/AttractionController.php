@@ -135,10 +135,16 @@ class AttractionController extends Controller
         }
 
         if ($request->hasFile('image')) {
+            if ($attraction->image) {
+                Storage::disk('public')->delete($attraction->image);
+            }
             $validated['image'] = $request->file('image')->store('attractions', 'public');
         }
 
         if ($request->hasFile('og_image')) {
+            if ($attraction->og_image) {
+                Storage::disk('public')->delete($attraction->og_image);
+            }
             $validated['og_image'] = $request->file('og_image')->store('attractions/seo', 'public');
         }
 
@@ -214,24 +220,6 @@ class AttractionController extends Controller
         return redirect()
             ->route('admin.attractions.index')
             ->with('success', 'Attraction deleted successfully.');
-    }
-
-    // Cascading dropdown: states for a given country
-    public function getStates(Country $country)
-    {
-        return State::where('country_id', $country->id)
-            ->where('status', 'active')
-            ->orderBy('sort_order')
-            ->get(['id', 'name']);
-    }
-
-    // Cascading dropdown: cities for a given state
-    public function getCities(State $state)
-    {
-        return City::where('state_id', $state->id)
-            ->where('status', 'active')
-            ->orderBy('sort_order')
-            ->get(['id', 'name']);
     }
 
     /**

@@ -273,8 +273,6 @@
                         <button type="button" class="cat-tab" data-tab="cta">CTA Section</button>
                         <button type="button" class="cat-tab" data-tab="promo">Promo Banner</button>
                         <button type="button" class="cat-tab" data-tab="faqsection">FAQ Section</button>
-                        <button type="button" class="cat-tab" data-tab="destinations">Destinations</button>
-                        <button type="button" class="cat-tab" data-tab="attractions">Attractions</button>
                         <button type="button" class="cat-tab" data-tab="seo">SEO / Open Graph</button>
                     </div>
 
@@ -575,36 +573,6 @@
 
                     </div>
 
-                    {{-- ============ DESTINATIONS ============ --}}
-                    <div class="cat-tab-panel" data-panel="destinations">
-
-                        <div class="form-field">
-                            <label>Nearby Destinations</label>
-                            <div id="new-dest-rows"></div>
-                            <button type="button" class="btn-secondary-dash" id="add-dest-row">
-                                <i class="fa fa-plus"></i> Add Destination
-                            </button>
-                            <div class="hint" style="margin-top:10px;">Card details (image, duration, budget) come from
-                                the Destination's own fields — order here sets slider order</div>
-                        </div>
-
-                    </div>
-
-                    {{-- ============ ATTRACTIONS ============ --}}
-                    <div class="cat-tab-panel" data-panel="attractions">
-
-                        <div class="form-field">
-                            <label>More Attractions</label>
-                            <div id="new-attr-rows"></div>
-                            <button type="button" class="btn-secondary-dash" id="add-attr-row">
-                                <i class="fa fa-plus"></i> Add Attraction
-                            </button>
-                            <div class="hint" style="margin-top:10px;">Card details (image, rating, review count) come
-                                from the Attraction's own fields — order here sets slider order</div>
-                        </div>
-
-                    </div>
-
                     {{-- ============ SEO ============ --}}
                     <div class="cat-tab-panel" data-panel="seo">
 
@@ -779,58 +747,7 @@
         row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
     });
 
-    const destinationOptions = @json($destinations->map(fn($d) => ['id' => $d->id, 'name' => $d->name]));
-
-    function destOptionsHtml(selectedId = '') {
-        return '<option value="">Select Destination</option>' + destinationOptions.map(d =>
-            `<option value="${d.id}" ${d.id == selectedId ? 'selected' : ''}>${d.name}</option>`
-        ).join('');
-    }
-
-    let destIndex = 0;
-    document.getElementById('add-dest-row').addEventListener('click', function () {
-        const row = document.createElement('div');
-        row.className = 'gallery-row';
-        row.innerHTML = `
-        <div class="form-field">
-            <label>Destination</label>
-            <select name="dest_destination_ids[${destIndex}]" class="form-control-styled">
-                ${destOptionsHtml()}
-            </select>
-        </div>
-        <button type="button" class="btn-secondary-dash remove-new-row"><i class="fa fa-trash"></i> Remove</button>
-    `;
-        document.getElementById('new-dest-rows').appendChild(row);
-        destIndex++;
-        row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
-    });
-
-    const attractionOptions = @json($attractions->map(fn($a) => ['id' => $a->id, 'name' => $a->name]));
-
-    function attrOptionsHtml(selectedId = '') {
-        return '<option value="">Select Attraction</option>' + attractionOptions.map(a =>
-            `<option value="${a.id}" ${a.id == selectedId ? 'selected' : ''}>${a.name}</option>`
-        ).join('');
-    }
-
-    let attrIndex = 0;
-    document.getElementById('add-attr-row').addEventListener('click', function () {
-        const row = document.createElement('div');
-        row.className = 'gallery-row';
-        row.innerHTML = `
-        <div class="form-field">
-            <label>Attraction</label>
-            <select name="attr_attraction_ids[${attrIndex}]" class="form-control-styled">
-                ${attrOptionsHtml()}
-            </select>
-        </div>
-        <button type="button" class="btn-secondary-dash remove-new-row"><i class="fa fa-trash"></i> Remove</button>
-    `;
-        document.getElementById('new-attr-rows').appendChild(row);
-        attrIndex++;
-        row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
-    });
-
+   
 </script>
 
 @include('admin.footer')

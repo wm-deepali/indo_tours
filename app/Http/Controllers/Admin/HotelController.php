@@ -26,18 +26,18 @@ class HotelController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'               => 'required|string|max:255',
-            'country_id'         => 'nullable|exists:countries,id',
-            'state_id'           => 'nullable|exists:states,id',
-            'city_id'            => 'nullable|exists:cities,id',
-            'rating'             => 'nullable|numeric|min:0|max:5',
-            'check_in_time'      => 'nullable',
-            'check_out_time'     => 'nullable',
-            'short_description'  => 'nullable|string',
-            'location'           => 'nullable|string|max:255',
-            'status'             => 'nullable|in:draft,published,unpublished',
-            'gallery_images'     => 'nullable|array',
-            'gallery_images.*'   => 'nullable|image|max:2048',
+            'name' => 'required|string|max:255',
+            'country_id' => 'nullable|exists:countries,id',
+            'state_id' => 'nullable|exists:states,id',
+            'city_id' => 'nullable|exists:cities,id',
+            'rating' => 'nullable|numeric|min:0|max:5',
+            'check_in_time' => 'nullable',
+            'check_out_time' => 'nullable',
+            'short_description' => 'nullable|string',
+            'location' => 'nullable|string|max:255',
+            'status' => 'nullable|in:draft,published,unpublished',
+            'gallery_images' => 'nullable|array',
+            'gallery_images.*' => 'nullable|image|max:2048',
         ]);
 
         $validated['slug'] = Str::slug($request->name) . '-' . Str::random(5);
@@ -60,18 +60,18 @@ class HotelController extends Controller
     public function update(Request $request, Hotel $hotel)
     {
         $validated = $request->validate([
-            'name'               => 'required|string|max:255',
-            'country_id'         => 'nullable|exists:countries,id',
-            'state_id'           => 'nullable|exists:states,id',
-            'city_id'            => 'nullable|exists:cities,id',
-            'rating'             => 'nullable|numeric|min:0|max:5',
-            'check_in_time'      => 'nullable',
-            'check_out_time'     => 'nullable',
-            'short_description'  => 'nullable|string',
-            'location'           => 'nullable|string|max:255',
-            'status'             => 'nullable|in:draft,published,unpublished',
-            'gallery_images'     => 'nullable|array',
-            'gallery_images.*'   => 'nullable|image|max:2048',
+            'name' => 'required|string|max:255',
+            'country_id' => 'nullable|exists:countries,id',
+            'state_id' => 'nullable|exists:states,id',
+            'city_id' => 'nullable|exists:cities,id',
+            'rating' => 'nullable|numeric|min:0|max:5',
+            'check_in_time' => 'nullable',
+            'check_out_time' => 'nullable',
+            'short_description' => 'nullable|string',
+            'location' => 'nullable|string|max:255',
+            'status' => 'nullable|in:draft,published,unpublished',
+            'gallery_images' => 'nullable|array',
+            'gallery_images.*' => 'nullable|image|max:2048',
         ]);
 
         $validated['status'] = $request->status ?? $hotel->status;
@@ -82,9 +82,7 @@ class HotelController extends Controller
         if ($request->filled('deleted_galleries')) {
             $ids = array_filter(explode(',', $request->deleted_galleries));
             foreach (HotelGallery::whereIn('id', $ids)->get() as $img) {
-                if (file_exists(public_path($img->image))) {
-                    unlink(public_path($img->image));
-                }
+                $this->deleteGalleryFile($img->image);
                 $img->delete();
             }
         }
@@ -97,13 +95,28 @@ class HotelController extends Controller
     public function destroy(Hotel $hotel)
     {
         foreach ($hotel->galleries as $img) {
-            if (file_exists(public_path($img->image))) {
-                unlink(public_path($img->image));
-            }
+            $this->deleteGalleryFile($img->image);
         }
+        $hotel->galleries()->delete();
         $hotel->delete();
 
         return redirect()->route('admin.hotels.index')->with('success', 'Hotel deleted successfully.');
+    }
+
+    private function deleteGalleryFile(?string $imagePath): void
+    {
+        if (!$imagePath) {
+            return;
+        }
+
+        // stored value is like "storage/hotels/gallery/xxx.jpg" -> strip the leading "storage/"
+        $relativePath = Str::startsWith($imagePath, 'storage/')
+            ? Str::after($imagePath, 'storage/')
+            : $imagePath;
+
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($relativePath)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($relativePath);
+        }
     }
 
     private function saveGalleryImages(Hotel $hotel, Request $request): void
@@ -115,11 +128,12 @@ class HotelController extends Controller
         $maxOrder = $hotel->galleries()->max('sort_order') ?? 0;
 
         foreach ($request->file('gallery_images') as $i => $file) {
-            if (!$file) continue;
+            if (!$file)
+                continue;
 
             $path = $file->store('hotels/gallery', 'public'); // adjust disk as per your setup
             $hotel->galleries()->create([
-                'image'      => 'storage/' . $path, // adjust based on your existing image path convention
+                'image' => 'storage/' . $path, // adjust based on your existing image path convention
                 'sort_order' => $maxOrder + $i + 1,
             ]);
         }

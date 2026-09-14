@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 
 class Destination extends Model
 {
@@ -155,9 +157,10 @@ class Destination extends Model
         return $this->hasMany(DestinationFaq::class)->orderBy('sort_order');
     }
 
-    public function subCategoryLinks(): HasMany
+    public function tourPackages(): BelongsToMany
     {
-        return $this->hasMany(SubCategoryDestination::class);
+        return $this->belongsToMany(TourPackage::class, 'tour_package_destination')
+            ->withPivot('sort_order');
     }
-    
+
 }

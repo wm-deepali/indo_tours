@@ -17,14 +17,14 @@
                     <div class="swiper-wrapper">
                         @if($subCategory->banner_image_one)
                             <div class="swiper-slide">
-                                <img loading="lazy" src="{{ asset($subCategory->banner_image_one) }}"
+                                <img loading="lazy" src="{{ asset('storage/'. $subCategory->banner_image_one) }}"
                                     alt="{{ $subCategory->name }}" />
                             </div>
                         @endif
 
                         @if($subCategory->banner_image_two)
                             <div class="swiper-slide">
-                                <img loading="lazy" src="{{ asset($subCategory->banner_image_two) }}"
+                                <img loading="lazy" src="{{ asset('storage/'. $subCategory->banner_image_two) }}"
                                     alt="{{ $subCategory->name }}" />
                             </div>
                         @endif
@@ -116,7 +116,7 @@
                             <div class="highlight-card">
                                 <div class="icon">
                                     @if($highlight->icon_image)
-                                        <img src="{{ asset($highlight->icon_image) }}" alt="{{ $highlight->title }}" />
+                                        <img src="{{ asset('storage/'. $highlight->icon_image) }}" alt="{{ $highlight->title }}" />
                                     @else
                                         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
                                             <path d="M0 0h24v24H0z" fill="none" />
@@ -288,7 +288,7 @@
                     <div class="group-offer-banner__media">
                         <div class="group-offer-banner__img group-offer-banner__img--secondary">
                             <img loading="lazy"
-                                src="{{ $subCategory->cta_image ? asset($subCategory->cta_image) : asset('assets/images/listing/banner1.jpg') }}"
+                                src="{{ $subCategory->cta_image ? asset('storage/'.$subCategory->cta_image) : asset('assets/images/listing/banner1.jpg') }}"
                                 alt="{{ $subCategory->name }}" />
                         </div>
                     </div>
@@ -311,7 +311,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card1.jpg" alt="" />
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card1.jpg')}}" alt="" />
                                         <span class="save">Save INR 75,900</span>
                                     </a>
 
@@ -358,7 +358,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card2.jpg" alt="" />
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card2.jpg')}}" alt="" />
                                         <span class="save">Save INR 75,900</span>
                                     </a>
 
@@ -405,7 +405,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card3.jpg" alt="" />
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card3.jpg')}}" alt="" />
                                         <span class="save">Save INR 75,900</span>
                                     </a>
 
@@ -451,7 +451,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card4.jpg" alt="" />
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card4.jpg')}}" alt="" />
                                         <span class="save">Save INR 75,900</span>
                                     </a>
 
@@ -498,7 +498,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card1.jpg" alt="" />
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card1.jpg')}}" alt="" />
                                         <span class="save">Save INR 75,900</span>
                                     </a>
 
@@ -634,7 +634,7 @@
                                 <div class="swiper-slide">
                                     <div class="card">
                                         <div class="header">
-                                            <img loading="lazy" src="assets/images/home/client1.png" alt="Sanjeev Ahuja" />
+                                            <img loading="lazy" src="{{ asset('assets/images/home/client1.png')}}" alt="Sanjeev Ahuja" />
                                             <div class="name">
                                                 <h6>Sanjeev Ahuja</h6>
                                                 <div class="badge-star">
@@ -661,9 +661,9 @@
                                         </p>
 
                                         <div class="photo-strip">
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg" alt="" />
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg" alt="" />
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg" alt="" />
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
                                         </div>
                                     </div>
                                 </div>
@@ -671,7 +671,7 @@
                                 <div class="swiper-slide">
                                     <div class="card">
                                         <div class="header">
-                                            <img loading="lazy" src="assets/images/home/client2.png" alt="Vicky Gupta" />
+                                            <img loading="lazy" src="{{ asset('assets/images/home/client2.png')}}" alt="Vicky Gupta" />
                                             <div class="name">
                                                 <h6>Vicky Gupta</h6>
                                                 <div class="badge-star">
@@ -698,10 +698,10 @@
                                         </p>
 
                                         <div class="photo-strip">
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg" alt="" />
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg" alt="" />
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg" alt="" />
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg" alt="" />
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
                                         </div>
                                     </div>
                                 </div>
@@ -709,7 +709,7 @@
                                 <div class="swiper-slide">
                                     <div class="card">
                                         <div class="header">
-                                            <img loading="lazy" src="assets/images/home/client3.png" alt="Floyd Miles" />
+                                            <img loading="lazy" src="{{ asset('assets/images/home/client3.png')}}" alt="Floyd Miles" />
                                             <div class="name">
                                                 <h6>Floyd Miles</h6>
                                                 <div class="badge-star">
@@ -736,10 +736,10 @@
                                         </p>
 
                                         <div class="photo-strip">
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg" alt="" />
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg" alt="" />
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg" alt="" />
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg" alt="" />
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
                                         </div>
                                     </div>
                                 </div>
@@ -765,7 +765,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card1.jpg" alt="" />
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card1.jpg')}}" alt="" />
                                         <span class="save">Save INR 75,900</span>
                                     </a>
 
@@ -812,7 +812,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card2.jpg" alt="" />
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card2.jpg')}}" alt="" />
                                         <span class="save">Save INR 75,900</span>
                                     </a>
 
@@ -859,7 +859,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card3.jpg" alt="" />
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card3.jpg')}}" alt="" />
                                         <span class="save">Save INR 75,900</span>
                                     </a>
 
@@ -905,7 +905,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card4.jpg" alt="" />
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card4.jpg')}}" alt="" />
                                         <span class="save">Save INR 75,900</span>
                                     </a>
 
@@ -952,7 +952,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card1.jpg" alt="" />
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card1.jpg')}}" alt="" />
                                         <span class="save">Save INR 75,900</span>
                                     </a>
 
@@ -1113,7 +1113,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card1.jpg" alt="" />
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card1.jpg')}}" alt="" />
                                         <span class="save">Save INR 75,900</span>
                                     </a>
 
@@ -1160,7 +1160,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card2.jpg" alt="" />
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card2.jpg')}}" alt="" />
                                         <span class="save">Save INR 75,900</span>
                                     </a>
 
@@ -1207,7 +1207,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card3.jpg" alt="" />
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card3.jpg')}}" alt="" />
                                         <span class="save">Save INR 75,900</span>
                                     </a>
 
@@ -1253,7 +1253,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card4.jpg" alt="" />
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card4.jpg')}}" alt="" />
                                         <span class="save">Save INR 75,900</span>
                                     </a>
 
@@ -1300,7 +1300,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card1.jpg" alt="" />
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card1.jpg')}}" alt="" />
                                         <span class="save">Save INR 75,900</span>
                                     </a>
 
@@ -1372,7 +1372,7 @@
         </section>
 
         {{-- ATTRACTIONS SECTION --}}
-        @if($subCategory->attractionLinks->count())
+        @if($attractions->count())
             <section class="listing-secF">
                 <div class="container">
                     <div class="heading">
@@ -1385,15 +1385,13 @@
                     <div class="swiper-wrap">
                         <div class="swiper thirdSilder">
                             <div class="swiper-wrapper">
-                                @foreach($subCategory->attractionLinks as $link)
-                                    @php $attraction = $link->attraction; @endphp
-                                    @continue(!$attraction)
+                                @foreach($attractions as $attraction)
 
                                     <div class="swiper-slide">
                                         <div class="trip_card">
                                             <a href="{{ route('attraction.show', $attraction->slug) }}" target="_blank" class="img">
                                                 <img loading="lazy"
-                                                    src="{{ $attraction->image ? asset($attraction->image) : asset('assets/images/listing/placeholder.jpg') }}"
+                                                    src="{{ $attraction->image ? asset('storage/'. $attraction->image) : asset('assets/images/listing/placeholder.jpg') }}"
                                                     alt="{{ $attraction->name }}" />
                                             </a>
 
@@ -1500,7 +1498,7 @@
         </section>
 
         {{-- DESTINATIONS SECTION --}}
-        @if($subCategory->destinationLinks->count())
+        @if($destinations->count())
             <section class="listing-secA">
                 <div class="container">
                     <div class="heading">
@@ -1514,16 +1512,14 @@
                     <div class="swiper-wrap">
                         <div class="swiper thirdSilder">
                             <div class="swiper-wrapper">
-                                @foreach($subCategory->destinationLinks as $link)
-                                    @php $destination = $link->destination; @endphp
-                                    @continue(!$destination)
+                                @foreach($destinations as $destination)
 
                                     <div class="swiper-slide">
                                         <a href="{{ route('destination.show', $destination->slug) }}" target="_blank"
                                             class="trip_card3">
                                             <div class="img">
                                                 <img loading="lazy"
-                                                    src="{{ $destination->image ? asset($destination->image) : asset('assets/images/listing/placeholder.jpg') }}"
+                                                    src="{{ $destination->image ? asset('storage/'. $destination->image) : asset('assets/images/listing/placeholder.jpg') }}"
                                                     alt="{{ $destination->name }}" />
                                             </div>
 

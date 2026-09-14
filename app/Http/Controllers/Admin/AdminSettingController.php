@@ -74,15 +74,21 @@ class AdminSettingController extends Controller
         $validated['maintenance_mode']
             = $request->has('maintenance_mode');
 
-        if ($request->hasFile('logo')) {
+        $existing = Setting::first();
 
+        if ($request->hasFile('logo')) {
+            if ($existing && $existing->logo) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($existing->logo);
+            }
             $validated['logo'] = $request
                 ->file('logo')
                 ->store('settings', 'public');
         }
 
         if ($request->hasFile('favicon')) {
-
+            if ($existing && $existing->favicon) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($existing->favicon);
+            }
             $validated['favicon'] = $request
                 ->file('favicon')
                 ->store('settings', 'public');

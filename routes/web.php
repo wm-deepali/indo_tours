@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\{
     ProfileSettingController,
     LogoutController,
     DestinationController,
+    ActivityController,
     AdminSettingController,
     SeoSettingController,
     AttractionController,
@@ -24,7 +25,7 @@ use App\Http\Controllers\FrontController;
 // ── (unchanged — front + customer routes, no admin permission needed here) ──
 Route::controller(FrontController::class)->group(function () {
     Route::get('/', 'home')->name('home');
-    
+
     Route::get('/category/{slug}', 'categoryDetail')->name('category.show');
     Route::get('/subcategory/{slug}', 'subcategoryDetail')->name('subcategory.show');
     Route::get('/tour-package/{slug}', 'tourPackageDetail')->name('tourpackage.show');
@@ -34,6 +35,13 @@ Route::controller(FrontController::class)->group(function () {
 
     Route::get('/attractions', 'attractions')->name('attractions');
     Route::get('/attraction/{slug}', 'attractionDetail')->name('attraction.show');
+
+    Route::get('/activities', 'activities')->name('activities');
+    Route::get('/activities/{slug}', 'activitiesDetail')->name('activities.show');
+
+
+    Route::post('/reviews', 'reviewStore')->name('reviews.store');
+    Route::post('/enquiries', 'enquiryStore')->name('enquiries.store');
 });
 
 
@@ -55,12 +63,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('location/cities/{state}', [LocationController::class, 'getCities'])->name('location.cities');
 
         Route::resource('destinations', DestinationController::class);
-        Route::get('destinations/states/{country}', [DestinationController::class, 'getStates'])->name('destinations.states');
-        Route::get('destinations/cities/{state}', [DestinationController::class, 'getCities'])->name('destinations.cities');
-
         Route::resource('attractions', AttractionController::class);
-        Route::get('attractions/states/{country}', [AttractionController::class, 'getStates'])->name('attractions.states');
-        Route::get('attractions/cities/{state}', [AttractionController::class, 'getCities'])->name('attractions.cities');
+        Route::resource('activities', ActivityController::class);
 
         Route::resource('hotels', HotelController::class);
         Route::resource('categories', CategoryController::class);

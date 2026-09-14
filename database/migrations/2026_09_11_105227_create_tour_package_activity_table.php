@@ -10,12 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('category_attractions', function (Blueprint $table) {
+        Schema::create('tour_package_activity', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('attraction_id')->constrained()->cascadeOnDelete();
-            $table->integer('sort_order')->default(0);
+            $table->foreignId('tour_package_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('activity_id')->constrained()->cascadeOnDelete();
+            $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
+
+            $table->unique(['tour_package_id', 'activity_id']);
         });
     }
 
@@ -24,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('category_attractions');
+        Schema::dropIfExists('tour_package_activity');
     }
 };

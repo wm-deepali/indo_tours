@@ -20,9 +20,7 @@ class CategoryController extends Controller
 
     public function create()
     {
-        $destinations = Destination::orderBy('name')->get(['id', 'name']);
-        $attractions = Attraction::orderBy('name')->get(['id', 'name']);
-        return view('admin.category.create', compact('destinations', 'attractions'));
+        return view('admin.category.create');
     }
 
     public function store(Request $request)
@@ -46,18 +44,14 @@ class CategoryController extends Controller
         $this->saveFacts($category, $request);
         $this->saveCtaPerks($category, $request);
         $this->saveFaqs($category, $request);
-        $this->saveDestinations($category, $request);
-        $this->saveAttractions($category, $request);
 
         return redirect()->route('admin.categories.index')->with('success', 'Category added successfully.');
     }
 
     public function edit(Category $category)
     {
-        $category->load(['facts', 'ctaPerks', 'faqs', 'destinationLinks.destination', 'attractionLinks.attraction']);
-        $destinations = Destination::orderBy('name')->get(['id', 'name']);
-        $attractions = Attraction::orderBy('name')->get(['id', 'name']);
-        return view('admin.category.edit', compact('category', 'destinations', 'attractions'));
+        $category->load(['facts', 'ctaPerks', 'faqs']);
+        return view('admin.category.edit', compact('category'));
     }
 
     public function update(Request $request, Category $category)
@@ -67,12 +61,21 @@ class CategoryController extends Controller
         $validated['status'] = $request->status ?? $category->status;
 
         if ($request->hasFile('image')) {
+            if ($category->image) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($category->image);
+            }
             $validated['image'] = $request->file('image')->store('categories', 'public');
         }
         if ($request->hasFile('cta_image')) {
+            if ($category->cta_image) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($category->cta_image);
+            }
             $validated['cta_image'] = $request->file('cta_image')->store('categories/cta', 'public');
         }
         if ($request->hasFile('og_image')) {
+            if ($category->og_image) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($category->og_image);
+            }
             $validated['og_image'] = $request->file('og_image')->store('categories/og', 'public');
         }
 
@@ -80,12 +83,9 @@ class CategoryController extends Controller
         $this->saveFacts($category, $request);
         $this->saveCtaPerks($category, $request);
         $this->saveFaqs($category, $request);
-        $this->saveDestinations($category, $request);
-        $this->saveAttractions($category, $request);
 
         return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
     }
-
     public function destroy(Category $category)
     {
         $category->delete();
@@ -162,18 +162,6 @@ class CategoryController extends Controller
             'faq_answers' => 'nullable|array',
             'faq_answers.*' => 'nullable|string',
             'deleted_faqs' => 'nullable|string',
-
-            'dest_link_ids' => 'nullable|array',
-            'dest_link_ids.*' => 'nullable|integer',
-            'dest_destination_ids' => 'nullable|array',
-            'dest_destination_ids.*' => 'nullable|exists:destinations,id',
-            'deleted_destinations' => 'nullable|string',
-
-            'attr_link_ids' => 'nullable|array',
-            'attr_link_ids.*' => 'nullable|integer',
-            'attr_attraction_ids' => 'nullable|array',
-            'attr_attraction_ids.*' => 'nullable|exists:attractions,id',
-            'deleted_attractions' => 'nullable|string',
         ];
     }
 
@@ -272,65 +260,6 @@ class CategoryController extends Controller
                     'answer' => $answer,
                     'sort_order' => $i,
                 ]);
-            }
-        }
-    }
-    private function saveDestinations(Category $category, Request $request): void
-    {
-        if ($request->filled('deleted_destinations')) {
-            $ids = array_filter(explode(',', $request->deleted_destinations));
-            if (!empty($ids))
-                $category->destinationLinks()->whereIn('id', $ids)->delete();
-        }
-
-        if (!$request->filled('dest_destination_ids'))
-            return;
-
-        foreach ($request->dest_destination_ids as $i => $destinationId) {
-            if (!$destinationId)
-                continue;
-
-            $data = [
-                'destination_id' => $destinationId,
-                'sort_order' => $i,
-            ];
-
-            $linkId = $request->dest_link_ids[$i] ?? null;
-
-            if ($linkId) {
-                $category->destinationLinks()->where('id', $linkId)->update($data);
-            } else {
-                $category->destinationLinks()->create($data);
-            }
-        }
-    }
-
-    private function saveAttractions(Category $category, Request $request): void
-    {
-        if ($request->filled('deleted_attractions')) {
-            $ids = array_filter(explode(',', $request->deleted_attractions));
-            if (!empty($ids))
-                $category->attractionLinks()->whereIn('id', $ids)->delete();
-        }
-
-        if (!$request->filled('attr_attraction_ids'))
-            return;
-
-        foreach ($request->attr_attraction_ids as $i => $attractionId) {
-            if (!$attractionId)
-                continue;
-
-            $data = [
-                'attraction_id' => $attractionId,
-                'sort_order' => $i,
-            ];
-
-            $linkId = $request->attr_link_ids[$i] ?? null;
-
-            if ($linkId) {
-                $category->attractionLinks()->where('id', $linkId)->update($data);
-            } else {
-                $category->attractionLinks()->create($data);
             }
         }
     }

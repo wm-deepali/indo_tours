@@ -20,48 +20,253 @@
             --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
-        .cat-page { background: var(--bg); padding: 24px 28px; min-height: 100vh; font-family: var(--font); color: var(--text-primary); box-sizing: border-box; }
-        .cat-page * { box-sizing: border-box; }
-        .cat-page-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
-        .cat-page-header h1 { font-size: 20px; font-weight: 650; margin: 0; }
-        .cat-breadcrumb { font-size: 12.5px; color: var(--text-hint); margin-top: 3px; }
-        .cat-breadcrumb a { color: var(--accent); text-decoration: none; }
-        .cat-breadcrumb a:hover { text-decoration: underline; }
-        .cat-breadcrumb span { margin: 0 5px; }
+        .cat-page {
+            background: var(--bg);
+            padding: 24px 28px;
+            min-height: 100vh;
+            font-family: var(--font);
+            color: var(--text-primary);
+            box-sizing: border-box;
+        }
 
-        .btn-primary-dash { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: #fff !important; border: none; border-radius: var(--radius-sm); padding: 9px 18px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none !important; box-shadow: 0 1px 3px rgba(48, 61, 137, .25); }
-        .btn-primary-dash:hover { background: #252f70; }
-        .btn-secondary-dash { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); color: var(--text-primary) !important; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 18px; font-size: 13px; font-weight: 500; cursor: pointer; text-decoration: none !important; }
-        .btn-secondary-dash:hover { background: var(--bg); }
+        .cat-page * {
+            box-sizing: border-box;
+        }
 
-        .cat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); max-width: 100vw; overflow: hidden; }
+        .cat-page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
 
-        .form-field { margin-bottom: 18px; }
-        .form-field label { display: block; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; letter-spacing: .02em; }
-        .form-field .hint { font-size: 11.5px; color: var(--text-hint); margin-top: 4px; }
+        .cat-page-header h1 {
+            font-size: 20px;
+            font-weight: 650;
+            margin: 0;
+        }
 
-        .form-control-styled { width: 100%; height: 40px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0 12px; font-size: 13.5px; font-family: var(--font); color: var(--text-primary); outline: none; transition: border-color .15s, box-shadow .15s; background: var(--surface); }
-        textarea.form-control-styled { height: auto; padding: 10px 12px; resize: vertical; }
-        select.form-control-styled { appearance: auto; }
-        .form-control-styled:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(48, 61, 137, .12); }
+        .cat-breadcrumb {
+            font-size: 12.5px;
+            color: var(--text-hint);
+            margin-top: 3px;
+        }
 
-        .form-error { color: #b22222; font-size: 12px; margin-top: 5px; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
-        .form-actions { display: flex; gap: 10px; padding: 20px 24px; border-top: 1px solid var(--border); background: var(--surface); position: sticky; bottom: 0; }
+        .cat-breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
 
-        .cat-tabs { display: flex; gap: 2px; padding: 0 24px; border-bottom: 1px solid var(--border); background: var(--surface); overflow-x: auto; }
-        .cat-tab { appearance: none; background: none; border: none; border-bottom: 2px solid transparent; padding: 14px 16px; font-family: var(--font); font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; white-space: nowrap; }
-        .cat-tab:hover { color: var(--text-primary); }
-        .cat-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-        .cat-tab-panel { display: none; padding: 24px; }
-        .cat-tab-panel.active { display: block; }
+        .cat-breadcrumb a:hover {
+            text-decoration: underline;
+        }
 
-        .current-img-preview { width: 72px; height: 72px; border-radius: var(--radius-sm); object-fit: cover; border: 1px solid var(--border); margin-bottom: 10px; display: block; }
-        .gallery-row { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 14px; background: var(--bg); }
-        .gallery-row .remove-new-row, .gallery-row [class^="remove-"] { margin-top: 10px; }
-        .checkbox-row { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-primary); }
-        .checkbox-row input { width: auto; height: auto; }
+        .cat-breadcrumb span {
+            margin: 0 5px;
+        }
+
+        .btn-primary-dash {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--accent);
+            color: #fff !important;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 9px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none !important;
+            box-shadow: 0 1px 3px rgba(48, 61, 137, .25);
+        }
+
+        .btn-primary-dash:hover {
+            background: #252f70;
+        }
+
+        .btn-secondary-dash {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--surface);
+            color: var(--text-primary) !important;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 9px 18px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none !important;
+        }
+
+        .btn-secondary-dash:hover {
+            background: var(--bg);
+        }
+
+        .cat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-card);
+            max-width: 100vw;
+            overflow: hidden;
+        }
+
+        .form-field {
+            margin-bottom: 18px;
+        }
+
+        .form-field label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            letter-spacing: .02em;
+        }
+
+        .form-field .hint {
+            font-size: 11.5px;
+            color: var(--text-hint);
+            margin-top: 4px;
+        }
+
+        .form-control-styled {
+            width: 100%;
+            height: 40px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0 12px;
+            font-size: 13.5px;
+            font-family: var(--font);
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color .15s, box-shadow .15s;
+            background: var(--surface);
+        }
+
+        textarea.form-control-styled {
+            height: auto;
+            padding: 10px 12px;
+            resize: vertical;
+        }
+
+        select.form-control-styled {
+            appearance: auto;
+        }
+
+        .form-control-styled:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(48, 61, 137, .12);
+        }
+
+        .form-error {
+            color: #b22222;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            padding: 20px 24px;
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+            position: sticky;
+            bottom: 0;
+        }
+
+        .cat-tabs {
+            display: flex;
+            gap: 2px;
+            padding: 0 24px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            overflow-x: auto;
+        }
+
+        .cat-tab {
+            appearance: none;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 14px 16px;
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .cat-tab:hover {
+            color: var(--text-primary);
+        }
+
+        .cat-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .cat-tab-panel {
+            display: none;
+            padding: 24px;
+        }
+
+        .cat-tab-panel.active {
+            display: block;
+        }
+
+        .current-img-preview {
+            width: 72px;
+            height: 72px;
+            border-radius: var(--radius-sm);
+            object-fit: cover;
+            border: 1px solid var(--border);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .gallery-row {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-bottom: 14px;
+            background: var(--bg);
+        }
+
+        .gallery-row .remove-new-row,
+        .gallery-row [class^="remove-"] {
+            margin-top: 10px;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        .checkbox-row input {
+            width: auto;
+            height: auto;
+        }
     </style>
 
     <div class="app-content content container-fluid">
@@ -84,7 +289,8 @@
             </div>
 
             <div class="cat-card">
-                <form action="{{ route('admin.tourpackages.update', $tourPackage) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.tourpackages.update', $tourPackage) }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -101,6 +307,10 @@
                         <button type="button" class="cat-tab" data-tab="policies">Policies</button>
                         <button type="button" class="cat-tab" data-tab="faqsection">FAQs</button>
                         <button type="button" class="cat-tab" data-tab="map">Map</button>
+                        <button type="button" class="cat-tab" data-tab="offers">Offers</button>
+                        <button type="button" class="cat-tab" data-tab="destinations">Destinations</button>
+                        <button type="button" class="cat-tab" data-tab="attractionslink">Attractions</button>
+                        <button type="button" class="cat-tab" data-tab="activitieslink">Activities</button>
                         <button type="button" class="cat-tab" data-tab="seo">SEO / Open Graph</button>
                     </div>
 
@@ -109,25 +319,31 @@
 
                         <div class="form-field">
                             <label for="sub_category_id">Parent Sub Category</label>
-                            <select id="sub_category_id" name="sub_category_id" class="form-control-styled @error('sub_category_id') is-invalid @enderror" required>
+                            <select id="sub_category_id" name="sub_category_id"
+                                class="form-control-styled @error('sub_category_id') is-invalid @enderror" required>
                                 <option value="">Select Sub Category</option>
                                 @foreach($subCategories as $sc)
-                                    <option value="{{ $sc->id }}" {{ old('sub_category_id', $tourPackage->sub_category_id) == $sc->id ? 'selected' : '' }}>{{ $sc->name }}</option>
+                                    <option value="{{ $sc->id }}" {{ old('sub_category_id', $tourPackage->sub_category_id) == $sc->id ? 'selected' : '' }}>{{ $sc->name }}
+                                    </option>
                                 @endforeach
                             </select>
-                            @error('sub_category_id')<div class="form-error">{{ $message }}</div>@enderror
+                            @error('sub_category_id')
+                            <div class="form-error">{{ $message }}</div>@enderror
                         </div>
 
                         <div class="form-field">
                             <label for="name">Package Name</label>
-                            <input type="text" id="name" name="name" class="form-control-styled @error('name') is-invalid @enderror"
+                            <input type="text" id="name" name="name"
+                                class="form-control-styled @error('name') is-invalid @enderror"
                                 value="{{ old('name', $tourPackage->name) }}" required>
-                            @error('name')<div class="form-error">{{ $message }}</div>@enderror
+                            @error('name')
+                            <div class="form-error">{{ $message }}</div>@enderror
                         </div>
 
                         <div class="form-field">
                             <label for="slug">Slug</label>
-                            <input type="text" id="slug" name="slug_preview" class="form-control-styled" readonly value="{{ $tourPackage->slug }}">
+                            <input type="text" id="slug" name="slug_preview" class="form-control-styled" readonly
+                                value="{{ $tourPackage->slug }}">
                         </div>
 
                         <div class="form-field">
@@ -146,7 +362,9 @@
                                     <select id="country_id" name="country_id" class="form-control-styled">
                                         <option value="">Select Country</option>
                                         @foreach($countries as $country)
-                                            <option value="{{ $country->id }}" {{ old('country_id', $tourPackage->country_id) == $country->id ? 'selected' : '' }}>{{ $country->name }}</option>
+                                            <option value="{{ $country->id }}" {{ old('country_id', $tourPackage->country_id) == $country->id ? 'selected' : '' }}>
+                                                {{ $country->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -154,7 +372,8 @@
                                     <select id="state_id" name="state_id" class="form-control-styled">
                                         <option value="">Select State</option>
                                         @foreach($states as $state)
-                                            <option value="{{ $state->id }}" {{ old('state_id', $tourPackage->state_id) == $state->id ? 'selected' : '' }}>{{ $state->name }}</option>
+                                            <option value="{{ $state->id }}" {{ old('state_id', $tourPackage->state_id) == $state->id ? 'selected' : '' }}>{{ $state->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -162,7 +381,8 @@
                                     <select id="city_id" name="city_id" class="form-control-styled">
                                         <option value="">Select City</option>
                                         @foreach($cities as $city)
-                                            <option value="{{ $city->id }}" {{ old('city_id', $tourPackage->city_id) == $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
+                                            <option value="{{ $city->id }}" {{ old('city_id', $tourPackage->city_id) == $city->id ? 'selected' : '' }}>{{ $city->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -172,28 +392,34 @@
                         <div class="form-row">
                             <div class="form-field">
                                 <label for="duration_text">Duration Text</label>
-                                <input type="text" id="duration_text" name="duration_text" class="form-control-styled" value="{{ old('duration_text', $tourPackage->duration_text) }}">
+                                <input type="text" id="duration_text" name="duration_text" class="form-control-styled"
+                                    value="{{ old('duration_text', $tourPackage->duration_text) }}">
                             </div>
                             <div class="form-field">
                                 <label for="price_unit_text">Price Unit Text</label>
-                                <input type="text" id="price_unit_text" name="price_unit_text" class="form-control-styled" value="{{ old('price_unit_text', $tourPackage->price_unit_text) }}">
+                                <input type="text" id="price_unit_text" name="price_unit_text"
+                                    class="form-control-styled"
+                                    value="{{ old('price_unit_text', $tourPackage->price_unit_text) }}">
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-field">
                                 <label for="old_price">Old Price (₹)</label>
-                                <input type="number" step="0.01" id="old_price" name="old_price" class="form-control-styled" value="{{ old('old_price', $tourPackage->old_price) }}">
+                                <input type="number" step="0.01" id="old_price" name="old_price"
+                                    class="form-control-styled" value="{{ old('old_price', $tourPackage->old_price) }}">
                             </div>
                             <div class="form-field">
                                 <label for="price">Current Price (₹)</label>
-                                <input type="number" step="0.01" id="price" name="price" class="form-control-styled" value="{{ old('price', $tourPackage->price) }}">
+                                <input type="number" step="0.01" id="price" name="price" class="form-control-styled"
+                                    value="{{ old('price', $tourPackage->price) }}">
                             </div>
                         </div>
 
                         <div class="form-field">
                             <label for="video_url">Video URL</label>
-                            <input type="text" id="video_url" name="video_url" class="form-control-styled" value="{{ old('video_url', $tourPackage->video_url) }}">
+                            <input type="text" id="video_url" name="video_url" class="form-control-styled"
+                                value="{{ old('video_url', $tourPackage->video_url) }}">
                         </div>
 
                     </div>
@@ -203,38 +429,51 @@
 
                         <div class="form-field">
                             <label for="banner_tag_text">Banner Tag Text</label>
-                            <input type="text" id="banner_tag_text" name="banner_tag_text" class="form-control-styled" value="{{ old('banner_tag_text', $tourPackage->banner_tag_text) }}">
+                            <input type="text" id="banner_tag_text" name="banner_tag_text" class="form-control-styled"
+                                value="{{ old('banner_tag_text', $tourPackage->banner_tag_text) }}">
                         </div>
 
                         <div class="form-field">
                             <label for="banner_intro">Banner Intro</label>
-                            <textarea id="banner_intro" name="banner_intro" rows="3" class="form-control-styled">{{ old('banner_intro', $tourPackage->banner_intro) }}</textarea>
+                            <textarea id="banner_intro" name="banner_intro" rows="3"
+                                class="form-control-styled">{{ old('banner_intro', $tourPackage->banner_intro) }}</textarea>
                         </div>
 
                         <div class="form-row">
                             <div class="form-field">
                                 <label for="main_image">Main Image</label>
-                                @if($tourPackage->main_image)<img src="{{ asset($tourPackage->main_image) }}" class="current-img-preview">@endif
-                                <input type="file" id="main_image" name="main_image" class="form-control-styled" accept="image/*">
+                                @if($tourPackage->main_image)<img
+                                    src="{{ asset('storage/' . $tourPackage->main_image) }}"
+                                class="current-img-preview">@endif
+                                <input type="file" id="main_image" name="main_image" class="form-control-styled"
+                                    accept="image/*">
                                 <div class="hint">Leave blank to keep current</div>
                             </div>
                             <div class="form-field">
                                 <label for="top_image">Top Image</label>
-                                @if($tourPackage->top_image)<img src="{{ asset($tourPackage->top_image) }}" class="current-img-preview">@endif
-                                <input type="file" id="top_image" name="top_image" class="form-control-styled" accept="image/*">
+                                @if($tourPackage->top_image)<img src="{{ asset('storage/' . $tourPackage->top_image) }}"
+                                class="current-img-preview">@endif
+                                <input type="file" id="top_image" name="top_image" class="form-control-styled"
+                                    accept="image/*">
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-field">
                                 <label for="bottom_left_image">Bottom Left Image</label>
-                                @if($tourPackage->bottom_left_image)<img src="{{ asset($tourPackage->bottom_left_image) }}" class="current-img-preview">@endif
-                                <input type="file" id="bottom_left_image" name="bottom_left_image" class="form-control-styled" accept="image/*">
+                                @if($tourPackage->bottom_left_image)<img
+                                    src="{{ asset('storage/' . $tourPackage->bottom_left_image) }}"
+                                class="current-img-preview">@endif
+                                <input type="file" id="bottom_left_image" name="bottom_left_image"
+                                    class="form-control-styled" accept="image/*">
                             </div>
                             <div class="form-field">
                                 <label for="bottom_right_image">Bottom Right Image</label>
-                                @if($tourPackage->bottom_right_image)<img src="{{ asset($tourPackage->bottom_right_image) }}" class="current-img-preview">@endif
-                                <input type="file" id="bottom_right_image" name="bottom_right_image" class="form-control-styled" accept="image/*">
+                                @if($tourPackage->bottom_right_image)<img
+                                    src="{{ asset('storage/' . $tourPackage->bottom_right_image) }}"
+                                class="current-img-preview">@endif
+                                <input type="file" id="bottom_right_image" name="bottom_right_image"
+                                    class="form-control-styled" accept="image/*">
                             </div>
                         </div>
 
@@ -248,24 +487,31 @@
                             <div id="existing-feature-rows">
                                 @foreach($tourPackage->features as $feature)
                                     <div class="gallery-row existing-row" data-id="{{ $feature->id }}">
-                                        <input type="hidden" name="feature_ids[{{ $loop->index }}]" value="{{ $feature->id }}">
+                                        <input type="hidden" name="feature_ids[{{ $loop->index }}]"
+                                            value="{{ $feature->id }}">
                                         <div class="form-row">
                                             <div class="form-field">
                                                 <label>Icon Image</label>
-                                                @if($feature->icon_image)<img src="{{ asset($feature->icon_image) }}" class="current-img-preview" style="width:40px;height:40px;">@endif
-                                                <input type="file" name="feature_images[{{ $loop->index }}]" class="form-control-styled" accept="image/*">
+                                                @if($feature->icon_image)<img
+                                                    src="{{ asset('storage/' . $feature->icon_image) }}"
+                                                class="current-img-preview" style="width:40px;height:40px;">@endif
+                                                <input type="file" name="feature_images[{{ $loop->index }}]"
+                                                    class="form-control-styled" accept="image/*">
                                             </div>
                                             <div class="form-field">
                                                 <label>Text</label>
-                                                <input type="text" name="feature_texts[{{ $loop->index }}]" class="form-control-styled" value="{{ $feature->text }}">
+                                                <input type="text" name="feature_texts[{{ $loop->index }}]"
+                                                    class="form-control-styled" value="{{ $feature->text }}">
                                             </div>
                                         </div>
-                                        <button type="button" class="btn-secondary-dash remove-existing" data-target="deleted_features"><i class="fa fa-trash"></i> Remove</button>
+                                        <button type="button" class="btn-secondary-dash remove-existing"
+                                            data-target="deleted_features"><i class="fa fa-trash"></i> Remove</button>
                                     </div>
                                 @endforeach
                             </div>
                             <div id="new-feature-rows"></div>
-                            <button type="button" class="btn-secondary-dash" id="add-feature-row"><i class="fa fa-plus"></i> Add Feature</button>
+                            <button type="button" class="btn-secondary-dash" id="add-feature-row"><i
+                                    class="fa fa-plus"></i> Add Feature</button>
                         </div>
                     </div>
 
@@ -281,24 +527,31 @@
                                         <div class="form-row-3">
                                             <div class="form-field">
                                                 <label>Image</label>
-                                                @if($opt->image)<img src="{{ asset($opt->image) }}" class="current-img-preview" style="width:40px;height:40px;">@endif
-                                                <input type="file" name="duropt_images[{{ $loop->index }}]" class="form-control-styled" accept="image/*">
+                                                @if($opt->image)<img src="{{ asset('storage/' . $opt->image) }}"
+                                                class="current-img-preview" style="width:40px;height:40px;">@endif
+                                                <input type="file" name="duropt_images[{{ $loop->index }}]"
+                                                    class="form-control-styled" accept="image/*">
                                             </div>
                                             <div class="form-field">
                                                 <label>Days Label</label>
-                                                <input type="text" name="duropt_labels[{{ $loop->index }}]" class="form-control-styled" value="{{ $opt->days_label }}">
+                                                <input type="text" name="duropt_labels[{{ $loop->index }}]"
+                                                    class="form-control-styled" value="{{ $opt->days_label }}">
                                             </div>
                                             <div class="form-field">
                                                 <label>Price (₹)</label>
-                                                <input type="number" step="0.01" name="duropt_prices[{{ $loop->index }}]" class="form-control-styled" value="{{ $opt->price }}">
+                                                <input type="number" step="0.01" name="duropt_prices[{{ $loop->index }}]"
+                                                    class="form-control-styled" value="{{ $opt->price }}">
                                             </div>
                                         </div>
-                                        <button type="button" class="btn-secondary-dash remove-existing" data-target="deleted_duration_options"><i class="fa fa-trash"></i> Remove</button>
+                                        <button type="button" class="btn-secondary-dash remove-existing"
+                                            data-target="deleted_duration_options"><i class="fa fa-trash"></i>
+                                            Remove</button>
                                     </div>
                                 @endforeach
                             </div>
                             <div id="new-duropt-rows"></div>
-                            <button type="button" class="btn-secondary-dash" id="add-duropt-row"><i class="fa fa-plus"></i> Add Duration Option</button>
+                            <button type="button" class="btn-secondary-dash" id="add-duropt-row"><i
+                                    class="fa fa-plus"></i> Add Duration Option</button>
                         </div>
                     </div>
 
@@ -313,14 +566,17 @@
                                         <input type="hidden" name="stop_ids[{{ $loop->index }}]" value="{{ $stop->id }}">
                                         <div class="form-field">
                                             <label>Stop Name</label>
-                                            <input type="text" name="stop_names[{{ $loop->index }}]" class="form-control-styled" value="{{ $stop->name }}">
+                                            <input type="text" name="stop_names[{{ $loop->index }}]"
+                                                class="form-control-styled" value="{{ $stop->name }}">
                                         </div>
-                                        <button type="button" class="btn-secondary-dash remove-existing" data-target="deleted_stops"><i class="fa fa-trash"></i> Remove</button>
+                                        <button type="button" class="btn-secondary-dash remove-existing"
+                                            data-target="deleted_stops"><i class="fa fa-trash"></i> Remove</button>
                                     </div>
                                 @endforeach
                             </div>
                             <div id="new-stop-rows"></div>
-                            <button type="button" class="btn-secondary-dash" id="add-stop-row"><i class="fa fa-plus"></i> Add Stop</button>
+                            <button type="button" class="btn-secondary-dash" id="add-stop-row"><i
+                                    class="fa fa-plus"></i> Add Stop</button>
                         </div>
                     </div>
 
@@ -329,12 +585,14 @@
 
                         <div class="form-field">
                             <label for="overview_title">Overview Title</label>
-                            <input type="text" id="overview_title" name="overview_title" class="form-control-styled" value="{{ old('overview_title', $tourPackage->overview_title) }}">
+                            <input type="text" id="overview_title" name="overview_title" class="form-control-styled"
+                                value="{{ old('overview_title', $tourPackage->overview_title) }}">
                         </div>
 
                         <div class="form-field">
                             <label for="overview_content">Overview Content</label>
-                            <textarea id="overview_content" name="overview_content" rows="6" class="form-control-styled">{{ old('overview_content', $tourPackage->overview_content) }}</textarea>
+                            <textarea id="overview_content" name="overview_content" rows="6"
+                                class="form-control-styled">{{ old('overview_content', $tourPackage->overview_content) }}</textarea>
                         </div>
 
                         <div class="form-field">
@@ -343,17 +601,21 @@
                             <div id="existing-highlight-rows">
                                 @foreach($tourPackage->highlights as $highlight)
                                     <div class="gallery-row existing-row" data-id="{{ $highlight->id }}">
-                                        <input type="hidden" name="highlight_ids[{{ $loop->index }}]" value="{{ $highlight->id }}">
+                                        <input type="hidden" name="highlight_ids[{{ $loop->index }}]"
+                                            value="{{ $highlight->id }}">
                                         <div class="form-field">
                                             <label>Highlight Text</label>
-                                            <input type="text" name="highlight_texts[{{ $loop->index }}]" class="form-control-styled" value="{{ $highlight->text }}">
+                                            <input type="text" name="highlight_texts[{{ $loop->index }}]"
+                                                class="form-control-styled" value="{{ $highlight->text }}">
                                         </div>
-                                        <button type="button" class="btn-secondary-dash remove-existing" data-target="deleted_highlights"><i class="fa fa-trash"></i> Remove</button>
+                                        <button type="button" class="btn-secondary-dash remove-existing"
+                                            data-target="deleted_highlights"><i class="fa fa-trash"></i> Remove</button>
                                     </div>
                                 @endforeach
                             </div>
                             <div id="new-highlight-rows"></div>
-                            <button type="button" class="btn-secondary-dash" id="add-highlight-row"><i class="fa fa-plus"></i> Add Highlight</button>
+                            <button type="button" class="btn-secondary-dash" id="add-highlight-row"><i
+                                    class="fa fa-plus"></i> Add Highlight</button>
                         </div>
 
                     </div>
@@ -370,23 +632,28 @@
                                         <div class="form-row">
                                             <div class="form-field">
                                                 <label>Day Number</label>
-                                                <input type="number" min="1" name="itin_day_numbers[{{ $loop->index }}]" class="form-control-styled" value="{{ $day->day_number }}">
+                                                <input type="number" min="1" name="itin_day_numbers[{{ $loop->index }}]"
+                                                    class="form-control-styled" value="{{ $day->day_number }}">
                                             </div>
                                             <div class="form-field">
                                                 <label>Title</label>
-                                                <input type="text" name="itin_titles[{{ $loop->index }}]" class="form-control-styled" value="{{ $day->title }}">
+                                                <input type="text" name="itin_titles[{{ $loop->index }}]"
+                                                    class="form-control-styled" value="{{ $day->title }}">
                                             </div>
                                         </div>
                                         <div class="form-field">
                                             <label>Content</label>
-                                            <textarea name="itin_contents[{{ $loop->index }}]" class="form-control-styled" rows="3">{{ $day->content }}</textarea>
+                                            <textarea name="itin_contents[{{ $loop->index }}]" class="form-control-styled"
+                                                rows="3">{{ $day->content }}</textarea>
                                         </div>
-                                        <button type="button" class="btn-secondary-dash remove-existing" data-target="deleted_itinerary"><i class="fa fa-trash"></i> Remove</button>
+                                        <button type="button" class="btn-secondary-dash remove-existing"
+                                            data-target="deleted_itinerary"><i class="fa fa-trash"></i> Remove</button>
                                     </div>
                                 @endforeach
                             </div>
                             <div id="new-itin-rows"></div>
-                            <button type="button" class="btn-secondary-dash" id="add-itin-row"><i class="fa fa-plus"></i> Add Day</button>
+                            <button type="button" class="btn-secondary-dash" id="add-itin-row"><i
+                                    class="fa fa-plus"></i> Add Day</button>
                         </div>
                     </div>
 
@@ -398,7 +665,8 @@
                             <div id="existing-hotel-rows">
                                 @foreach($tourPackage->hotelStays as $stay)
                                     <div class="gallery-row existing-row" data-id="{{ $stay->id }}">
-                                        <input type="hidden" name="hotel_stay_ids[{{ $loop->index }}]" value="{{ $stay->id }}">
+                                        <input type="hidden" name="hotel_stay_ids[{{ $loop->index }}]"
+                                            value="{{ $stay->id }}">
                                         <div class="form-row">
                                             <div class="form-field">
                                                 <label>Hotel</label>
@@ -411,34 +679,44 @@
                                             </div>
                                             <div class="form-field">
                                                 <label>Day Label</label>
-                                                <input type="text" name="hotel_day_labels[{{ $loop->index }}]" class="form-control-styled" value="{{ $stay->day_label }}">
+                                                <input type="text" name="hotel_day_labels[{{ $loop->index }}]"
+                                                    class="form-control-styled" value="{{ $stay->day_label }}">
                                             </div>
                                         </div>
                                         <div class="form-field">
                                             <label>Title</label>
-                                            <input type="text" name="hotel_titles[{{ $loop->index }}]" class="form-control-styled" value="{{ $stay->title }}">
+                                            <input type="text" name="hotel_titles[{{ $loop->index }}]"
+                                                class="form-control-styled" value="{{ $stay->title }}">
                                         </div>
                                         <div class="form-row">
                                             <div class="form-field">
                                                 <label>Check In</label>
-                                                <input type="text" name="hotel_check_ins[{{ $loop->index }}]" class="form-control-styled" value="{{ $stay->check_in }}">
+                                                <input type="text" name="hotel_check_ins[{{ $loop->index }}]"
+                                                    class="form-control-styled" value="{{ $stay->check_in }}">
                                             </div>
                                             <div class="form-field">
                                                 <label>Check Out</label>
-                                                <input type="text" name="hotel_check_outs[{{ $loop->index }}]" class="form-control-styled" value="{{ $stay->check_out }}">
+                                                <input type="text" name="hotel_check_outs[{{ $loop->index }}]"
+                                                    class="form-control-styled" value="{{ $stay->check_out }}">
                                             </div>
                                         </div>
                                         <div class="form-row-3">
-                                            <label class="checkbox-row"><input type="checkbox" name="hotel_breakfast[{{ $loop->index }}]" value="1" {{ $stay->breakfast_included ? 'checked' : '' }}> Breakfast Included</label>
-                                            <label class="checkbox-row"><input type="checkbox" name="hotel_lunch[{{ $loop->index }}]" value="1" {{ $stay->lunch_included ? 'checked' : '' }}> Lunch Included</label>
-                                            <label class="checkbox-row"><input type="checkbox" name="hotel_dinner[{{ $loop->index }}]" value="1" {{ $stay->dinner_included ? 'checked' : '' }}> Dinner Included</label>
+                                            <label class="checkbox-row"><input type="checkbox"
+                                                    name="hotel_breakfast[{{ $loop->index }}]" value="1" {{ $stay->breakfast_included ? 'checked' : '' }}> Breakfast
+                                                Included</label>
+                                            <label class="checkbox-row"><input type="checkbox"
+                                                    name="hotel_lunch[{{ $loop->index }}]" value="1" {{ $stay->lunch_included ? 'checked' : '' }}> Lunch Included</label>
+                                            <label class="checkbox-row"><input type="checkbox"
+                                                    name="hotel_dinner[{{ $loop->index }}]" value="1" {{ $stay->dinner_included ? 'checked' : '' }}> Dinner Included</label>
                                         </div>
-                                        <button type="button" class="btn-secondary-dash remove-existing" data-target="deleted_hotels"><i class="fa fa-trash"></i> Remove</button>
+                                        <button type="button" class="btn-secondary-dash remove-existing"
+                                            data-target="deleted_hotels"><i class="fa fa-trash"></i> Remove</button>
                                     </div>
                                 @endforeach
                             </div>
                             <div id="new-hotel-rows"></div>
-                            <button type="button" class="btn-secondary-dash" id="add-hotel-row"><i class="fa fa-plus"></i> Add Hotel Stay</button>
+                            <button type="button" class="btn-secondary-dash" id="add-hotel-row"><i
+                                    class="fa fa-plus"></i> Add Hotel Stay</button>
                         </div>
                     </div>
 
@@ -454,14 +732,17 @@
                                         <input type="hidden" name="include_ids[{{ $loop->index }}]" value="{{ $item->id }}">
                                         <div class="form-field">
                                             <label>Text</label>
-                                            <input type="text" name="include_texts[{{ $loop->index }}]" class="form-control-styled" value="{{ $item->text }}">
+                                            <input type="text" name="include_texts[{{ $loop->index }}]"
+                                                class="form-control-styled" value="{{ $item->text }}">
                                         </div>
-                                        <button type="button" class="btn-secondary-dash remove-existing" data-target="deleted_includes"><i class="fa fa-trash"></i> Remove</button>
+                                        <button type="button" class="btn-secondary-dash remove-existing"
+                                            data-target="deleted_includes"><i class="fa fa-trash"></i> Remove</button>
                                     </div>
                                 @endforeach
                             </div>
                             <div id="new-include-rows"></div>
-                            <button type="button" class="btn-secondary-dash" id="add-include-row"><i class="fa fa-plus"></i> Add Include</button>
+                            <button type="button" class="btn-secondary-dash" id="add-include-row"><i
+                                    class="fa fa-plus"></i> Add Include</button>
                         </div>
 
                         <div class="form-field" style="margin-top:24px;">
@@ -473,14 +754,17 @@
                                         <input type="hidden" name="exclude_ids[{{ $loop->index }}]" value="{{ $item->id }}">
                                         <div class="form-field">
                                             <label>Text</label>
-                                            <input type="text" name="exclude_texts[{{ $loop->index }}]" class="form-control-styled" value="{{ $item->text }}">
+                                            <input type="text" name="exclude_texts[{{ $loop->index }}]"
+                                                class="form-control-styled" value="{{ $item->text }}">
                                         </div>
-                                        <button type="button" class="btn-secondary-dash remove-existing" data-target="deleted_excludes"><i class="fa fa-trash"></i> Remove</button>
+                                        <button type="button" class="btn-secondary-dash remove-existing"
+                                            data-target="deleted_excludes"><i class="fa fa-trash"></i> Remove</button>
                                     </div>
                                 @endforeach
                             </div>
                             <div id="new-exclude-rows"></div>
-                            <button type="button" class="btn-secondary-dash" id="add-exclude-row"><i class="fa fa-plus"></i> Add Exclude</button>
+                            <button type="button" class="btn-secondary-dash" id="add-exclude-row"><i
+                                    class="fa fa-plus"></i> Add Exclude</button>
                         </div>
 
                     </div>
@@ -493,21 +777,26 @@
                             <div id="existing-policy-rows">
                                 @foreach($tourPackage->policies as $policy)
                                     <div class="gallery-row existing-row" data-id="{{ $policy->id }}">
-                                        <input type="hidden" name="policy_ids[{{ $loop->index }}]" value="{{ $policy->id }}">
+                                        <input type="hidden" name="policy_ids[{{ $loop->index }}]"
+                                            value="{{ $policy->id }}">
                                         <div class="form-field">
                                             <label>Title</label>
-                                            <input type="text" name="policy_titles[{{ $loop->index }}]" class="form-control-styled" value="{{ $policy->title }}">
+                                            <input type="text" name="policy_titles[{{ $loop->index }}]"
+                                                class="form-control-styled" value="{{ $policy->title }}">
                                         </div>
                                         <div class="form-field">
                                             <label>Content</label>
-                                            <textarea name="policy_contents[{{ $loop->index }}]" class="form-control-styled" rows="4">{{ $policy->content }}</textarea>
+                                            <textarea name="policy_contents[{{ $loop->index }}]" class="form-control-styled"
+                                                rows="4">{{ $policy->content }}</textarea>
                                         </div>
-                                        <button type="button" class="btn-secondary-dash remove-existing" data-target="deleted_policies"><i class="fa fa-trash"></i> Remove</button>
+                                        <button type="button" class="btn-secondary-dash remove-existing"
+                                            data-target="deleted_policies"><i class="fa fa-trash"></i> Remove</button>
                                     </div>
                                 @endforeach
                             </div>
                             <div id="new-policy-rows"></div>
-                            <button type="button" class="btn-secondary-dash" id="add-policy-row"><i class="fa fa-plus"></i> Add Policy</button>
+                            <button type="button" class="btn-secondary-dash" id="add-policy-row"><i
+                                    class="fa fa-plus"></i> Add Policy</button>
                         </div>
                     </div>
 
@@ -522,18 +811,22 @@
                                         <input type="hidden" name="faq_ids[{{ $loop->index }}]" value="{{ $faq->id }}">
                                         <div class="form-field">
                                             <label>Question</label>
-                                            <input type="text" name="faq_questions[{{ $loop->index }}]" class="form-control-styled" value="{{ $faq->question }}">
+                                            <input type="text" name="faq_questions[{{ $loop->index }}]"
+                                                class="form-control-styled" value="{{ $faq->question }}">
                                         </div>
                                         <div class="form-field">
                                             <label>Answer</label>
-                                            <textarea name="faq_answers[{{ $loop->index }}]" class="form-control-styled" rows="3">{{ $faq->answer }}</textarea>
+                                            <textarea name="faq_answers[{{ $loop->index }}]" class="form-control-styled"
+                                                rows="3">{{ $faq->answer }}</textarea>
                                         </div>
-                                        <button type="button" class="btn-secondary-dash remove-existing" data-target="deleted_faqs"><i class="fa fa-trash"></i> Remove</button>
+                                        <button type="button" class="btn-secondary-dash remove-existing"
+                                            data-target="deleted_faqs"><i class="fa fa-trash"></i> Remove</button>
                                     </div>
                                 @endforeach
                             </div>
                             <div id="new-faq-rows"></div>
-                            <button type="button" class="btn-secondary-dash" id="add-faq-row"><i class="fa fa-plus"></i> Add FAQ</button>
+                            <button type="button" class="btn-secondary-dash" id="add-faq-row"><i class="fa fa-plus"></i>
+                                Add FAQ</button>
                         </div>
                     </div>
 
@@ -541,7 +834,187 @@
                     <div class="cat-tab-panel" data-panel="map">
                         <div class="form-field">
                             <label for="map_embed_url">Google Maps Embed URL</label>
-                            <textarea id="map_embed_url" name="map_embed_url" rows="3" class="form-control-styled">{{ old('map_embed_url', $tourPackage->map_embed_url) }}</textarea>
+                            <textarea id="map_embed_url" name="map_embed_url" rows="3"
+                                class="form-control-styled">{{ old('map_embed_url', $tourPackage->map_embed_url) }}</textarea>
+                        </div>
+                    </div>
+
+                      {{-- ============ OFFERS ============ --}}
+                    <div class="cat-tab-panel" data-panel="offers">
+
+                        <h4 style="margin-bottom:14px;">Group Offer Banner</h4>
+
+                        <div class="form-field">
+                            <label for="group_offer_badge_text">Badge Text</label>
+                            <input type="text" id="group_offer_badge_text" name="group_offer_badge_text"
+                                class="form-control-styled" value="{{ old('group_offer_badge_text',$tourPackage->group_offer_badge_text) }}"
+                                placeholder="e.g. Limited-Time Offer">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="group_offer_title">Title</label>
+                            <input type="text" id="group_offer_title" name="group_offer_title"
+                                class="form-control-styled" value="{{ old('group_offer_title',$tourPackage->group_offer_title) }}"
+                                placeholder="e.g. Planning a Ladakh Trip? Save Up to 40% on Early Bookings">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="group_offer_description">Description</label>
+                            <textarea id="group_offer_description" name="group_offer_description" rows="3"
+                                class="form-control-styled">{{ old('group_offer_description',$tourPackage->group_offer_description) }}</textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="group_offer_button1_text">Button Text</label>
+                                <input type="text" id="group_offer_button1_text" name="group_offer_button1_text"
+                                    class="form-control-styled" value="{{ old('group_offer_button1_text' ,$tourPackage->group_offer_button1_text) }}"
+                                    placeholder="e.g. Explore Packages">
+                            </div>
+                            <div class="form-field">
+                                <label for="group_offer_button1_url">Button URL</label>
+                                <input type="text" id="group_offer_button1_url" name="group_offer_button1_url"
+                                    class="form-control-styled" value="{{ old('group_offer_button1_url',$tourPackage->group_offer_button1_url) }}"
+                                    placeholder="Leave blank to link to this subcategory">
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="group_offer_image">Banner Image</label>
+                            <input type="file" id="group_offer_image" name="group_offer_image"
+                                class="form-control-styled" accept="image/*">
+                        </div>
+
+                        <hr style="margin:24px 0;">
+
+                        <h4 style="margin-bottom:14px;">Monsoon / Countdown Sale</h4>
+
+                        <div class="form-field">
+                            <label for="promo_badge_text">Badge Text</label>
+                            <input type="text" id="promo_badge_text" name="promo_badge_text" class="form-control-styled"
+                                value="{{ old('promo_badge_text',$tourPackage->promo_badge_text) }}" placeholder="e.g. Monsoon Sale">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="promo_title">Title</label>
+                            <input type="text" id="promo_title" name="promo_title" class="form-control-styled"
+                                value="{{ old('promo_title',$tourPackage->promo_title) }}"
+                                placeholder="e.g. Save up to INR 30,000 on selected Ladakh trips">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="promo_description">Description</label>
+                            <textarea id="promo_description" name="promo_description" rows="3"
+                                class="form-control-styled">{{ old('promo_description',$tourPackage->promo_description) }}</textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="promo_button_text">Button Text</label>
+                                <input type="text" id="promo_button_text" name="promo_button_text"
+                                    class="form-control-styled" value="{{ old('promo_button_text',$tourPackage->promo_button_text) }}"
+                                    placeholder="e.g. Know More About the Deal">
+                            </div>
+                            <div class="form-field">
+                                <label for="promo_button_url">Button URL</label>
+                                <input type="text" id="promo_button_url" name="promo_button_url"
+                                    class="form-control-styled" value="{{ old('promo_button_url',$tourPackage->promo_button_url) }}">
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="promo_end_at">Sale Ends At</label>
+                            <input type="datetime-local" id="promo_end_at" name="promo_end_at"
+                                class="form-control-styled" value="{{ old('promo_end_at',$tourPackage->promo_end_at) }}">
+                            <div class="hint">Countdown on the detail page counts down to this date/time — leave blank
+                                to hide the countdown block.</div>
+                        </div>
+
+                    </div>
+                    
+                    {{-- ============ DESTINATIONS ============ --}}
+                    <div class="cat-tab-panel" data-panel="destinations">
+                        <div class="form-field">
+                            <label>Linked Destinations</label>
+                            <div id="existing-destination-rows">
+                                @foreach($tourPackage->destinations as $destination)
+                                    <div class="gallery-row existing-row">
+                                        <div class="form-field">
+                                            <label>Destination</label>
+                                            <select name="destination_ids[]" class="form-control-styled">
+                                                <option value="">Select Destination</option>
+                                                @foreach($destinations as $d)
+                                                    <option value="{{ $d->id }}" {{ $destination->id == $d->id ? 'selected' : '' }}>{{ $d->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <button type="button" class="btn-secondary-dash remove-new-row"><i
+                                                class="fa fa-trash"></i> Remove</button>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <div id="new-destination-rows"></div>
+                            <button type="button" class="btn-secondary-dash" id="add-destination-row">
+                                <i class="fa fa-plus"></i> Add Destination
+                            </button>
+                            <div class="hint" style="margin-top:10px;">Order here sets the display order on the package
+                                page</div>
+                        </div>
+                    </div>
+
+                    {{-- ============ ATTRACTIONS ============ --}}
+                    <div class="cat-tab-panel" data-panel="attractionslink">
+                        <div class="form-field">
+                            <label>Linked Attractions</label>
+                            <div id="existing-attraction-rows">
+                                @foreach($tourPackage->attractions as $attraction)
+                                    <div class="gallery-row existing-row">
+                                        <div class="form-field">
+                                            <label>Attraction</label>
+                                            <select name="attraction_ids[]" class="form-control-styled">
+                                                <option value="">Select Attraction</option>
+                                                @foreach($attractions as $a)
+                                                    <option value="{{ $a->id }}" {{ $attraction->id == $a->id ? 'selected' : '' }}>{{ $a->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <button type="button" class="btn-secondary-dash remove-new-row"><i
+                                                class="fa fa-trash"></i> Remove</button>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <div id="new-attraction-rows"></div>
+                            <button type="button" class="btn-secondary-dash" id="add-attraction-row">
+                                <i class="fa fa-plus"></i> Add Attraction
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- ============ ACTIVITIES ============ --}}
+                    <div class="cat-tab-panel" data-panel="activitieslink">
+                        <div class="form-field">
+                            <label>Linked Activities</label>
+                            <div id="existing-activity-rows">
+                                @foreach($tourPackage->activities as $activity)
+                                    <div class="gallery-row existing-row">
+                                        <div class="form-field">
+                                            <label>Activity</label>
+                                            <select name="activity_ids[]" class="form-control-styled">
+                                                <option value="">Select Activity</option>
+                                                @foreach($activities as $act)
+                                                    <option value="{{ $act->id }}" {{ $activity->id == $act->id ? 'selected' : '' }}>{{ $act->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <button type="button" class="btn-secondary-dash remove-new-row"><i
+                                                class="fa fa-trash"></i> Remove</button>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <div id="new-activity-rows"></div>
+                            <button type="button" class="btn-secondary-dash" id="add-activity-row">
+                                <i class="fa fa-plus"></i> Add Activity
+                            </button>
                         </div>
                     </div>
 
@@ -550,34 +1023,41 @@
 
                         <div class="form-field">
                             <label for="meta_title">Meta Title</label>
-                            <input type="text" id="meta_title" name="meta_title" class="form-control-styled" value="{{ old('meta_title', $tourPackage->meta_title) }}">
+                            <input type="text" id="meta_title" name="meta_title" class="form-control-styled"
+                                value="{{ old('meta_title', $tourPackage->meta_title) }}">
                         </div>
 
                         <div class="form-field">
                             <label for="meta_description">Meta Description</label>
-                            <textarea id="meta_description" name="meta_description" rows="4" class="form-control-styled">{{ old('meta_description', $tourPackage->meta_description) }}</textarea>
+                            <textarea id="meta_description" name="meta_description" rows="4"
+                                class="form-control-styled">{{ old('meta_description', $tourPackage->meta_description) }}</textarea>
                         </div>
 
                         <div class="form-field">
                             <label for="og_title">OG Title</label>
-                            <input type="text" id="og_title" name="og_title" class="form-control-styled" value="{{ old('og_title', $tourPackage->og_title) }}">
+                            <input type="text" id="og_title" name="og_title" class="form-control-styled"
+                                value="{{ old('og_title', $tourPackage->og_title) }}">
                         </div>
 
                         <div class="form-field">
                             <label for="og_description">OG Description</label>
-                            <textarea id="og_description" name="og_description" rows="3" class="form-control-styled">{{ old('og_description', $tourPackage->og_description) }}</textarea>
+                            <textarea id="og_description" name="og_description" rows="3"
+                                class="form-control-styled">{{ old('og_description', $tourPackage->og_description) }}</textarea>
                         </div>
 
                         <div class="form-field">
                             <label for="og_image">OG Image</label>
-                            @if($tourPackage->og_image)<img src="{{ asset($tourPackage->og_image) }}" class="current-img-preview">@endif
-                            <input type="file" id="og_image" name="og_image" class="form-control-styled" accept="image/*">
+                            @if($tourPackage->og_image)<img src="{{ asset('storage/' . $tourPackage->og_image) }}"
+                            class="current-img-preview">@endif
+                            <input type="file" id="og_image" name="og_image" class="form-control-styled"
+                                accept="image/*">
                             <div class="hint">Leave blank to keep current</div>
                         </div>
 
                         <div class="form-field">
                             <label for="canonical_url">Canonical URL</label>
-                            <input type="text" id="canonical_url" name="canonical_url" class="form-control-styled" value="{{ old('canonical_url', $tourPackage->canonical_url) }}">
+                            <input type="text" id="canonical_url" name="canonical_url" class="form-control-styled"
+                                value="{{ old('canonical_url', $tourPackage->canonical_url) }}">
                         </div>
 
                     </div>
@@ -626,7 +1106,7 @@
         stateSelect.innerHTML = '<option value="">Select State</option>';
         citySelect.innerHTML = '<option value="">Select City</option>';
         if (!this.value) return;
-        fetch(`/admin/ajax/states/${this.value}`).then(r => r.json()).then(states => {
+        fetch(`/admin/location/states/${this.value}`).then(r => r.json()).then(states => {
             states.forEach(s => stateSelect.insertAdjacentHTML('beforeend', `<option value="${s.id}">${s.name}</option>`));
         });
     });
@@ -635,7 +1115,7 @@
         const citySelect = document.getElementById('city_id');
         citySelect.innerHTML = '<option value="">Select City</option>';
         if (!this.value) return;
-        fetch(`/admin/ajax/cities/${this.value}`).then(r => r.json()).then(cities => {
+        fetch(`/admin/location/cities/${this.value}`).then(r => r.json()).then(cities => {
             cities.forEach(c => citySelect.insertAdjacentHTML('beforeend', `<option value="${c.id}">${c.name}</option>`));
         });
     });
@@ -877,6 +1357,70 @@
         faqIndex++;
         row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
     });
+
+    // ---- Destinations repeater ----
+    const destinationOptions = @json($destinations->map(fn($d) => ['id' => $d->id, 'name' => $d->name]));
+    function destinationOptionsHtml(selectedId = '') {
+        return '<option value="">Select Destination</option>' + destinationOptions.map(d =>
+            `<option value="${d.id}" ${d.id == selectedId ? 'selected' : ''}>${d.name}</option>`
+        ).join('');
+    }
+    document.getElementById('add-destination-row').addEventListener('click', function () {
+        const row = document.createElement('div');
+        row.className = 'gallery-row';
+        row.innerHTML = `
+        <div class="form-field">
+            <label>Destination</label>
+            <select name="destination_ids[]" class="form-control-styled">${destinationOptionsHtml()}</select>
+        </div>
+        <button type="button" class="btn-secondary-dash remove-new-row"><i class="fa fa-trash"></i> Remove</button>
+    `;
+        document.getElementById('new-destination-rows').appendChild(row);
+        row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
+    });
+
+    // ---- Attractions repeater ----
+    const attractionOptions = @json($attractions->map(fn($a) => ['id' => $a->id, 'name' => $a->name]));
+    function attractionOptionsHtml(selectedId = '') {
+        return '<option value="">Select Attraction</option>' + attractionOptions.map(a =>
+            `<option value="${a.id}" ${a.id == selectedId ? 'selected' : ''}>${a.name}</option>`
+        ).join('');
+    }
+    document.getElementById('add-attraction-row').addEventListener('click', function () {
+        const row = document.createElement('div');
+        row.className = 'gallery-row';
+        row.innerHTML = `
+        <div class="form-field">
+            <label>Attraction</label>
+            <select name="attraction_ids[]" class="form-control-styled">${attractionOptionsHtml()}</select>
+        </div>
+        <button type="button" class="btn-secondary-dash remove-new-row"><i class="fa fa-trash"></i> Remove</button>
+    `;
+        document.getElementById('new-attraction-rows').appendChild(row);
+        row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
+    });
+
+    // ---- Activities repeater ----
+    const activityOptions = @json($activities->map(fn($act) => ['id' => $act->id, 'name' => $act->name]));
+    function activityOptionsHtml(selectedId = '') {
+        return '<option value="">Select Activity</option>' + activityOptions.map(act =>
+            `<option value="${act.id}" ${act.id == selectedId ? 'selected' : ''}>${act.name}</option>`
+        ).join('');
+    }
+    document.getElementById('add-activity-row').addEventListener('click', function () {
+        const row = document.createElement('div');
+        row.className = 'gallery-row';
+        row.innerHTML = `
+        <div class="form-field">
+            <label>Activity</label>
+            <select name="activity_ids[]" class="form-control-styled">${activityOptionsHtml()}</select>
+        </div>
+        <button type="button" class="btn-secondary-dash remove-new-row"><i class="fa fa-trash"></i> Remove</button>
+    `;
+        document.getElementById('new-activity-rows').appendChild(row);
+        row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
+    });
+
 </script>
 
 @include('admin.footer')

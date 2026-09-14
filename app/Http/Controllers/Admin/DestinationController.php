@@ -9,6 +9,7 @@ use App\Models\Destination;
 use App\Models\DestinationGallery;
 use App\Models\State;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class DestinationController extends Controller
@@ -100,14 +101,17 @@ class DestinationController extends Controller
         }
 
         if ($request->hasFile('image')) {
+            $this->deleteImage($destination->image);
             $validated['image'] = $request->file('image')->store('destinations', 'public');
         }
 
         if ($request->hasFile('og_image')) {
+            $this->deleteImage($destination->og_image);
             $validated['og_image'] = $request->file('og_image')->store('destinations/seo', 'public');
         }
 
         if ($request->hasFile('why_visit_image')) {
+            $this->deleteImage($destination->why_visit_image);
             $validated['why_visit_image'] = $request->file('why_visit_image')->store('destinations/highlights', 'public');
         }
 
@@ -125,39 +129,63 @@ class DestinationController extends Controller
         $destination->update($validated);
 
         if ($request->filled('remove_gallery_ids')) {
-            DestinationGallery::where('destination_id', $destination->id)
+            $toDelete = DestinationGallery::where('destination_id', $destination->id)
                 ->whereIn('id', $request->input('remove_gallery_ids'))
-                ->delete();
+                ->get();
+            foreach ($toDelete as $g) {
+                $this->deleteImage($g->image);
+            }
+            DestinationGallery::whereIn('id', $toDelete->pluck('id'))->delete();
         }
 
         if ($request->filled('remove_match_ids')) {
-            \App\Models\DestinationMatch::where('destination_id', $destination->id)
+            $toDelete = \App\Models\DestinationMatch::where('destination_id', $destination->id)
                 ->whereIn('id', $request->input('remove_match_ids'))
-                ->delete();
+                ->get();
+            foreach ($toDelete as $m) {
+                $this->deleteImage($m->icon);
+            }
+            \App\Models\DestinationMatch::whereIn('id', $toDelete->pluck('id'))->delete();
         }
 
         if ($request->filled('remove_area_ids')) {
-            \App\Models\DestinationArea::where('destination_id', $destination->id)
+            $toDelete = \App\Models\DestinationArea::where('destination_id', $destination->id)
                 ->whereIn('id', $request->input('remove_area_ids'))
-                ->delete();
+                ->get();
+            foreach ($toDelete as $a) {
+                $this->deleteImage($a->image);
+            }
+            \App\Models\DestinationArea::whereIn('id', $toDelete->pluck('id'))->delete();
         }
 
         if ($request->filled('remove_highlight_ids')) {
-            \App\Models\DestinationHighlight::where('destination_id', $destination->id)
+            $toDelete = \App\Models\DestinationHighlight::where('destination_id', $destination->id)
                 ->whereIn('id', $request->input('remove_highlight_ids'))
-                ->delete();
+                ->get();
+            foreach ($toDelete as $h) {
+                $this->deleteImage($h->icon);
+            }
+            \App\Models\DestinationHighlight::whereIn('id', $toDelete->pluck('id'))->delete();
         }
 
         if ($request->filled('remove_place_ids')) {
-            \App\Models\DestinationPlace::where('destination_id', $destination->id)
+            $toDelete = \App\Models\DestinationPlace::where('destination_id', $destination->id)
                 ->whereIn('id', $request->input('remove_place_ids'))
-                ->delete();
+                ->get();
+            foreach ($toDelete as $p) {
+                $this->deleteImage($p->image);
+            }
+            \App\Models\DestinationPlace::whereIn('id', $toDelete->pluck('id'))->delete();
         }
 
         if ($request->filled('remove_activity_ids')) {
-            \App\Models\DestinationActivity::where('destination_id', $destination->id)
+            $toDelete = \App\Models\DestinationActivity::where('destination_id', $destination->id)
                 ->whereIn('id', $request->input('remove_activity_ids'))
-                ->delete();
+                ->get();
+            foreach ($toDelete as $act) {
+                $this->deleteImage($act->image);
+            }
+            \App\Models\DestinationActivity::whereIn('id', $toDelete->pluck('id'))->delete();
         }
 
         if ($request->filled('remove_route_ids')) {
@@ -167,9 +195,13 @@ class DestinationController extends Controller
         }
 
         if ($request->filled('remove_journey_ids')) {
-            \App\Models\DestinationJourneyDay::where('destination_id', $destination->id)
+            $toDelete = \App\Models\DestinationJourneyDay::where('destination_id', $destination->id)
                 ->whereIn('id', $request->input('remove_journey_ids'))
-                ->delete();
+                ->get();
+            foreach ($toDelete as $j) {
+                $this->deleteImage($j->image);
+            }
+            \App\Models\DestinationJourneyDay::whereIn('id', $toDelete->pluck('id'))->delete();
         }
 
         if ($request->filled('remove_faq_ids')) {
@@ -208,6 +240,14 @@ class DestinationController extends Controller
 
     public function destroy(Destination $destination)
     {
+        $this->deleteImage($destination->image);
+        $this->deleteImage($destination->og_image);
+        $this->deleteImage($destination->why_visit_image);
+
+        foreach ($destination->galleries as $g) {
+            $this->deleteImage($g->image);
+        }
+
         $destination->galleries()->delete();
         $destination->delete();
 
@@ -216,22 +256,14 @@ class DestinationController extends Controller
             ->with('success', 'Destination deleted successfully.');
     }
 
-    // Cascading dropdown: states for a given country
-    public function getStates(Country $country)
+    /**
+     * Delete a stored image from the public disk if it exists.
+     */
+    private function deleteImage(?string $path): void
     {
-        return State::where('country_id', $country->id)
-            ->where('status', 'active')
-            ->orderBy('sort_order')
-            ->get(['id', 'name']);
-    }
-
-    // Cascading dropdown: cities for a given state
-    public function getCities(State $state)
-    {
-        return City::where('state_id', $state->id)
-            ->where('status', 'active')
-            ->orderBy('sort_order')
-            ->get(['id', 'name']);
+        if ($path && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
     }
 
     private function validateData(Request $request, ?int $ignoreId = null): array
@@ -296,6 +328,7 @@ class DestinationController extends Controller
             ->values()
             ->all();
     }
+
     private function updateExistingGallery(Request $request, Destination $destination): void
     {
         if (!$request->has('existing_gallery')) {
@@ -321,6 +354,7 @@ class DestinationController extends Controller
             ];
 
             if ($request->hasFile("existing_gallery.$galleryId.image")) {
+                $this->deleteImage($gallery->image);
                 $data['image'] = $request->file("existing_gallery.$galleryId.image")->store('destinations/gallery', 'public');
             }
 
@@ -379,6 +413,7 @@ class DestinationController extends Controller
             ];
 
             if ($request->hasFile("existing_match.$matchId.icon")) {
+                $this->deleteImage($match->icon);
                 $data['icon'] = $request->file("existing_match.$matchId.icon")->store('destinations/matches', 'public');
             }
 
@@ -440,6 +475,7 @@ class DestinationController extends Controller
             ];
 
             if ($request->hasFile("existing_area.$areaId.image")) {
+                $this->deleteImage($area->image);
                 $data['image'] = $request->file("existing_area.$areaId.image")->store('destinations/areas', 'public');
             }
 
@@ -501,6 +537,7 @@ class DestinationController extends Controller
             ];
 
             if ($request->hasFile("existing_highlight.$highlightId.icon")) {
+                $this->deleteImage($highlight->icon);
                 $data['icon'] = $request->file("existing_highlight.$highlightId.icon")->store('destinations/highlights', 'public');
             }
 
@@ -560,6 +597,7 @@ class DestinationController extends Controller
             ];
 
             if ($request->hasFile("existing_place.$placeId.image")) {
+                $this->deleteImage($place->image);
                 $data['image'] = $request->file("existing_place.$placeId.image")->store('destinations/places', 'public');
             }
 
@@ -621,6 +659,7 @@ class DestinationController extends Controller
             ];
 
             if ($request->hasFile("existing_activity.$activityId.image")) {
+                $this->deleteImage($activity->image);
                 $data['image'] = $request->file("existing_activity.$activityId.image")->store('destinations/activities', 'public');
             }
 
@@ -670,14 +709,19 @@ class DestinationController extends Controller
             ? array_map('trim', explode(',', $bannerData['perks']))
             : null;
 
+        $existingBanner = $bannerId
+            ? \App\Models\DestinationBanner::where('id', $bannerId)->where('destination_id', $destination->id)->first()
+            : null;
+
         if ($request->hasFile('banner_image')) {
+            if ($existingBanner) {
+                $this->deleteImage($existingBanner->image);
+            }
             $bannerData['image'] = $request->file('banner_image')->store('destinations/banners', 'public');
         }
 
-        if ($bannerId) {
-            \App\Models\DestinationBanner::where('id', $bannerId)
-                ->where('destination_id', $destination->id)
-                ->update($bannerData);
+        if ($existingBanner) {
+            $existingBanner->update($bannerData);
         } elseif (array_filter($bannerData)) {
             $destination->banner()->create($bannerData);
         }
@@ -765,6 +809,7 @@ class DestinationController extends Controller
             ];
 
             if ($request->hasFile("existing_journey.$dayId.image")) {
+                $this->deleteImage($day->image);
                 $data['image'] = $request->file("existing_journey.$dayId.image")->store('destinations/journey', 'public');
             }
 
@@ -927,5 +972,4 @@ class DestinationController extends Controller
             ]);
         }
     }
-
 }

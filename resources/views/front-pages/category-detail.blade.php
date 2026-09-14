@@ -222,7 +222,7 @@
                     <div class="group-offer-banner__media">
                         <div class="group-offer-banner__img group-offer-banner__img--secondary">
                             <img loading="lazy"
-                                src="{{ $category->cta_image ? asset($category->cta_image) : asset('assets/images/listing/banner1.jpg') }}"
+                                src="{{ $category->cta_image ? asset('storage/' . $category->cta_image) : asset('assets/images/listing/banner1.jpg') }}"
                                 alt="{{ $category->name }}" />
                         </div>
                     </div>
@@ -247,7 +247,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card1.jpg"
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card1.jpg') }}"
                                             alt="Romantic Paris and Switzerland Honeymoon" />
                                         <span class="save">Save INR 45,000</span>
                                     </a>
@@ -300,7 +300,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card2.jpg"
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card2.jpg') }}"
                                             alt="Italy Honeymoon Package" />
                                         <span class="save">Save INR 38,500</span>
                                     </a>
@@ -353,7 +353,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card3.jpg"
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card3.jpg') }}"
                                             alt="Greece Honeymoon Package" />
                                         <span class="save">Save INR 42,000</span>
                                     </a>
@@ -406,7 +406,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card4.jpg"
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card4.jpg') }}"
                                             alt="Switzerland Honeymoon Package" />
                                         <span class="save">Save INR 50,000</span>
                                     </a>
@@ -459,7 +459,7 @@
                             <div class="swiper-slide">
                                 <div class="trip_card">
                                     <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/home/card1.jpg"
+                                        <img loading="lazy" src="{{ asset('assets/images/home/card1.jpg') }}"
                                             alt="France and Italy Honeymoon Package" />
                                         <span class="save">Save INR 48,000</span>
                                     </a>
@@ -607,7 +607,7 @@
         </section>
 
         <!-- ATTRACTION SECTION -->
-        @if($category->attractionLinks->count())
+        @if($attractions->count())
             <section class="listing-secF">
                 <div class="container">
                     <div class="heading">
@@ -620,15 +620,13 @@
                     <div class="swiper-wrap">
                         <div class="swiper thirdSilder">
                             <div class="swiper-wrapper">
-                                @foreach($category->attractionLinks as $link)
-                                    @php $attraction = $link->attraction; @endphp
-                                    @continue(!$attraction)
+                                @foreach($attractions as $attraction)
 
                                     <div class="swiper-slide">
                                         <div class="trip_card">
                                             <a href="{{ route('attraction.show', $attraction->slug) }}" target="_blank" class="img">
                                                 <img loading="lazy"
-                                                    src="{{ $attraction->image ? asset($attraction->image) : asset('assets/images/listing/placeholder.jpg') }}"
+                                                    src="{{ $attraction->image ? asset('storage/' . $attraction->image) : asset('assets/images/listing/placeholder.jpg') }}"
                                                     alt="{{ $attraction->name }}" />
                                             </a>
 
@@ -776,7 +774,7 @@
                                 <div class="swiper-slide">
                                     <div class="card">
                                         <div class="header">
-                                            <img loading="lazy" src="assets/images/home/client1.png" alt="Sanjeev Ahuja" />
+                                            <img loading="lazy" src="{{ asset('assets/images/home/client1.png') }}" alt="Sanjeev Ahuja" />
 
                                             <div class="name">
                                                 <h6>Sanjeev Ahuja</h6>
@@ -794,7 +792,7 @@
                                                 <svg width="30" height="22" viewBox="0 0 44 34" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
                                                     <path
-                                                        d="M4.98462 0.5H17.7346C18.1656 0.5 18.5793 0.670839 18.884 0.975586C19.1888 1.28033 19.3596 1.69402 19.3596 2.125V19.1748L19.3635 19.1973C19.3641 19.2053 19.3657 19.216 19.3665 19.2295C19.3688 19.2693 19.3712 19.3295 19.3733 19.4082C19.3775 19.5654 19.3794 19.795 19.3684 20.084C19.3464 20.6625 19.2751 21.4755 19.0823 22.4189C18.6962 24.3078 17.8253 26.6999 15.8987 28.79C13.0414 31.8876 8.68419 33.5 2.85962 33.5H1.23462V28.417L2.53833 28.1582H2.53931C5.54333 27.5578 7.72977 26.3475 8.91138 24.4844L8.91431 24.4785C9.51092 23.5111 9.85011 22.407 9.89966 21.2715L9.9231 20.75H2.85962C2.42864 20.75 2.01495 20.5792 1.71021 20.2744C1.40546 19.9697 1.23462 19.556 1.23462 19.125V4.25C1.23462 2.18227 2.91689 0.5 4.98462 0.5ZM28.3743 0.5H41.1243C41.5552 0.5 41.9689 0.670911 42.2737 0.975586C42.5784 1.28033 42.7493 1.69402 42.7493 2.125V19.1748L42.7532 19.1973C42.7538 19.2053 42.7553 19.2161 42.7561 19.2295C42.7584 19.2693 42.7609 19.3296 42.7629 19.4082C42.7671 19.5654 42.7691 19.7951 42.7581 20.084C42.7359 20.6625 42.6639 21.4755 42.4709 22.4189C42.0846 24.3078 41.214 26.6999 39.2883 28.79C36.431 31.8876 32.0738 33.5 26.2493 33.5H24.6243V28.417L25.929 28.1582C28.9331 27.5578 31.1194 26.3475 32.301 24.4844L32.304 24.4785C32.9006 23.5111 33.2398 22.407 33.2893 21.2715L33.3127 20.75H26.2493C25.8185 20.7499 25.4055 20.5789 25.1008 20.2744C24.7961 19.9697 24.6243 19.556 24.6243 19.125V4.25C24.6243 2.18234 26.3066 0.500123 28.3743 0.5Z"
+                                                        d="M4.98462 0.5H17.7346C18.1656 0.5 18.5793 0.670839 18.884 0.975586C19.1888 1.28033 19.3596 1.69402 19.3596 2.125V19.1748L19.3635 19.1973C19.3641 19.2053 19.3657 19.216 19.3665 19.2295C19.3688 19.2693 19.3712 19.3295 19.3733 19.4082C19.3775 19.5654 19.3794 19.795 19.3684 20.084C19.3464 20.6625 19.2751 21.4755 19.0823 22.4189C18.6962 24.3078 17.8253 26.6999 15.8987 28.79C13.0414 31.8876 8.68419 33.5 2.85962 33.5H1.23462V28.417L2.53833 28.1582H2.53931C5.54333 27.5578 7.72977 26.3475 8.91138 24.4844L8.91431 24.4785C9.51092 23.5111 9.85011 22.407 9.89966 21.2715L9.9231 20.75H2.85962C2.42864 20.75 2.01495 20.5792 1.71021 20.2744C1.40546 19.9697 1.23462 19.556 1.23462 19.125V4.25C1.23462 2.18227 2.91689 0.5 4.98462 0.5ZM28.3743 0.5H41.1243C41.5552 0.5 41.9689 0.670911 42.2737 0.975586C42.5784 1.28033 42.7493 1.69402 42.7493 2.125V19.1748L42.7532 19.1973C42.7538 19.2053 42.7553 19.2161 42.7561 19.2295C42.7584 19.2693 42.7609 19.3296 42.7629 19.4082C42.7671 19.5654 42.7691 19.795 42.7581 20.084C42.7359 20.6625 42.6639 21.4755 42.4709 22.4189C42.0846 24.3078 41.214 26.6999 39.2883 28.79C36.431 31.8876 32.0738 33.5 26.2493 33.5H24.6243V28.417L25.929 28.1582C28.9331 27.5578 31.1194 26.3475 32.301 24.4844L32.304 24.4785C32.9006 23.5111 33.2398 22.407 33.2893 21.2715L33.3127 20.75H26.2493C25.8185 20.7499 25.4055 20.5789 25.1008 20.2744C24.7961 19.9697 24.6243 19.556 24.6243 19.125V4.25C24.6243 2.18234 26.3066 0.500123 28.3743 0.5Z"
                                                         fill="#F3F4F6" stroke="#E5E7EB" />
                                                 </svg>
                                             </div>
@@ -806,11 +804,11 @@
                                         </p>
 
                                         <div class="photo-strip">
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg"
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg') }}"
                                                 alt="Europe honeymoon experience" />
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg"
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg') }}"
                                                 alt="Paris honeymoon experience" />
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg"
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg') }}"
                                                 alt="Switzerland honeymoon experience" />
                                         </div>
                                     </div>
@@ -820,7 +818,7 @@
                                 <div class="swiper-slide">
                                     <div class="card">
                                         <div class="header">
-                                            <img loading="lazy" src="assets/images/home/client2.png" alt="Vicky Gupta" />
+                                            <img loading="lazy" src="{{ asset('assets/images/home/client2.png') }}" alt="Vicky Gupta" />
 
                                             <div class="name">
                                                 <h6>Vicky Gupta</h6>
@@ -851,13 +849,13 @@
                                         </p>
 
                                         <div class="photo-strip">
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg"
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg') }}"
                                                 alt="Santorini honeymoon experience" />
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg"
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg') }}"
                                                 alt="Greece honeymoon experience" />
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg"
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg') }}"
                                                 alt="Europe couple holiday" />
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg"
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg') }}"
                                                 alt="Romantic Europe trip" />
                                         </div>
                                     </div>
@@ -867,7 +865,7 @@
                                 <div class="swiper-slide">
                                     <div class="card">
                                         <div class="header">
-                                            <img loading="lazy" src="assets/images/home/client3.png" alt="Floyd Miles" />
+                                            <img loading="lazy" src="{{ asset('assets/images/home/client3.png') }}" alt="Floyd Miles" />
 
                                             <div class="name">
                                                 <h6>Floyd Miles</h6>
@@ -898,13 +896,13 @@
                                         </p>
 
                                         <div class="photo-strip">
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg"
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg') }}"
                                                 alt="Italy honeymoon experience" />
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg"
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg') }}"
                                                 alt="Rome honeymoon experience" />
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg"
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg') }}"
                                                 alt="Venice honeymoon experience" />
-                                            <img loading="lazy" src="assets/images/listing/rarting-view.jpg"
+                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg') }}"
                                                 alt="Romantic Italy trip" />
                                         </div>
                                     </div>
@@ -947,7 +945,7 @@
         </section>
 
         <!-- DESTINATION SECTION -->
-        @if($category->destinationLinks->count())
+        @if($destinations->count())
             <section class="listing-secV">
                 <div class="container">
                     <div class="heading">
@@ -960,16 +958,14 @@
                     <div class="swiper-wrap">
                         <div class="swiper thirdSilder">
                             <div class="swiper-wrapper">
-                                @foreach($category->destinationLinks as $link)
-                                    @php $destination = $link->destination; @endphp
-                                    @continue(!$destination)
+                                @foreach($destinations as $destination)
 
                                     <div class="swiper-slide">
                                         <a href="{{ route('destination.show', $destination->slug) }}" target="_blank"
                                             class="trip_card3">
                                             <div class="img">
                                                 <img loading="lazy"
-                                                    src="{{ $destination->image ? asset($destination->image) : asset('assets/images/listing/placeholder.jpg') }}"
+                                                    src="{{ $destination->image ? asset('storage/' . $destination->image) : asset('assets/images/listing/placeholder.jpg') }}"
                                                     alt="{{ $destination->name }}" />
                                             </div>
 

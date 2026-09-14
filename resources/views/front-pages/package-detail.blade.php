@@ -11,20 +11,32 @@
 
   @php
     $bannerImages = collect([
-        $tourPackage->main_image,
-        $tourPackage->top_image,
-        $tourPackage->bottom_left_image,
-        $tourPackage->bottom_right_image,
+      $tourPackage->main_image,
+      $tourPackage->top_image,
+      $tourPackage->bottom_left_image,
+      $tourPackage->bottom_right_image,
     ])->filter();
 
     $locationParts = collect([
-        $tourPackage->city->name ?? null,
-        $tourPackage->state->name ?? null,
-        $tourPackage->country->name ?? null,
+      $tourPackage->city->name ?? null,
+      $tourPackage->state->name ?? null,
+      $tourPackage->country->name ?? null,
     ])->filter();
+
+    $reviewCount = $tourPackage->reviews->count();
+    $avgRating = $reviewCount ? round($tourPackage->reviews->avg('rating'), 1) : 0;
+
+    $ratingBreakdown = collect(range(5, 1))->mapWithKeys(function ($star) use ($tourPackage, $reviewCount) {
+      $count = $tourPackage->reviews->where('rating', $star)->count();
+      $percent = $reviewCount ? round($count / $reviewCount * 100) : 0;
+      return [$star => ['count' => $count, 'percent' => $percent]];
+    });
   @endphp
 
+
   <main>
+
+    <!-- BANNER SECTION -->
     <section class="detail-banner">
       <div class="container">
         <!-- Breadcrumb -->
@@ -33,7 +45,9 @@
             <li><a href="/">Home</a></li>
             <li><span class="breadcrumb-separator">/</span></li>
             @if($tourPackage->subCategory)
-              <li><a href="{{ route('subcategory.show', $tourPackage->subCategory->slug) }}">{{ $tourPackage->subCategory->name }}</a></li>
+              <li><a
+                  href="{{ route('subcategory.show', $tourPackage->subCategory->slug) }}">{{ $tourPackage->subCategory->name }}</a>
+              </li>
               <li><span class="breadcrumb-separator">/</span></li>
             @endif
             <li>
@@ -65,7 +79,8 @@
             <!-- ACTION BUTTONS -->
             <div class="img-actions">
               @if($bannerImages->isNotEmpty())
-                <a data-fancybox="gallery1" href="{{ asset('storage/' . $bannerImages->first()) }}" type="button" class="action-btn">
+                <a data-fancybox="gallery1" href="{{ asset('storage/' . $bannerImages->first()) }}" type="button"
+                  class="action-btn">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path d="M0 0h24v24H0z" fill="none" />
                     <path fill="currentColor" fill-rule="evenodd"
@@ -98,7 +113,8 @@
           <!-- TOP IMAGE -->
           @if($tourPackage->top_image)
             <div class="item-img item-top">
-              <img loading="lazy" src="{{ asset('storage/' . $tourPackage->top_image) }}" alt="{{ $tourPackage->name }} - Destinations" />
+              <img loading="lazy" src="{{ asset('storage/' . $tourPackage->top_image) }}"
+                alt="{{ $tourPackage->name }} - Destinations" />
               <div class="image-overlay"></div>
               <div class="image-content">
                 <span class="image-label">Explore</span>
@@ -110,7 +126,8 @@
           <!-- BOTTOM LEFT -->
           @if($tourPackage->bottom_left_image)
             <div class="item-img item-bottom-left">
-              <img loading="lazy" src="{{ asset('storage/' . $tourPackage->bottom_left_image) }}" alt="{{ $tourPackage->name }} - Stays" />
+              <img loading="lazy" src="{{ asset('storage/' . $tourPackage->bottom_left_image) }}"
+                alt="{{ $tourPackage->name }} - Stays" />
               <div class="image-overlay"></div>
               <div class="image-content">
                 <span class="image-label">Stay</span>
@@ -122,7 +139,8 @@
           <!-- BOTTOM RIGHT -->
           @if($tourPackage->bottom_right_image)
             <div class="item-img item-bottom-right">
-              <img loading="lazy" src="{{ asset('storage/' . $tourPackage->bottom_right_image) }}" alt="{{ $tourPackage->name }} - Activities" />
+              <img loading="lazy" src="{{ asset('storage/' . $tourPackage->bottom_right_image) }}"
+                alt="{{ $tourPackage->name }} - Activities" />
               <div class="image-overlay"></div>
               <div class="image-content">
                 <span class="image-label">Experience</span>
@@ -196,6 +214,7 @@
       </div>
     </section>
 
+    <!-- DETAIL SECTION -->
     <section class="detail-secA">
       <div class="container">
         <div class="grid">
@@ -241,7 +260,8 @@
                   @foreach($tourPackage->features as $feature)
                     <div class="feature-pill">
                       @if($feature->icon_image)
-                        <img loading="lazy" src="{{ asset('storage/' . $feature->icon_image) }}" alt="" width="20" height="20" />
+                        <img loading="lazy" src="{{ asset('storage/' . $feature->icon_image) }}" alt="" width="20"
+                          height="20" />
                       @endif
                       {{ $feature->text }}
                     </div>
@@ -260,7 +280,8 @@
                       <div class="duration-card {{ $loop->first ? 'active' : '' }}">
                         <div class="d-img">
                           @if($option->image)
-                            <img loading="lazy" src="{{ asset('storage/' . $option->image) }}" alt="{{ $option->days_label }}" />
+                            <img loading="lazy" src="{{ asset('storage/' . $option->image) }}"
+                              alt="{{ $option->days_label }}" />
                           @endif
                           <span class="d-days">{{ $option->days_label }}</span>
                         </div>
@@ -419,19 +440,22 @@
                           <div class="hw-inclusions">
                             <span class="hw-inclusions-label">Meals</span>
                             <div class="hw-inclusions-list">
-                              <div class="hw-inclusion {{ $stay->breakfast_included ? 'hw-inclusion--yes' : 'hw-inclusion--no' }}">
+                              <div
+                                class="hw-inclusion {{ $stay->breakfast_included ? 'hw-inclusion--yes' : 'hw-inclusion--no' }}">
                                 <div>
                                   <span>Breakfast</span>
                                   <small>{{ $stay->breakfast_included ? 'Included' : 'Not Included' }}</small>
                                 </div>
                               </div>
-                              <div class="hw-inclusion {{ $stay->lunch_included ? 'hw-inclusion--yes' : 'hw-inclusion--no' }}">
+                              <div
+                                class="hw-inclusion {{ $stay->lunch_included ? 'hw-inclusion--yes' : 'hw-inclusion--no' }}">
                                 <div>
                                   <span>Lunch</span>
                                   <small>{{ $stay->lunch_included ? 'Included' : 'Not Included' }}</small>
                                 </div>
                               </div>
-                              <div class="hw-inclusion {{ $stay->dinner_included ? 'hw-inclusion--yes' : 'hw-inclusion--no' }}">
+                              <div
+                                class="hw-inclusion {{ $stay->dinner_included ? 'hw-inclusion--yes' : 'hw-inclusion--no' }}">
                                 <div>
                                   <span>Dinner</span>
                                   <small>{{ $stay->dinner_included ? 'Included' : 'Not Included' }}</small>
@@ -449,7 +473,8 @@
               @if($tourPackage->includes->isNotEmpty() || $tourPackage->excludes->isNotEmpty())
                 <div class="include_exclude" id="include">
                   <h6 class="include_exclude__title">What's Included / Excluded</h6>
-                  <p class="include_exclude__subtitle">Everything you need to know before you book — no hidden surprises.</p>
+                  <p class="include_exclude__subtitle">Everything you need to know before you book — no hidden surprises.
+                  </p>
 
                   <div class="include_exclude__grid">
                     @if($tourPackage->includes->isNotEmpty())
@@ -466,7 +491,8 @@
                         </div>
                         <ul class="ie-list">
                           @foreach($tourPackage->includes as $include)
-                            <li><span class="ie-list__icon ie-list__icon--yes"><i class="fas fa-check"></i></span>{{ $include->text }}</li>
+                            <li><span class="ie-list__icon ie-list__icon--yes"><i
+                                  class="fas fa-check"></i></span>{{ $include->text }}</li>
                           @endforeach
                         </ul>
                       </div>
@@ -486,7 +512,8 @@
                         </div>
                         <ul class="ie-list">
                           @foreach($tourPackage->excludes as $exclude)
-                            <li><span class="ie-list__icon ie-list__icon--no"><i class="fas fa-times"></i></span>{{ $exclude->text }}</li>
+                            <li><span class="ie-list__icon ie-list__icon--no"><i
+                                  class="fas fa-times"></i></span>{{ $exclude->text }}</li>
                           @endforeach
                         </ul>
                       </div>
@@ -527,10 +554,8 @@
                     <h6>Map</h6>
                   </div>
                   <div class="map_wrap">
-                    <iframe
-                      src="{{ $tourPackage->map_embed_url }}"
-                      width="100%" height="450" style="border: 0" allowfullscreen="" loading="lazy"
-                      referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                    <iframe src="{{ $tourPackage->map_embed_url }}" width="100%" height="450" style="border: 0"
+                      allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
                   </div>
                 </div>
               @endif
@@ -567,13 +592,14 @@
                   <span class="quote-card__now">₹{{ number_format($tourPackage->price) }}</span>
                   @if($tourPackage->old_price)
                     <span class="quote-card__old">₹{{ number_format($tourPackage->old_price) }}</span>
-                    <span class="quote-card__save">Save ₹{{ number_format($tourPackage->old_price - $tourPackage->price) }}</span>
+                    <span class="quote-card__save">Save
+                      ₹{{ number_format($tourPackage->old_price - $tourPackage->price) }}</span>
                   @endif
                 </div>
               @endif
             </div>
 
-            <form id="enquiryForm" action="{{ route('enquiry.store') }}" method="POST">
+            <form id="enquiryForm" action="{{ route('enquiries.store') }}" method="POST">
               @csrf
               <input type="hidden" name="tour_package_id" value="{{ $tourPackage->id }}">
 
@@ -630,125 +656,128 @@
       </div>
     </section>
 
-    <!-- ================= GROUP OFFER BANNER ================= -->
-    <section class="group-offer-banner">
-      <div class="container">
-        <div class="group-offer-banner__inner">
-          <div class="group-offer-banner__content">
-            <span class="group-offer-banner__badge">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em">
-                <path d="M0 0h24v24H0z" fill="none" />
-                <path fill="currentColor"
-                  d="M12 2l1.6 4.8L18 5l-1.8 4.4L21 12l-4.8 1.6L18 19l-4.4-1.8L12 22l-1.6-4.8L6 19l1.8-4.4L3 12l4.8-1.6L6 5l4.4 1.8z" />
-              </svg>
-              Limited-Time Offer
-            </span>
+    <!-- OFFER BANNER -->
+    @if($tourPackage->group_offer_title)
+      <section class="group-offer-banner">
+        <div class="container">
+          <div class="group-offer-banner__inner">
+            <div class="group-offer-banner__content">
+              @if($tourPackage->group_offer_badge_text)
+                <span class="group-offer-banner__badge">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path fill="currentColor"
+                      d="M12 2l1.6 4.8L18 5l-1.8 4.4L21 12l-4.8 1.6L18 19l-4.4-1.8L12 22l-1.6-4.8L6 19l1.8-4.4L3 12l4.8-1.6L6 5l4.4 1.8z" />
+                  </svg>
+                  {{ $tourPackage->group_offer_badge_text }}
+                </span>
+              @endif
 
-            <h3>Planning a Ladakh Trip? Save Up to 40% on Early Bookings</h3>
+              <h3>{{ $tourPackage->group_offer_title }}</h3>
 
-            <p>
-              Handpicked Ladakh itineraries with free transfers and flexible
-              dates — book before the offer ends.
-            </p>
+              @if($tourPackage->group_offer_description)
+                <p>{{ $tourPackage->group_offer_description }}</p>
+              @endif
 
-            <div class="group-offer-banner__actions">
-              <a href="listing.html" class="btn btn-white">
-                Explore Packages
-              </a>
-              <a href="javascript:void()" data-model=".enquire-pop" class="btn btn-outline-white">
-                Get A Quote
-              </a>
+              <div class="group-offer-banner__actions">
+                @if($tourPackage->group_offer_button1_text)
+                  <a href="{{ $tourPackage->group_offer_button1_url ?: route('subcategory.show', $tourPackage->subCategory->slug ?? '') }}"
+                    class="btn btn-white">
+                    {{ $tourPackage->group_offer_button1_text }}
+                  </a>
+                @endif
+                <a href="javascript:void()" data-model=".enquire-pop" data-package-id="{{ $tourPackage->id }}"
+                  class="btn btn-outline-white">
+                  Get A Quote
+                </a>
+              </div>
             </div>
-          </div>
 
-          <div class="group-offer-banner__media">
-            <div class="group-offer-banner__img group-offer-banner__img--secondary">
-              <img loading="lazy" src="assets/images/blog/kashmir.jpg" alt="Ladakh mountain landscape" />
+            @if($tourPackage->group_offer_image)
+              <div class="group-offer-banner__media">
+                <div class="group-offer-banner__img group-offer-banner__img--secondary">
+                  <img loading="lazy" src="{{ asset('storage/' . $tourPackage->group_offer_image) }}"
+                    alt="{{ $tourPackage->group_offer_title }}" />
+                </div>
+              </div>
+            @endif
+          </div>
+        </div>
+      </section>
+    @endif
+
+    <!-- PROMO BANNER -->
+    @if($tourPackage->promo_title && $tourPackage->promo_end_at)
+      <section class="listing-secG">
+        <div class="container">
+          <div class="grid">
+            <div class="glow"></div>
+
+            <div class="promo-left">
+              @if($tourPackage->promo_badge_text)
+                <span class="promo-badge">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <g fill="currentColor">
+                      <path fill-rule="evenodd"
+                        d="M10.594 2.319a3.26 3.26 0 0 1 2.812 0c.387.185.74.487 1.231.905l.078.066c.238.203.313.265.389.316c.193.13.41.219.637.264c.09.018.187.027.499.051l.101.008c.642.051 1.106.088 1.51.23a3.27 3.27 0 0 1 1.99 1.99c.142.404.178.868.23 1.51l.008.101c.024.312.033.41.051.499c.045.228.135.445.264.638c.051.075.113.15.316.388l.066.078c.419.49.72.844.905 1.23c.425.89.425 1.924 0 2.813c-.184.387-.486.74-.905 1.231l-.066.078a5 5 0 0 0-.316.389c-.13.193-.219.41-.264.637c-.018.09-.026.187-.051.499l-.009.101c-.05.642-.087 1.106-.23 1.51a3.26 3.26 0 0 1-1.989 1.99c-.404.142-.868.178-1.51.23l-.101.008a5 5 0 0 0-.499.051a1.8 1.8 0 0 0-.637.264a5 5 0 0 0-.39.316l-.077.066c-.49.419-.844.72-1.23.905a3.26 3.26 0 0 1-2.813 0c-.387-.184-.74-.486-1.231-.905l-.078-.066a5 5 0 0 0-.388-.316a1.8 1.8 0 0 0-.638-.264a5 5 0 0 0-.499-.051l-.101-.009c-.642-.05-1.106-.087-1.51-.23a3.26 3.26 0 0 1-1.99-1.989c-.142-.404-.179-.868-.23-1.51l-.008-.101a5 5 0 0 0-.051-.499a1.8 1.8 0 0 0-.264-.637a5 5 0 0 0-.316-.39l-.066-.077c-.418-.49-.72-.844-.905-1.23a3.26 3.26 0 0 1 0-2.813c.185-.387.487-.74.905-1.231l.066-.078a5 5 0 0 0 .316-.388c.13-.193.219-.41.264-.638c.018-.09.027-.187.051-.499l.008-.101c.051-.642.088-1.106.23-1.51a3.26 3.26 0 0 1 1.99-1.99c.404-.142.868-.179 1.51-.23l.101-.008a5 5 0 0 0 .499-.051c.228-.045.445-.135.638-.264c.075-.051.15-.113.388-.316l.078-.066c.49-.418.844-.72 1.23-.905m2.163 1.358a1.76 1.76 0 0 0-1.514 0c-.185.088-.38.247-.981.758l-.03.025c-.197.168-.34.291-.497.396c-.359.24-.761.407-1.185.49c-.185.037-.373.052-.632.073l-.038.003c-.787.063-1.036.089-1.23.157c-.5.177-.894.57-1.07 1.071c-.07.194-.095.443-.158 1.23l-.003.038c-.02.259-.036.447-.072.632c-.084.424-.25.826-.49 1.185c-.106.157-.229.3-.397.498l-.025.029c-.511.6-.67.796-.758.98a1.76 1.76 0 0 0 0 1.515c.088.185.247.38.758.981l.025.03c.168.197.291.34.396.497c.24.359.407.761.49 1.185c.037.185.052.373.073.632l.003.038c.063.787.089 1.036.157 1.23c.177.5.57.894 1.071 1.07c.194.07.443.095 1.23.158l.038.003c.259.02.447.036.632.072c.424.084.826.25 1.185.49c.157.106.3.229.498.397l.029.025c.6.511.796.67.98.758a1.76 1.76 0 0 0 1.515 0c.185-.088.38-.247.981-.758l.03-.025c.197-.168.34-.291.497-.396c.359-.24.761-.407 1.185-.49a6 6 0 0 1 .632-.073l.038-.003c.787-.063 1.036-.089 1.23-.157c.5-.177.894-.57 1.07-1.071c.07-.194.095-.444.158-1.23l.003-.038a6 6 0 0 1 .072-.633c.084-.423.25-.825.49-1.184c.106-.157.229-.3.397-.498l.025-.029c.511-.6.67-.796.758-.98a1.76 1.76 0 0 0 0-1.515c-.088-.185-.247-.38-.758-.981l-.025-.03c-.168-.197-.291-.34-.396-.497a3.3 3.3 0 0 1-.49-1.185a6 6 0 0 1-.073-.632l-.003-.038c-.063-.787-.089-1.036-.157-1.23c-.177-.5-.57-.894-1.071-1.07c-.194-.07-.444-.095-1.23-.158l-.038-.003a6 6 0 0 1-.633-.072a3.3 3.3 0 0 1-1.184-.49c-.157-.106-.3-.229-.498-.397l-.029-.025c-.6-.511-.796-.67-.98-.758"
+                        clip-rule="evenodd" />
+                      <path fill-rule="evenodd"
+                        d="M15.543 8.457a.753.753 0 0 1 0 1.065l-6.021 6.02a.753.753 0 0 1-1.065-1.064l6.021-6.02a.753.753 0 0 1 1.065 0"
+                        clip-rule="evenodd" />
+                      <path
+                        d="M15.512 14.509a1.004 1.004 0 1 1-2.007 0a1.004 1.004 0 0 1 2.007 0m-5.017-5.018a1.004 1.004 0 1 1-2.007 0a1.004 1.004 0 0 1 2.007 0" />
+                    </g>
+                  </svg>
+                  {{ $tourPackage->promo_badge_text }}
+                </span>
+              @endif
+
+              <h3>{{ $tourPackage->promo_title }}</h3>
+
+              @if($tourPackage->promo_description)
+                <p>{{ $tourPackage->promo_description }}</p>
+              @endif
+
+              @if($tourPackage->promo_button_text)
+                <a href="{{ $tourPackage->promo_button_url ?: '#' }}" class="btn btn-promo">
+                  {{ $tourPackage->promo_button_text }}
+                  <i class="icon-arrow"></i>
+                </a>
+              @endif
+            </div>
+
+            <div class="promo-right">
+              <span class="countdown-label">Hurry, sale ends in</span>
+
+              <div class="countdown" id="countdown" data-end="{{ \Carbon\Carbon::parse($tourPackage->promo_end_at)->toIso8601String() }}">
+                <div class="time-block">
+                  <div class="flip" data-unit="days"><span class="digit">00</span></div>
+                  <span class="unit-label">Days</span>
+                </div>
+                <span class="sep">:</span>
+                <div class="time-block">
+                  <div class="flip" data-unit="hours"><span class="digit">00</span></div>
+                  <span class="unit-label">Hours</span>
+                </div>
+                <span class="sep">:</span>
+                <div class="time-block">
+                  <div class="flip" data-unit="minutes"><span class="digit">00</span></div>
+                  <span class="unit-label">Mins</span>
+                </div>
+                <span class="sep">:</span>
+                <div class="time-block">
+                  <div class="flip" data-unit="seconds"><span class="digit">00</span></div>
+                  <span class="unit-label">Secs</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    @endif
 
-    <section class="listing-secG">
-      <div class="container">
-        <div class="grid">
-          <div class="glow"></div>
-
-          <div class="promo-left">
-            <span class="promo-badge">
-              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                <path d="M0 0h24v24H0z" fill="none" />
-                <g fill="currentColor">
-                  <path fill-rule="evenodd"
-                    d="M10.594 2.319a3.26 3.26 0 0 1 2.812 0c.387.185.74.487 1.231.905l.078.066c.238.203.313.265.389.316c.193.13.41.219.637.264c.09.018.187.027.499.051l.101.008c.642.051 1.106.088 1.51.23a3.27 3.27 0 0 1 1.99 1.99c.142.404.178.868.23 1.51l.008.101c.024.312.033.41.051.499c.045.228.135.445.264.638c.051.075.113.15.316.388l.066.078c.419.49.72.844.905 1.23c.425.89.425 1.924 0 2.813c-.184.387-.486.74-.905 1.231l-.066.078a5 5 0 0 0-.316.389c-.13.193-.219.41-.264.637c-.018.09-.026.187-.051.499l-.009.101c-.05.642-.087 1.106-.23 1.51a3.26 3.26 0 0 1-1.989 1.99c-.404.142-.868.178-1.51.23l-.101.008a5 5 0 0 0-.499.051a1.8 1.8 0 0 0-.637.264a5 5 0 0 0-.39.316l-.077.066c-.49.419-.844.72-1.23.905a3.26 3.26 0 0 1-2.813 0c-.387-.184-.74-.486-1.231-.905l-.078-.066a5 5 0 0 0-.388-.316a1.8 1.8 0 0 0-.638-.264a5 5 0 0 0-.499-.051l-.101-.009c-.642-.05-1.106-.087-1.51-.23a3.26 3.26 0 0 1-1.99-1.989c-.142-.404-.179-.868-.23-1.51l-.008-.101a5 5 0 0 0-.051-.499a1.8 1.8 0 0 0-.264-.637a5 5 0 0 0-.316-.39l-.066-.077c-.418-.49-.72-.844-.905-1.23a3.26 3.26 0 0 1 0-2.813c.185-.387.487-.74.905-1.231l.066-.078a5 5 0 0 0 .316-.388c.13-.193.219-.41.264-.638c.018-.09.027-.187.051-.499l.008-.101c.051-.642.088-1.106.23-1.51a3.26 3.26 0 0 1 1.99-1.99c.404-.142.868-.179 1.51-.23l.101-.008a5 5 0 0 0 .499-.051c.228-.045.445-.135.638-.264c.075-.051.15-.113.388-.316l.078-.066c.49-.418.844-.72 1.23-.905m2.163 1.358a1.76 1.76 0 0 0-1.514 0c-.185.088-.38.247-.981.758l-.03.025c-.197.168-.34.291-.497.396c-.359.24-.761.407-1.185.49c-.185.037-.373.052-.632.073l-.038.003c-.787.063-1.036.089-1.23.157c-.5.177-.894.57-1.07 1.071c-.07.194-.095.443-.158 1.23l-.003.038c-.02.259-.036.447-.072.632c-.084.424-.25.826-.49 1.185c-.106.157-.229.3-.397.498l-.025.029c-.511.6-.67.796-.758.98a1.76 1.76 0 0 0 0 1.515c.088.185.247.38.758.981l.025.03c.168.197.291.34.396.497c.24.359.407.761.49 1.185c.037.185.052.373.073.632l.003.038c.063.787.089 1.036.157 1.23c.177.5.57.894 1.071 1.07c.194.07.443.095 1.23.158l.038.003c.259.02.447.036.632.072c.424.084.826.25 1.185.49c.157.106.3.229.498.397l.029.025c.6.511.796.67.98.758a1.76 1.76 0 0 0 1.515 0c.185-.088.38-.247.981-.758l.03-.025c.197-.168.34-.291.497-.396c.359-.24.761-.407 1.185-.49a6 6 0 0 1 .632-.073l.038-.003c.787-.063 1.036-.089 1.23-.157c.5-.177.894-.57 1.07-1.071c.07-.194.095-.444.158-1.23l.003-.038a6 6 0 0 1 .072-.633c.084-.423.25-.825.49-1.184c.106-.157.229-.3.397-.498l.025-.029c.511-.6.67-.796.758-.98a1.76 1.76 0 0 0 0-1.515c-.088-.185-.247-.38-.758-.981l-.025-.03c-.168-.197-.291-.34-.396-.497a3.3 3.3 0 0 1-.49-1.185a6 6 0 0 1-.073-.632l-.003-.038c-.063-.787-.089-1.036-.157-1.23c-.177-.5-.57-.894-1.071-1.07c-.194-.07-.444-.095-1.23-.158l-.038-.003a6 6 0 0 1-.633-.072a3.3 3.3 0 0 1-1.184-.49c-.157-.106-.3-.229-.498-.397l-.029-.025c-.6-.511-.796-.67-.98-.758"
-                    clip-rule="evenodd" />
-                  <path fill-rule="evenodd"
-                    d="M15.543 8.457a.753.753 0 0 1 0 1.065l-6.021 6.02a.753.753 0 0 1-1.065-1.064l6.021-6.02a.753.753 0 0 1 1.065 0"
-                    clip-rule="evenodd" />
-                  <path
-                    d="M15.512 14.509a1.004 1.004 0 1 1-2.007 0a1.004 1.004 0 0 1 2.007 0m-5.017-5.018a1.004 1.004 0 1 1-2.007 0a1.004 1.004 0 0 1 2.007 0" />
-                </g>
-              </svg>
-
-              Monsoon Sale
-            </span>
-
-            <h3>Save up to INR 30,000 on selected Ladakh trips</h3>
-            <p>
-              Connect with our destination experts to unlock exclusive monsoon
-              discounts before the offer ends.
-            </p>
-
-            <a href="#" class="btn btn-promo">
-              Know More About the Deal
-              <i class="icon-arrow"></i>
-            </a>
-          </div>
-
-          <div class="promo-right">
-            <span class="countdown-label">Hurry, sale ends in</span>
-
-            <div class="countdown" id="countdown">
-              <div class="time-block">
-                <div class="flip" data-unit="days">
-                  <span class="digit">03</span>
-                </div>
-                <span class="unit-label">Days</span>
-              </div>
-
-              <span class="sep">:</span>
-
-              <div class="time-block">
-                <div class="flip" data-unit="hours">
-                  <span class="digit">11</span>
-                </div>
-                <span class="unit-label">Hours</span>
-              </div>
-
-              <span class="sep">:</span>
-
-              <div class="time-block">
-                <div class="flip" data-unit="minutes">
-                  <span class="digit">24</span>
-                </div>
-                <span class="unit-label">Mins</span>
-              </div>
-
-              <span class="sep">:</span>
-
-              <div class="time-block">
-                <div class="flip" data-unit="seconds">
-                  <span class="digit">09</span>
-                </div>
-                <span class="unit-label">Secs</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
+    <!-- REVIEW SECTION -->
     <section class="detail-secF">
       <div class="heading">
         <h3>Traveler <span>Reviews</span></h3>
@@ -760,289 +789,156 @@
       <div class="grid">
         <!-- Rating Summary -->
         <div class="rating-wrapper">
-          <h2>4.8</h2>
+          <h2>{{ $reviewCount ? $avgRating : '—' }}</h2>
 
           <div class="stars">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z">
-              </path>
-            </svg>
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z">
-              </path>
-            </svg>
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z">
-              </path>
-            </svg>
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z">
-              </path>
-            </svg>
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z">
-              </path>
-            </svg>
+            @for($i = 1; $i <= 5; $i++)
+              <svg viewBox="0 0 24 24" fill="currentColor" style="opacity: {{ $i <= round($avgRating) ? 1 : 0.3 }}">
+                <path
+                  d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
+              </svg>
+            @endfor
           </div>
 
-          <p class="total-reviews">24 Reviews</p>
+          <p class="total-reviews">{{ $reviewCount }} {{ Str::plural('Review', $reviewCount) }}</p>
 
           <div class="rating-bars">
-            <div class="bar-row">
-              <span class="label">5</span>
-              <div class="bar-track">
-                <div class="bar-fill" style="width: 85%"></div>
+            @foreach($ratingBreakdown as $star => $data)
+              <div class="bar-row">
+                <span class="label">{{ $star }}</span>
+                <div class="bar-track">
+                  <div class="bar-fill" style="width: {{ $data['percent'] }}%"></div>
+                </div>
+                <span class="count">{{ $data['count'] }}</span>
               </div>
-              <span class="count">20</span>
-            </div>
-
-            <div class="bar-row">
-              <span class="label">4</span>
-              <div class="bar-track">
-                <div class="bar-fill" style="width: 15%"></div>
-              </div>
-              <span class="count">4</span>
-            </div>
-
-            <div class="bar-row">
-              <span class="label">3</span>
-              <div class="bar-track">
-                <div class="bar-fill" style="width: 0%"></div>
-              </div>
-              <span class="count">0</span>
-            </div>
-
-            <div class="bar-row">
-              <span class="label">2</span>
-              <div class="bar-track">
-                <div class="bar-fill" style="width: 0%"></div>
-              </div>
-              <span class="count">0</span>
-            </div>
-
-            <div class="bar-row">
-              <span class="label">1</span>
-              <div class="bar-track">
-                <div class="bar-fill" style="width: 0%"></div>
-              </div>
-              <span class="count">0</span>
-            </div>
+            @endforeach
           </div>
         </div>
 
         <!-- Review Swiper -->
         <div class="swiper-wrap">
-          <div class="swiper reviewSlider">
-            <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <div class="card">
-                  <div class="header">
-                    <img loading="lazy" src="assets/images/home/client1.png" alt="Floyd Miles" />
-                    <div class="name">
-                      <h6>Floyd Miles</h6>
-                      <p>CEO, Traveller</p>
-                    </div>
-                    <div class="quotes">
-                      <svg width="34" height="26" viewBox="0 0 44 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M4.98462 0.5H17.7346C18.1656 0.5 18.5793 0.670839 18.884 0.975586C19.1888 1.28033 19.3596 1.69402 19.3596 2.125V19.1748L19.3635 19.1973C19.3641 19.2053 19.3657 19.216 19.3665 19.2295C19.3688 19.2693 19.3712 19.3295 19.3733 19.4082C19.3775 19.5654 19.3794 19.795 19.3684 20.084C19.3464 20.6625 19.2751 21.4755 19.0823 22.4189C18.6962 24.3078 17.8253 26.6999 15.8987 28.79C13.0414 31.8876 8.68419 33.5 2.85962 33.5H1.23462V28.417L2.53833 28.1582H2.53931C5.54333 27.5578 7.72977 26.3475 8.91138 24.4844L8.91431 24.4785C9.51092 23.5111 9.85011 22.407 9.89966 21.2715L9.9231 20.75H2.85962C2.42864 20.75 2.01495 20.5792 1.71021 20.2744C1.40546 19.9697 1.23462 19.556 1.23462 19.125V4.25C1.23462 2.18227 2.91689 0.5 4.98462 0.5ZM28.3743 0.5H41.1243C41.5552 0.5 41.9689 0.670911 42.2737 0.975586C42.5784 1.28033 42.7493 1.69402 42.7493 2.125V19.1748L42.7532 19.1973C42.7538 19.2053 42.7553 19.2161 42.7561 19.2295C42.7584 19.2693 42.7609 19.3296 42.7629 19.4082C42.7671 19.5654 42.7691 19.7951 42.7581 20.084C42.7359 20.6625 42.6639 21.4755 42.4709 22.4189C42.0846 24.3078 41.214 26.6999 39.2883 28.79C36.431 31.8876 32.0738 33.5 26.2493 33.5H24.6243V28.417L25.929 28.1582C28.9331 27.5578 31.1194 26.3475 32.301 24.4844L32.304 24.4785C32.9006 23.5111 33.2398 22.407 33.2893 21.2715L33.3127 20.75H26.2493C25.8185 20.7499 25.4055 20.5789 25.1008 20.2744C24.7961 19.9697 24.6243 19.556 24.6243 19.125V4.25C24.6243 2.18234 26.3066 0.500123 28.3743 0.5Z"
-                          fill="white" stroke="#D1D1D1" />
-                      </svg>
-                    </div>
-                  </div>
+          @if($tourPackage->reviews->isNotEmpty())
+            <div class="swiper reviewSlider">
+              <div class="swiper-wrapper">
+                @foreach($tourPackage->reviews as $review)
+                  <div class="swiper-slide">
+                    <div class="card">
+                      <div class="header">
+                        @if($review->photo)
+                          <img loading="lazy" src="{{ asset('storage/' . $review->photo) }}" alt="{{ $review->full_name }}" />
+                        @else
+                          <span class="avatar-initials">{{ $review->initials() }}</span>
+                        @endif
+                        <div class="name">
+                          <h6>{{ $review->full_name }}</h6>
+                          <p>{{ $review->designation ?: $review->created_at->format('d M Y') }}</p>
+                        </div>
+                      </div>
 
-                  <p class="quote">
-                    “ Morem ipsum dolor siter amet areaeey consec taetur
-                    adipisc service ollwing ipsum dolor consectetur.”
-                  </p>
+                      <p class="quote">"{{ $review->review }}"</p>
 
-                  <div class="stars">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              <div class="swiper-slide">
-                <div class="card">
-                  <div class="header">
-                    <img loading="lazy" src="assets/images/home/client2.png" alt="Floyd Miles" />
-                    <div class="name">
-                      <h6>Floyd Miles</h6>
-                      <p>CEO, Traveller</p>
-                    </div>
-                    <div class="quotes">
-                      <svg width="34" height="26" viewBox="0 0 44 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M4.98462 0.5H17.7346C18.1656 0.5 18.5793 0.670839 18.884 0.975586C19.1888 1.28033 19.3596 1.69402 19.3596 2.125V19.1748L19.3635 19.1973C19.3641 19.2053 19.3657 19.216 19.3665 19.2295C19.3688 19.2693 19.3712 19.3295 19.3733 19.4082C19.3775 19.5654 19.3794 19.795 19.3684 20.084C19.3464 20.6625 19.2751 21.4755 19.0823 22.4189C18.6962 24.3078 17.8253 26.6999 15.8987 28.79C13.0414 31.8876 8.68419 33.5 2.85962 33.5H1.23462V28.417L2.53833 28.1582H2.53931C5.54333 27.5578 7.72977 26.3475 8.91138 24.4844L8.91431 24.4785C9.51092 23.5111 9.85011 22.407 9.89966 21.2715L9.9231 20.75H2.85962C2.42864 20.75 2.01495 20.5792 1.71021 20.2744C1.40546 19.9697 1.23462 19.556 1.23462 19.125V4.25C1.23462 2.18227 2.91689 0.5 4.98462 0.5ZM28.3743 0.5H41.1243C41.5552 0.5 41.9689 0.670911 42.2737 0.975586C42.5784 1.28033 42.7493 1.69402 42.7493 2.125V19.1748L42.7532 19.1973C42.7538 19.2053 42.7553 19.2161 42.7561 19.2295C42.7584 19.2693 42.7609 19.3296 42.7629 19.4082C42.7671 19.5654 42.7691 19.7951 42.7581 20.084C42.7359 20.6625 42.6639 21.4755 42.4709 22.4189C42.0846 24.3078 41.214 26.6999 39.2883 28.79C36.431 31.8876 32.0738 33.5 26.2493 33.5H24.6243V28.417L25.929 28.1582C28.9331 27.5578 31.1194 26.3475 32.301 24.4844L32.304 24.4785C32.9006 23.5111 33.2398 22.407 33.2893 21.2715L33.3127 20.75H26.2493C25.8185 20.7499 25.4055 20.5789 25.1008 20.2744C24.7961 19.9697 24.6243 19.556 24.6243 19.125V4.25C24.6243 2.18234 26.3066 0.500123 28.3743 0.5Z"
-                          fill="white" stroke="#D1D1D1" />
-                      </svg>
+                      <div class="stars">
+                        @for($i = 1; $i <= 5; $i++)
+                          <svg viewBox="0 0 24 24" fill="currentColor" style="opacity: {{ $i <= $review->rating ? 1 : 0.3 }}">
+                            <path
+                              d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
+                          </svg>
+                        @endfor
+                      </div>
                     </div>
                   </div>
-
-                  <p class="quote">
-                    “ Morem ipsum dolor siter amet areaeey consec taetur
-                    adipisc service ollwing ipsum dolor consectetur.”
-                  </p>
-
-                  <div class="stars">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              <div class="swiper-slide">
-                <div class="card">
-                  <div class="header">
-                    <img loading="lazy" src="assets/images/home/client3.png" alt="Floyd Miles" />
-                    <div class="name">
-                      <h6>Floyd Miles</h6>
-                      <p>CEO, Traveller</p>
-                    </div>
-                    <div class="quotes">
-                      <svg width="34" height="26" viewBox="0 0 44 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M4.98462 0.5H17.7346C18.1656 0.5 18.5793 0.670839 18.884 0.975586C19.1888 1.28033 19.3596 1.69402 19.3596 2.125V19.1748L19.3635 19.1973C19.3641 19.2053 19.3657 19.216 19.3665 19.2295C19.3688 19.2693 19.3712 19.3295 19.3733 19.4082C19.3775 19.5654 19.3794 19.795 19.3684 20.084C19.3464 20.6625 19.2751 21.4755 19.0823 22.4189C18.6962 24.3078 17.8253 26.6999 15.8987 28.79C13.0414 31.8876 8.68419 33.5 2.85962 33.5H1.23462V28.417L2.53833 28.1582H2.53931C5.54333 27.5578 7.72977 26.3475 8.91138 24.4844L8.91431 24.4785C9.51092 23.5111 9.85011 22.407 9.89966 21.2715L9.9231 20.75H2.85962C2.42864 20.75 2.01495 20.5792 1.71021 20.2744C1.40546 19.9697 1.23462 19.556 1.23462 19.125V4.25C1.23462 2.18227 2.91689 0.5 4.98462 0.5ZM28.3743 0.5H41.1243C41.5552 0.5 41.9689 0.670911 42.2737 0.975586C42.5784 1.28033 42.7493 1.69402 42.7493 2.125V19.1748L42.7532 19.1973C42.7538 19.2053 42.7553 19.2161 42.7561 19.2295C42.7584 19.2693 42.7609 19.3296 42.7629 19.4082C42.7671 19.5654 42.7691 19.7951 42.7581 20.084C42.7359 20.6625 42.6639 21.4755 42.4709 22.4189C42.0846 24.3078 41.214 26.6999 39.2883 28.79C36.431 31.8876 32.0738 33.5 26.2493 33.5H24.6243V28.417L25.929 28.1582C28.9331 27.5578 31.1194 26.3475 32.301 24.4844L32.304 24.4785C32.9006 23.5111 33.2398 22.407 33.2893 21.2715L33.3127 20.75H26.2493C25.8185 20.7499 25.4055 20.5789 25.1008 20.2744C24.7961 19.9697 24.6243 19.556 24.6243 19.125V4.25C24.6243 2.18234 26.3066 0.500123 28.3743 0.5Z"
-                          fill="white" stroke="#D1D1D1" />
-                      </svg>
-                    </div>
-                  </div>
-
-                  <p class="quote">
-                    “ Morem ipsum dolor siter amet areaeey consec taetur
-                    adipisc service ollwing ipsum dolor consectetur.”
-                  </p>
-
-                  <div class="stars">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              <div class="swiper-slide">
-                <div class="card">
-                  <div class="header">
-                    <img loading="lazy" src="assets/images/home/client2.png" alt="Floyd Miles" />
-                    <div class="name">
-                      <h6>Floyd Miles</h6>
-                      <p>CEO, Traveller</p>
-                    </div>
-                    <div class="quotes">
-                      <svg width="34" height="26" viewBox="0 0 44 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M4.98462 0.5H17.7346C18.1656 0.5 18.5793 0.670839 18.884 0.975586C19.1888 1.28033 19.3596 1.69402 19.3596 2.125V19.1748L19.3635 19.1973C19.3641 19.2053 19.3657 19.216 19.3665 19.2295C19.3688 19.2693 19.3712 19.3295 19.3733 19.4082C19.3775 19.5654 19.3794 19.795 19.3684 20.084C19.3464 20.6625 19.2751 21.4755 19.0823 22.4189C18.6962 24.3078 17.8253 26.6999 15.8987 28.79C13.0414 31.8876 8.68419 33.5 2.85962 33.5H1.23462V28.417L2.53833 28.1582H2.53931C5.54333 27.5578 7.72977 26.3475 8.91138 24.4844L8.91431 24.4785C9.51092 23.5111 9.85011 22.407 9.89966 21.2715L9.9231 20.75H2.85962C2.42864 20.75 2.01495 20.5792 1.71021 20.2744C1.40546 19.9697 1.23462 19.556 1.23462 19.125V4.25C1.23462 2.18227 2.91689 0.5 4.98462 0.5ZM28.3743 0.5H41.1243C41.5552 0.5 41.9689 0.670911 42.2737 0.975586C42.5784 1.28033 42.7493 1.69402 42.7493 2.125V19.1748L42.7532 19.1973C42.7538 19.2053 42.7553 19.2161 42.7561 19.2295C42.7584 19.2693 42.7609 19.3296 42.7629 19.4082C42.7671 19.5654 42.7691 19.7951 42.7581 20.084C42.7359 20.6625 42.6639 21.4755 42.4709 22.4189C42.0846 24.3078 41.214 26.6999 39.2883 28.79C36.431 31.8876 32.0738 33.5 26.2493 33.5H24.6243V28.417L25.929 28.1582C28.9331 27.5578 31.1194 26.3475 32.301 24.4844L32.304 24.4785C32.9006 23.5111 33.2398 22.407 33.2893 21.2715L33.3127 20.75H26.2493C25.8185 20.7499 25.4055 20.5789 25.1008 20.2744C24.7961 19.9697 24.6243 19.556 24.6243 19.125V4.25C24.6243 2.18234 26.3066 0.500123 28.3743 0.5Z"
-                          fill="white" stroke="#D1D1D1" />
-                      </svg>
-                    </div>
-                  </div>
-
-                  <p class="quote">
-                    “ Morem ipsum dolor siter amet areaeey consec taetur
-                    adipisc service ollwing ipsum dolor consectetur.”
-                  </p>
-
-                  <div class="stars">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                  </div>
-                </div>
+                @endforeach
               </div>
             </div>
+
+            <div class="swiper-group">
+              <div class="progress-track">
+                <div class="swiper-pagination"></div>
+              </div>
+              <div class="btns">
+                <button type="button" class="review-prev" aria-label="Previous review">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                    <path fill="#ffff"
+                      d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
+                  </svg>
+                </button>
+                <button type="button" class="review-next" aria-label="Next review">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                    <path fill="#ffff"
+                      d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          @else
+            <div class="no-reviews">
+              <p>No reviews yet — be the first to share your experience on this trip.</p>
+            </div>
+          @endif
+        </div>
+      </div>
+    </section>
+
+    <!-- RELATED PACKAGES -->
+    @if($relatedPackages->isNotEmpty())
+      <section class="listing-secA">
+        <div class="container">
+          <div class="heading">
+            <h3>More Trips to <span>Explore</span></h3>
+            <p>
+              Discover more exciting journeys and handpicked experiences for
+              your next adventure.
+            </p>
           </div>
 
-          <div class="swiper-group">
-            <div class="progress-track">
-              <div class="swiper-pagination"></div>
+          <div class="swiper-wrap">
+            <div class="swiper thirdSilder">
+              <div class="swiper-wrapper">
+                @foreach($relatedPackages as $package)
+                  <div class="swiper-slide">
+                    <a href="{{ route('tourpackage.show', $package->slug) }}" target="_blank" class="trip_card3">
+                      <div class="img">
+                        @if($package->main_image)
+                          <img loading="lazy" src="{{ asset('storage/' . $package->main_image) }}" alt="{{ $package->name }}" />
+                        @endif
+                      </div>
+                      <span class="rating-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                          <path
+                            d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
+                        </svg>
+                        4.8
+                      </span>
+                      <div class="content">
+                        <p class="type">Tour Packages</p>
+                        <h3 class="place">{{ $package->name }}</h3>
+                        <div class="foot">
+                          @if($package->price)
+                            <p class="price"><small>Starts at</small>INR {{ number_format($package->price) }}</p>
+                          @endif
+                          <span class="arrow-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                              stroke-width="2">
+                              <path d="M5 12h14M13 6l6 6-6 6" />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                @endforeach
+              </div>
             </div>
 
-            <div class="btns">
-              <button type="button" class="review-prev" aria-label="Previous review">
+            <div class="swiper-group">
+              <button type="button" class="thirdSilder-prev btn-prev">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
                   <path fill="#ffff"
                     d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
                 </svg>
               </button>
 
-              <button type="button" class="review-next" aria-label="Next review">
+              <button type="button" class="thirdSilder-next btn-next">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
                   <path fill="#ffff"
                     d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
@@ -1050,167 +946,14 @@
               </button>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
 
-    <section class="listing-secA">
-      <div class="container">
-        <div class="heading">
-          <h3>More Trips to <span>Explore</span></h3>
-          <p>
-            Discover more exciting journeys and handpicked experiences for
-            your next adventure.
-          </p>
-        </div>
-
-        <div class="swiper-wrap">
-          <div class="swiper thirdSilder">
-            <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <a href="listing-detail.html" target="_blank" class="trip_card3">
-                  <div class="img">
-                    <img loading="lazy" src="assets/images/home/card2.jpg" alt="Leh" />
-                  </div>
-
-                  <span class="rating-badge">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    4.8
-                  </span>
-
-                  <div class="content">
-                    <p class="type">Tour Packages</p>
-                    <h3 class="place">Leh</h3>
-                    <div class="foot">
-                      <p class="price"><small>Starts at</small>INR 14,750</p>
-                      <span class="arrow-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                          stroke-width="2">
-                          <path d="M5 12h14M13 6l6 6-6 6" />
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-              </div>
-              </a>
-
-              <div class="swiper-slide">
-                <a href="listing-detail.html" target="_blank" class="trip_card3">
-                  <div class="img">
-                    <img loading="lazy" src="assets/images/home/card1.jpg" alt="Nubra Valley" />
-                  </div>
-
-                  <span class="rating-badge">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    4.6
-                  </span>
-
-                  <div class="content">
-                    <p class="type">Tour Packages</p>
-                    <h3 class="place">Nubra Valley</h3>
-                    <div class="foot">
-                      <p class="price"><small>Starts at</small>INR 19,500</p>
-                      <span class="arrow-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                          stroke-width="2">
-                          <path d="M5 12h14M13 6l6 6-6 6" />
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-                </a>
-              </div>
-
-              <div class="swiper-slide">
-                <a href="listing-detail.html" target="_blank" class="trip_card3">
-                  <div class="img">
-                    <img loading="lazy" src="assets/images/home/card3.jpg" alt="Pangong Lake" />
-                  </div>
-
-                  <span class="rating-badge">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    4.9
-                  </span>
-
-                  <div class="content">
-                    <p class="type">Tour Packages</p>
-                    <h3 class="place">Pangong Lake</h3>
-                    <div class="foot">
-                      <p class="price"><small>Starts at</small>INR 22,000</p>
-                      <span class="arrow-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                          stroke-width="2">
-                          <path d="M5 12h14M13 6l6 6-6 6" />
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-                </a>
-              </div>
-
-              <div class="swiper-slide">
-                <a href="listing-detail.html" target="_blank" class="trip_card3">
-                  <div class="img">
-                    <img loading="lazy" src="assets/images/home/card4.jpg" alt="Tso Moriri" />
-                  </div>
-
-                  <span class="rating-badge">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                    </svg>
-                    4.7
-                  </span>
-
-                  <div class="content">
-                    <p class="type">Tour Packages</p>
-                    <h3 class="place">Tso Moriri</h3>
-                    <div class="foot">
-                      <p class="price"><small>Starts at</small>INR 25,900</p>
-                      <span class="arrow-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                          stroke-width="2">
-                          <path d="M5 12h14M13 6l6 6-6 6" />
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div class="swiper-group">
-            <button type="button" class="thirdSilder-prev btn-prev">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                <path fill="#ffff"
-                  d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
-              </svg>
-            </button>
-
-            <button type="button" class="thirdSilder-next btn-next">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                <path fill="#ffff"
-                  d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
-              </svg>
-            </button>
+          <div class="center-btn">
+            <a href="{{ route('subcategory.show', $tourPackage->subCategory->slug ?? '') }}"
+              class="btn btn-outline-primary">View All</a>
           </div>
         </div>
-
-        <div class="center-btn">
-          <a href="javascript:void()" class="btn btn-outline-primary">View All</a>
-        </div>
-      </div>
-    </section>
+      </section>
+    @endif
 
     <section class="seo-links-sec">
       <div class="container">
@@ -1297,122 +1040,11 @@
       </div>
     </section>
 
-    <section class="listing-secI">
-      <div class="container">
-        <div class="heading">
-          <h3>Have Questions? <span>We’re Here to Help.</span></h3>
-        </div>
-
-        <div class="accordion-wrapper">
-          <div class="accordion-item">
-            <div class="accordion-body">
-              <div class="accordion-header active">
-                <h4>How far in advance should I start planning my trip?</h4>
-                <span class="accordion-icon">−</span>
-              </div>
-              <div class="accordion-content">
-                <p>
-                  We recommend starting at least 4–6 weeks before your travel
-                  date, especially for international destinations. This gives
-                  enough time for visa processing, flight bookings at better
-                  rates, and securing accommodation during peak season. For
-                  last-minute trips, our team can still put together a plan
-                  within 48 hours.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <div class="accordion-body">
-              <div class="accordion-header">
-                <h4>Can I customize a pre-built itinerary?</h4>
-                <span class="accordion-icon">+</span>
-              </div>
-              <div class="accordion-content">
-                <p>
-                  Absolutely. Every itinerary on our platform is a starting
-                  point, not a fixed package. You can add or remove
-                  destinations, change hotel categories, adjust the number of
-                  days, or swap activities — our trip planner recalculates
-                  pricing and logistics automatically as you edit.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <div class="accordion-body">
-              <div class="accordion-header">
-                <h4>What's included in the trip cost?</h4>
-                <span class="accordion-icon">+</span>
-              </div>
-              <div class="accordion-content">
-                <p>
-                  Standard packages include accommodation, daily breakfast,
-                  private transfers, and a dedicated trip coordinator.
-                  Flights, visas, travel insurance, and optional excursions
-                  are shown separately at checkout so you always know exactly
-                  what you're paying for before you confirm.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <div class="accordion-body">
-              <div class="accordion-header">
-                <h4>What happens if I need to cancel or reschedule?</h4>
-                <span class="accordion-icon">+</span>
-              </div>
-              <div class="accordion-content">
-                <p>
-                  Cancellations made 15 days or more before departure receive
-                  a full refund minus a small processing fee. Between 7–14
-                  days, you'll receive credit toward a future trip.
-                  Rescheduling is free of charge up to 72 hours before your
-                  travel date, subject to availability.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <div class="accordion-body">
-              <div class="accordion-header">
-                <h4>Do you provide support during the trip?</h4>
-                <span class="accordion-icon">+</span>
-              </div>
-              <div class="accordion-content">
-                <p>
-                  Yes — every booking comes with 24/7 on-trip support through
-                  call, WhatsApp, and email. If a flight gets delayed, a hotel
-                  booking has an issue, or your plans change mid-trip, our
-                  local coordinators step in to resolve it in real time.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
   </main>
 
+
+  <!-- REVIEW MODAL -->
   <div class="overlay"></div>
-
-  <!-- Video Pop -->
-  <div class="model video-pop">
-    <div class="model-body">
-      <button type="button" class="close close-video">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0.75 0.75L23.25 23.25M0.75 23.25L23.25 0.75" stroke="black" stroke-linecap="round"
-            stroke-linejoin="round" />
-        </svg>
-      </button>
-      <iframe id="iframe1" allow="autoplay; fullscreen" src=""></iframe>
-    </div>
-  </div>
-
   <div class="model review_pop">
     <div class="model-body">
       <div class="dialog-wrapper">
@@ -1430,53 +1062,55 @@
           <p>Share your travel experience with other travellers.</p>
         </div>
 
-        <div class="form form-grid">
+        <form id="reviewForm" class="form form-grid" enctype="multipart/form-data">
+          @csrf
+          <input type="hidden" name="tour_package_id" value="{{ $tourPackage->id }}">
+
           <div class="star-rating">
             <p class="rating-label">Your Rating</p>
-
             <div class="stars">
-              <input type="radio" name="rating" value="5" id="star5" />
+              <input type="radio" name="rating" value="5" id="star5" required />
               <label for="star5" title="5 stars">★</label>
-
               <input type="radio" name="rating" value="4" id="star4" />
               <label for="star4" title="4 stars">★</label>
-
               <input type="radio" name="rating" value="3" id="star3" />
               <label for="star3" title="3 stars">★</label>
-
               <input type="radio" name="rating" value="2" id="star2" />
               <label for="star2" title="2 stars">★</label>
-
               <input type="radio" name="rating" value="1" id="star1" />
               <label for="star1" title="1 star">★</label>
             </div>
           </div>
 
           <div class="form-group">
-            <input type="text" id="fullName" name="fullName" placeholder="" autocomplete="off" />
+            <input type="text" id="fullName" name="full_name" placeholder="" autocomplete="off" required />
             <label for="fullName">Full Name*</label>
           </div>
 
           <div class="form-group">
-            <input type="text" id="destination" name="destination" placeholder="" autocomplete="off" />
-            <label for="destination">Destination*</label>
+            <input type="text" id="designation" name="designation" placeholder="" autocomplete="off" />
+            <label for="designation">Designation (optional)</label>
           </div>
 
           <div class="form-group">
-            <textarea id="reviewMessage" name="reviewMessage" class="form-control" placeholder=""></textarea>
+            <textarea id="reviewMessage" name="review" class="form-control" placeholder="" required></textarea>
             <label for="reviewMessage">Your Review*</label>
           </div>
 
-          <div class="sbmt-grp text-center">
-            <button type="submit" class="btn btn-primary">
-              SUBMIT REVIEW
-            </button>
+          <div class="form-group">
+            <input type="file" id="reviewPhoto" name="photo" accept="image/*" />
+            <label for="reviewPhoto">Your Photo (optional)</label>
           </div>
-        </div>
+
+          <div id="reviewFormAlert" class="form-alert" style="display:none;"></div>
+
+          <div class="sbmt-grp text-center">
+            <button type="submit" class="btn btn-primary">SUBMIT REVIEW</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
-
 
 
 @endsection
@@ -1540,5 +1174,100 @@
         $nav.find('li[data-scroll="' + current + '"]').addClass("active");
       });
     });
+
+    $(function () {
+      var $countdown = $('#countdown');
+      if (!$countdown.length) return;
+
+      var end = new Date($countdown.data('end')).getTime();
+
+      var tick = function () {
+        var now = new Date().getTime();
+        var diff = end - now;
+
+        if (diff <= 0) {
+          $countdown.closest('.listing-secG').fadeOut(300);
+          clearInterval(timer);
+          return;
+        }
+
+        var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        var secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        $countdown.find('[data-unit="days"] .digit').text(String(days).padStart(2, '0'));
+        $countdown.find('[data-unit="hours"] .digit').text(String(hours).padStart(2, '0'));
+        $countdown.find('[data-unit="minutes"] .digit').text(String(mins).padStart(2, '0'));
+        $countdown.find('[data-unit="seconds"] .digit').text(String(secs).padStart(2, '0'));
+      };
+
+      tick();
+      var timer = setInterval(tick, 1000);
+    });
+
+    $(function () {
+      var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+      // ---- Review form (multipart, because of the optional photo upload) ----
+      $('#reviewForm').on('submit', function (e) {
+        e.preventDefault();
+        var $form = $(this);
+        var formData = new FormData(this);
+
+        $.ajax({
+          url: '{{ route("reviews.store") }}',
+          method: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          headers: { 'X-CSRF-TOKEN': csrfToken },
+          dataType: 'json',
+        })
+          .done(function (res) {
+            var $alert = $('#reviewFormAlert');
+            $alert.text(res.message || 'Thanks for sharing your experience!')
+              .css('color', '#1a7f37').show();
+            $form[0].reset();
+            setTimeout(function () {
+              $alert.hide();
+              location.reload(); // refreshes the review list/stats with the new entry
+            }, 1200);
+          })
+          .fail(function (xhr) {
+            var message = 'Something went wrong. Please check the form and try again.';
+            if (xhr.responseJSON && xhr.responseJSON.errors) {
+              message = Object.values(xhr.responseJSON.errors).flat().join(' ');
+            }
+            $('#reviewFormAlert').text(message).css('color', '#b22222').show();
+          });
+      });
+
+      // ---- Enquiry form (plain fields, no files) ----
+      $('#enquiryForm').on('submit', function (e) {
+        e.preventDefault();
+        var $form = $(this);
+
+        $.ajax({
+          url: $form.attr('action'),
+          method: 'POST',
+          data: $form.serialize(),
+          headers: { 'X-CSRF-TOKEN': csrfToken },
+          dataType: 'json',
+        })
+          .done(function (res) {
+            alert(res.message || 'Thanks! We will contact you shortly.');
+            $form[0].reset();
+          })
+          .fail(function (xhr) {
+            var message = 'Something went wrong. Please check the form and try again.';
+            if (xhr.responseJSON && xhr.responseJSON.errors) {
+              message = Object.values(xhr.responseJSON.errors).flat().join(' ');
+            }
+            alert(message);
+          });
+      });
+    });
+
   </script>
 @endpush

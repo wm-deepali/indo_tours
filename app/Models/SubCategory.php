@@ -60,16 +60,6 @@ class SubCategory extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function destinationLinks(): HasMany
-    {
-        return $this->hasMany(SubCategoryDestination::class)->orderBy('sort_order');
-    }
-
-    public function attractionLinks(): HasMany
-    {
-        return $this->hasMany(SubCategoryAttraction::class)->orderBy('sort_order');
-    }
-
     public function highlights(): HasMany
     {
         return $this->hasMany(SubCategoryHighlight::class)->orderBy('sort_order');

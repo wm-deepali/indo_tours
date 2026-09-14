@@ -41,7 +41,7 @@ return new class extends Migration
             $table->text('overview_content')->nullable();
 
             // Map
-            $table->string('map_embed_url')->nullable();
+            $table->text('map_embed_url')->nullable();
 
             // SEO
             $table->string('meta_title')->nullable();

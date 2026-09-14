@@ -1426,7 +1426,7 @@
 
         if (!this.value) return;
 
-        fetch(`{{ url('admin/destinations/states') }}/${this.value}`)
+        fetch(`{{ url('admin/location/states') }}/${this.value}`)
             .then(res => res.json())
             .then(states => {
                 states.forEach(state => {
@@ -1440,7 +1440,7 @@
 
         if (!this.value) return;
 
-        fetch(`{{ url('admin/destinations/cities') }}/${this.value}`)
+        fetch(`{{ url('admin/location/cities') }}/${this.value}`)
             .then(res => res.json())
             .then(cities => {
                 cities.forEach(city => {

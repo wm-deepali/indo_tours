@@ -5,47 +5,236 @@
     @include('admin.header')
 
     <style>
-    :root {
-        --bg: #f1f2f4; --surface: #ffffff; --border: #e3e5e8;
-        --text-primary: #202223; --text-secondary:#6d7175; --text-hint:#8c9196;
-        --accent: #303d89; --accent-light: #f0f1fc;
-        --radius-sm: 8px; --radius-md: 12px;
-        --shadow-card: 0 1px 3px rgba(0,0,0,.08), 0 0 0 1px var(--border);
-        --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-    .cat-page { background: var(--bg); padding: 24px 28px; min-height: 100vh; font-family: var(--font); color: var(--text-primary); box-sizing: border-box; }
-    .cat-page * { box-sizing: border-box; }
-    .cat-page-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
-    .cat-page-header h1 { font-size: 20px; font-weight: 650; margin: 0; }
-    .cat-breadcrumb { font-size: 12.5px; color: var(--text-hint); margin-top: 3px; }
-    .cat-breadcrumb a { color: var(--accent); text-decoration: none; }
-    .cat-breadcrumb a:hover { text-decoration: underline; }
-    .cat-breadcrumb span { margin: 0 5px; }
-    .btn-primary-dash { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: #fff !important; border: none; border-radius: var(--radius-sm); padding: 9px 18px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none !important; box-shadow: 0 1px 3px rgba(48,61,137,.25); }
-    .btn-primary-dash:hover { background: #252f70; }
-    .btn-secondary-dash { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); color: var(--text-primary) !important; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 18px; font-size: 13px; font-weight: 500; cursor: pointer; text-decoration: none !important; }
-    .btn-secondary-dash:hover { background: var(--bg); }
-    .cat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); max-width: 100vw; overflow: hidden; }
-    .form-field { margin-bottom: 18px; }
-    .form-field label { display: block; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; letter-spacing: .02em; }
-    .form-field .hint { font-size: 11.5px; color: var(--text-hint); margin-top: 4px; }
-    .form-control-styled { width: 100%; height: 40px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0 12px; font-size: 13.5px; font-family: var(--font); color: var(--text-primary); outline: none; transition: border-color .15s, box-shadow .15s; background: var(--surface); }
-    textarea.form-control-styled { height: auto; padding: 10px 12px; resize: vertical; }
-    select.form-control-styled { appearance: auto; }
-    .form-control-styled:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(48,61,137,.12); }
-    .form-error { color: #b22222; font-size: 12px; margin-top: 5px; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
-    .form-actions { display: flex; gap: 10px; padding: 20px 24px; border-top: 1px solid var(--border); background: var(--surface); }
-    .gallery-row { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 14px; background: var(--bg); }
-    .gallery-row .remove-new-row, .gallery-row .remove-gallery-row { margin-top: 10px; }
-    .existing-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; margin-bottom: 16px; }
-    .existing-gallery-item { position: relative; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: var(--bg); }
-    .existing-gallery-item img { width: 100%; height: 90px; object-fit: cover; display: block; }
-    .existing-gallery-item .remove-gallery-row {
-        position: absolute; top: 6px; right: 6px; background: #fff; border: 1px solid var(--border);
-        border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
-        cursor: pointer; color: #b22222; font-size: 12px; padding: 0;
-    }
+        :root {
+            --bg: #f1f2f4;
+            --surface: #ffffff;
+            --border: #e3e5e8;
+            --text-primary: #202223;
+            --text-secondary: #6d7175;
+            --text-hint: #8c9196;
+            --accent: #303d89;
+            --accent-light: #f0f1fc;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, .08), 0 0 0 1px var(--border);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .cat-page {
+            background: var(--bg);
+            padding: 24px 28px;
+            min-height: 100vh;
+            font-family: var(--font);
+            color: var(--text-primary);
+            box-sizing: border-box;
+        }
+
+        .cat-page * {
+            box-sizing: border-box;
+        }
+
+        .cat-page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .cat-page-header h1 {
+            font-size: 20px;
+            font-weight: 650;
+            margin: 0;
+        }
+
+        .cat-breadcrumb {
+            font-size: 12.5px;
+            color: var(--text-hint);
+            margin-top: 3px;
+        }
+
+        .cat-breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .cat-breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .cat-breadcrumb span {
+            margin: 0 5px;
+        }
+
+        .btn-primary-dash {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--accent);
+            color: #fff !important;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 9px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none !important;
+            box-shadow: 0 1px 3px rgba(48, 61, 137, .25);
+        }
+
+        .btn-primary-dash:hover {
+            background: #252f70;
+        }
+
+        .btn-secondary-dash {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--surface);
+            color: var(--text-primary) !important;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 9px 18px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none !important;
+        }
+
+        .btn-secondary-dash:hover {
+            background: var(--bg);
+        }
+
+        .cat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-card);
+            max-width: 100vw;
+            overflow: hidden;
+        }
+
+        .form-field {
+            margin-bottom: 18px;
+        }
+
+        .form-field label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            letter-spacing: .02em;
+        }
+
+        .form-field .hint {
+            font-size: 11.5px;
+            color: var(--text-hint);
+            margin-top: 4px;
+        }
+
+        .form-control-styled {
+            width: 100%;
+            height: 40px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0 12px;
+            font-size: 13.5px;
+            font-family: var(--font);
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color .15s, box-shadow .15s;
+            background: var(--surface);
+        }
+
+        textarea.form-control-styled {
+            height: auto;
+            padding: 10px 12px;
+            resize: vertical;
+        }
+
+        select.form-control-styled {
+            appearance: auto;
+        }
+
+        .form-control-styled:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(48, 61, 137, .12);
+        }
+
+        .form-error {
+            color: #b22222;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            padding: 20px 24px;
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .gallery-row {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-bottom: 14px;
+            background: var(--bg);
+        }
+
+        .gallery-row .remove-new-row,
+        .gallery-row .remove-gallery-row {
+            margin-top: 10px;
+        }
+
+        .existing-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .existing-gallery-item {
+            position: relative;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: var(--bg);
+        }
+
+        .existing-gallery-item img {
+            width: 100%;
+            height: 90px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .existing-gallery-item .remove-gallery-row {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #b22222;
+            font-size: 12px;
+            padding: 0;
+        }
     </style>
 
     <div class="app-content content container-fluid">
@@ -79,7 +268,8 @@
                             <input type="text" id="name" name="name"
                                 class="form-control-styled @error('name') is-invalid @enderror"
                                 value="{{ old('name', $hotel->name) }}" placeholder="Enter hotel name" required>
-                            @error('name')<div class="form-error">{{ $message }}</div>@enderror
+                            @error('name')
+                            <div class="form-error">{{ $message }}</div>@enderror
                         </div>
 
                         <div class="form-row">
@@ -124,18 +314,17 @@
                                 <input type="number" id="rating" name="rating" step="0.1" min="0" max="5"
                                     class="form-control-styled @error('rating') is-invalid @enderror"
                                     value="{{ old('rating', $hotel->rating) }}" placeholder="e.g. 4.5">
-                                @error('rating')<div class="form-error">{{ $message }}</div>@enderror
+                                @error('rating')
+                                <div class="form-error">{{ $message }}</div>@enderror
                             </div>
                             <div class="form-field">
                                 <label for="check_in_time">Check-In Time</label>
-                                <input type="time" id="check_in_time" name="check_in_time"
-                                    class="form-control-styled"
+                                <input type="time" id="check_in_time" name="check_in_time" class="form-control-styled"
                                     value="{{ old('check_in_time', $hotel->check_in_time ? \Carbon\Carbon::parse($hotel->check_in_time)->format('H:i') : '') }}">
                             </div>
                             <div class="form-field">
                                 <label for="check_out_time">Check-Out Time</label>
-                                <input type="time" id="check_out_time" name="check_out_time"
-                                    class="form-control-styled"
+                                <input type="time" id="check_out_time" name="check_out_time" class="form-control-styled"
                                     value="{{ old('check_out_time', $hotel->check_out_time ? \Carbon\Carbon::parse($hotel->check_out_time)->format('H:i') : '') }}">
                             </div>
                         </div>
@@ -143,20 +332,24 @@
                         <div class="form-field">
                             <label for="short_description">Short Description</label>
                             <textarea id="short_description" name="short_description" rows="3"
-                                class="form-control-styled" placeholder="Brief description of the hotel">{{ old('short_description', $hotel->short_description) }}</textarea>
+                                class="form-control-styled"
+                                placeholder="Brief description of the hotel">{{ old('short_description', $hotel->short_description) }}</textarea>
                         </div>
 
                         <div class="form-field">
                             <label for="location">Location</label>
                             <input type="text" id="location" name="location" class="form-control-styled"
-                                value="{{ old('location', $hotel->location) }}" placeholder="e.g. Downtown Reykjavik, near Hallgrímskirkja">
-                            <div class="hint">Free text — enter the area/landmark description as you'd like it displayed</div>
+                                value="{{ old('location', $hotel->location) }}"
+                                placeholder="e.g. Downtown Reykjavik, near Hallgrímskirkja">
+                            <div class="hint">Free text — enter the area/landmark description as you'd like it displayed
+                            </div>
                         </div>
 
                         <div class="form-field">
                             <label for="status">Status</label>
                             <select id="status" name="status" class="form-control-styled">
-                                <option value="draft" {{ old('status', $hotel->status) == 'draft' ? 'selected' : '' }}>Draft</option>
+                                <option value="draft" {{ old('status', $hotel->status) == 'draft' ? 'selected' : '' }}>
+                                    Draft</option>
                                 <option value="published" {{ old('status', $hotel->status) == 'published' ? 'selected' : '' }}>Published</option>
                                 <option value="unpublished" {{ old('status', $hotel->status) == 'unpublished' ? 'selected' : '' }}>Unpublished</option>
                             </select>
@@ -169,8 +362,9 @@
                                 <div class="existing-gallery-grid">
                                     @foreach($hotel->galleries as $img)
                                         <div class="existing-gallery-item" data-id="{{ $img->id }}">
-                                            <img src="{{ asset($img->image) }}" alt="">
-                                            <button type="button" class="remove-gallery-row" data-id="{{ $img->id }}" title="Remove">
+                                            <img src="{{ asset('storage/' . $img->image) }}" alt="">
+                                            <button type="button" class="remove-gallery-row" data-id="{{ $img->id }}"
+                                                title="Remove">
                                                 <i class="fa fa-times"></i>
                                             </button>
                                         </div>
@@ -184,7 +378,8 @@
                             <button type="button" class="btn-secondary-dash" id="add-gallery-row">
                                 <i class="fa fa-plus"></i> Add Photo
                             </button>
-                            <div class="hint" style="margin-top:10px;">Click × on an existing photo to remove it — new photos are added below</div>
+                            <div class="hint" style="margin-top:10px;">Click × on an existing photo to remove it — new
+                                photos are added below</div>
                         </div>
 
                     </div>

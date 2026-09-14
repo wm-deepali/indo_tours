@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Attraction extends Model
 {
@@ -121,9 +122,10 @@ class Attraction extends Model
         return $this->hasMany(AttractionFaq::class)->orderBy('sort_order');
     }
 
-    public function subCategoryLinks()
+    public function tourPackages(): BelongsToMany
     {
-        return $this->hasMany(SubCategoryAttraction::class);
+        return $this->belongsToMany(TourPackage::class, 'tour_package_attraction')
+            ->withPivot('sort_order');
     }
 
 }

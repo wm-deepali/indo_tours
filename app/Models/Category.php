@@ -75,14 +75,4 @@ class Category extends Model
         return $this->hasMany(CategoryFaq::class)->orderBy('sort_order');
     }
 
-    public function destinationLinks(): HasMany
-    {
-        return $this->hasMany(CategoryDestination::class)->orderBy('sort_order');
-    }
-
-    public function attractionLinks()
-    {
-        return $this->hasMany(CategoryAttraction::class)->orderBy('sort_order');
-    }
-
 }
