@@ -142,13 +142,6 @@ class TourPackage extends Model
         return $this->hasMany(TourPackageFaq::class)->orderBy('sort_order');
     }
 
-    public function reviews(): HasMany
-    {
-        return $this->hasMany(TourPackageReview::class)
-            ->where('status', 'approved')
-            ->latest();
-    }
-
     public function enquiries(): HasMany
     {
         return $this->hasMany(TourPackageEnquiry::class);
@@ -173,6 +166,11 @@ class TourPackage extends Model
         return $this->belongsToMany(Activity::class, 'tour_package_activity')
             ->withPivot('sort_order')
             ->orderByPivot('sort_order');
+    }
+
+    public function reviews()
+    {
+        return $this->morphMany(Review::class, 'reviewable')->where('status', 'published');
     }
 
 }

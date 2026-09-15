@@ -13,8 +13,10 @@ use App\Http\Controllers\Admin\{
     HotelController,
     CategoryController,
     SubCategoryController,
-    TourPackageController
-
+    TourPackageController,
+    ReviewController,
+    ActivityCategoryController,
+    TourPackageEnquiryController
 };
 
 use Illuminate\Support\Facades\Route;
@@ -40,7 +42,7 @@ Route::controller(FrontController::class)->group(function () {
     Route::get('/activities/{slug}', 'activitiesDetail')->name('activities.show');
 
 
-    Route::post('/reviews', 'reviewStore')->name('reviews.store');
+    Route::post('/reviews', 'reviewStore')->name('review.store');
     Route::post('/enquiries', 'enquiryStore')->name('enquiries.store');
 });
 
@@ -64,12 +66,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::resource('destinations', DestinationController::class);
         Route::resource('attractions', AttractionController::class);
+        Route::resource('activity-categories', ActivityCategoryController::class);
         Route::resource('activities', ActivityController::class);
 
         Route::resource('hotels', HotelController::class);
         Route::resource('categories', CategoryController::class);
         Route::resource('subcategories', SubCategoryController::class);
         Route::resource('tourpackages', TourPackageController::class);
+
+        Route::resource('reviews', ReviewController::class);
+        Route::get('reviews/entities/{type}', [ReviewController::class, 'entitiesByType'])->name('reviews.entities');
 
         // Admin Settings routes
         Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');
@@ -78,6 +84,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/settings/google', [AdminSettingController::class, 'googleSettingStore'])->name('settings.google');
         Route::post('/settings/sms', [AdminSettingController::class, 'smsSettingStore'])->name('settings.sms');
         Route::post('/settings/sms/test', [AdminSettingController::class, 'smsSettingTest'])->name('settings.sms.test');
+
+        Route::resource('package-enquiries', TourPackageEnquiryController::class)->only(['index', 'show', 'destroy']);
+        Route::patch('package-enquiries/{package_enquiry}/status', [TourPackageEnquiryController::class, 'updateStatus'])->name('package-enquiries.status');
 
         Route::prefix('seo-setting')->name('seo-setting.')->group(function () {
             Route::get('/', [SeoSettingController::class, 'index'])->name('index');

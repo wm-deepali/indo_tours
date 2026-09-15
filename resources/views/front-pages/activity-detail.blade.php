@@ -466,882 +466,300 @@
             </div>
         </section>
 
-        <!-- DUBAI TOP ATTRACTIONS -->
-        <section class="dubai-attractions-sec">
-            <div class="container">
-                <div class="heading">
-                    <h3>Dubai <span>Top Attractions</span></h3>
-                </div>
+        <!-- ATTRACTION SECTION -->
+        @if($activity->attractions->isNotEmpty())
+            <section class="dubai-attractions-sec">
+                <div class="container">
+                    <div class="heading">
+                        <h3>{{ $activity->city->name ?? '' }} <span>Top Attractions</span></h3>
+                    </div>
 
-                <div class="mini-grid">
-                    <a href="/dubai/burj-khalifa/" class="mini-card">
-                        <div class="mini-img">
-                            <img loading="lazy" src="assets/images/blog/dubai.jpg" alt="Burj Khalifa" />
-                        </div>
-                        <div class="mini-content">
-                            <h6>Burj Khalifa</h6>
-                            <p>World's tallest building & observation decks</p>
-                        </div>
-                    </a>
-                    <a href="/dubai/dubai-marina/" class="mini-card">
-                        <div class="mini-img">
-                            <img loading="lazy" src="assets/images/blog/dubai.jpg" alt="Dubai Marina" />
-                        </div>
-                        <div class="mini-content">
-                            <h6>Dubai Marina</h6>
-                            <p>Waterfront promenade, cruises & dining</p>
-                        </div>
-                    </a>
-                    <a href="/dubai/palm-jumeirah/" class="mini-card">
-                        <div class="mini-img">
-                            <img loading="lazy" src="assets/images/blog/dubai.jpg" alt="Palm Jumeirah" />
-                        </div>
-                        <div class="mini-content">
-                            <h6>Palm Jumeirah</h6>
-                            <p>Iconic man-made island & luxury resorts</p>
-                        </div>
-                    </a>
-                    <a href="/dubai/dubai-frame/" class="mini-card">
-                        <div class="mini-img">
-                            <img loading="lazy" src="assets/images/blog/dubai.jpg" alt="Dubai Frame" />
-                        </div>
-                        <div class="mini-content">
-                            <h6>Dubai Frame</h6>
-                            <p>Old & new Dubai framed in one view</p>
-                        </div>
-                    </a>
-                    <a href="/dubai/dubai-aquarium/" class="mini-card">
-                        <div class="mini-img">
-                            <img loading="lazy" src="assets/images/blog/dubai.jpg" alt="Dubai Aquarium" />
-                        </div>
-                        <div class="mini-content">
-                            <h6>Dubai Aquarium & Zoo</h6>
-                            <p>Underwater tunnel & marine life encounters</p>
-                        </div>
-                    </a>
-                    <a href="/dubai/museum-of-the-future/" class="mini-card">
-                        <div class="mini-img">
-                            <img loading="lazy" src="assets/images/blog/dubai.jpg" alt="Museum of the Future" />
-                        </div>
-                        <div class="mini-content">
-                            <h6>Museum of the Future</h6>
-                            <p>Immersive tech & innovation experiences</p>
-                        </div>
-                    </a>
-                    <a href="/dubai/ain-dubai/" class="mini-card">
-                        <div class="mini-img">
-                            <img loading="lazy" src="assets/images/blog/dubai.jpg" alt="Ain Dubai" />
-                        </div>
-                        <div class="mini-content">
-                            <h6>Ain Dubai</h6>
-                            <p>World's largest observation wheel</p>
-                        </div>
-                    </a>
-                    <a href="/dubai/miracle-garden/" class="mini-card">
-                        <div class="mini-img">
-                            <img loading="lazy" src="assets/images/blog/dubai.jpg" alt="Dubai Miracle Garden" />
-                        </div>
-                        <div class="mini-content">
-                            <h6>Dubai Miracle Garden</h6>
-                            <p>World's largest natural flower garden</p>
-                        </div>
-                    </a>
+                    <div class="mini-grid">
+                        @foreach($activity->attractions as $attraction)
+                            <a href="{{ route('attraction.show', $attraction->slug) }}" class="mini-card">
+                                <div class="mini-img">
+                                    <img loading="lazy"
+                                        src="{{ $attraction->image ? asset('storage/' . $attraction->image) : asset('assets/images/blog/dubai.jpg') }}"
+                                        alt="{{ $attraction->name }}" />
+                                </div>
+                                <div class="mini-content">
+                                    <h6>{{ $attraction->name }}</h6>
+                                    <p>{{ $attraction->short_description }}</p>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        @endif
 
+        <!-- REVIEW SECTION -->
         <section class="detail-secF">
             <div class="heading">
                 <h3>Traveler <span>Reviews</span></h3>
                 <a href="javascript:void()" class="btn btn-secondary" data-model=".review_pop">Write a Review</a>
             </div>
 
-            <div class="grid">
-                <div class="rating-wrapper">
-                    <h2>4.7</h2>
-                    <div class="stars">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z">
-                            </path>
-                        </svg>
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z">
-                            </path>
-                        </svg>
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z">
-                            </path>
-                        </svg>
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z">
-                            </path>
-                        </svg>
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z">
-                            </path>
-                        </svg>
+            @php
+                $reviewCount = $activity->reviews->count();
+                $avgRating = $reviewCount ? round($activity->reviews->avg('rating'), 1) : 0;
+
+                $ratingCounts = [5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0];
+                foreach ($activity->reviews as $r) {
+                    $star = (int) round($r->rating);
+                    if (isset($ratingCounts[$star])) {
+                        $ratingCounts[$star]++;
+                    }
+                }
+            @endphp
+
+            @if($reviewCount)
+                <div class="grid">
+                    <div class="rating-wrapper">
+                        <h2>{{ $avgRating }}</h2>
+                        <div class="stars">
+                            @for($i = 0; $i < 5; $i++)
+                                <svg viewBox="0 0 24 24" fill="currentColor"
+                                    style="{{ $i < round($avgRating) ? '' : 'opacity:.3' }}">
+                                    <path
+                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z">
+                                    </path>
+                                </svg>
+                            @endfor
+                        </div>
+
+                        <p class="total-reviews">{{ $reviewCount }} Reviews</p>
+
+                        <div class="rating-bars">
+                            @for($star = 5; $star >= 1; $star--)
+                                @php
+                                    $count = $ratingCounts[$star];
+                                    $percent = $reviewCount ? round(($count / $reviewCount) * 100) : 0;
+                                @endphp
+                                <div class="bar-row">
+                                    <span class="label">{{ $star }}</span>
+                                    <div class="bar-track">
+                                        <div class="bar-fill" style="width: {{ $percent }}%"></div>
+                                    </div>
+                                    <span class="count">{{ $count }}</span>
+                                </div>
+                            @endfor
+                        </div>
                     </div>
 
-                    <p class="total-reviews">350 Reviews</p>
+                    <div class="swiper-wrap">
+                        <div class="swiper reviewSlider">
+                            <div class="swiper-wrapper">
+                                @foreach($activity->reviews as $review)
+                                    <div class="swiper-slide">
+                                        <div class="card">
+                                            <div class="header">
+                                                @if($review->photo)
+                                                    <img loading="lazy" src="{{ asset('storage/' . $review->photo) }}"
+                                                        alt="{{ $review->full_name }}" />
+                                                @else
+                                                    <div class="avatar-initials">{{ $review->initials() }}</div>
+                                                @endif
 
-                    <div class="rating-bars">
-                        <div class="bar-row">
-                            <span class="label">5</span>
-                            <div class="bar-track">
-                                <div class="bar-fill" style="width: 78%"></div>
+                                                <div class="name">
+                                                    <h6>{{ $review->full_name }}</h6>
+                                                    <p>{{ $review->designation ?: 'Traveller' }}</p>
+                                                </div>
+
+                                                <div class="quotes">
+                                                    <svg width="34" height="26" viewBox="0 0 44 34" fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path
+                                                            d="M4.98462 0.5H17.7346C18.1656 0.5 18.5793 0.670839 18.884 0.975586C19.1888 1.28033 19.3596 1.69402 19.3596 2.125V19.1748L19.3635 19.1973C19.3641 19.2053 19.3657 19.216 19.3665 19.2295C19.3688 19.2693 19.3712 19.3295 19.3733 19.4082C19.3775 19.5654 19.3794 19.795 19.3684 20.084C19.3464 20.6625 19.2751 21.4755 19.0823 22.4189C18.6962 24.3078 17.8253 26.6999 15.8987 28.79C13.0414 31.8876 8.68419 33.5 2.85962 33.5H1.23462V28.417L2.53833 28.1582H2.53931C5.54333 27.5578 7.72977 26.3475 8.91138 24.4844L8.91431 24.4785C9.51092 23.5111 9.85011 22.407 9.89966 21.2715L9.9231 20.75H2.85962C2.42864 20.75 2.01495 20.5792 1.71021 20.2744C1.40546 19.9697 1.23462 19.556 1.23462 19.125V4.25C1.23462 2.18227 2.91689 0.5 4.98462 0.5ZM28.3743 0.5H41.1243C41.5552 0.5 41.9689 0.670911 42.2737 0.975586C42.5784 1.28033 42.7493 1.69402 42.7493 2.125V19.1748L42.7532 19.1973C42.7538 19.2053 42.7553 19.2161 42.7561 19.2295C42.7584 19.2693 42.7609 19.3296 42.7629 19.4082C42.7671 19.5654 42.7691 19.7951 42.7581 20.084C42.7359 20.6625 42.6639 21.4755 42.4709 22.4189C42.0846 24.3078 41.214 26.6999 39.2883 28.79C36.431 31.8876 32.0738 33.5 26.2493 33.5H24.6243V28.417L25.929 28.1582C28.9331 27.5578 31.1194 26.3475 32.301 24.4844L32.304 24.4785C32.9006 23.5111 33.2398 22.407 33.2893 21.2715L33.3127 20.75H26.2493C25.8185 20.7499 25.4055 20.5789 25.1008 20.2744C24.7961 19.9697 24.6243 19.556 24.6243 19.125V4.25C24.6243 2.18234 26.3066 0.500123 28.3743 0.5Z"
+                                                            fill="white" stroke="#D1D1D1" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+
+                                            <p class="quote">"{{ $review->review }}"</p>
+
+                                            <div class="stars">
+                                                @for($i = 0; $i < 5; $i++)
+                                                    <svg viewBox="0 0 24 24" fill="currentColor"
+                                                        style="{{ $i < $review->rating ? '' : 'opacity:.3' }}">
+                                                        <path
+                                                            d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
+                                                    </svg>
+                                                @endfor
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
-                            <span class="count">273</span>
                         </div>
-                        <div class="bar-row">
-                            <span class="label">4</span>
-                            <div class="bar-track">
-                                <div class="bar-fill" style="width: 16%"></div>
+
+                        <div class="swiper-group">
+                            <div class="progress-track">
+                                <div class="swiper-pagination"></div>
                             </div>
-                            <span class="count">56</span>
-                        </div>
-                        <div class="bar-row">
-                            <span class="label">3</span>
-                            <div class="bar-track">
-                                <div class="bar-fill" style="width: 4%"></div>
+                            <div class="btns">
+                                <button type="button" class="review-prev" aria-label="Previous review">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                                        <path fill="#ffff"
+                                            d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
+                                    </svg>
+                                </button>
+                                <button type="button" class="review-next" aria-label="Next review">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                                        <path fill="#ffff"
+                                            d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
+                                    </svg>
+                                </button>
                             </div>
-                            <span class="count">14</span>
-                        </div>
-                        <div class="bar-row">
-                            <span class="label">2</span>
-                            <div class="bar-track">
-                                <div class="bar-fill" style="width: 1%"></div>
-                            </div>
-                            <span class="count">4</span>
-                        </div>
-                        <div class="bar-row">
-                            <span class="label">1</span>
-                            <div class="bar-track">
-                                <div class="bar-fill" style="width: 1%"></div>
-                            </div>
-                            <span class="count">3</span>
                         </div>
                     </div>
                 </div>
-
-                <div class="swiper-wrap">
-                    <div class="swiper reviewSlider">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="card">
-                                    <div class="header">
-                                        <img loading="lazy" src="https://randomuser.me/api/portraits/women/65.jpg"
-                                            alt="Agnese Rudzinska" />
-                                        <div class="name">
-                                            <h6>Agnese Rudzinska</h6>
-                                            <p>Traveller, Delhi</p>
-                                        </div>
-                                        <div class="quotes">
-                                            <svg width="34" height="26" viewBox="0 0 44 34" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M4.98462 0.5H17.7346C18.1656 0.5 18.5793 0.670839 18.884 0.975586C19.1888 1.28033 19.3596 1.69402 19.3596 2.125V19.1748L19.3635 19.1973C19.3641 19.2053 19.3657 19.216 19.3665 19.2295C19.3688 19.2693 19.3712 19.3295 19.3733 19.4082C19.3775 19.5654 19.3794 19.795 19.3684 20.084C19.3464 20.6625 19.2751 21.4755 19.0823 22.4189C18.6962 24.3078 17.8253 26.6999 15.8987 28.79C13.0414 31.8876 8.68419 33.5 2.85962 33.5H1.23462V28.417L2.53833 28.1582H2.53931C5.54333 27.5578 7.72977 26.3475 8.91138 24.4844L8.91431 24.4785C9.51092 23.5111 9.85011 22.407 9.89966 21.2715L9.9231 20.75H2.85962C2.42864 20.75 2.01495 20.5792 1.71021 20.2744C1.40546 19.9697 1.23462 19.556 1.23462 19.125V4.25C1.23462 2.18227 2.91689 0.5 4.98462 0.5ZM28.3743 0.5H41.1243C41.5552 0.5 41.9689 0.670911 42.2737 0.975586C42.5784 1.28033 42.7493 1.69402 42.7493 2.125V19.1748L42.7532 19.1973C42.7538 19.2053 42.7553 19.2161 42.7561 19.2295C42.7584 19.2693 42.7609 19.3296 42.7629 19.4082C42.7671 19.5654 42.7691 19.7951 42.7581 20.084C42.7359 20.6625 42.6639 21.4755 42.4709 22.4189C42.0846 24.3078 41.214 26.6999 39.2883 28.79C36.431 31.8876 32.0738 33.5 26.2493 33.5H24.6243V28.417L25.929 28.1582C28.9331 27.5578 31.1194 26.3475 32.301 24.4844L32.304 24.4785C32.9006 23.5111 33.2398 22.407 33.2893 21.2715L33.3127 20.75H26.2493C25.8185 20.7499 25.4055 20.5789 25.1008 20.2744C24.7961 19.9697 24.6243 19.556 24.6243 19.125V4.25C24.6243 2.18234 26.3066 0.500123 28.3743 0.5Z"
-                                                    fill="white" stroke="#D1D1D1" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <p class="quote">
-                                        "Everything was great, no waiting. Beautiful sunrise and
-                                        perfect views. Coffee and snack after. Great experience,
-                                        thank you!"
-                                    </p>
-                                    <div class="stars">
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="card">
-                                    <div class="header">
-                                        <img loading="lazy" src="https://randomuser.me/api/portraits/men/32.jpg"
-                                            alt="Mahesh Krishnan" />
-                                        <div class="name">
-                                            <h6>Mahesh Krishnan</h6>
-                                            <p>Traveller, Mumbai</p>
-                                        </div>
-                                        <div class="quotes">
-                                            <svg width="34" height="26" viewBox="0 0 44 34" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M4.98462 0.5H17.7346C18.1656 0.5 18.5793 0.670839 18.884 0.975586C19.1888 1.28033 19.3596 1.69402 19.3596 2.125V19.1748L19.3635 19.1973C19.3641 19.2053 19.3657 19.216 19.3665 19.2295C19.3688 19.2693 19.3712 19.3295 19.3733 19.4082C19.3775 19.5654 19.3794 19.795 19.3684 20.084C19.3464 20.6625 19.2751 21.4755 19.0823 22.4189C18.6962 24.3078 17.8253 26.6999 15.8987 28.79C13.0414 31.8876 8.68419 33.5 2.85962 33.5H1.23462V28.417L2.53833 28.1582H2.53931C5.54333 27.5578 7.72977 26.3475 8.91138 24.4844L8.91431 24.4785C9.51092 23.5111 9.85011 22.407 9.89966 21.2715L9.9231 20.75H2.85962C2.42864 20.75 2.01495 20.5792 1.71021 20.2744C1.40546 19.9697 1.23462 19.556 1.23462 19.125V4.25C1.23462 2.18227 2.91689 0.5 4.98462 0.5ZM28.3743 0.5H41.1243C41.5552 0.5 41.9689 0.670911 42.2737 0.975586C42.5784 1.28033 42.7493 1.69402 42.7493 2.125V19.1748L42.7532 19.1973C42.7538 19.2053 42.7553 19.2161 42.7561 19.2295C42.7584 19.2693 42.7609 19.3296 42.7629 19.4082C42.7671 19.5654 42.7691 19.7951 42.7581 20.084C42.7359 20.6625 42.6639 21.4755 42.4709 22.4189C42.0846 24.3078 41.214 26.6999 39.2883 28.79C36.431 31.8876 32.0738 33.5 26.2493 33.5H24.6243V28.417L25.929 28.1582C28.9331 27.5578 31.1194 26.3475 32.301 24.4844L32.304 24.4785C32.9006 23.5111 33.2398 22.407 33.2893 21.2715L33.3127 20.75H26.2493C25.8185 20.7499 25.4055 20.5789 25.1008 20.2744C24.7961 19.9697 24.6243 19.556 24.6243 19.125V4.25C24.6243 2.18234 26.3066 0.500123 28.3743 0.5Z"
-                                                    fill="white" stroke="#D1D1D1" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <p class="quote">
-                                        "The most attractive part of the experience was the ease
-                                        of booking. Customer service and mobile assistance were
-                                        worth mentioning."
-                                    </p>
-                                    <div class="stars">
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="card">
-                                    <div class="header">
-                                        <img loading="lazy" src="https://randomuser.me/api/portraits/men/45.jpg"
-                                            alt="Ashwin Hulawale" />
-                                        <div class="name">
-                                            <h6>Ashwin Hulawale</h6>
-                                            <p>Traveller, Pune</p>
-                                        </div>
-                                        <div class="quotes">
-                                            <svg width="34" height="26" viewBox="0 0 44 34" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M4.98462 0.5H17.7346C18.1656 0.5 18.5793 0.670839 18.884 0.975586C19.1888 1.28033 19.3596 1.69402 19.3596 2.125V19.1748L19.3635 19.1973C19.3641 19.2053 19.3657 19.216 19.3665 19.2295C19.3688 19.2693 19.3712 19.3295 19.3733 19.4082C19.3775 19.5654 19.3794 19.795 19.3684 20.084C19.3464 20.6625 19.2751 21.4755 19.0823 22.4189C18.6962 24.3078 17.8253 26.6999 15.8987 28.79C13.0414 31.8876 8.68419 33.5 2.85962 33.5H1.23462V28.417L2.53833 28.1582H2.53931C5.54333 27.5578 7.72977 26.3475 8.91138 24.4844L8.91431 24.4785C9.51092 23.5111 9.85011 22.407 9.89966 21.2715L9.9231 20.75H2.85962C2.42864 20.75 2.01495 20.5792 1.71021 20.2744C1.40546 19.9697 1.23462 19.556 1.23462 19.125V4.25C1.23462 2.18227 2.91689 0.5 4.98462 0.5ZM28.3743 0.5H41.1243C41.5552 0.5 41.9689 0.670911 42.2737 0.975586C42.5784 1.28033 42.7493 1.69402 42.7493 2.125V19.1748L42.7532 19.1973C42.7538 19.2053 42.7553 19.2161 42.7561 19.2295C42.7584 19.2693 42.7609 19.3296 42.7629 19.4082C42.7671 19.5654 42.7691 19.7951 42.7581 20.084C42.7359 20.6625 42.6639 21.4755 42.4709 22.4189C42.0846 24.3078 41.214 26.6999 39.2883 28.79C36.431 31.8876 32.0738 33.5 26.2493 33.5H24.6243V28.417L25.929 28.1582C28.9331 27.5578 31.1194 26.3475 32.301 24.4844L32.304 24.4785C32.9006 23.5111 33.2398 22.407 33.2893 21.2715L33.3127 20.75H26.2493C25.8185 20.7499 25.4055 20.5789 25.1008 20.2744C24.7961 19.9697 24.6243 19.556 24.6243 19.125V4.25C24.6243 2.18234 26.3066 0.500123 28.3743 0.5Z"
-                                                    fill="white" stroke="#D1D1D1" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <p class="quote">
-                                        "Had an amazing experience! Booking was easy and we could
-                                        see and pick our slot online. Truly special visit."
-                                    </p>
-                                    <div class="stars">
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="card">
-                                    <div class="header">
-                                        <img loading="lazy" src="https://randomuser.me/api/portraits/women/22.jpg"
-                                            alt="C Kumar" />
-                                        <div class="name">
-                                            <h6>C Kumar</h6>
-                                            <p>Traveller, Bengaluru</p>
-                                        </div>
-                                        <div class="quotes">
-                                            <svg width="34" height="26" viewBox="0 0 44 34" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M4.98462 0.5H17.7346C18.1656 0.5 18.5793 0.670839 18.884 0.975586C19.1888 1.28033 19.3596 1.69402 19.3596 2.125V19.1748L19.3635 19.1973C19.3641 19.2053 19.3657 19.216 19.3665 19.2295C19.3688 19.2693 19.3712 19.3295 19.3733 19.4082C19.3775 19.5654 19.3794 19.795 19.3684 20.084C19.3464 20.6625 19.2751 21.4755 19.0823 22.4189C18.6962 24.3078 17.8253 26.6999 15.8987 28.79C13.0414 31.8876 8.68419 33.5 2.85962 33.5H1.23462V28.417L2.53833 28.1582H2.53931C5.54333 27.5578 7.72977 26.3475 8.91138 24.4844L8.91431 24.4785C9.51092 23.5111 9.85011 22.407 9.89966 21.2715L9.9231 20.75H2.85962C2.42864 20.75 2.01495 20.5792 1.71021 20.2744C1.40546 19.9697 1.23462 19.556 1.23462 19.125V4.25C1.23462 2.18227 2.91689 0.5 4.98462 0.5ZM28.3743 0.5H41.1243C41.5552 0.5 41.9689 0.670911 42.2737 0.975586C42.5784 1.28033 42.7493 1.69402 42.7493 2.125V19.1748L42.7532 19.1973C42.7538 19.2053 42.7553 19.2161 42.7561 19.2295C42.7584 19.2693 42.7609 19.3296 42.7629 19.4082C42.7671 19.5654 42.7691 19.7951 42.7581 20.084C42.7359 20.6625 42.6639 21.4755 42.4709 22.4189C42.0846 24.3078 41.214 26.6999 39.2883 28.79C36.431 31.8876 32.0738 33.5 26.2493 33.5H24.6243V28.417L25.929 28.1582C28.9331 27.5578 31.1194 26.3475 32.301 24.4844L32.304 24.4785C32.9006 23.5111 33.2398 22.407 33.2893 21.2715L33.3127 20.75H26.2493C25.8185 20.7499 25.4055 20.5789 25.1008 20.2744C24.7961 19.9697 24.6243 19.556 24.6243 19.125V4.25C24.6243 2.18234 26.3066 0.500123 28.3743 0.5Z"
-                                                    fill="white" stroke="#D1D1D1" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <p class="quote">
-                                        "Ticket booking experience was excellent, even the price
-                                        was economical compared to other sites. Overall a great
-                                        experience."
-                                    </p>
-                                    <div class="stars">
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-group">
-                        <div class="progress-track">
-                            <div class="swiper-pagination"></div>
-                        </div>
-                        <div class="btns">
-                            <button type="button" class="review-prev" aria-label="Previous review">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                    <path fill="#ffff"
-                                        d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
-                                </svg>
-                            </button>
-                            <button type="button" class="review-next" aria-label="Next review">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                    <path fill="#ffff"
-                                        d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @else
+                <p style="padding: 20px 0; color:#6d7175;">No reviews yet. Be the first to share your experience!</p>
+            @endif
         </section>
 
-        <section class="all-reviews-grid-sec" id="all-reviews">
-            <div class="container">
-                <div class="heading">
-                    <h3>All <span>Reviews</span></h3>
-                </div>
-
-                <div class="reviews-grid">
-                    <div class="review-card">
-                        <div class="review-top">
-                            <div class="reviewer">
-                                <img loading="lazy" src="https://randomuser.me/api/portraits/women/65.jpg"
-                                    alt="Agnese Rudzinska" />
-                                <div class="reviewer-info">
-                                    <h6>Agnese Rudzinska</h6>
-                                    <span class="review-date">Excellent · 2 weeks ago</span>
-                                </div>
-                            </div>
-                            <div class="stars">
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                            </div>
-                        </div>
-                        <p class="review-text">
-                            Everything was great, no waiting. Beautiful sunrise and perfect
-                            views. Coffee and snack after. Great experience, thank you!
-                        </p>
+        <!-- ALL REVIEW SECTION -->
+        @if($activity->reviews->isNotEmpty())
+            <section class="all-reviews-grid-sec" id="all-reviews">
+                <div class="container">
+                    <div class="heading">
+                        <h3>All <span>Reviews</span></h3>
                     </div>
 
-                    <div class="review-card">
-                        <div class="review-top">
-                            <div class="reviewer">
-                                <img loading="lazy" src="https://randomuser.me/api/portraits/men/32.jpg"
-                                    alt="Mahesh Krishnan" />
-                                <div class="reviewer-info">
-                                    <h6>Mahesh Krishnan</h6>
-                                    <span class="review-date">Excellent · 1 month ago</span>
-                                </div>
-                            </div>
-                            <div class="stars">
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                            </div>
-                        </div>
-                        <p class="review-text">
-                            The most attractive part of the experience was the ease of
-                            booking. Customer service and mobile assistance were worth
-                            mentioning. Booked for my friends and family, and they were
-                            happy throughout.
-                        </p>
-                    </div>
+                    <div class="reviews-grid">
+                        @foreach($activity->reviews as $review)
+                            <div class="review-card">
+                                <div class="review-top">
+                                    <div class="reviewer">
+                                        @if($review->photo)
+                                            <img loading="lazy" src="{{ asset('storage/' . $review->photo) }}"
+                                                alt="{{ $review->full_name }}" />
+                                        @else
+                                            <div class="avatar-initials">{{ $review->initials() }}</div>
+                                        @endif
 
-                    <div class="review-card">
-                        <div class="review-top">
-                            <div class="reviewer">
-                                <img loading="lazy" src="https://randomuser.me/api/portraits/men/45.jpg"
-                                    alt="Ashwin Hulawale" />
-                                <div class="reviewer-info">
-                                    <h6>Ashwin Hulawale</h6>
-                                    <span class="review-date">Excellent · 3 weeks ago</span>
-                                </div>
-                            </div>
-                            <div class="stars">
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                            </div>
-                        </div>
-                        <p class="review-text">
-                            Had an amazing experience! Booking was easy — could see and pick
-                            the slot online, and we were made to feel truly special
-                            throughout the visit.
-                        </p>
-                    </div>
+                                        <div class="reviewer-info">
+                                            <h6>{{ $review->full_name }}</h6>
+                                            <span class="review-date">{{ $review->created_at->diffForHumans() }}</span>
+                                        </div>
+                                    </div>
 
-                    <div class="review-card">
-                        <div class="review-top">
-                            <div class="reviewer">
-                                <img loading="lazy" src="https://randomuser.me/api/portraits/women/22.jpg" alt="C Kumar" />
-                                <div class="reviewer-info">
-                                    <h6>C Kumar</h6>
-                                    <span class="review-date">Excellent · 1 week ago</span>
+                                    <div class="stars">
+                                        @for($i = 0; $i < 5; $i++)
+                                            <svg viewBox="0 0 24 24" fill="currentColor"
+                                                style="{{ $i < $review->rating ? '' : 'opacity:.3' }}">
+                                                <path
+                                                    d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
+                                            </svg>
+                                        @endfor
+                                    </div>
                                 </div>
+                                <p class="review-text">{{ $review->review }}</p>
                             </div>
-                            <div class="stars">
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                            </div>
-                        </div>
-                        <p class="review-text">
-                            Ticket booking experience was excellent, and even the price was
-                            economical compared to other sites. Overall a great experience
-                            booking through the official listing.
-                        </p>
-                    </div>
-
-                    <div class="review-card">
-                        <div class="review-top">
-                            <div class="reviewer">
-                                <img loading="lazy" src="https://randomuser.me/api/portraits/women/48.jpg"
-                                    alt="Priya Sharma" />
-                                <div class="reviewer-info">
-                                    <h6>Priya Sharma</h6>
-                                    <span class="review-date">Excellent · 4 days ago</span>
-                                </div>
-                            </div>
-                            <div class="stars">
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                            </div>
-                        </div>
-                        <p class="review-text">
-                            Booked the Sky level package for our anniversary — the sunset
-                            view from the 148th floor lounge was worth every rupee. Staff
-                            made it feel really special.
-                        </p>
-                    </div>
-
-                    <div class="review-card">
-                        <div class="review-top">
-                            <div class="reviewer">
-                                <img loading="lazy" src="https://randomuser.me/api/portraits/men/51.jpg"
-                                    alt="Rohan Verma" />
-                                <div class="reviewer-info">
-                                    <h6>Rohan Verma</h6>
-                                    <span class="review-date">Very Good · 5 days ago</span>
-                                </div>
-                            </div>
-                            <div class="stars">
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                                <svg viewBox="0 0 24 24" fill="currentColor" style="opacity: 0.3">
-                                    <path
-                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                </svg>
-                            </div>
-                        </div>
-                        <p class="review-text">
-                            Good experience overall, lift access was quick. Would have liked
-                            a bit more time at the top before being moved along by staff.
-                        </p>
+                        @endforeach
                     </div>
                 </div>
+            </section>
+        @endif
 
-                <div class="reviews-more">
-                    <button type="button" class="btn btn-outline-primary btn-show-more">
-                        Load More Reviews
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= RELATED DUBAI ACTIVITIES SWIPER ================= -->
+        <!-- RELATED ACTIVITIES SECTION -->
         <section class="related-tour-package">
             <div class="container">
                 <div class="heading">
-                    <h3>Dubai <span>Activities</span></h3>
+                    <h3>{{ $activity->city->name ?? ($activity->country->name ?? '') }} <span>Activities</span></h3>
                     <p>
-                        Discover Dubai's most popular experiences and book unforgettable
-                        activities.
+                        Discover {{ $activity->city->name ?? ($activity->country->name ?? 'more') }}'s most popular
+                        experiences and book unforgettable activities.
                     </p>
                 </div>
 
-                <div class="swiper-wrap">
-                    <div class="swiper thirdSilder">
-                        <div class="swiper-wrapper">
-                            <!-- Card 1 -->
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="activities-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/blog/dubai.jpg" alt="Dubai Desert Safari" />
-                                        <span class="save">Bestseller</span>
-                                    </a>
+                @if($relatedActivities->isNotEmpty())
+                    <div class="swiper-wrap">
+                        <div class="swiper thirdSilder">
+                            <div class="swiper-wrapper">
+                                @foreach($relatedActivities as $related)
+                                    <div class="swiper-slide">
+                                        <div class="trip_card">
+                                            <a href="/{{ $related->city->slug ?? '' }}/activities/{{ $related->slug }}/"
+                                                class="img">
+                                                <img loading="lazy"
+                                                    src="{{ $related->main_image ? asset('storage/' . $related->main_image) : asset('assets/images/blog/dubai.jpg') }}"
+                                                    alt="{{ $related->name }}" />
+                                                @if($related->banner_tag)
+                                                    <span class="save">{{ $related->banner_tag }}</span>
+                                                @endif
+                                            </a>
 
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>6 Hours</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.7</span>
-                                                <em>(320)</em>
+                                            <div class="content">
+                                                <div class="rating">
+                                                    @if($related->duration_text)
+                                                        <span>{{ $related->duration_text }}</span>
+                                                    @endif
+
+                                                    @if($related->rating)
+                                                        <div class="star">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                                <path
+                                                                    d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
+                                                            </svg>
+                                                            <span>{{ number_format($related->rating, 1) }}</span>
+                                                            <em>({{ $related->review_count ?? 0 }})</em>
+                                                        </div>
+                                                    @endif
+                                                </div>
+
+                                                <h3>
+                                                    <a href="/{{ $related->city->slug ?? '' }}/activities/{{ $related->slug }}/">
+                                                        {{ $related->name }}
+                                                    </a>
+                                                </h3>
+
+                                                @if($related->starting_price)
+                                                    <p class="price">INR {{ number_format($related->starting_price) }}</p>
+                                                @endif
+
+                                                <div class="btns">
+                                                    <a href="tel:+911234567890" class="btn btn-outline-primary">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+                                                            <path
+                                                                d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
+                                                        </svg>
+                                                    </a>
+
+                                                    <button data-model=".enquire-pop" class="btn btn-primary">
+                                                        Enquire Now
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-
-                                        <h3>
-                                            <a href="activities-detail.html" target="_blank">
-                                                Desert Safari
-                                            </a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 4,500</s>
-                                            <span class="saveChip">Save INR 800</span>
-                                        </div>
-
-                                        <p class="price">INR 3,700</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- Card 2 -->
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="activities-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/blog/dubai.jpg"
-                                            alt="Dubai Marina Dinner Cruise" />
-                                        <span class="save">Popular</span>
-                                    </a>
-
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>2 Hours</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(210)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="activities-detail.html" target="_blank">
-                                                Marina Dinner Cruise
-                                            </a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 3,300</s>
-                                            <span class="saveChip">Save INR 600</span>
-                                        </div>
-
-                                        <p class="price">INR 2,700</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Card 3 -->
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="activities-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/blog/dubai.jpg" alt="Burj Khalifa Dubai" />
-                                        <span class="save">Iconic</span>
-                                    </a>
-
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>1.5 Hours</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.8</span>
-                                                <em>(540)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="activities-detail.html" target="_blank">
-                                                Burj Khalifa At The Top
-                                            </a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 5,200</s>
-                                            <span class="saveChip">Save INR 700</span>
-                                        </div>
-
-                                        <p class="price">INR 4,500</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Card 4 -->
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="activities-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="assets/images/blog/dubai.jpg"
-                                            alt="Dubai Luxury Yacht Cruise" />
-                                        <span class="save">Luxury</span>
-                                    </a>
-
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>3 Hours</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.7</span>
-                                                <em>(260)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="activities-detail.html" target="_blank">
-                                                Luxury Yacht Cruise
-                                            </a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 8,500</s>
-                                            <span class="saveChip">Save INR 1,200</span>
-                                        </div>
-
-                                        <p class="price">INR 7,300</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 1 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
-                    </div>
 
-                    <div class="swiper-group">
-                        <button type="button" class="thirdSilder-prev btn-prev" aria-label="Previous">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                <path fill="#fff"
-                                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
-                            </svg>
-                        </button>
+                        <div class="swiper-group">
+                            <button type="button" class="thirdSilder-prev btn-prev" aria-label="Previous">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                                    <path fill="#fff"
+                                        d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
+                                </svg>
+                            </button>
 
-                        <button type="button" class="thirdSilder-next btn-next" aria-label="Next">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                <path fill="#fff"
-                                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
-                            </svg>
-                        </button>
+                            <button type="button" class="thirdSilder-next btn-next" aria-label="Next">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                                    <path fill="#fff"
+                                        d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                </div>
+                @endif
             </div>
         </section>
 
+        <!-- FAQ SECTION -->
         <section class="attraction_accordion" id="faqSection">
             <div class="container">
                 <div class="heading">
@@ -1365,10 +783,11 @@
                 </div>
             </div>
         </section>
+
     </main>
 
+    <!-- REVIEW MODAL -->
     <div class="overlay"></div>
-
     <div class="model review_pop">
         <div class="model-body">
             <div class="dialog-wrapper">
@@ -1386,52 +805,101 @@
                     <p>Share your travel experience with other travellers.</p>
                 </div>
 
-                <div class="form form-grid">
+                <form id="reviewForm" class="form form-grid" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="activity_id" value="{{ $activity->id }}">
+                    <input type="hidden" name="reviewable_type" value="activity">
+                    <input type="hidden" name="reviewable_id" value="{{ $activity->id }}">
+
                     <div class="star-rating">
                         <p class="rating-label">Your Rating</p>
-
                         <div class="stars">
-                            <input type="radio" name="rating" value="5" id="star5" />
+                            <input type="radio" name="rating" value="5" id="star5" required />
                             <label for="star5" title="5 stars">★</label>
-
                             <input type="radio" name="rating" value="4" id="star4" />
                             <label for="star4" title="4 stars">★</label>
-
                             <input type="radio" name="rating" value="3" id="star3" />
                             <label for="star3" title="3 stars">★</label>
-
                             <input type="radio" name="rating" value="2" id="star2" />
                             <label for="star2" title="2 stars">★</label>
-
                             <input type="radio" name="rating" value="1" id="star1" />
                             <label for="star1" title="1 star">★</label>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <input type="text" id="fullName" name="fullName" placeholder="" autocomplete="off" />
+                        <input type="text" id="fullName" name="full_name" placeholder="" autocomplete="off" required />
                         <label for="fullName">Full Name*</label>
                     </div>
 
                     <div class="form-group">
-                        <input type="text" id="destination" name="destination" placeholder="" autocomplete="off" />
-                        <label for="destination">Destination*</label>
+                        <input type="text" id="designation" name="designation" placeholder="" autocomplete="off" />
+                        <label for="designation">Designation (optional)</label>
                     </div>
 
                     <div class="form-group">
-                        <textarea id="reviewMessage" name="reviewMessage" class="form-control" placeholder=""></textarea>
+                        <textarea id="reviewMessage" name="review" class="form-control" placeholder="" required></textarea>
                         <label for="reviewMessage">Your Review*</label>
                     </div>
 
-                    <div class="sbmt-grp text-center">
-                        <button type="submit" class="btn btn-primary">
-                            SUBMIT REVIEW
-                        </button>
+                    <div class="form-group">
+                        <input type="file" id="reviewPhoto" name="photo" accept="image/*" />
+                        <label for="reviewPhoto">Your Photo (optional)</label>
                     </div>
-                </div>
+
+                    <div id="reviewFormAlert" class="form-alert" style="display:none;"></div>
+
+                    <div class="sbmt-grp text-center">
+                        <button type="submit" class="btn btn-primary">SUBMIT REVIEW</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-
 @endsection
+
+
+@push('scripts')
+    <script>
+        $(function () {
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+            // ---- Review form (multipart, because of the optional photo upload) ----
+            $('#reviewForm').on('submit', function (e) {
+                e.preventDefault();
+                var $form = $(this);
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: '{{ route("review.store") }}',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: { 'X-CSRF-TOKEN': csrfToken },
+                    dataType: 'json',
+                })
+                    .done(function (res) {
+                        var $alert = $('#reviewFormAlert');
+                        $alert.text(res.message || 'Thanks for sharing your experience!')
+                            .css('color', '#1a7f37').show();
+                        $form[0].reset();
+                        setTimeout(function () {
+                            $alert.hide();
+                            location.reload(); // refreshes the review list/stats with the new entry
+                        }, 1200);
+                    })
+                    .fail(function (xhr) {
+                        var message = 'Something went wrong. Please check the form and try again.';
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            message = Object.values(xhr.responseJSON.errors).flat().join(' ');
+                        }
+                        $('#reviewFormAlert').text(message).css('color', '#b22222').show();
+                    });
+            });
+
+        });
+
+    </script>
+@endpush

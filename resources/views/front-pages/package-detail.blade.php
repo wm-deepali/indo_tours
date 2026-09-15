@@ -400,6 +400,13 @@
 
                   <div class="hw-list">
                     @foreach($tourPackage->hotelStays as $stay)
+                      @php
+                        $galleries = $stay->hotel->galleries ?? collect();
+                        $mainImage = $galleries->first();
+                        $thumbs = $galleries->slice(1, 6);
+                        $remainingCount = $galleries->count() - 7;
+                      @endphp
+
                       <div class="hw-item {{ $loop->first ? 'active' : '' }}">
                         <div class="hw-daytag">
                           @if($stay->day_label)<span class="hw-day">{{ $stay->day_label }}</span>@endif
@@ -422,6 +429,16 @@
 
                           <div class="hw-hotel-name">
                             {{ $stay->hotel->name ?? '' }}
+
+                            @if($stay->hotel && $stay->hotel->rating)
+                              <span class="hw-stars">
+                                @for($i = 1; $i <= (int) $stay->hotel->rating; $i++)
+                                  <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21l1.2-6.9-5-4.9 6.9-1z" />
+                                  </svg>
+                                @endfor
+                              </span>
+                            @endif
                           </div>
 
                           @if($stay->check_in || $stay->check_out)
@@ -434,6 +451,44 @@
                                 <small>Check Out</small>
                                 <strong>{{ $stay->check_out }}</strong>
                               </div>
+                            </div>
+                          @endif
+
+                          @if($galleries->isNotEmpty())
+                            <div class="hw-gallery">
+                              <a href="{{ asset('storage/' . $mainImage->image) }}" data-fancybox="hotel-{{ $stay->id }}"
+                                class="hw-gallery-main">
+                                <img loading="lazy" src="{{ asset('storage/' . $mainImage->image) }}"
+                                  alt="{{ $stay->hotel->name ?? '' }}" />
+                                @if($stay->hotel && $stay->hotel->rating)
+                                  <span class="hw-rating-badge">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                      <path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21l1.2-6.9-5-4.9 6.9-1z" />
+                                    </svg>
+                                    {{ $stay->hotel->rating }}/5
+                                  </span>
+                                @endif
+                              </a>
+
+                              @foreach($thumbs as $index => $thumb)
+                                @php $isLastThumb = $loop->last && $remainingCount > 0; @endphp
+                                <a href="{{ asset('storage/' . $thumb->image) }}" data-fancybox="hotel-{{ $stay->id }}"
+                                  class="hw-thumb {{ $isLastThumb ? 'hw-thumb--more' : '' }}">
+                                  <img loading="lazy" src="{{ asset('storage/' . $thumb->image) }}" alt="" />
+                                  @if($isLastThumb)
+                                    <div class="hw-more-overlay">
+                                      <span>View all</span>
+                                      <strong>({{ $galleries->count() }})</strong>
+                                    </div>
+                                  @endif
+                                </a>
+                              @endforeach
+
+                              {{-- Remaining images beyond the visible thumbs, still in the fancybox group --}}
+                              @foreach($galleries->slice(7) as $extra)
+                                <a href="{{ asset('storage/' . $extra->image) }}" data-fancybox="hotel-{{ $stay->id }}"
+                                  style="display:none;"></a>
+                              @endforeach
                             </div>
                           @endif
 
@@ -750,7 +805,8 @@
             <div class="promo-right">
               <span class="countdown-label">Hurry, sale ends in</span>
 
-              <div class="countdown" id="countdown" data-end="{{ \Carbon\Carbon::parse($tourPackage->promo_end_at)->toIso8601String() }}">
+              <div class="countdown" id="countdown"
+                data-end="{{ \Carbon\Carbon::parse($tourPackage->promo_end_at)->toIso8601String() }}">
                 <div class="time-block">
                   <div class="flip" data-unit="days"><span class="digit">00</span></div>
                   <span class="unit-label">Days</span>
@@ -955,90 +1011,75 @@
       </section>
     @endif
 
-    <section class="seo-links-sec">
-      <div class="container">
-        <div class="heading">
-          <h3>Explore More <span>Leh Ladakh Expedition</span></h3>
-          <p>
-            Discover related departures, durations, destinations and experiences
-            for this Leh Ladakh trip.
-          </p>
-        </div>
-
-        <div class="seo-links-wrapper">
-          <!-- Category 01 -->
-          <div class="seo-link-block">
-            <h4>Leh Ladakh Expedition From Popular Indian Cities</h4>
-
-            <div class="seo-link-wrap">
-              <a href="javascript:void()">Leh Ladakh Tour From Delhi</a>
-              <a href="javascript:void()">Leh Ladakh Tour From Mumbai</a>
-              <a href="javascript:void()">Leh Ladakh Tour From Bangalore</a>
-              <a href="javascript:void()">Leh Ladakh Tour From Chandigarh</a>
-              <a href="javascript:void()">Leh Ladakh Tour From Pune</a>
-              <a href="javascript:void()">Leh Ladakh Tour From Ahmedabad</a>
-              <a href="javascript:void()">Leh Ladakh Tour From Jaipur</a>
-              <a href="javascript:void()">Leh Ladakh Tour From Hyderabad</a>
-              <a href="javascript:void()">Leh Ladakh Tour From Kolkata</a>
-              <a href="javascript:void()">Leh Ladakh Tour From Surat</a>
-              <a href="javascript:void()">Leh Ladakh Tour From Lucknow</a>
-              <a href="javascript:void()">Leh Ladakh Tour From Chennai</a>
-            </div>
+    <!-- HYPERLINK SECTION -->
+    @if($tourPackage->subCategory || $tourPackage->destinations->isNotEmpty() || $tourPackage->attractions->isNotEmpty() || $tourPackage->activities->isNotEmpty())
+      <section class="seo-links-sec">
+        <div class="container">
+          <div class="heading">
+            <h3>Explore More <span>{{ $tourPackage->name }}</span></h3>
+            <p>
+              Discover related categories, destinations and experiences for this {{ $tourPackage->name }} trip.
+            </p>
           </div>
 
-          <!-- Category 02 -->
-          <div class="seo-link-block">
-            <h4>Choose Your Trip Duration</h4>
+          <div class="seo-links-wrapper">
+            {{-- Category / Sub-Category --}}
+            @if($tourPackage->subCategory)
+              <div class="seo-link-block">
+                <h4>Browse By Category</h4>
+                <div class="seo-link-wrap">
+                  @if($tourPackage->subCategory->category)
+                    <a href="{{ route('category.show', $tourPackage->subCategory->category->slug) }}">
+                      {{ $tourPackage->subCategory->category->name }}
+                    </a>
+                  @endif
 
-            <div class="seo-link-wrap">
-              <a href="javascript:void()">4 Days Leh Ladakh Package</a>
-              <a href="javascript:void()">5 Days Leh Ladakh Package</a>
-              <a href="javascript:void()">6 Days Leh Ladakh Package</a>
-              <a href="javascript:void()">7 Days Leh Ladakh Package</a>
-              <a href="javascript:void()">8 Days Leh Ladakh Package</a>
-              <a href="javascript:void()">9 Days Leh Ladakh Package</a>
-              <a href="javascript:void()">10 Days Leh Ladakh Package</a>
-            </div>
-          </div>
+                  <a href="{{ route('subcategory.show', $tourPackage->subCategory->slug) }}">
+                    {{ $tourPackage->subCategory->name }}
+                  </a>
+                </div>
+              </div>
+            @endif
 
-          <!-- Category 03 -->
-          <div class="seo-link-block">
-            <h4>Destinations Covered On This Route</h4>
+            {{-- Destinations --}}
+            @if($tourPackage->destinations->isNotEmpty())
+              <div class="seo-link-block">
+                <h4>Destinations Covered On This Trip</h4>
+                <div class="seo-link-wrap">
+                  @foreach($tourPackage->destinations as $destination)
+                    <a href="{{ route('destination.show', $destination->slug) }}">{{ $destination->name }}</a>
+                  @endforeach
+                </div>
+              </div>
+            @endif
 
-            <div class="seo-link-wrap">
-              <a href="javascript:void()">Places to Visit in Leh</a>
-              <a href="javascript:void()">Nubra Valley Sightseeing</a>
-              <a href="javascript:void()">Pangong Tso Lake Tour</a>
-              <a href="javascript:void()">Manali to Leh Route Guide</a>
-              <a href="javascript:void()">Solang Valley Activities</a>
-              <a href="javascript:void()">Kasol Travel Guide</a>
-              <a href="javascript:void()">Best Time to Visit Ladakh</a>
-              <a href="javascript:void()">How to Reach Leh Ladakh</a>
-            </div>
-          </div>
+            {{-- Attractions --}}
+            @if($tourPackage->attractions->isNotEmpty())
+              <div class="seo-link-block">
+                <h4>Top Attractions On This Route</h4>
+                <div class="seo-link-wrap">
+                  @foreach($tourPackage->attractions as $attraction)
+                    <a href="{{ route('attraction.show', $attraction->slug) }}">{{ $attraction->name }}</a>
+                  @endforeach
+                </div>
+              </div>
+            @endif
 
-          <!-- Category 04 -->
-          <div class="seo-link-block">
-            <h4>More Ways To Experience This Trip</h4>
-
-            <div class="seo-link-wrap">
-              <a href="javascript:void()">Group Tours to Leh Ladakh</a>
-              <a href="javascript:void()">Bike Trip to Leh Ladakh</a>
-              <a href="javascript:void()">Family Package for Leh Ladakh</a>
-              <a href="javascript:void()">Honeymoon Package Leh Ladakh</a>
-              <a href="javascript:void()">Luxury Stays in Leh Ladakh</a>
-              <a href="javascript:void()">Budget Leh Ladakh Packages</a>
-              <a href="javascript:void()">Car Rental for Leh Ladakh</a>
-              <a href="javascript:void()">Jeep Safari to Pangong Tso</a>
-              <a href="javascript:void()">Camping Near Pangong Lake</a>
-              <a href="javascript:void()">Monsoon Sale Ladakh Deals</a>
-              <a href="javascript:void()">Weekend Getaways Near Manali</a>
-              <a href="javascript:void()">Adventure Activities in Ladakh</a>
-            </div>
+            {{-- Activities --}}
+            @if($tourPackage->activities->isNotEmpty())
+              <div class="seo-link-block">
+                <h4>Things To Do On This Trip</h4>
+                <div class="seo-link-wrap">
+                  @foreach($tourPackage->activities as $activity)
+                    <a href="{{ route('activities.show', $activity->slug) }}">{{ $activity->name }}</a>
+                  @endforeach
+                </div>
+              </div>
+            @endif
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    @endif
 
   </main>
 
@@ -1065,6 +1106,8 @@
         <form id="reviewForm" class="form form-grid" enctype="multipart/form-data">
           @csrf
           <input type="hidden" name="tour_package_id" value="{{ $tourPackage->id }}">
+          <input type="hidden" name="reviewable_type" value="tour_package">
+          <input type="hidden" name="reviewable_id" value="{{ $tourPackage->id }}">
 
           <div class="star-rating">
             <p class="rating-label">Your Rating</p>
@@ -1216,7 +1259,7 @@
         var formData = new FormData(this);
 
         $.ajax({
-          url: '{{ route("reviews.store") }}',
+          url: '{{ route("review.store") }}',
           method: 'POST',
           data: formData,
           processData: false,

@@ -42,15 +42,18 @@
             </a>
         </li>
 
-        {{-- MASTER — Categories, Sub Categories, Hotels, Tour Packages, Destinations, Attractions --}}
+        {{-- MASTER — Categories, Sub Categories, Hotels, Tour Packages, Destinations, Attractions, Activities, Activity
+        Categories --}}
         <li class="{{ request()->routeIs([
-            'admin.categories.*',
-            'admin.subcategories.*',
-            'admin.hotels.*',
-            'admin.tourpackages.*',
-            'admin.destinations.*',
-            'admin.attractions.*',
-        ]) ? 'active' : '' }}">
+    'admin.categories.*',
+    'admin.subcategories.*',
+    'admin.hotels.*',
+    'admin.tourpackages.*',
+    'admin.destinations.*',
+    'admin.attractions.*',
+    'admin.activities.*',
+    'admin.activity-categories.*',
+]) ? 'active' : '' }}">
             <a href="#"><i class="fa-solid fa-layer-group"></i> Master</a>
             <ul>
                 <li class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
@@ -83,12 +86,24 @@
                         <i class="fa-solid fa-landmark"></i> Attractions
                     </a>
                 </li>
+                <li class="{{ request()->routeIs('admin.activity-categories.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.activity-categories.index') }}">
+                        <i class="fa-solid fa-list"></i> Activity Categories
+                    </a>
+                </li>
                 <li class="{{ request()->routeIs('admin.activities.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.activities.index') }}">
-                        <i class="fa-solid fa-landmark"></i> Activities
+                        <i class="fa-solid fa-person-hiking"></i> Activities
                     </a>
                 </li>
             </ul>
+        </li>
+
+        {{-- REVIEWS --}}
+        <li class="{{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.reviews.index') }}">
+                <i class="fa-solid fa-star"></i> Reviews
+            </a>
         </li>
 
         <li class="{{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
@@ -100,6 +115,18 @@
                 <li><a href="{{ route('admin.settings.index', ['tab' => 'tracking']) }}"> Google Tracking & Pixels</a>
                 </li>
                 <li><a href="{{ route('admin.seo-setting.index') }}"> SEO Settings</a></li>
+            </ul>
+        </li>
+
+        {{-- REPORTS & INQUIRIES --}}
+        <li class="{{ request()->routeIs('admin.inquiries.*') ? 'active' : '' }}">
+            <a href="#"><i class="fa-solid fa-inbox"></i> Reports & Inquiries</a>
+            <ul>
+                <li class="{{ request()->routeIs('admin.package-enquiries.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.package-enquiries.index') }}">
+                        <i class="fa-solid fa-suitcase-rolling"></i> Package Enquiries
+                    </a>
+                </li>
             </ul>
         </li>
 

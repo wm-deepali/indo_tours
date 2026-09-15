@@ -1,15 +1,15 @@
 <?php
-// app/Models/TourPackageReview.php
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class TourPackageReview extends Model
+class Review extends Model
 {
     protected $fillable = [
-        'tour_package_id',
+        'reviewable_id',
+        'reviewable_type',
         'full_name',
         'designation',
         'photo',
@@ -18,9 +18,13 @@ class TourPackageReview extends Model
         'status',
     ];
 
-    public function tourPackage(): BelongsTo
+    protected $casts = [
+        'rating' => 'integer',
+    ];
+
+    public function reviewable(): MorphTo
     {
-        return $this->belongsTo(TourPackage::class);
+        return $this->morphTo();
     }
 
     public function initials(): string

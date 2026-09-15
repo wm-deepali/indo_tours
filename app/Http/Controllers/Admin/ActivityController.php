@@ -5,18 +5,20 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
+use App\Models\ActivityCategory;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\Attraction;
 
 class ActivityController extends Controller
 {
     public function index()
     {
-        $activities = Activity::with(['country', 'state', 'city'])
+        $activities = Activity::with(['country', 'state', 'city', 'category'])
             ->orderBy('sort_order')
             ->latest()
             ->paginate(15);
@@ -27,8 +29,10 @@ class ActivityController extends Controller
     public function create()
     {
         $countries = Country::where('status', 'active')->orderBy('sort_order')->get();
+        $categories = ActivityCategory::where('status', 'active')->orderBy('sort_order')->get();
+        $attractions = Attraction::where('status', 'published')->orderBy('name')->get();
 
-        return view('admin.activity.create', compact('countries'));
+        return view('admin.activity.create', compact('countries', 'categories', 'attractions'));
     }
 
     public function store(Request $request)
@@ -51,6 +55,7 @@ class ActivityController extends Controller
         $this->syncPackages($request, $activity);
         $this->syncPolicies($request, $activity);
         $this->syncFaqs($request, $activity);
+        $this->syncAttractions($request, $activity);
 
         return redirect()
             ->route('admin.activities.index')
@@ -60,13 +65,25 @@ class ActivityController extends Controller
     public function edit(Activity $activity)
     {
         $countries = Country::where('status', 'active')->orderBy('sort_order')->get();
+        $categories = ActivityCategory::where('status', 'active')->orderBy('sort_order')->get();
         $states = State::where('country_id', $activity->country_id)->orderBy('sort_order')->get();
         $cities = City::where('state_id', $activity->state_id)->orderBy('sort_order')->get();
         $packages = $activity->packages;
         $policies = $activity->policies;
         $faqs = $activity->faqs;
+        $attractions = Attraction::where('status', 'published')->orderBy('name')->get();
 
-        return view('admin.activity.edit', compact('activity', 'countries', 'states', 'cities', 'packages', 'policies', 'faqs'));
+        return view('admin.activity.edit', compact(
+            'activity',
+            'countries',
+            'categories',
+            'states',
+            'cities',
+            'packages',
+            'policies',
+            'faqs',
+            'attractions'
+        ));
     }
 
     public function update(Request $request, Activity $activity)
@@ -91,6 +108,7 @@ class ActivityController extends Controller
         $this->syncPackages($request, $activity);
         $this->syncPolicies($request, $activity);
         $this->syncFaqs($request, $activity);
+        $this->syncAttractions($request, $activity);
 
         return redirect()
             ->route('admin.activities.index')
@@ -249,6 +267,32 @@ class ActivityController extends Controller
         }
     }
 
+    /**
+     * Sync selected Attractions (existing Attraction module records) shown
+     * in this activity's "Top Attractions" section, via the activity_attraction
+     * pivot. Row order in the form determines sort_order.
+     */
+    private function syncAttractions(Request $request, Activity $activity): void
+    {
+        if (!$request->has('attraction_ids')) {
+            return; // field not submitted — leave existing selections untouched
+        }
+
+        $sync = [];
+        $order = 0;
+
+        foreach ($request->input('attraction_ids') as $attractionId) {
+            if (!$attractionId) {
+                continue;
+            }
+
+            $order++;
+            $sync[$attractionId] = ['sort_order' => $order];
+        }
+
+        $activity->attractions()->sync($sync);
+    }
+
     // Cascading dropdowns reuse the same generic logic as the Attraction
     // module — point the JS at admin/attractions/states/{country} and
     // admin/attractions/cities/{state}, no need to duplicate these routes.
@@ -257,6 +301,7 @@ class ActivityController extends Controller
     {
         return $request->validate([
             'name' => 'required|string|max:255',
+            'activity_category_id' => 'nullable|exists:activity_categories,id',
             'country_id' => 'nullable|exists:countries,id',
             'state_id' => 'nullable|exists:states,id',
             'city_id' => 'nullable|exists:cities,id',
@@ -314,6 +359,8 @@ class ActivityController extends Controller
             'package_old_prices.*' => 'nullable|numeric|min:0',
             'package_new_prices.*' => 'nullable|numeric|min:0',
             'package_save_texts.*' => 'nullable|string|max:50',
+
+            'attraction_ids.*' => 'nullable|exists:attractions,id',
         ]);
     }
 
@@ -342,4 +389,5 @@ class ActivityController extends Controller
             ->values()
             ->all();
     }
+    
 }

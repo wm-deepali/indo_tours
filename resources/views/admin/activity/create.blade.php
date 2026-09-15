@@ -344,11 +344,24 @@
                         <button type="button" class="cat-tab" data-tab="packages">Packages</button>
                         <button type="button" class="cat-tab" data-tab="map">Map</button>
                         <button type="button" class="cat-tab" data-tab="policies">Policies</button>
+                        <button type="button" class="cat-tab" data-tab="attractions">Attractions</button>
                         <button type="button" class="cat-tab" data-tab="faqs">FAQs</button>
                     </div>
 
                     {{-- ============ GENERAL ============ --}}
                     <div class="cat-tab-panel active" data-panel="general">
+
+                        <div class="form-field">
+                            <label for="activity_category_id">Category</label>
+                            <select id="activity_category_id" name="activity_category_id" class="form-control-styled">
+                                <option value="">Select Category</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ old('activity_category_id') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
                         <div class="form-field">
                             <label for="name">Activity Name</label>
@@ -655,6 +668,19 @@
                         </div>
                     </div>
 
+                    {{-- ============ ATTRACTIONS ============ --}}
+                    <div class="cat-tab-panel" data-panel="attractions">
+                        <div id="attraction-rows"></div>
+                        <button type="button" class="btn-secondary-dash" id="add-attraction-row">
+                            <i class="fa fa-plus"></i> Add Attraction
+                        </button>
+                        <div class="hint" style="margin-top:10px;">
+                            Pick existing Attractions to show in the "Top Attractions" section on this activity's page.
+                            Row order sets
+                            the display order.
+                        </div>
+                    </div>
+
                     {{-- ============ FAQS ============ --}}
                     <div class="cat-tab-panel" data-panel="faqs">
                         <div id="faq-rows"></div>
@@ -678,6 +704,9 @@
     </div>
 </div>
 
+<script id="attractions-options-data" type="application/json">
+    {!! json_encode($attractions->map(fn($a) => ['id' => $a->id, 'name' => $a->name])) !!}
+</script>
 <script>
     document.querySelectorAll('#activity-tabs .cat-tab').forEach(function (tabBtn) {
         tabBtn.addEventListener('click', function () {
@@ -925,6 +954,36 @@
     }
 
     document.getElementById('add-faq-row').addEventListener('click', () => addFaqRow());
+
+    // ---- Attractions repeater (picks existing Attraction records) ----
+    const attractionOptions = JSON.parse(document.getElementById('attractions-options-data').textContent);
+    let attractionRowIndex = 0;
+
+    function addAttractionRow(selectedId = null) {
+        const idx = attractionRowIndex;
+        const row = document.createElement('div');
+        row.className = 'gallery-row';
+
+        const optionsHtml = attractionOptions.map(opt =>
+            `<option value="${opt.id}" ${selectedId == opt.id ? 'selected' : ''}>${opt.name}</option>`
+        ).join('');
+
+        row.innerHTML = `
+        <div class="form-field">
+            <label>Attraction</label>
+            <select name="attraction_ids[${idx}]" class="form-control-styled">
+                <option value="">Select Attraction</option>
+                ${optionsHtml}
+            </select>
+        </div>
+        <button type="button" class="btn-secondary-dash remove-new-row" style="margin-top:10px;"><i class="fa fa-trash"></i> Remove</button>
+    `;
+        document.getElementById('attraction-rows').appendChild(row);
+        row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
+        attractionRowIndex++;
+    }
+
+    document.getElementById('add-attraction-row').addEventListener('click', () => addAttractionRow());
 </script>
 
 @include('admin.footer')

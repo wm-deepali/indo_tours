@@ -128,4 +128,10 @@ class Attraction extends Model
             ->withPivot('sort_order');
     }
 
+    public function activities(): BelongsToMany
+    {
+        return $this->belongsToMany(Activity::class, 'activity_attraction')
+            ->withPivot('sort_order');
+    }
+
 }

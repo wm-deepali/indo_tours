@@ -175,6 +175,15 @@
             color: #6d7175;
         }
 
+        .badge-category {
+            background: #eef0fb;
+            color: var(--accent);
+        }
+
+        .text-muted-cell {
+            color: var(--text-hint);
+        }
+
         .row-actions {
             display: flex;
             gap: 8px;
@@ -214,6 +223,7 @@
                             <tr>
                                 <th></th>
                                 <th>Name</th>
+                                <th>Category</th>
                                 <th>Location</th>
                                 <th>Starting Price</th>
                                 <th>Rating</th>
@@ -234,6 +244,13 @@
                                     <td class="name-cell">
                                         <strong>{{ $activity->name }}</strong>
                                         <span>{{ $activity->slug }}</span>
+                                    </td>
+                                    <td>
+                                        @if($activity->category)
+                                            <span class="badge badge-category">{{ $activity->category->name }}</span>
+                                        @else
+                                            <span class="text-muted-cell">—</span>
+                                        @endif
                                     </td>
                                     <td>{{ $activity->city->name ?? $activity->state->name ?? $activity->country->name ?? '—' }}</td>
                                     <td>

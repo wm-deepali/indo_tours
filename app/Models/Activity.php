@@ -4,10 +4,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Activity extends Model
 {
     protected $fillable = [
+        'activity_category_id',
         'name',
         'slug',
         'country_id',
@@ -57,6 +60,11 @@ class Activity extends Model
         'review_count' => 'integer',
     ];
 
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(ActivityCategory::class, 'activity_category_id');
+    }
+
     public function country()
     {
         return $this->belongsTo(Country::class);
@@ -86,4 +94,23 @@ class Activity extends Model
     {
         return $this->hasMany(ActivityPolicy::class)->orderBy('sort_order');
     }
+
+    public function tourPackages(): BelongsToMany
+    {
+        return $this->belongsToMany(TourPackage::class, 'tour_package_activity')
+            ->withPivot('sort_order');
+    }
+
+    public function reviews()
+    {
+        return $this->morphMany(Review::class, 'reviewable')->where('status', 'published');
+    }
+
+    public function attractions()
+    {
+        return $this->belongsToMany(Attraction::class, 'activity_attraction')
+            ->withPivot('sort_order')
+            ->orderBy('activity_attraction.sort_order');
+    }
+
 }

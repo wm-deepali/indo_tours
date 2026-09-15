@@ -9,11 +9,25 @@ use App\Models\Category;
 use App\Models\SubCategory;
 use App\Models\Attraction;
 use App\Models\TourPackage;
-use App\Models\TourPackageReview;
+use App\Models\Review;
 use App\Models\TourPackageEnquiry;
+use App\Models\ActivityCategory;
 
 class FrontController extends Controller
 {
+    /**
+     * Map of short type keys (used in forms/requests) to model classes.
+     * Keep this in sync with Admin\ReviewController::reviewableTypes().
+     */
+    protected function reviewableTypes(): array
+    {
+        return [
+            'tour_package' => TourPackage::class,
+            'activity' => Activity::class,
+            'destination' => Destination::class,
+            'attraction' => Attraction::class,
+        ];
+    }
 
     public function home(Request $request)
     {
@@ -43,7 +57,33 @@ class FrontController extends Controller
                 ->where('status', 'published');
         })->get();
 
-        return view('front-pages.category-detail', compact('category', 'destinations', 'attractions'));
+        // Distinct activities covered by this category's tour packages
+        $activities = Activity::whereHas('tourPackages', function ($query) use ($subCategoryIds) {
+            $query->whereIn('sub_category_id', $subCategoryIds)
+                ->where('status', 'published');
+        })->get();
+
+        // Top reviews for tour packages under this category
+        $reviews = Review::with('reviewable')
+            ->where('reviewable_type', TourPackage::class)
+            ->whereIn('reviewable_id', function ($query) use ($subCategoryIds) {
+                $query->select('id')->from('tour_packages')
+                    ->whereIn('sub_category_id', $subCategoryIds)
+                    ->where('status', 'published');
+            })
+            ->where('status', 'published')
+            ->orderByDesc('rating')
+            ->latest()
+            ->take(9)
+            ->get();
+
+        return view('front-pages.category-detail', compact(
+            'category',
+            'destinations',
+            'attractions',
+            'activities',
+            'reviews'
+        ));
     }
 
     public function subcategoryDetail($slug)
@@ -58,30 +98,55 @@ class FrontController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
-$subCategoryId = $subCategory->id;
+        $subCategoryId = $subCategory->id;
 
- // Distinct destinations covered by this category's tour packages
+        // Distinct destinations covered by this sub-category's tour packages
         $destinations = Destination::whereHas('tourPackages', function ($query) use ($subCategoryId) {
             $query->where('sub_category_id', $subCategoryId)
                 ->where('status', 'published');
         })->get();
 
-        // Distinct attractions covered by this category's tour packages
+        // Distinct attractions covered by this sub-category's tour packages
         $attractions = Attraction::whereHas('tourPackages', function ($query) use ($subCategoryId) {
             $query->where('sub_category_id', $subCategoryId)
                 ->where('status', 'published');
         })->get();
-        
-        return view('front-pages.subcategory-detail', compact('subCategory','destinations', 'attractions'));
+
+        // Distinct activities covered by this sub-category's tour packages
+        $activities = Activity::whereHas('tourPackages', function ($query) use ($subCategoryId) {
+            $query->where('sub_category_id', $subCategoryId)
+                ->where('status', 'published');
+        })->get();
+
+        // Top reviews for tour packages under this sub-category
+        $reviews = Review::with('reviewable')
+            ->where('reviewable_type', TourPackage::class)
+            ->whereIn('reviewable_id', function ($query) use ($subCategoryId) {
+                $query->select('id')->from('tour_packages')
+                    ->where('sub_category_id', $subCategoryId)
+                    ->where('status', 'published');
+            })
+            ->where('status', 'published')
+            ->orderByDesc('rating')
+            ->latest()
+            ->take(9)
+            ->get();
+
+        return view('front-pages.subcategory-detail', compact(
+            'subCategory',
+            'destinations',
+            'attractions',
+            'activities',
+            'reviews'
+        ));
     }
 
-    // FrontController.php
     public function tourPackageDetail(string $slug)
     {
         $tourPackage = TourPackage::where('slug', $slug)
             ->where('status', 'published')
             ->with([
-                'subCategory',
+                'subCategory.category',
                 'country',
                 'state',
                 'city',
@@ -90,12 +155,15 @@ $subCategoryId = $subCategory->id;
                 'routeStops',
                 'highlights',
                 'itineraryDays',
-                'hotelStays.hotel',
+                'hotelStays.hotel.galleries',
                 'includes',
                 'excludes',
                 'policies',
                 'faqs',
-                'reviews'
+                'reviews', // uses TourPackage::reviews() morphMany, already scoped to published
+                'destinations',
+                'attractions',
+                'activities',
             ])
             ->firstOrFail();
 
@@ -121,9 +189,31 @@ $subCategoryId = $subCategory->id;
 
     public function destinationDetail($slug)
     {
-        $destination = Destination::with(['galleries', 'country', 'state', 'city'])->where('slug', $slug)->firstOrFail();
+        $destination = Destination::with([
+            'galleries',
+            'country',
+            'state',
+            'city',
+            'tourPackages' => fn($query) => $query->where('status', 'published')->latest(),
+        ])->where('slug', $slug)->firstOrFail();
 
-        return view('front-pages.destination-detail', compact('destination'));
+        // Related packages: tour packages belonging to OTHER destinations
+        // in the same state (fallback to same country), excluding this destination's own packages
+        $relatedPackages = TourPackage::where('status', 'published')
+            ->whereHas('destinations', function ($query) use ($destination) {
+                $query->where('destinations.id', '!=', $destination->id);
+
+                if ($destination->state_id) {
+                    $query->where('state_id', $destination->state_id);
+                } elseif ($destination->country_id) {
+                    $query->where('country_id', $destination->country_id);
+                }
+            })
+            ->latest()
+            ->take(8)
+            ->get();
+
+        return view('front-pages.destination-detail', compact('destination', 'relatedPackages'));
     }
 
     public function attractions(Request $request)
@@ -154,6 +244,7 @@ $subCategoryId = $subCategory->id;
             'country',
             'state',
             'city',
+            'tourPackages' => fn($query) => $query->where('status', 'published')->latest(),
         ])->where('slug', $slug)->firstOrFail();
 
         $relatedAttractions = Attraction::where('status', 'published')
@@ -167,32 +258,95 @@ $subCategoryId = $subCategory->id;
             ->take(8)
             ->get();
 
-        return view('front-pages.attraction-detail', compact('attraction', 'relatedAttractions'));
+        // Related packages: tour packages tied to the related (nearby) attractions,
+        // excluding any package already shown in this attraction's own package list
+        $ownPackageIds = $attraction->tourPackages->pluck('id');
+
+        $relatedPackages = TourPackage::where('status', 'published')
+            ->whereHas('attractions', function ($query) use ($relatedAttractions) {
+                $query->whereIn('attractions.id', $relatedAttractions->pluck('id'));
+            })
+            ->whereNotIn('id', $ownPackageIds)
+            ->latest()
+            ->take(8)
+            ->get();
+
+        return view('front-pages.attraction-detail', compact(
+            'attraction',
+            'relatedAttractions',
+            'relatedPackages'
+        ));
     }
 
 
     public function activities(Request $request)
     {
-        return view('front-pages.attractions');
+        $categories = ActivityCategory::where('status', 'active')
+            ->orderBy('sort_order')
+            ->get();
+
+        $allActivities = Activity::with(['category', 'country', 'state', 'city', 'packages'])
+            ->where('status', 'published')
+            ->orderBy('sort_order')
+            ->latest()
+            ->get();
+
+        $indianActivities = $allActivities->filter(function ($activity) {
+            return $activity->country && $activity->country->name === 'India';
+        })->values();
+
+        $internationalActivities = $allActivities->filter(function ($activity) {
+            return !$activity->country || $activity->country->name !== 'India';
+        })->values();
+
+        return view('front-pages.activities', compact('categories', 'indianActivities', 'internationalActivities'));
     }
 
     public function activitiesDetail($slug)
     {
         $activity = Activity::with([
             'country',
+            'city',
             'packages',
             'policies',
-            'faqs'
+            'faqs',
+            'reviews',
+            'attractions.city',
         ])->where('slug', $slug)->firstOrFail();
 
-        return view('front-pages.activity-detail', compact('activity'));
+        // Related activities: prefer same city, fall back to same country
+        $relatedQuery = Activity::where('id', '!=', $activity->id);
+
+        if ($activity->city_id) {
+            $relatedQuery->where('city_id', $activity->city_id);
+        } elseif ($activity->country_id) {
+            $relatedQuery->where('country_id', $activity->country_id);
+        }
+
+        $relatedActivities = $relatedQuery->latest()->take(8)->get();
+
+        // If same-city search came up short, top it up from the same country
+        if ($relatedActivities->count() < 4 && $activity->country_id) {
+            $more = Activity::where('country_id', $activity->country_id)
+                ->whereNotIn('id', $relatedActivities->pluck('id'))
+                ->latest()
+                ->take(8 - $relatedActivities->count())
+                ->get();
+
+            $relatedActivities = $relatedActivities->concat($more);
+        }
+
+        return view('front-pages.activity-detail', compact('activity', 'relatedActivities'));
     }
 
 
     public function reviewStore(Request $request)
     {
+        $types = $this->reviewableTypes();
+
         $validated = $request->validate([
-            'tour_package_id' => 'required|exists:tour_packages,id',
+            'reviewable_type' => 'required|in:' . implode(',', array_keys($types)),
+            'reviewable_id' => 'required|integer',
             'full_name' => 'required|string|max:255',
             'designation' => 'nullable|string|max:100',
             'rating' => 'required|integer|min:1|max:5',
@@ -200,20 +354,43 @@ $subCategoryId = $subCategory->id;
             'photo' => 'nullable|image|max:1024',
         ]);
 
-        if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('reviews/photos', 'public');
+        $modelClass = $types[$validated['reviewable_type']];
+
+        // Confirm the entity actually exists and is published before attaching a review to it
+        if (!$modelClass::where('id', $validated['reviewable_id'])->where('status', 'published')->exists()) {
+            $message = 'The item you are reviewing could not be found.';
+
+            return $request->wantsJson()
+                ? response()->json(['success' => false, 'message' => $message], 422)
+                : back()->withErrors(['reviewable_id' => $message]);
         }
 
-        TourPackageReview::create($validated);
+        $data = [
+            'reviewable_type' => $modelClass,
+            'reviewable_id' => $validated['reviewable_id'],
+            'full_name' => $validated['full_name'],
+            'designation' => $validated['designation'] ?? null,
+            'rating' => $validated['rating'],
+            'review' => $validated['review'],
+            'status' => 'draft', // public submissions go to moderation queue, not straight to published
+        ];
+
+        if ($request->hasFile('photo')) {
+            $data['photo'] = $request->file('photo')->store('reviews/photos', 'public');
+        }
+
+        Review::create($data);
+
+        $message = 'Thanks for sharing your experience! Your review will appear after a quick review.';
 
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Thanks for sharing your experience!',
+                'message' => $message,
             ]);
         }
 
-        return back()->with('success', 'Thanks for sharing your experience!');
+        return back()->with('success', $message);
     }
 
     public function enquiryStore(Request $request)

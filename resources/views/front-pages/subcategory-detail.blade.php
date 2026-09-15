@@ -10,6 +10,7 @@
 @section('content')
 
     <main>
+
         <!-- BASIC INFO SECTION -->
         <section class="listing-banner">
             <div class="bg">
@@ -17,14 +18,14 @@
                     <div class="swiper-wrapper">
                         @if($subCategory->banner_image_one)
                             <div class="swiper-slide">
-                                <img loading="lazy" src="{{ asset('storage/'. $subCategory->banner_image_one) }}"
+                                <img loading="lazy" src="{{ asset('storage/' . $subCategory->banner_image_one) }}"
                                     alt="{{ $subCategory->name }}" />
                             </div>
                         @endif
 
                         @if($subCategory->banner_image_two)
                             <div class="swiper-slide">
-                                <img loading="lazy" src="{{ asset('storage/'. $subCategory->banner_image_two) }}"
+                                <img loading="lazy" src="{{ asset('storage/' . $subCategory->banner_image_two) }}"
                                     alt="{{ $subCategory->name }}" />
                             </div>
                         @endif
@@ -116,7 +117,7 @@
                             <div class="highlight-card">
                                 <div class="icon">
                                     @if($highlight->icon_image)
-                                        <img src="{{ asset('storage/'. $highlight->icon_image) }}" alt="{{ $highlight->title }}" />
+                                        <img src="{{ asset('storage/' . $highlight->icon_image) }}" alt="{{ $highlight->title }}" />
                                     @else
                                         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
                                             <path d="M0 0h24v24H0z" fill="none" />
@@ -288,7 +289,7 @@
                     <div class="group-offer-banner__media">
                         <div class="group-offer-banner__img group-offer-banner__img--secondary">
                             <img loading="lazy"
-                                src="{{ $subCategory->cta_image ? asset('storage/'.$subCategory->cta_image) : asset('assets/images/listing/banner1.jpg') }}"
+                                src="{{ $subCategory->cta_image ? asset('storage/' . $subCategory->cta_image) : asset('assets/images/listing/banner1.jpg') }}"
                                 alt="{{ $subCategory->name }}" />
                         </div>
                     </div>
@@ -296,252 +297,85 @@
             </div>
         </section>
 
-        <section class="listing-secE">
-            <div class="container">
-                <div class="heading">
-                    <h3>Tours In <span>Thailand</span></h3>
-                    <p>
-                        Choose from our handpicked travel experiences, designed to make
-                        every journey unforgettable.
-                    </p>
-                </div>
-                <div class="swiper-wrap">
-                    <div class="swiper thirdSilder">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/home/card1.jpg')}}" alt="" />
-                                        <span class="save">Save INR 75,900</span>
-                                    </a>
+        <!-- ACTIVITIES SECTION -->
+        @if($activities->count())
+            <section class="listing-secE">
+                <div class="container">
+                    <div class="heading">
+                        <h3>Popular <span>{{ $subCategory->name }} Activities</span></h3>
+                        <p>
+                            Handpicked experiences and things to do, curated to make your trip more memorable.
+                        </p>
+                    </div>
+                    <div class="swiper-wrap">
+                        <div class="swiper thirdSilder">
+                            <div class="swiper-wrapper">
+                                @foreach($activities as $activity)
+                                    <div class="swiper-slide">
+                                        <div class="trip_card">
+                                            <a href="{{ route('activities.show', $activity->slug) }}" target="_blank" class="img">
+                                                @if($activity->main_image)
+                                                    <img loading="lazy" src="{{ asset('storage/' . $activity->main_image) }}"
+                                                        alt="{{ $activity->name }}" />
+                                                @endif
+                                                @if($activity->banner_tag)
+                                                    <span class="save">{{ $activity->banner_tag }}</span>
+                                                @endif
+                                            </a>
 
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>7 days & 6 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(9)</em>
+                                            <div class="content">
+                                                <div class="rating">
+                                                    @if($activity->duration_text)
+                                                        <span>{{ $activity->duration_text }}</span>
+                                                    @endif
+
+                                                    @if($activity->rating)
+                                                        <div class="star">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                                <path
+                                                                    d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
+                                                            </svg>
+                                                            <span>{{ $activity->rating }}</span>
+                                                            @if($activity->review_count)
+                                                                <em>({{ $activity->review_count }})</em>
+                                                            @endif
+                                                        </div>
+                                                    @endif
+                                                </div>
+
+                                                <h3>
+                                                    <a href="{{ route('activities.show', $activity->slug) }}" target="_blank">
+                                                        {{ $activity->name }}
+                                                    </a>
+                                                </h3>
+
+                                                @if($activity->starting_price)
+                                                    <p class="price">
+                                                        {{ $activity->price_unit ?? 'INR' }}
+                                                        {{ number_format($activity->starting_price) }}
+                                                    </p>
+                                                @endif
+
+                                                <div class="btns">
+                                                    <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+                                                            <path
+                                                                d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
+                                                        </svg>
+                                                    </a>
+
+                                                    <button data-model=".enquire-pop" class="btn btn-primary">
+                                                        Enquire Now
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Scenic Iceland With Diamond
-                                                Circle</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 3,06,151</s>
-                                            <span class="saveChip">Save INR 75,900</span>
-                                        </div>
-                                        <p class="price">INR 2,30,251</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/home/card2.jpg')}}" alt="" />
-                                        <span class="save">Save INR 75,900</span>
-                                    </a>
-
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>7 days & 6 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(9)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Scenic Iceland With Diamond
-                                                Circle</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 3,06,151</s>
-                                            <span class="saveChip">Save INR 75,900</span>
-                                        </div>
-                                        <p class="price">INR 2,30,251</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/home/card3.jpg')}}" alt="" />
-                                        <span class="save">Save INR 75,900</span>
-                                    </a>
-
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>7 days & 6 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(9)</em>
-                                            </div>
-                                        </div>
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Scenic Iceland With Diamond
-                                                Circle</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 3,06,151</s>
-                                            <span class="saveChip">Save INR 75,900</span>
-                                        </div>
-                                        <p class="price">INR 2,30,251</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/home/card4.jpg')}}" alt="" />
-                                        <span class="save">Save INR 75,900</span>
-                                    </a>
-
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>7 days & 6 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(9)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Scenic Iceland With Diamond
-                                                Circle</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 3,06,151</s>
-                                            <span class="saveChip">Save INR 75,900</span>
-                                        </div>
-                                        <p class="price">INR 2,30,251</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/home/card1.jpg')}}" alt="" />
-                                        <span class="save">Save INR 75,900</span>
-                                    </a>
-
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>7 days & 6 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(9)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Scenic Iceland With Diamond
-                                                Circle</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 3,06,151</s>
-                                            <span class="saveChip">Save INR 75,900</span>
-                                        </div>
-                                        <p class="price">INR 2,30,251</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
+
                         <div class="swiper-group">
                             <button type="button" class="thirdSilder-prev btn-prev">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
@@ -560,468 +394,111 @@
                             </button>
                         </div>
                     </div>
-                    <!-- <div class="center-btn">
-                                    <a href="javascript:void()" class="btn btn-outline-primary"
-                                      >View All</a
-                                    >
-                                  </div> -->
                 </div>
-        </section>
+            </section>
+        @endif
 
-        <section class="listing-secD">
-            <div class="container">
-                <div class="heading">
-                    <h3>Loved by <span>Ladakh Travellers</span></h3>
-                    <div class="swiper-group">
-                        <button type="button" class="testimonial2-prev btn-prev">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                <path fill="currentColor"
-                                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
-                            </svg>
-                        </button>
-                        <button type="button" class="testimonial2-next btn-next">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                <path fill="currentColor"
-                                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
-                            </svg>
-                        </button>
+        <!-- REVIEWS SECTION -->
+        @if($reviews->count())
+            <section class="listing-secD">
+                <div class="container">
+                    <div class="heading">
+                        <h3>Loved by <span>{{ $subCategory->name }} Travellers</span></h3>
+                        <div class="swiper-group">
+                            <button type="button" class="testimonial2-prev btn-prev">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                                    <path fill="currentColor"
+                                        d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
+                                </svg>
+                            </button>
+                            <button type="button" class="testimonial2-next btn-next">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                                    <path fill="currentColor"
+                                        d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="grid">
-                    <div class="rating_wrap">
-                        <div class="ring">
-                            <svg viewBox="0 0 120 120">
-                                <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
-                                <circle class="ring-fill" cx="60" cy="60" r="52"></circle>
-                            </svg>
-                            <div class="ring-score">
-                                <h2>4.5</h2>
-                                <span>out of 5</span>
+                    <div class="grid">
+                        <div class="rating_wrap">
+                            @php $avgRating = round($reviews->avg('rating'), 1); @endphp
+                            <div class="ring">
+                                <svg viewBox="0 0 120 120">
+                                    <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+                                    <circle class="ring-fill" cx="60" cy="60" r="52"></circle>
+                                </svg>
+                                <div class="ring-score">
+                                    <h2>{{ $avgRating }}</h2>
+                                    <span>out of 5</span>
+                                </div>
                             </div>
+
+                            <div class="rating-stars">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path
+                                            d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
+                                    </svg>
+                                @endfor
+                            </div>
+
+                            <a href="javascript:void()" class="review-link">
+                                {{ number_format($reviews->count()) }} {{ $subCategory->name }} Reviews
+                            </a>
+                            <p class="review-sub">by customers from 70+ countries</p>
                         </div>
 
-                        <div class="rating-stars">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                            </svg>
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                            </svg>
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                            </svg>
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                            </svg>
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                            </svg>
-                        </div>
+                        <div class="swiper_wrap">
+                            <div class="swiper TestimonialSlider2">
+                                <div class="swiper-wrapper">
+                                    @foreach($reviews as $review)
+                                        <div class="swiper-slide">
+                                            <div class="card">
+                                                <div class="header">
+                                                    @if($review->photo)
+                                                        <img loading="lazy" src="{{ asset('storage/' . $review->photo) }}"
+                                                            alt="{{ $review->full_name }}" />
+                                                    @else
+                                                        <div class="avatar-initials">{{ $review->initials() }}</div>
+                                                    @endif
 
-                        <a href="javascript:void()" class="review-link">53,688 Ladakh Reviews</a>
-                        <p class="review-sub">by customers from 70+ countries</p>
-                    </div>
+                                                    <div class="name">
+                                                        <h6>{{ $review->full_name }}</h6>
+                                                        @if($review->designation)
+                                                            <span class="designation">{{ $review->designation }}</span>
+                                                        @endif
 
-                    <div class="swiper_wrap">
-                        <div class="swiper TestimonialSlider2">
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide">
-                                    <div class="card">
-                                        <div class="header">
-                                            <img loading="lazy" src="{{ asset('assets/images/home/client1.png')}}" alt="Sanjeev Ahuja" />
-                                            <div class="name">
-                                                <h6>Sanjeev Ahuja</h6>
-                                                <div class="badge-star">
-                                                    <svg viewBox="0 0 24 24" fill="currentColor">
-                                                        <path
-                                                            d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                    </svg>
-                                                    <span>5.0</span>
+                                                        <div class="badge-star">
+                                                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                                                <path
+                                                                    d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
+                                                            </svg>
+                                                            <span>{{ number_format($review->rating, 1) }}</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="quotes">
+                                                        <svg width="30" height="22" viewBox="0 0 44 34" fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg">
+                                                            <path
+                                                                d="M4.98462 0.5H17.7346C18.1656 0.5 18.5793 0.670839 18.884 0.975586C19.1888 1.28033 19.3596 1.69402 19.3596 2.125V19.1748L19.3635 19.1973C19.3641 19.2053 19.3657 19.216 19.3665 19.2295C19.3688 19.2693 19.3712 19.3295 19.3733 19.4082C19.3775 19.5654 19.3794 19.795 19.3684 20.084C19.3464 20.6625 19.2751 21.4755 19.0823 22.4189C18.6962 24.3078 17.8253 26.6999 15.8987 28.79C13.0414 31.8876 8.68419 33.5 2.85962 33.5H1.23462V28.417L2.53833 28.1582H2.53931C5.54333 27.5578 7.72977 26.3475 8.91138 24.4844L8.91431 24.4785C9.51092 23.5111 9.85011 22.407 9.89966 21.2715L9.9231 20.75H2.85962C2.42864 20.75 2.01495 20.5792 1.71021 20.2744C1.40546 19.9697 1.23462 19.556 1.23462 19.125V4.25C1.23462 2.18227 2.91689 0.5 4.98462 0.5ZM28.3743 0.5H41.1243C41.5552 0.5 41.9689 0.670911 42.2737 0.975586C42.5784 1.28033 42.7493 1.69402 42.7493 2.125V19.1748L42.7532 19.1973C42.7538 19.2053 42.7553 19.2161 42.7561 19.2295C42.7584 19.2693 42.7609 19.3296 42.7629 19.4082C42.7671 19.5654 42.7691 19.795 42.7581 20.084C42.7359 20.6625 42.6639 21.4755 42.4709 22.4189C42.0846 24.3078 41.214 26.6999 39.2883 28.79C36.431 31.8876 32.0738 33.5 26.2493 33.5H24.6243V28.417L25.929 28.1582C28.9331 27.5578 31.1194 26.3475 32.301 24.4844L32.304 24.4785C32.9006 23.5111 33.2398 22.407 33.2893 21.2715L33.3127 20.75H26.2493C25.8185 20.7499 25.4055 20.5789 25.1008 20.2744C24.7961 19.9697 24.6243 19.556 24.6243 19.125V4.25C24.6243 2.18234 26.3066 0.500123 28.3743 0.5Z"
+                                                                fill="#F3F4F6" stroke="#E5E7EB" />
+                                                        </svg>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="quotes">
-                                                <svg width="30" height="22" viewBox="0 0 44 34" fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M4.98462 0.5H17.7346C18.1656 0.5 18.5793 0.670839 18.884 0.975586C19.1888 1.28033 19.3596 1.69402 19.3596 2.125V19.1748L19.3635 19.1973C19.3641 19.2053 19.3657 19.216 19.3665 19.2295C19.3688 19.2693 19.3712 19.3295 19.3733 19.4082C19.3775 19.5654 19.3794 19.795 19.3684 20.084C19.3464 20.6625 19.2751 21.4755 19.0823 22.4189C18.6962 24.3078 17.8253 26.6999 15.8987 28.79C13.0414 31.8876 8.68419 33.5 2.85962 33.5H1.23462V28.417L2.53833 28.1582H2.53931C5.54333 27.5578 7.72977 26.3475 8.91138 24.4844L8.91431 24.4785C9.51092 23.5111 9.85011 22.407 9.89966 21.2715L9.9231 20.75H2.85962C2.42864 20.75 2.01495 20.5792 1.71021 20.2744C1.40546 19.9697 1.23462 19.556 1.23462 19.125V4.25C1.23462 2.18227 2.91689 0.5 4.98462 0.5ZM28.3743 0.5H41.1243C41.5552 0.5 41.9689 0.670911 42.2737 0.975586C42.5784 1.28033 42.7493 1.69402 42.7493 2.125V19.1748L42.7532 19.1973C42.7538 19.2053 42.7553 19.2161 42.7561 19.2295C42.7584 19.2693 42.7609 19.3296 42.7629 19.4082C42.7671 19.5654 42.7691 19.7951 42.7581 20.084C42.7359 20.6625 42.6639 21.4755 42.4709 22.4189C42.0846 24.3078 41.214 26.6999 39.2883 28.79C36.431 31.8876 32.0738 33.5 26.2493 33.5H24.6243V28.417L25.929 28.1582C28.9331 27.5578 31.1194 26.3475 32.301 24.4844L32.304 24.4785C32.9006 23.5111 33.2398 22.407 33.2893 21.2715L33.3127 20.75H26.2493C25.8185 20.7499 25.4055 20.5789 25.1008 20.2744C24.7961 19.9697 24.6243 19.556 24.6243 19.125V4.25C24.6243 2.18234 26.3066 0.500123 28.3743 0.5Z"
-                                                        fill="#F3F4F6" stroke="#E5E7EB" />
-                                                </svg>
+
+                                                <p class="quote">{{ $review->review }}</p>
                                             </div>
                                         </div>
-
-                                        <p class="quote">
-                                            Very well organised trip by Thrillophilia. This was our
-                                            3rd trip and everything was smooth from start to finish.
-                                        </p>
-
-                                        <div class="photo-strip">
-                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
-                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
-                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="swiper-slide">
-                                    <div class="card">
-                                        <div class="header">
-                                            <img loading="lazy" src="{{ asset('assets/images/home/client2.png')}}" alt="Vicky Gupta" />
-                                            <div class="name">
-                                                <h6>Vicky Gupta</h6>
-                                                <div class="badge-star">
-                                                    <svg viewBox="0 0 24 24" fill="currentColor">
-                                                        <path
-                                                            d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                    </svg>
-                                                    <span>5.0</span>
-                                                </div>
-                                            </div>
-                                            <div class="quotes">
-                                                <svg width="30" height="22" viewBox="0 0 44 34" fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M4.98462 0.5H17.7346C18.1656 0.5 18.5793 0.670839 18.884 0.975586C19.1888 1.28033 19.3596 1.69402 19.3596 2.125V19.1748L19.3635 19.1973C19.3641 19.2053 19.3657 19.216 19.3665 19.2295C19.3688 19.2693 19.3712 19.3295 19.3733 19.4082C19.3775 19.5654 19.3794 19.795 19.3684 20.084C19.3464 20.6625 19.2751 21.4755 19.0823 22.4189C18.6962 24.3078 17.8253 26.6999 15.8987 28.79C13.0414 31.8876 8.68419 33.5 2.85962 33.5H1.23462V28.417L2.53833 28.1582H2.53931C5.54333 27.5578 7.72977 26.3475 8.91138 24.4844L8.91431 24.4785C9.51092 23.5111 9.85011 22.407 9.89966 21.2715L9.9231 20.75H2.85962C2.42864 20.75 2.01495 20.5792 1.71021 20.2744C1.40546 19.9697 1.23462 19.556 1.23462 19.125V4.25C1.23462 2.18227 2.91689 0.5 4.98462 0.5ZM28.3743 0.5H41.1243C41.5552 0.5 41.9689 0.670911 42.2737 0.975586C42.5784 1.28033 42.7493 1.69402 42.7493 2.125V19.1748L42.7532 19.1973C42.7538 19.2053 42.7553 19.2161 42.7561 19.2295C42.7584 19.2693 42.7609 19.3296 42.7629 19.4082C42.7671 19.5654 42.7691 19.7951 42.7581 20.084C42.7359 20.6625 42.6639 21.4755 42.4709 22.4189C42.0846 24.3078 41.214 26.6999 39.2883 28.79C36.431 31.8876 32.0738 33.5 26.2493 33.5H24.6243V28.417L25.929 28.1582C28.9331 27.5578 31.1194 26.3475 32.301 24.4844L32.304 24.4785C32.9006 23.5111 33.2398 22.407 33.2893 21.2715L33.3127 20.75H26.2493C25.8185 20.7499 25.4055 20.5789 25.1008 20.2744C24.7961 19.9697 24.6243 19.556 24.6243 19.125V4.25C24.6243 2.18234 26.3066 0.500123 28.3743 0.5Z"
-                                                        fill="#F3F4F6" stroke="#E5E7EB" />
-                                                </svg>
-                                            </div>
-                                        </div>
-
-                                        <p class="quote">
-                                            Excellent service by Thrillophilia. I strongly recommend
-                                            booking their luxurious packages, worth every rupee.
-                                        </p>
-
-                                        <div class="photo-strip">
-                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
-                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
-                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
-                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="swiper-slide">
-                                    <div class="card">
-                                        <div class="header">
-                                            <img loading="lazy" src="{{ asset('assets/images/home/client3.png')}}" alt="Floyd Miles" />
-                                            <div class="name">
-                                                <h6>Floyd Miles</h6>
-                                                <div class="badge-star">
-                                                    <svg viewBox="0 0 24 24" fill="currentColor">
-                                                        <path
-                                                            d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                    </svg>
-                                                    <span>4.6</span>
-                                                </div>
-                                            </div>
-                                            <div class="quotes">
-                                                <svg width="30" height="22" viewBox="0 0 44 34" fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M4.98462 0.5H17.7346C18.1656 0.5 18.5793 0.670839 18.884 0.975586C19.1888 1.28033 19.3596 1.69402 19.3596 2.125V19.1748L19.3635 19.1973C19.3641 19.2053 19.3657 19.216 19.3665 19.2295C19.3688 19.2693 19.3712 19.3295 19.3733 19.4082C19.3775 19.5654 19.3794 19.795 19.3684 20.084C19.3464 20.6625 19.2751 21.4755 19.0823 22.4189C18.6962 24.3078 17.8253 26.6999 15.8987 28.79C13.0414 31.8876 8.68419 33.5 2.85962 33.5H1.23462V28.417L2.53833 28.1582H2.53931C5.54333 27.5578 7.72977 26.3475 8.91138 24.4844L8.91431 24.4785C9.51092 23.5111 9.85011 22.407 9.89966 21.2715L9.9231 20.75H2.85962C2.42864 20.75 2.01495 20.5792 1.71021 20.2744C1.40546 19.9697 1.23462 19.556 1.23462 19.125V4.25C1.23462 2.18227 2.91689 0.5 4.98462 0.5ZM28.3743 0.5H41.1243C41.5552 0.5 41.9689 0.670911 42.2737 0.975586C42.5784 1.28033 42.7493 1.69402 42.7493 2.125V19.1748L42.7532 19.1973C42.7538 19.2053 42.7553 19.2161 42.7561 19.2295C42.7584 19.2693 42.7609 19.3296 42.7629 19.4082C42.7671 19.5654 42.7691 19.7951 42.7581 20.084C42.7359 20.6625 42.6639 21.4755 42.4709 22.4189C42.0846 24.3078 41.214 26.6999 39.2883 28.79C36.431 31.8876 32.0738 33.5 26.2493 33.5H24.6243V28.417L25.929 28.1582C28.9331 27.5578 31.1194 26.3475 32.301 24.4844L32.304 24.4785C32.9006 23.5111 33.2398 22.407 33.2893 21.2715L33.3127 20.75H26.2493C25.8185 20.7499 25.4055 20.5789 25.1008 20.2744C24.7961 19.9697 24.6243 19.556 24.6243 19.125V4.25C24.6243 2.18234 26.3066 0.500123 28.3743 0.5Z"
-                                                        fill="#F3F4F6" stroke="#E5E7EB" />
-                                                </svg>
-                                            </div>
-                                        </div>
-
-                                        <p class="quote">
-                                            Morem ipsum dolor siter amet areaeey consec taetur
-                                            adipisc service ollwing ipsum dolor consectetur.
-                                        </p>
-
-                                        <div class="photo-strip">
-                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
-                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
-                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
-                                            <img loading="lazy" src="{{ asset('assets/images/listing/rarting-view.jpg')}}" alt="" />
-                                        </div>
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <section class="listing-secF">
-            <div class="container">
-                <div class="heading">
-                    <h3>Ladakh <span>Best Deals</span></h3>
-                    <p>
-                        Choose from our handpicked travel experiences, designed to make
-                        every journey unforgettable.
-                    </p>
-                </div>
-                <div class="swiper-wrap">
-                    <div class="swiper thirdSilder">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/home/card1.jpg')}}" alt="" />
-                                        <span class="save">Save INR 75,900</span>
-                                    </a>
-
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>7 days & 6 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(9)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Scenic Iceland With Diamond
-                                                Circle</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 3,06,151</s>
-                                            <span class="saveChip">Save INR 75,900</span>
-                                        </div>
-                                        <p class="price">INR 2,30,251</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/home/card2.jpg')}}" alt="" />
-                                        <span class="save">Save INR 75,900</span>
-                                    </a>
-
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>7 days & 6 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(9)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Scenic Iceland With Diamond
-                                                Circle</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 3,06,151</s>
-                                            <span class="saveChip">Save INR 75,900</span>
-                                        </div>
-                                        <p class="price">INR 2,30,251</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/home/card3.jpg')}}" alt="" />
-                                        <span class="save">Save INR 75,900</span>
-                                    </a>
-
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>7 days & 6 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(9)</em>
-                                            </div>
-                                        </div>
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Scenic Iceland With Diamond
-                                                Circle</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 3,06,151</s>
-                                            <span class="saveChip">Save INR 75,900</span>
-                                        </div>
-                                        <p class="price">INR 2,30,251</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/home/card4.jpg')}}" alt="" />
-                                        <span class="save">Save INR 75,900</span>
-                                    </a>
-
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>7 days & 6 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(9)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Scenic Iceland With Diamond
-                                                Circle</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 3,06,151</s>
-                                            <span class="saveChip">Save INR 75,900</span>
-                                        </div>
-                                        <p class="price">INR 2,30,251</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/home/card1.jpg')}}" alt="" />
-                                        <span class="save">Save INR 75,900</span>
-                                    </a>
-
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>7 days & 6 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(9)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Scenic Iceland With Diamond
-                                                Circle</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 3,06,151</s>
-                                            <span class="saveChip">Save INR 75,900</span>
-                                        </div>
-                                        <p class="price">INR 2,30,251</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-group">
-                        <button type="button" class="thirdSilder-prev btn-prev">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                <path fill="#ffff"
-                                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0">
-                                </path>
-                            </svg>
-                        </button>
-
-                        <button type="button" class="thirdSilder-next btn-next">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                <path fill="#ffff"
-                                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0">
-                                </path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <!-- <div class="center-btn">
-                                    <a href="javascript:void()" class="btn btn-outline-primary"
-                                      >View All</a
-                                    >
-                                  </div> -->
-            </div>
-        </section>
+            </section>
+        @endif
 
         <!-- PROMO BANNER SECTION -->
         <section class="listing-secG">
@@ -1098,285 +575,12 @@
             </div>
         </section>
 
-        <section class="listing-secA">
-            <div class="container">
-                <div class="heading">
-                    <h3>Ladakh <span>Group Tours</span></h3>
-                    <p>
-                        Choose from our handpicked travel experiences, designed to make
-                        every journey unforgettable.
-                    </p>
-                </div>
-                <div class="swiper-wrap">
-                    <div class="swiper thirdSilder">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/home/card1.jpg')}}" alt="" />
-                                        <span class="save">Save INR 75,900</span>
-                                    </a>
-
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>7 days & 6 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(9)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Scenic Iceland With Diamond
-                                                Circle</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 3,06,151</s>
-                                            <span class="saveChip">Save INR 75,900</span>
-                                        </div>
-                                        <p class="price">INR 2,30,251</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/home/card2.jpg')}}" alt="" />
-                                        <span class="save">Save INR 75,900</span>
-                                    </a>
-
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>7 days & 6 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(9)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Scenic Iceland With Diamond
-                                                Circle</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 3,06,151</s>
-                                            <span class="saveChip">Save INR 75,900</span>
-                                        </div>
-                                        <p class="price">INR 2,30,251</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/home/card3.jpg')}}" alt="" />
-                                        <span class="save">Save INR 75,900</span>
-                                    </a>
-
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>7 days & 6 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(9)</em>
-                                            </div>
-                                        </div>
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Scenic Iceland With Diamond
-                                                Circle</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 3,06,151</s>
-                                            <span class="saveChip">Save INR 75,900</span>
-                                        </div>
-                                        <p class="price">INR 2,30,251</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/home/card4.jpg')}}" alt="" />
-                                        <span class="save">Save INR 75,900</span>
-                                    </a>
-
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>7 days & 6 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(9)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Scenic Iceland With Diamond
-                                                Circle</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 3,06,151</s>
-                                            <span class="saveChip">Save INR 75,900</span>
-                                        </div>
-                                        <p class="price">INR 2,30,251</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/home/card1.jpg')}}" alt="" />
-                                        <span class="save">Save INR 75,900</span>
-                                    </a>
-
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>7 days & 6 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(9)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Scenic Iceland With Diamond
-                                                Circle</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 3,06,151</s>
-                                            <span class="saveChip">Save INR 75,900</span>
-                                        </div>
-                                        <p class="price">INR 2,30,251</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-group">
-                        <button type="button" class="thirdSilder-prev btn-prev">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                <path fill="#ffff"
-                                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0">
-                                </path>
-                            </svg>
-                        </button>
-
-                        <button type="button" class="thirdSilder-next btn-next">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                <path fill="#ffff"
-                                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0">
-                                </path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <!-- <div class="center-btn">
-                                    <a href="javascript:void()" class="btn btn-outline-primary"
-                                      >View All</a
-                                    >
-                                  </div> -->
-            </div>
-        </section>
-
-        {{-- ATTRACTIONS SECTION --}}
+        <!-- ATTRACTIONS SECTION -->
         @if($attractions->count())
             <section class="listing-secF">
                 <div class="container">
                     <div class="heading">
-                        <h3>More <span>{{ $subCategory->name }} Attractions</span></h3>
+                        <h3>Popular <span>{{ $subCategory->name }} Attractions</span></h3>
                         @if($subCategory->intro_text)
                             <p>{{ $subCategory->intro_text }}</p>
                         @endif
@@ -1391,7 +595,7 @@
                                         <div class="trip_card">
                                             <a href="{{ route('attraction.show', $attraction->slug) }}" target="_blank" class="img">
                                                 <img loading="lazy"
-                                                    src="{{ $attraction->image ? asset('storage/'. $attraction->image) : asset('assets/images/listing/placeholder.jpg') }}"
+                                                    src="{{ $attraction->image ? asset('storage/' . $attraction->image) : asset('assets/images/listing/placeholder.jpg') }}"
                                                     alt="{{ $attraction->name }}" />
                                             </a>
 
@@ -1436,9 +640,10 @@
                                                         </svg>
                                                     </a>
 
-                                                    <button data-model=".enquire-pop" class="btn btn-primary">
-                                                        Enquire Now
-                                                    </button>
+                                                    <a href="{{ route('attraction.show', $attraction->slug) }}" target="_blank"
+                                                        class="btn btn-primary">
+                                                        View Details
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -1467,7 +672,7 @@
             </section>
         @endif
 
-        <!-- FAQ / EXPLORE MORE SECTION -->
+        <!-- FAQ SECTION -->
         <section class="listing-secI">
             <div class="container">
                 <div class="heading">
@@ -1497,7 +702,7 @@
             </div>
         </section>
 
-        {{-- DESTINATIONS SECTION --}}
+        <!-- DESTINATIONS SECTION -->
         @if($destinations->count())
             <section class="listing-secA">
                 <div class="container">
@@ -1519,7 +724,7 @@
                                             class="trip_card3">
                                             <div class="img">
                                                 <img loading="lazy"
-                                                    src="{{ $destination->image ? asset('storage/'. $destination->image) : asset('assets/images/listing/placeholder.jpg') }}"
+                                                    src="{{ $destination->image ? asset('storage/' . $destination->image) : asset('assets/images/listing/placeholder.jpg') }}"
                                                     alt="{{ $destination->name }}" />
                                             </div>
 
@@ -1576,91 +781,71 @@
             </section>
         @endif
 
-        <section class="seo-links-sec">
-            <div class="container">
-                <div class="heading">
-                    <h3>Explore More <span>About Ladakh</span></h3>
-                    <p>
-                        Discover popular Ladakh tours, itineraries, places to visit and
-                        experiences to make your journey unforgettable.
-                    </p>
-                </div>
-
-                <div class="seo-links-wrapper">
-                    <!-- Category 01 -->
-                    <div class="seo-link-block">
-                        <h4>Ladakh Tour Packages From Popular Indian Cities</h4>
-
-                        <div class="seo-link-wrap">
-                            <a href="javascript:void()">Ladakh Tour Packages From Ahmedabad</a>
-                            <a href="javascript:void()">Ladakh Tour Packages From Kolkata</a>
-                            <a href="javascript:void()">Ladakh Tour Packages From Bangalore</a>
-                            <a href="javascript:void()">Ladakh Tour Packages From Delhi</a>
-                            <a href="javascript:void()">Ladakh Tour Packages From Mumbai</a>
-                            <a href="javascript:void()">Ladakh Tour Packages From Nashik</a>
-                            <a href="javascript:void()">Ladakh Tour Packages From Surat</a>
-                            <a href="javascript:void()">Ladakh Tour Packages From Pune</a>
-                            <a href="javascript:void()">Ladakh Tour Packages From Jaipur</a>
-                            <a href="javascript:void()">Ladakh Tour Packages From Hyderabad</a>
-                            <a href="javascript:void()">Ladakh Tour Packages From Lucknow</a>
-                            <a href="javascript:void()">Ladakh Tour Packages From Vadodara</a>
-                        </div>
+        <!-- HYPERLINK SECTION -->
+        @if($destinations->isNotEmpty() || $attractions->isNotEmpty() || $activities->isNotEmpty())
+            <section class="seo-links-sec">
+                <div class="container">
+                    <div class="heading">
+                        <h3>Explore More <span>About {{ $subCategory->name }}</span></h3>
+                        <p>
+                            {{ $subCategory->short_description ?? 'Discover popular tours, itineraries, places to visit and experiences to make your journey unforgettable.' }}
+                        </p>
                     </div>
 
-                    <!-- Category 02 -->
-                    <div class="seo-link-block">
-                        <h4>Best Selling Ladakh Itineraries</h4>
+                    <div class="seo-links-wrapper">
+                        {{-- Destinations --}}
+                        @if($destinations->isNotEmpty())
+                            <div class="seo-link-block">
+                                <h4>Popular {{ $subCategory->name }} Destinations</h4>
+                                <div class="seo-link-wrap">
+                                    @foreach($destinations as $destination)
+                                        <a href="{{ route('destination.show', $destination->slug) }}">{{ $destination->name }}</a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
 
-                        <div class="seo-link-wrap">
-                            <a href="javascript:void()">Ladakh Itinerary for 5 Days</a>
-                            <a href="javascript:void()">Ladakh Itinerary for 6 Days</a>
-                            <a href="javascript:void()">Ladakh Itinerary for 7 Days</a>
-                            <a href="javascript:void()">Ladakh Itinerary for 8 Days</a>
-                            <a href="javascript:void()">Ladakh Itinerary for 9 Days</a>
-                            <a href="javascript:void()">Ladakh Itinerary for 10 Days</a>
-                            <a href="javascript:void()">Ladakh Itinerary for 11 Days</a>
-                            <a href="javascript:void()">Ladakh Itinerary for 12 Days</a>
-                        </div>
-                    </div>
+                        {{-- Attractions --}}
+                        @if($attractions->isNotEmpty())
+                            <div class="seo-link-block">
+                                <h4>Top {{ $subCategory->name }} Attractions</h4>
+                                <div class="seo-link-wrap">
+                                    @foreach($attractions as $attraction)
+                                        <a href="{{ route('attraction.show', $attraction->slug) }}">{{ $attraction->name }}</a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
 
-                    <!-- Category 03 -->
-                    <div class="seo-link-block">
-                        <h4>All About Ladakh Trip</h4>
+                        {{-- Activities --}}
+                        @if($activities->isNotEmpty())
+                            <div class="seo-link-block">
+                                <h4>Things To Do in {{ $subCategory->name }}</h4>
+                                <div class="seo-link-wrap">
+                                    @foreach($activities as $activity)
+                                        <a href="{{ route('activities.show', $activity->slug) }}">{{ $activity->name }}</a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
 
-                        <div class="seo-link-wrap">
-                            <a href="javascript:void()">Tourist Places in Ladakh</a>
-                            <a href="javascript:void()">What to Do in Ladakh</a>
-                            <a href="javascript:void()">Places to Stay in Ladakh</a>
-                            <a href="javascript:void()">Best Time to Visit Ladakh</a>
-                            <a href="javascript:void()">How to Reach Ladakh</a>
-                            <a href="javascript:void()">Ladakh Travel Guide</a>
-                        </div>
-                    </div>
-
-                    <!-- Category 04 -->
-                    <div class="seo-link-block">
-                        <h4>More Things To Do in Ladakh</h4>
-
-                        <div class="seo-link-wrap">
-                            <a href="javascript:void()">Luxury Tours in Ladakh</a>
-                            <a href="javascript:void()">Group Tours in Ladakh</a>
-                            <a href="javascript:void()">Biking in Ladakh</a>
-                            <a href="javascript:void()">Family Tours in Ladakh</a>
-                            <a href="javascript:void()">Honeymoon in Ladakh</a>
-                            <a href="javascript:void()">Best Deals in Ladakh</a>
-                            <a href="javascript:void()">Car Rentals in Ladakh</a>
-                            <a href="javascript:void()">Difficult Treks in Ladakh</a>
-                            <a href="javascript:void()">Motorbike Trips in Ladakh</a>
-                            <a href="javascript:void()">Jeep Safari in Ladakh</a>
-                            <a href="javascript:void()">Snow Trips in Ladakh</a>
-                            <a href="javascript:void()">Camping in Ladakh</a>
-                            <a href="javascript:void()">Winter Treks in Ladakh</a>
-                            <a href="javascript:void()">Monsoon Treks in Ladakh</a>
+                        {{-- Static evergreen info block --}}
+                        <div class="seo-link-block">
+                            <h4>All About {{ $subCategory->name }} Trip</h4>
+                            <div class="seo-link-wrap">
+                                <a href="javascript:void()">Tourist Places in {{ $subCategory->name }}</a>
+                                <a href="javascript:void()">What to Do in {{ $subCategory->name }}</a>
+                                <a href="javascript:void()">Places to Stay in {{ $subCategory->name }}</a>
+                                <a href="javascript:void()">Best Time to Visit {{ $subCategory->name }}</a>
+                                <a href="javascript:void()">How to Reach {{ $subCategory->name }}</a>
+                                <a href="javascript:void()">{{ $subCategory->name }} Travel Guide</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        @endif
+
     </main>
 
 @endsection

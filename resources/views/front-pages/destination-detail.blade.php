@@ -11,6 +11,7 @@
 @section('content')
 
     <main>
+
         {{-- Hero Section --}}
         <section class="detail-banner">
             <div class="container">
@@ -130,221 +131,109 @@
         </section>
 
         {{-- Tour Packages Section --}}
-        <section class="tour-package-near-h1">
-            <div class="container">
-                <div class="heading">
-                    <h3>Kashmir <span>Tour Packages</span></h3>
-                    <p>
-                        Handpicked itineraries to help you plan the perfect Kashmir trip.
-                    </p>
-                </div>
+        @if($destination->tourPackages->isNotEmpty())
+            <section class="tour-package-near-h1">
+                <div class="container">
+                    <div class="heading">
+                        <h3>{{ $destination->name }} <span>Tour Packages</span></h3>
+                        <p>
+                            Handpicked itineraries to help you plan the perfect {{ $destination->name }} trip.
+                        </p>
+                    </div>
 
-                <div class="swiper-wrap">
-                    <div class="swiper thirdSilder">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/attraction/kashmir1.jpg') }}"
-                                            alt="Kashmir Escape Package" />
-                                        <span class="save">Save INR 5,900</span>
-                                    </a>
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>5N / 6D</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(78)</em>
+                    <div class="swiper-wrap">
+                        <div class="swiper thirdSilder">
+                            <div class="swiper-wrapper">
+                                @foreach($destination->tourPackages as $package)
+                                    <div class="swiper-slide">
+                                        <div class="trip_card">
+                                            <a href="{{ route('tourpackage.show', $package->slug) }}" target="_blank" class="img">
+                                                @if($package->main_image)
+                                                    <img loading="lazy" src="{{ asset('storage/' . $package->main_image) }}"
+                                                        alt="{{ $package->name }}" />
+                                                @endif
+                                                @if($package->old_price && $package->price && $package->old_price > $package->price)
+                                                    <span class="save">Save INR
+                                                        {{ number_format($package->old_price - $package->price) }}</span>
+                                                @endif
+                                            </a>
+
+                                            <div class="content">
+                                                <div class="rating">
+                                                    @if($package->duration_text)
+                                                        <span>{{ $package->duration_text }}</span>
+                                                    @endif
+
+                                                    @if($package->rating)
+                                                        <div class="star">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                                <path
+                                                                    d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
+                                                            </svg>
+                                                            <span>{{ $package->rating }}</span>
+                                                            @if($package->review_count)
+                                                                <em>({{ $package->review_count }})</em>
+                                                            @endif
+                                                        </div>
+                                                    @endif
+                                                </div>
+
+                                                <h3>
+                                                    <a href="{{ route('tourpackage.show', $package->slug) }}" target="_blank">
+                                                        {{ $package->name }}
+                                                    </a>
+                                                </h3>
+
+                                                @if($package->old_price && $package->price && $package->old_price > $package->price)
+                                                    <div class="innerSave">
+                                                        <s>INR {{ number_format($package->old_price) }}</s>
+                                                        <span class="saveChip">Save INR
+                                                            {{ number_format($package->old_price - $package->price) }}</span>
+                                                    </div>
+                                                @endif
+
+                                                @if($package->price)
+                                                    <p class="price">INR {{ number_format($package->price) }}</p>
+                                                @endif
+
+                                                <div class="btns">
+                                                    <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+                                                            <path
+                                                                d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
+                                                        </svg>
+                                                    </a>
+                                                    <button data-model=".enquire-pop" data-package-id="{{ $package->id }}"
+                                                        class="btn btn-primary">
+                                                        Enquire Now
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Kashmir Escape</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 30,800</s>
-                                            <span class="saveChip">Save INR 5,900</span>
-                                        </div>
-                                        <p class="price">INR 24,900</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/attraction/kashmir2.jpg') }}"
-                                            alt="Good Vibes Kashmir Package" />
-                                        <span class="save">Save INR 7,200</span>
-                                    </a>
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>5N / 6D</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.7</span>
-                                                <em>(103)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Good Vibes Kashmir</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 38,000</s>
-                                            <span class="saveChip">Save INR 7,200</span>
-                                        </div>
-                                        <p class="price">INR 30,800</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/attraction/kashmir3.jpg') }}"
-                                            alt="Kashmir Explorer Package" />
-                                        <span class="save">Save INR 9,000</span>
-                                    </a>
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>6N / 7D</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.6</span>
-                                                <em>(64)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Kashmir Explorer</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 44,900</s>
-                                            <span class="saveChip">Save INR 9,000</span>
-                                        </div>
-                                        <p class="price">INR 35,900</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/attraction/kashmir4.jpg') }}"
-                                            alt="Kashmir Honeymoon Package" />
-                                        <span class="save">Save INR 11,500</span>
-                                    </a>
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>5N / 6D</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.8</span>
-                                                <em>(120)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Kashmir Honeymoon</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 52,400</s>
-                                            <span class="saveChip">Save INR 11,500</span>
-                                        </div>
-                                        <p class="price">INR 40,900</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
-                    </div>
 
-                    <div class="swiper-group">
-                        <button type="button" class="thirdSilder-prev btn-prev">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                <path fill="#fff"
-                                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
-                            </svg>
-                        </button>
-                        <button type="button" class="thirdSilder-next btn-next">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                <path fill="#fff"
-                                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
-                            </svg>
-                        </button>
+                        <div class="swiper-group">
+                            <button type="button" class="thirdSilder-prev btn-prev">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                                    <path fill="#fff"
+                                        d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
+                                </svg>
+                            </button>
+                            <button type="button" class="thirdSilder-next btn-next">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                                    <path fill="#fff"
+                                        d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        @endif
 
         {{-- Verdict Section --}}
         <section class="detail-secA">
@@ -787,225 +676,109 @@
         </section>
 
         {{-- Related Packages --}}
-        <section class="related-tour-package">
-            <div class="container">
-                <div class="heading">
-                    <h3>Related <span>Packages</span></h3>
-                    <p>
-                        Explore more tour packages combining Kashmir with nearby
-                        destinations.
-                    </p>
-                </div>
+        @if($relatedPackages->isNotEmpty())
+            <section class="related-tour-package">
+                <div class="container">
+                    <div class="heading">
+                        <h3>Related <span>Packages</span></h3>
+                        <p>
+                            Explore more tour packages combining {{ $destination->name }} with nearby destinations.
+                        </p>
+                    </div>
 
-                <div class="swiper-wrap">
-                    <div class="swiper thirdSilder">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/attraction/kashmir5.jpg')}}"
-                                            alt="Leh Ladakh Tour Package" />
-                                        <span class="save">Save INR 18,000</span>
-                                    </a>
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>7 days & 6 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.7</span>
-                                                <em>(95)</em>
+                    <div class="swiper-wrap">
+                        <div class="swiper thirdSilder">
+                            <div class="swiper-wrapper">
+                                @foreach($relatedPackages as $package)
+                                    <div class="swiper-slide">
+                                        <div class="trip_card">
+                                            <a href="{{ route('tourpackage.show', $package->slug) }}" target="_blank" class="img">
+                                                @if($package->main_image)
+                                                    <img loading="lazy" src="{{ asset('storage/' . $package->main_image) }}"
+                                                        alt="{{ $package->name }}" />
+                                                @endif
+                                                @if($package->old_price && $package->price && $package->old_price > $package->price)
+                                                    <span class="save">Save INR
+                                                        {{ number_format($package->old_price - $package->price) }}</span>
+                                                @endif
+                                            </a>
+
+                                            <div class="content">
+                                                <div class="rating">
+                                                    @if($package->duration_text)
+                                                        <span>{{ $package->duration_text }}</span>
+                                                    @endif
+
+                                                    @if($package->rating)
+                                                        <div class="star">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                                <path
+                                                                    d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
+                                                            </svg>
+                                                            <span>{{ $package->rating }}</span>
+                                                            @if($package->review_count)
+                                                                <em>({{ $package->review_count }})</em>
+                                                            @endif
+                                                        </div>
+                                                    @endif
+                                                </div>
+
+                                                <h3>
+                                                    <a href="{{ route('tourpackage.show', $package->slug) }}" target="_blank">
+                                                        {{ $package->name }}
+                                                    </a>
+                                                </h3>
+
+                                                @if($package->old_price && $package->price && $package->old_price > $package->price)
+                                                    <div class="innerSave">
+                                                        <s>INR {{ number_format($package->old_price) }}</s>
+                                                        <span class="saveChip">Save INR
+                                                            {{ number_format($package->old_price - $package->price) }}</span>
+                                                    </div>
+                                                @endif
+
+                                                @if($package->price)
+                                                    <p class="price">INR {{ number_format($package->price) }}</p>
+                                                @endif
+
+                                                <div class="btns">
+                                                    <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+                                                            <path
+                                                                d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
+                                                        </svg>
+                                                    </a>
+                                                    <button data-model=".enquire-pop" data-package-id="{{ $package->id }}"
+                                                        class="btn btn-primary">
+                                                        Enquire Now
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Leh Ladakh High-Altitude
-                                                Adventure</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 63,000</s>
-                                            <span class="saveChip">Save INR 18,000</span>
-                                        </div>
-                                        <p class="price">INR 45,000</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/destinaiton/ride.jpg') }}"
-                                            alt="Manali Tour Package" />
-                                        <span class="save">Save INR 10,500</span>
-                                    </a>
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>5 days & 4 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.5</span>
-                                                <em>(72)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Manali Snow Valley Escape</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 38,500</s>
-                                            <span class="saveChip">Save INR 10,500</span>
-                                        </div>
-                                        <p class="price">INR 28,000</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/destinaiton/garder.jpg') }}"
-                                            alt="Shimla Tour Package" />
-                                        <span class="save">Save INR 8,200</span>
-                                    </a>
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>4 days & 3 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.4</span>
-                                                <em>(58)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Shimla Hill Station Getaway</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 26,700</s>
-                                            <span class="saveChip">Save INR 8,200</span>
-                                        </div>
-                                        <p class="price">INR 18,500</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="trip_card">
-                                    <a href="listing-detail.html" target="_blank" class="img">
-                                        <img loading="lazy" src="{{ asset('assets/images/attraction/kashmir5.jpg') }}"
-                                            alt="Leh Ladakh Tour Package" />
-                                        <span class="save">Save INR 18,000</span>
-                                    </a>
-                                    <div class="content">
-                                        <div class="rating">
-                                            <span>7 days & 6 nights</span>
-                                            <div class="star">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08z" />
-                                                </svg>
-                                                <span>4.7</span>
-                                                <em>(95)</em>
-                                            </div>
-                                        </div>
-
-                                        <h3>
-                                            <a href="listing-detail.html" target="_blank">Leh Ladakh High-Altitude
-                                                Adventure</a>
-                                        </h3>
-
-                                        <div class="innerSave">
-                                            <s>INR 63,000</s>
-                                            <span class="saveChip">Save INR 18,000</span>
-                                        </div>
-                                        <p class="price">INR 45,000</p>
-
-                                        <div class="btns">
-                                            <a href="tel:+91 000 000 000" class="btn btn-outline-primary">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                    <path
-                                                        d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                                </svg>
-                                            </a>
-                                            <button data-model=".enquire-pop" class="btn btn-primary">
-                                                Enquire Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
-                    </div>
 
-                    <div class="swiper-group">
-                        <button type="button" class="thirdSilder-prev btn-prev">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                <path fill="#fff"
-                                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
-                            </svg>
-                        </button>
-                        <button type="button" class="thirdSilder-next btn-next">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                <path fill="#fff"
-                                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
-                            </svg>
-                        </button>
+                        <div class="swiper-group">
+                            <button type="button" class="thirdSilder-prev btn-prev">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                                    <path fill="#fff"
+                                        d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
+                                </svg>
+                            </button>
+                            <button type="button" class="thirdSilder-next btn-next">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                                    <path fill="#fff"
+                                        d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
-
-            </div>
-        </section>
+            </section>
+        @endif
 
         {{-- More About Destination --}}
         <section class="more-about">
