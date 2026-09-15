@@ -20,6 +20,8 @@ use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\AttractionCategory;
+
 
 class AttractionController extends Controller
 {
@@ -36,8 +38,9 @@ class AttractionController extends Controller
     public function create()
     {
         $countries = Country::where('status', 'active')->orderBy('sort_order')->get();
+        $categories = AttractionCategory::published()->orderBy('sort_order')->orderBy('name')->get();
 
-        return view('admin.attraction.create', compact('countries'));
+        return view('admin.attraction.create', compact('countries', 'categories'));
     }
 
     public function store(Request $request)
@@ -72,6 +75,7 @@ class AttractionController extends Controller
 
         $validated['best_for_tags'] = $this->parseTags($request->input('best_for_tags'));
         $validated['is_featured'] = $request->boolean('is_featured');
+        $validated['is_must_visit'] = $request->boolean('is_must_visit');
         $validated['status'] = $request->input('status', 'draft');
 
         $attraction = Attraction::create($validated);
@@ -97,6 +101,7 @@ class AttractionController extends Controller
         $countries = Country::where('status', 'active')->orderBy('sort_order')->get();
         $states = State::where('country_id', $attraction->country_id)->orderBy('sort_order')->get();
         $cities = City::where('state_id', $attraction->state_id)->orderBy('sort_order')->get();
+        $categories = AttractionCategory::published()->orderBy('sort_order')->orderBy('name')->get();
         $galleries = $attraction->galleries()->orderBy('sort_order')->get();
         $highlights = $attraction->highlights()->orderBy('sort_order')->get();
         $experiences = $attraction->experiences()->orderBy('sort_order')->get();
@@ -111,6 +116,7 @@ class AttractionController extends Controller
         return view('admin.attraction.edit', compact(
             'attraction',
             'countries',
+            'categories',
             'states',
             'cities',
             'galleries',
@@ -171,6 +177,7 @@ class AttractionController extends Controller
 
         $validated['best_for_tags'] = $this->parseTags($request->input('best_for_tags'));
         $validated['is_featured'] = $request->boolean('is_featured');
+        $validated['is_must_visit'] = $request->boolean('is_must_visit');
         $validated['status'] = $request->input('status', $attraction->status);
 
         $attraction->update($validated);
@@ -691,6 +698,8 @@ class AttractionController extends Controller
     private function validateData(Request $request, ?int $ignoreId = null): array
     {
         return $request->validate([
+            'category_id' => 'nullable|exists:attraction_categories,id',
+            'is_must_visit' => 'nullable|boolean',
             'name' => 'required|string|max:255',
             'country_id' => 'required|exists:countries,id',
             'state_id' => 'nullable|exists:states,id',

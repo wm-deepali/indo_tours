@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\{
     ActivityController,
     AdminSettingController,
     SeoSettingController,
+    AttractionCategoryController,
     AttractionController,
     LocationController,
     HotelController,
@@ -16,7 +17,10 @@ use App\Http\Controllers\Admin\{
     TourPackageController,
     ReviewController,
     ActivityCategoryController,
-    TourPackageEnquiryController
+    TourPackageEnquiryController,
+    LandingPageActivityController,
+    LandingPageDestinationController,
+    LandingPageAttractionController
 };
 
 use Illuminate\Support\Facades\Route;
@@ -65,6 +69,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('location/cities/{state}', [LocationController::class, 'getCities'])->name('location.cities');
 
         Route::resource('destinations', DestinationController::class);
+        Route::resource('attraction-categories', AttractionCategoryController::class);
         Route::resource('attractions', AttractionController::class);
         Route::resource('activity-categories', ActivityCategoryController::class);
         Route::resource('activities', ActivityController::class);
@@ -76,6 +81,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::resource('reviews', ReviewController::class);
         Route::get('reviews/entities/{type}', [ReviewController::class, 'entitiesByType'])->name('reviews.entities');
+
+        Route::get('landing-pages/activities', [LandingPageActivityController::class, 'edit'])->name('landing-pages.activities.edit');
+        Route::put('landing-pages/activities', [LandingPageActivityController::class, 'update'])->name('landing-pages.activities.update');
+
+        Route::get('landing-pages/destination', [LandingPageDestinationController::class, 'edit'])->name('landing-pages.destination.edit');
+        Route::put('landing-pages/destination', [LandingPageDestinationController::class, 'update'])->name('landing-pages.destination.update');
+
+        Route::get('landing-pages/attraction', [LandingPageAttractionController::class, 'edit'])->name('landing-pages.attraction.edit');
+        Route::put('landing-pages/attraction', [LandingPageAttractionController::class, 'update'])->name('landing-pages.attraction.update');
 
         // Admin Settings routes
         Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');

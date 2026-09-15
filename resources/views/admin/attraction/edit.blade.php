@@ -365,6 +365,21 @@
                     <div class="cat-tab-panel active" data-panel="general">
 
                         <div class="form-field">
+                            <label for="category_id">Category</label>
+                            <select id="category_id" name="category_id"
+                                class="form-control-styled @error('category_id') is-invalid @enderror">
+                                <option value="">Select Category (optional)</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ old('category_id', $attraction->category_id) == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('category_id')
+                            <div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="form-field">
                             <label for="name">Attraction Name</label>
                             <input type="text" id="name" name="name"
                                 class="form-control-styled @error('name') is-invalid @enderror"
@@ -471,12 +486,21 @@
                             </div>
                         </div>
 
-                        <div class="form-field toggle-row">
-                            <label class="switch">
-                                <input type="checkbox" name="is_featured" value="1" {{ old('is_featured', $attraction->is_featured) ? 'checked' : '' }}>
-                                <span class="switch-slider"></span>
-                            </label>
-                            <label style="margin:0">Featured Attraction</label>
+                        <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+                            <div class="form-field toggle-row">
+                                <label class="switch">
+                                    <input type="checkbox" name="is_featured" value="1" {{ old('is_featured', $attraction->is_featured) ? 'checked' : '' }}>
+                                    <span class="switch-slider"></span>
+                                </label>
+                                <label style="margin:0">Featured Attraction</label>
+                            </div>
+                            <div class="form-field toggle-row">
+                                <label class="switch">
+                                    <input type="checkbox" name="is_must_visit" value="1" {{ old('is_must_visit', $attraction->is_must_visit) ? 'checked' : '' }}>
+                                    <span class="switch-slider"></span>
+                                </label>
+                                <label style="margin:0">Must-Visit Attraction</label>
+                            </div>
                         </div>
 
                         <div class="form-field">

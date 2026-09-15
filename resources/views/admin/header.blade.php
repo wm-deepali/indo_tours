@@ -35,35 +35,35 @@
 <div id='cssmenu'>
     <ul class="pt-0">
 
-        {{-- DASHBOARD — always visible, no permission gate --}}
+        {{-- DASHBOARD --}}
         <li class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
             <a href="{{ route('admin.dashboard') }}">
-                <i class="fa-solid fa-gauge"></i> Dashboard
+                <i class="fa-solid fa-gauge-high"></i> Dashboard
             </a>
         </li>
 
-        {{-- MASTER — Categories, Sub Categories, Hotels, Tour Packages, Destinations, Attractions, Activities, Activity
-        Categories --}}
+        {{-- MASTER --}}
         <li class="{{ request()->routeIs([
-    'admin.categories.*',
-    'admin.subcategories.*',
-    'admin.hotels.*',
-    'admin.tourpackages.*',
-    'admin.destinations.*',
-    'admin.attractions.*',
-    'admin.activities.*',
-    'admin.activity-categories.*',
-]) ? 'active' : '' }}">
+            'admin.categories.*',
+            'admin.subcategories.*',
+            'admin.hotels.*',
+            'admin.tourpackages.*',
+            'admin.destinations.*',
+            'admin.attraction-categories.*',
+            'admin.attractions.*',
+            'admin.activity-categories.*',
+            'admin.activities.*',
+        ]) ? 'active' : '' }}">
             <a href="#"><i class="fa-solid fa-layer-group"></i> Master</a>
             <ul>
                 <li class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.categories.index') }}">
-                        <i class="fa-solid fa-tags"></i> Categories
+                        <i class="fa-solid fa-tags"></i> Tour Categories
                     </a>
                 </li>
                 <li class="{{ request()->routeIs('admin.subcategories.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.subcategories.index') }}">
-                        <i class="fa-solid fa-tag"></i> Sub Categories
+                        <i class="fa-solid fa-tag"></i> Tour Sub Categories
                     </a>
                 </li>
                 <li class="{{ request()->routeIs('admin.hotels.*') ? 'active' : '' }}">
@@ -81,6 +81,11 @@
                         <i class="fa-solid fa-map-location-dot"></i> Destinations
                     </a>
                 </li>
+                <li class="{{ request()->routeIs('admin.attraction-categories.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.attraction-categories.index') }}">
+                        <i class="fa-solid fa-rectangle-list"></i> Attraction Categories
+                    </a>
+                </li>
                 <li class="{{ request()->routeIs('admin.attractions.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.attractions.index') }}">
                         <i class="fa-solid fa-landmark"></i> Attractions
@@ -88,7 +93,7 @@
                 </li>
                 <li class="{{ request()->routeIs('admin.activity-categories.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.activity-categories.index') }}">
-                        <i class="fa-solid fa-list"></i> Activity Categories
+                        <i class="fa-solid fa-clipboard-list"></i> Activity Categories
                     </a>
                 </li>
                 <li class="{{ request()->routeIs('admin.activities.*') ? 'active' : '' }}">
@@ -106,21 +111,70 @@
             </a>
         </li>
 
-        <li class="{{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+        {{-- CONTENT MANAGE --}}
+        <li class="{{ request()->routeIs('admin.landing-pages.*') ? 'active' : '' }}">
+            <a href="#"><i class="fa-solid fa-file-lines"></i> Content Manage</a>
+            <ul>
+                <li class="{{ request()->routeIs('admin.landing-pages.*') ? 'active' : '' }}">
+                    <a href="#" class="submenu-toggle">
+                        <i class="fa-solid fa-window-restore"></i> Manage Landing Pages
+                    </a>
+                    <ul>
+                        <li class="{{ request()->routeIs('admin.landing-pages.destination.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.landing-pages.destination.edit') }}">
+                                <i class="fa-solid fa-map-location-dot"></i> Destination Page
+                            </a>
+                        </li>
+                        <li class="{{ request()->routeIs('admin.landing-pages.activities.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.landing-pages.activities.edit') }}">
+                                <i class="fa-solid fa-person-hiking"></i> Activities Page
+                            </a>
+                        </li>
+                        <li class="{{ request()->routeIs('admin.landing-pages.attraction.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.landing-pages.attraction.edit') }}">
+                                <i class="fa-solid fa-landmark"></i> Attraction Page
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+
+        {{-- SETTINGS --}}
+        <li class="{{ request()->routeIs(['admin.settings.*', 'admin.seo-setting.*']) ? 'active' : '' }}">
             <a href="#"><i class="fa-solid fa-gear"></i> Settings</a>
             <ul>
-                <li><a href="{{ route('admin.settings.index', ['tab' => 'general']) }}">General Setting</a></li>
-                <li><a href="{{ route('admin.settings.index', ['tab' => 'smtp']) }}">SMTP</a></li>
-                <li><a href="{{ route('admin.settings.index', ['tab' => 'sms']) }}">SMS</a></li>
-                <li><a href="{{ route('admin.settings.index', ['tab' => 'tracking']) }}"> Google Tracking & Pixels</a>
+                <li class="{{ request()->routeIs('admin.settings.*') && request()->query('tab', 'general') === 'general' ? 'active' : '' }}">
+                    <a href="{{ route('admin.settings.index', ['tab' => 'general']) }}">
+                        <i class="fa-solid fa-sliders"></i> General Setting
+                    </a>
                 </li>
-                <li><a href="{{ route('admin.seo-setting.index') }}"> SEO Settings</a></li>
+                <li class="{{ request()->routeIs('admin.settings.*') && request()->query('tab') === 'smtp' ? 'active' : '' }}">
+                    <a href="{{ route('admin.settings.index', ['tab' => 'smtp']) }}">
+                        <i class="fa-solid fa-envelope"></i> SMTP
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.settings.*') && request()->query('tab') === 'sms' ? 'active' : '' }}">
+                    <a href="{{ route('admin.settings.index', ['tab' => 'sms']) }}">
+                        <i class="fa-solid fa-comment-sms"></i> SMS
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.settings.*') && request()->query('tab') === 'tracking' ? 'active' : '' }}">
+                    <a href="{{ route('admin.settings.index', ['tab' => 'tracking']) }}">
+                        <i class="fa-brands fa-google"></i> Google Tracking &amp; Pixels
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.seo-setting.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.seo-setting.index') }}">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i> SEO Settings
+                    </a>
+                </li>
             </ul>
         </li>
 
         {{-- REPORTS & INQUIRIES --}}
-        <li class="{{ request()->routeIs('admin.inquiries.*') ? 'active' : '' }}">
-            <a href="#"><i class="fa-solid fa-inbox"></i> Reports & Inquiries</a>
+        <li class="{{ request()->routeIs(['admin.inquiries.*', 'admin.package-enquiries.*']) ? 'active' : '' }}">
+            <a href="#"><i class="fa-solid fa-inbox"></i> Reports &amp; Inquiries</a>
             <ul>
                 <li class="{{ request()->routeIs('admin.package-enquiries.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.package-enquiries.index') }}">

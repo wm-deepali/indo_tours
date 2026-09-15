@@ -49,6 +49,7 @@ class ActivityController extends Controller
         $validated['sidebar_points'] = $this->parseList($request->input('sidebar_points', []));
         $validated['map_points'] = $this->parseList($request->input('map_points', []));
         $validated['status'] = $request->input('status', 'draft');
+        $validated['featured'] = $request->boolean('featured');
 
         $activity = Activity::create($validated);
 
@@ -102,6 +103,7 @@ class ActivityController extends Controller
         $validated['sidebar_points'] = $this->parseList($request->input('sidebar_points', []));
         $validated['map_points'] = $this->parseList($request->input('map_points', []));
         $validated['status'] = $request->input('status', $activity->status);
+        $validated['featured'] = $request->boolean('featured');
 
         $activity->update($validated);
 
@@ -333,6 +335,7 @@ class ActivityController extends Controller
 
             'starting_price' => 'nullable|numeric|min:0',
             'price_unit' => 'nullable|string|max:50',
+            'featured' => 'nullable|boolean',
 
             'about_title' => 'nullable|string|max:255',
             'about_content' => 'nullable|string',
@@ -389,5 +392,5 @@ class ActivityController extends Controller
             ->values()
             ->all();
     }
-    
+
 }

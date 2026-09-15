@@ -65,6 +65,7 @@ class TourPackageController extends Controller
 
         $validated['slug'] = Str::slug($request->name);
         $validated['status'] = $request->status ?? 'draft';
+        $validated['featured'] = $request->boolean('featured');
 
         foreach (['main_image', 'top_image', 'bottom_left_image', 'bottom_right_image', 'og_image', 'group_offer_image'] as $field) {
             if ($request->hasFile($field)) {
@@ -115,6 +116,7 @@ class TourPackageController extends Controller
         $validated = $request->validate($this->rules());
 
         $validated['status'] = $request->status ?? $tourpackage->status;
+        $validated['featured'] = $request->boolean('featured');
 
         foreach (['main_image', 'top_image', 'bottom_left_image', 'bottom_right_image', 'og_image', 'group_offer_image'] as $field) {
             if ($request->hasFile($field)) {
@@ -179,6 +181,7 @@ class TourPackageController extends Controller
             'sub_category_id' => 'required|exists:sub_categories,id',
             'name' => 'required|string|max:255',
             'status' => 'nullable|in:draft,published,unpublished',
+            'featured' => 'nullable|boolean',
 
             'country_id' => 'nullable|exists:countries,id',
             'state_id' => 'nullable|exists:states,id',

@@ -47,10 +47,12 @@ class Activity extends Model
         'map_points',
         'map_directions_url',
         'status',
+        'featured',
         'sort_order',
     ];
 
     protected $casts = [
+        'featured' => 'boolean',
         'highlights' => 'array',
         'know_before_you_go' => 'array',
         'sidebar_points' => 'array',

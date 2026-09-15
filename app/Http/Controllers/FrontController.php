@@ -12,6 +12,10 @@ use App\Models\TourPackage;
 use App\Models\Review;
 use App\Models\TourPackageEnquiry;
 use App\Models\ActivityCategory;
+use App\Models\LandingPageActivity;
+use App\Models\LandingPageDestination;
+use App\Models\LandingPageAttraction;
+use App\Models\AttractionCategory;
 
 class FrontController extends Controller
 {
@@ -179,12 +183,24 @@ class FrontController extends Controller
 
     public function destinations(Request $request)
     {
+
+        $landingPage = LandingPageDestination::firstOrCreate([]);
+
+        $featuredPackages = TourPackage::with(['country', 'state', 'city'])
+            ->withAvg('reviews', 'rating')
+            ->withCount('reviews')
+            ->where('status', 'published')
+            ->where('featured', true)
+            ->latest()
+            ->take(8)
+            ->get();
+
         $destinations = Destination::published()
             ->orderBy('sort_order')
             ->take(6)
             ->get();
 
-        return view('front-pages.destination', compact('destinations'));
+        return view('front-pages.destination', compact('destinations', 'landingPage', 'featuredPackages'));
     }
 
     public function destinationDetail($slug)
@@ -218,14 +234,45 @@ class FrontController extends Controller
 
     public function attractions(Request $request)
     {
+        $landingPage = LandingPageAttraction::firstOrCreate([]);
+
+        $featuredAttractions = Attraction::with(['country', 'state', 'city'])
+            ->where('status', 'published')
+            ->where('is_featured', true)
+            ->orderBy('sort_order')
+            ->take(6)
+            ->get();
+
+        $destinations = Destination::published()
+            ->orderBy('sort_order')
+            ->take(6)
+            ->get();
+
+        $allDestinations = Destination::published()
+            ->orderBy('name')
+            ->get();
+
+        $categories = AttractionCategory::published()
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->take(6)
+            ->get();
+
         $mustVisitAttractions = Attraction::with(['country', 'state', 'city'])
             ->where('status', 'published')
-            ->orderByDesc('rating')
+            ->where('is_must_visit', true)
             ->latest()
             ->take(6)
             ->get();
 
-        return view('front-pages.attractions', compact('mustVisitAttractions'));
+        return view('front-pages.attractions', compact(
+            'landingPage',
+            'featuredAttractions',
+            'destinations',
+            'allDestinations',
+            'categories',
+            'mustVisitAttractions'
+        ));
     }
 
     public function attractionDetail($slug)
@@ -278,9 +325,23 @@ class FrontController extends Controller
         ));
     }
 
-
     public function activities(Request $request)
     {
+        $landingPage = LandingPageActivity::first();
+
+        $relatedDestinations = collect();
+        if ($landingPage && !empty($landingPage->related_destination_ids)) {
+            $attractionsById = Attraction::whereIn('id', $landingPage->related_destination_ids)
+                ->where('status', 'active')
+                ->get()
+                ->keyBy('id');
+
+            // preserve the admin-chosen order, since whereIn() doesn't guarantee it
+            $relatedDestinations = collect($landingPage->related_destination_ids)
+                ->map(fn($id) => $attractionsById->get($id))
+                ->filter();
+        }
+
         $categories = ActivityCategory::where('status', 'active')
             ->orderBy('sort_order')
             ->get();
@@ -299,7 +360,15 @@ class FrontController extends Controller
             return !$activity->country || $activity->country->name !== 'India';
         })->values();
 
-        return view('front-pages.activities', compact('categories', 'indianActivities', 'internationalActivities'));
+        $featuredActivities = Activity::with(['category', 'country', 'state', 'city', 'packages'])
+            ->where('status', 'published')
+            ->where('featured', true)
+            ->orderBy('sort_order')
+            ->latest()
+            ->take(8)
+            ->get();
+
+        return view('front-pages.activities', compact('landingPage', 'relatedDestinations', 'categories', 'indianActivities', 'internationalActivities', 'featuredActivities'));
     }
 
     public function activitiesDetail($slug)
@@ -338,7 +407,6 @@ class FrontController extends Controller
 
         return view('front-pages.activity-detail', compact('activity', 'relatedActivities'));
     }
-
 
     public function reviewStore(Request $request)
     {

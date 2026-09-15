@@ -550,6 +550,14 @@
                             </select>
                         </div>
 
+                        <div class="form-field toggle-row">
+                            <label class="switch">
+                                <input type="checkbox" name="featured" value="1" {{ old('featured') ? 'checked' : '' }}>
+                                <span class="switch-slider"></span>
+                            </label>
+                            <label style="margin:0">Featured (show in "Handpicked Activities" section)</label>
+                        </div>
+
                     </div>
 
                     {{-- ============ ABOUT ============ --}}

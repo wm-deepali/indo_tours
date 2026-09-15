@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Attraction extends Model
 {
     protected $fillable = [
+        'category_id',
         'name',
         'slug',
         'image',
@@ -30,6 +31,7 @@ class Attraction extends Model
         'rating',
         'review_count',
         'is_featured',
+        'is_must_visit',
         'status',
         'sort_order',
         'country_id',
@@ -53,9 +55,15 @@ class Attraction extends Model
     protected $casts = [
         'best_for_tags' => 'array',
         'is_featured' => 'boolean',
+        'is_must_visit' => 'boolean',
         'rating' => 'float',
         'offer_perks' => 'array',
     ];
+    
+    public function category()
+    {
+        return $this->belongsTo(AttractionCategory::class);
+    }
 
     public function country()
     {

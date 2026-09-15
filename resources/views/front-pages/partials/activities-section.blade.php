@@ -1,18 +1,5 @@
-{{-- resources/views/front-pages/partials/activities-section.blade.php --}}
-{{--
-    Usage: @include('front-pages.partials.activities-section', [
-        'sectionId'  => 'international-activities-grid',
-        'tabPrefix'  => 'intl',
-        'heading'    => 'International Activities',
-        'eyebrow'    => 'Handpicked For You',
-        'activities' => $internationalActivities,
-        'categories' => $categories,
-    ])
---}}
 
-<!-- ============================= -->
-<!-- {{ $heading }} CATEGORIES (tab-nav — uses existing common tab JS) -->
-<!-- ============================= -->
+<!-- {{ $heading }} CATEGORIES -->
 <section class="activities-categories">
   <div class="container">
     <ul class="tab-nav" data-tab-group="{{ $tabPrefix }}">
@@ -24,9 +11,7 @@
   </div>
 </section>
 
-<!-- ============================= -->
 <!-- {{ $heading }} LISTING -->
-<!-- ============================= -->
 <section class="activities-listing" id="{{ $sectionId }}">
   <div class="container">
     <div class="activities-listing-head">

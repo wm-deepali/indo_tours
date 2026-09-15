@@ -353,6 +353,13 @@
                         </div>
 
                         <div class="form-field">
+                            <label class="checkbox-row">
+                                <input type="checkbox" name="featured" value="1" {{ old('featured') ? 'checked' : '' }}>
+                                Featured (show in "Explore Our Tour Packages" on the Destinations landing page)
+                            </label>
+                        </div>
+
+                        <div class="form-field">
                             <label>Location</label>
                             <div class="form-row-3">
                                 <div>

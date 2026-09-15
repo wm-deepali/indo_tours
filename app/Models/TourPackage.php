@@ -15,6 +15,7 @@ class TourPackage extends Model
         'name',
         'slug',
         'status',
+        'featured',
         'country_id',
         'state_id',
         'city_id',
@@ -53,6 +54,7 @@ class TourPackage extends Model
     ];
 
     protected $casts = [
+        'featured' => 'boolean',
         'old_price' => 'decimal:2',
         'price' => 'decimal:2',
     ];

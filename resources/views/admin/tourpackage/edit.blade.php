@@ -356,6 +356,13 @@
                         </div>
 
                         <div class="form-field">
+                            <label class="checkbox-row">
+                                <input type="checkbox" name="featured" value="1" {{ old('featured', $tourPackage->featured) ? 'checked' : '' }}>
+                                Featured (show in "Explore Our Tour Packages" on the Destinations landing page)
+                            </label>
+                        </div>
+
+                        <div class="form-field">
                             <label>Location</label>
                             <div class="form-row-3">
                                 <div>
@@ -839,7 +846,7 @@
                         </div>
                     </div>
 
-                      {{-- ============ OFFERS ============ --}}
+                    {{-- ============ OFFERS ============ --}}
                     <div class="cat-tab-panel" data-panel="offers">
 
                         <h4 style="margin-bottom:14px;">Group Offer Banner</h4>
@@ -847,34 +854,38 @@
                         <div class="form-field">
                             <label for="group_offer_badge_text">Badge Text</label>
                             <input type="text" id="group_offer_badge_text" name="group_offer_badge_text"
-                                class="form-control-styled" value="{{ old('group_offer_badge_text',$tourPackage->group_offer_badge_text) }}"
+                                class="form-control-styled"
+                                value="{{ old('group_offer_badge_text', $tourPackage->group_offer_badge_text) }}"
                                 placeholder="e.g. Limited-Time Offer">
                         </div>
 
                         <div class="form-field">
                             <label for="group_offer_title">Title</label>
                             <input type="text" id="group_offer_title" name="group_offer_title"
-                                class="form-control-styled" value="{{ old('group_offer_title',$tourPackage->group_offer_title) }}"
+                                class="form-control-styled"
+                                value="{{ old('group_offer_title', $tourPackage->group_offer_title) }}"
                                 placeholder="e.g. Planning a Ladakh Trip? Save Up to 40% on Early Bookings">
                         </div>
 
                         <div class="form-field">
                             <label for="group_offer_description">Description</label>
                             <textarea id="group_offer_description" name="group_offer_description" rows="3"
-                                class="form-control-styled">{{ old('group_offer_description',$tourPackage->group_offer_description) }}</textarea>
+                                class="form-control-styled">{{ old('group_offer_description', $tourPackage->group_offer_description) }}</textarea>
                         </div>
 
                         <div class="form-row">
                             <div class="form-field">
                                 <label for="group_offer_button1_text">Button Text</label>
                                 <input type="text" id="group_offer_button1_text" name="group_offer_button1_text"
-                                    class="form-control-styled" value="{{ old('group_offer_button1_text' ,$tourPackage->group_offer_button1_text) }}"
+                                    class="form-control-styled"
+                                    value="{{ old('group_offer_button1_text', $tourPackage->group_offer_button1_text) }}"
                                     placeholder="e.g. Explore Packages">
                             </div>
                             <div class="form-field">
                                 <label for="group_offer_button1_url">Button URL</label>
                                 <input type="text" id="group_offer_button1_url" name="group_offer_button1_url"
-                                    class="form-control-styled" value="{{ old('group_offer_button1_url',$tourPackage->group_offer_button1_url) }}"
+                                    class="form-control-styled"
+                                    value="{{ old('group_offer_button1_url', $tourPackage->group_offer_button1_url) }}"
                                     placeholder="Leave blank to link to this subcategory">
                             </div>
                         </div>
@@ -892,46 +903,50 @@
                         <div class="form-field">
                             <label for="promo_badge_text">Badge Text</label>
                             <input type="text" id="promo_badge_text" name="promo_badge_text" class="form-control-styled"
-                                value="{{ old('promo_badge_text',$tourPackage->promo_badge_text) }}" placeholder="e.g. Monsoon Sale">
+                                value="{{ old('promo_badge_text', $tourPackage->promo_badge_text) }}"
+                                placeholder="e.g. Monsoon Sale">
                         </div>
 
                         <div class="form-field">
                             <label for="promo_title">Title</label>
                             <input type="text" id="promo_title" name="promo_title" class="form-control-styled"
-                                value="{{ old('promo_title',$tourPackage->promo_title) }}"
+                                value="{{ old('promo_title', $tourPackage->promo_title) }}"
                                 placeholder="e.g. Save up to INR 30,000 on selected Ladakh trips">
                         </div>
 
                         <div class="form-field">
                             <label for="promo_description">Description</label>
                             <textarea id="promo_description" name="promo_description" rows="3"
-                                class="form-control-styled">{{ old('promo_description',$tourPackage->promo_description) }}</textarea>
+                                class="form-control-styled">{{ old('promo_description', $tourPackage->promo_description) }}</textarea>
                         </div>
 
                         <div class="form-row">
                             <div class="form-field">
                                 <label for="promo_button_text">Button Text</label>
                                 <input type="text" id="promo_button_text" name="promo_button_text"
-                                    class="form-control-styled" value="{{ old('promo_button_text',$tourPackage->promo_button_text) }}"
+                                    class="form-control-styled"
+                                    value="{{ old('promo_button_text', $tourPackage->promo_button_text) }}"
                                     placeholder="e.g. Know More About the Deal">
                             </div>
                             <div class="form-field">
                                 <label for="promo_button_url">Button URL</label>
                                 <input type="text" id="promo_button_url" name="promo_button_url"
-                                    class="form-control-styled" value="{{ old('promo_button_url',$tourPackage->promo_button_url) }}">
+                                    class="form-control-styled"
+                                    value="{{ old('promo_button_url', $tourPackage->promo_button_url) }}">
                             </div>
                         </div>
 
                         <div class="form-field">
                             <label for="promo_end_at">Sale Ends At</label>
                             <input type="datetime-local" id="promo_end_at" name="promo_end_at"
-                                class="form-control-styled" value="{{ old('promo_end_at',$tourPackage->promo_end_at) }}">
+                                class="form-control-styled"
+                                value="{{ old('promo_end_at', $tourPackage->promo_end_at) }}">
                             <div class="hint">Countdown on the detail page counts down to this date/time — leave blank
                                 to hide the countdown block.</div>
                         </div>
 
                     </div>
-                    
+
                     {{-- ============ DESTINATIONS ============ --}}
                     <div class="cat-tab-panel" data-panel="destinations">
                         <div class="form-field">

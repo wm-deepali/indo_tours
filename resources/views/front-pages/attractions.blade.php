@@ -9,13 +9,17 @@
 
 @section('content')
 
-
   <main>
+
+    <!-- HERO SECTION -->
     <section class="banner attraction-banner">
       <div class="bg">
-        <video autoplay="" muted="" loop="" playsinline="" class="bg-video" src="{{ asset('assets/video/trip2.mp4') }}"
+        <video autoplay="" muted="" loop="" playsinline="" class="bg-video"
+          src="{{ $landingPage->hero_video ? asset('storage/' . $landingPage->hero_video) : asset('assets/video/trip2.mp4') }}"
           poster="{{ asset('assets/video/poster/trip2.png') }}">
-          <source src="{{ asset('assets/video/home-banner.mp4') }}" type="video/mp4" />
+          <source
+            src="{{ $landingPage->hero_video ? asset('storage/' . $landingPage->hero_video) : asset('assets/video/home-banner.mp4') }}"
+            type="video/mp4" />
         </video>
         <nav class="breadcrumb breadcrumb-light left" aria-label="Breadcrumb">
           <ul>
@@ -38,11 +42,15 @@
               <div class="attraction-search">
                 <div class="search-wrapper">
                   <div class="search-content">
-                    <h1>Find Your Perfect Attraction</h1>
-                    <p>
-                      Search for places, experiences and attractions to make
-                      your next trip unforgettable.
-                    </p>
+                    <h1>{{ $landingPage->hero_heading ?? 'Find Your Perfect Attraction' }}</h1>
+                    @if($landingPage->hero_description ?? null)
+                      <p>{{ $landingPage->hero_description }}</p>
+                    @else
+                      <p>
+                        Search for places, experiences and attractions to make
+                        your next trip unforgettable.
+                      </p>
+                    @endif
                   </div>
 
                   <form class="attraction-filter">
@@ -59,12 +67,9 @@
                     <div class="select-field">
                       <select name="destination" class="js-nice-select">
                         <option value="">Select Destination</option>
-                        <option value="kashmir">Kashmir</option>
-                        <option value="goa">Goa</option>
-                        <option value="manali">Manali</option>
-                        <option value="rajasthan">Rajasthan</option>
-                        <option value="kerala">Kerala</option>
-                        <option value="dubai">Dubai</option>
+                        @foreach($allDestinations as $destination)
+                          <option value="{{ $destination->slug }}">{{ $destination->name }}</option>
+                        @endforeach
                       </select>
                     </div>
 
@@ -93,316 +98,104 @@
       </div>
     </section>
 
+    <!-- DESTINATION SECTION -->
     <section class="destinations-sec">
       <div class="container">
         <div class="heading">
-          <h3>Explore Attractions by <span>Destination</span></h3>
-          <p>
-            Find amazing places to visit across popular destinations and start
-            planning your perfect journey.
-          </p>
+          <h3>{{ $landingPage->destinations_heading ?? 'Explore Attractions by Destination' }}</h3>
+          @if($landingPage->destinations_description ?? null)
+            <p>{{ $landingPage->destinations_description }}</p>
+          @else
+            <p>
+              Find amazing places to visit across popular destinations and start
+              planning your perfect journey.
+            </p>
+          @endif
         </div>
 
         <div class="destination-grid">
-          <a href="#" target="_blank" class="destination_card">
-            <div class="img">
-              <img loading="lazy" src="{{ asset('assets/images/blog/kashmir.jpg') }}" alt="Kashmir" />
-            </div>
-            <div class="content">
-              <p class="tag">Kashmir</p>
-              <h5>Explore Kashmir</h5>
-              <p class="desc">
-                Discover mountains, lakes, valleys and breathtaking natural
-                landscapes.
-              </p>
-              <button class="link-btn">
-                View Attractions
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2">
-                  <path d="M5 12h14M13 6l6 6-6 6" />
-                </svg>
-              </button>
-            </div>
-          </a>
-
-          <a href="#" target="_blank" class="destination_card">
-            <div class="img">
-              <img loading="lazy" src="{{ asset('assets/images/blog/hawamahal.jpg') }}" alt="Rajasthan" />
-            </div>
-            <div class="content">
-              <p class="tag">Rajasthan</p>
-              <h5>Explore Rajasthan</h5>
-              <p class="desc">
-                Experience royal palaces, historic forts and vibrant cultural
-                heritage.
-              </p>
-              <button class="link-btn">
-                View Attractions
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2">
-                  <path d="M5 12h14M13 6l6 6-6 6" />
-                </svg>
-              </button>
-            </div>
-          </a>
-
-          <a href="#" target="_blank" class="destination_card">
-            <div class="img">
-              <img loading="lazy" src="{{ asset('assets/images/blog/goa.jpg') }}" alt="Goa" />
-            </div>
-            <div class="content">
-              <p class="tag">Goa</p>
-              <h5>Explore Goa</h5>
-              <p class="desc">
-                Relax on beautiful beaches and experience Goa's vibrant
-                coastal lifestyle.
-              </p>
-              <button class="link-btn">
-                View Attractions
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2">
-                  <path d="M5 12h14M13 6l6 6-6 6" />
-                </svg>
-              </button>
-            </div>
-          </a>
-
-          <a href="#" target="_blank" class="destination_card">
-            <div class="img">
-              <img loading="lazy" src="{{ asset('assets/images/blog/manali.jpg') }}" alt="Kerala" />
-            </div>
-            <div class="content">
-              <p class="tag">Kerala</p>
-              <h5>Explore Kerala</h5>
-              <p class="desc">
-                Discover tranquil backwaters, lush landscapes and unique
-                cultural experiences.
-              </p>
-              <button class="link-btn">
-                View Attractions
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2">
-                  <path d="M5 12h14M13 6l6 6-6 6" />
-                </svg>
-              </button>
-            </div>
-          </a>
-
-          <a href="#" target="_blank" class="destination_card">
-            <div class="img">
-              <img loading="lazy" src="{{ asset('assets/images/blog/manali.jpg') }}" alt="Manali" />
-            </div>
-            <div class="content">
-              <p class="tag">Manali</p>
-              <h5>Explore Manali</h5>
-              <p class="desc">
-                Experience mountain views, adventure activities and peaceful
-                Himalayan escapes.
-              </p>
-              <button class="link-btn">
-                View Attractions
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2">
-                  <path d="M5 12h14M13 6l6 6-6 6" />
-                </svg>
-              </button>
-            </div>
-          </a>
-
-          <a href="#" target="_blank" class="destination_card">
-            <div class="img">
-              <img loading="lazy" src="{{ asset('assets/images/blog/dubai.jpg') }}" alt="Dubai" />
-            </div>
-            <div class="content">
-              <p class="tag">Dubai</p>
-              <h5>Explore Dubai</h5>
-              <p class="desc">
-                Discover modern landmarks, luxury experiences, desert
-                adventures and vibrant city life.
-              </p>
-              <button class="link-btn">
-                View Attractions
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2">
-                  <path d="M5 12h14M13 6l6 6-6 6" />
-                </svg>
-              </button>
-            </div>
-          </a>
+          @forelse($destinations as $destination)
+            <a href="{{ route('destination.show', $destination->slug) }}" target="_blank" class="destination_card">
+              <div class="img">
+                <img loading="lazy"
+                  src="{{ $destination->image ? asset('storage/' . $destination->image) : asset('assets/images/blog/default.jpg') }}"
+                  alt="{{ $destination->name }}" />
+              </div>
+              <div class="content">
+                <p class="tag">{{ $destination->name }}</p>
+                <h5>Explore {{ $destination->name }}</h5>
+                <p class="desc">
+                  {{ $destination->short_description }}
+                </p>
+                <button class="link-btn">
+                  View Attractions
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </button>
+              </div>
+            </a>
+          @empty
+            <p>No destinations available yet.</p>
+          @endforelse
         </div>
       </div>
     </section>
 
+    <!-- FEATURED ATTRACTION SECTION -->
     <section class="attractions-secA">
       <div class="container">
         <div class="heading">
-          <h3>Featured <span>Attractions</span></h3>
-          <p>
-            Explore some of the most popular places and experiences
-            recommended for your next journey.
-          </p>
+          <h3>{{ $landingPage->featured_heading ?? 'Featured Attractions' }}</h3>
+          @if($landingPage->featured_description ?? null)
+            <p>{{ $landingPage->featured_description }}</p>
+          @else
+            <p>
+              Explore some of the most popular places and experiences
+              recommended for your next journey.
+            </p>
+          @endif
         </div>
         <div class="swiper-wrap">
           <div class="swiper fourSilder">
             <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <a href="#" target="_blank" class="journey_card2">
-                  <div class="img">
-                    <img loading="lazy" src="{{ asset('assets/images/blog/manali.jpg') }}" alt="Solang Valley, Manali" />
-                  </div>
-
-                  <div class="content">
-                    <h5>Solang Valley</h5>
-
-                    <div class="icon">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none" />
-                        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                          stroke-width="2">
-                          <circle cx="12" cy="10" r="3" />
-                          <path
-                            d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8" />
-                        </g>
-                      </svg>
-
-                      <p>Manali, India</p>
+              @forelse($featuredAttractions as $attraction)
+                <div class="swiper-slide">
+                  <a href="{{ route('attraction.show', $attraction->slug) }}" target="_blank" class="journey_card2">
+                    <div class="img">
+                      <img loading="lazy"
+                        src="{{ $attraction->image ? asset('storage/' . $attraction->image) : asset('assets/images/blog/default.jpg') }}"
+                        alt="{{ $attraction->name }}" />
                     </div>
 
-                    <p>
-                      Enjoy breathtaking mountain views, adventure activities
-                      and the peaceful beauty of the Himalayas at Solang
-                      Valley.
-                    </p>
-                  </div>
-                </a>
-              </div>
+                    <div class="content">
+                      <h5>{{ $attraction->name }}</h5>
 
-              <div class="swiper-slide">
-                <a href="#" target="_blank" class="journey_card2">
-                  <div class="img">
-                    <img loading="lazy" src="{{ asset('assets/images/blog/goa.jpg') }}" alt="Baga Beach, Goa" />
-                  </div>
+                      <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                          <path d="M0 0h24v24H0z" fill="none" />
+                          <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2">
+                            <circle cx="12" cy="10" r="3" />
+                            <path
+                              d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8" />
+                          </g>
+                        </svg>
+                        <p>
+                          {{ collect([$attraction->city?->name, $attraction->state?->name, $attraction->country?->name])->filter()->implode(', ') }}
+                        </p>
+                      </div>
 
-                  <div class="content">
-                    <h5>Baga Beach</h5>
-
-                    <div class="icon">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none" />
-                        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                          stroke-width="2">
-                          <circle cx="12" cy="10" r="3" />
-                          <path
-                            d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8" />
-                        </g>
-                      </svg>
-
-                      <p>Goa, India</p>
+                      <p>
+                        {{ $attraction->short_description }}
+                      </p>
                     </div>
-
-                    <p>
-                      Relax by the Arabian Sea, enjoy water sports and
-                      experience the vibrant beach culture of Goa at Baga
-                      Beach.
-                    </p>
-                  </div>
-                </a>
-              </div>
-
-              <div class="swiper-slide">
-                <a href="#" target="_blank" class="journey_card2">
-                  <div class="img">
-                    <img loading="lazy" src="{{ asset('assets/images/blog/dubai.jpg') }}" alt="Burj Khalifa, Dubai" />
-                  </div>
-
-                  <div class="content">
-                    <h5>Burj Khalifa</h5>
-
-                    <div class="icon">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none" />
-                        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                          stroke-width="2">
-                          <circle cx="12" cy="10" r="3" />
-                          <path
-                            d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8" />
-                        </g>
-                      </svg>
-
-                      <p>Dubai, UAE</p>
-                    </div>
-
-                    <p>
-                      Experience spectacular city views from one of the
-                      world's most iconic skyscrapers in the heart of Downtown
-                      Dubai.
-                    </p>
-                  </div>
-                </a>
-              </div>
-
-              <div class="swiper-slide">
-                <a href="#" target="_blank" class="journey_card2">
-                  <div class="img">
-                    <img loading="lazy" src="{{ asset('assets/images/blog/kashmir.jpg') }}" alt="Dal Lake, Kashmir" />
-                  </div>
-
-                  <div class="content">
-                    <h5>Dal Lake</h5>
-
-                    <div class="icon">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none" />
-                        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                          stroke-width="2">
-                          <circle cx="12" cy="10" r="3" />
-                          <path
-                            d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8" />
-                        </g>
-                      </svg>
-
-                      <p>Srinagar, Kashmir</p>
-                    </div>
-
-                    <p>
-                      Cruise through the calm waters of Dal Lake and admire
-                      the beautiful mountains, houseboats and traditional
-                      Kashmiri scenery.
-                    </p>
-                  </div>
-                </a>
-              </div>
-
-              <div class="swiper-slide">
-                <a href="#" target="_blank" class="journey_card2">
-                  <div class="img">
-                    <img loading="lazy" src="{{ asset('assets/images/blog/hawamahal.jpg') }}" alt="Hawa Mahal, Jaipur" />
-                  </div>
-
-                  <div class="content">
-                    <h5>Hawa Mahal</h5>
-
-                    <div class="icon">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none" />
-                        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                          stroke-width="2">
-                          <circle cx="12" cy="10" r="3" />
-                          <path
-                            d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8" />
-                        </g>
-                      </svg>
-
-                      <p>Jaipur, India</p>
-                    </div>
-
-                    <p>
-                      Discover the stunning pink façade, historic architecture
-                      and royal heritage of Jaipur at the iconic Hawa Mahal.
-                    </p>
-                  </div>
-                </a>
-              </div>
+                  </a>
+                </div>
+              @empty
+                <p>No featured attractions yet.</p>
+              @endforelse
             </div>
           </div>
 
@@ -424,94 +217,54 @@
       </div>
     </section>
 
+    <!-- CATERGORY SECTION -->
     <section class="categories-sec">
       <div class="container">
         <div class="heading">
-          <h3>Explore Attractions by <span>Category</span></h3>
-          <p>
-            Whatever kind of experience you're looking for, discover
-            attractions that match your travel style.
-          </p>
+          <h3>{{ $landingPage->categories_heading ?? 'Explore Attractions by Category' }}</h3>
+          @if($landingPage->categories_description ?? null)
+            <p>{{ $landingPage->categories_description }}</p>
+          @else
+            <p>
+              Whatever kind of experience you're looking for, discover
+              attractions that match your travel style.
+            </p>
+          @endif
         </div>
 
         <div class="category-grid">
-          <a href="#" target="_blank" class="category_card">
-            <img loading="lazy" src="{{ asset('assets/images/blog/mount.jpg') }}" alt="Nature and Mountains" />
-            <div class="content">
-              <span class="pill">Nature & Mountains</span>
-              <p class="desc">
-                Escape into breathtaking landscapes, valleys and mountain
-                destinations.
-              </p>
-            </div>
-          </a>
-
-          <a href="#" target="_blank" class="category_card">
-            <img loading="lazy" src="{{ asset('assets/images/blog/beach.jpg') }}" alt="Beaches" />
-            <div class="content">
-              <span class="pill">Beaches</span>
-              <p class="desc">
-                Discover beautiful coastlines, peaceful beaches and exciting
-                water experiences.
-              </p>
-            </div>
-          </a>
-
-          <a href="#" target="_blank" class="category_card">
-            <img loading="lazy" src="{{ asset('assets/images/blog/histroical.avif') }}" alt="Historical Places" />
-            <div class="content">
-              <span class="pill">Historical Places</span>
-              <p class="desc">
-                Step into history and explore iconic monuments, forts and
-                heritage sites.
-              </p>
-            </div>
-          </a>
-
-          <a href="#" target="_blank" class="category_card">
-            <img loading="lazy" src="{{ asset('assets/images/blog/wild.avif') }}" alt="Wildlife and Safari" />
-            <div class="content">
-              <span class="pill">Wildlife & Safari</span>
-              <p class="desc">
-                Get closer to nature with wildlife reserves, national parks
-                and safari experiences.
-              </p>
-            </div>
-          </a>
-
-          <a href="#" target="_blank" class="category_card">
-            <img loading="lazy" src="{{ asset('assets/images/blog/travel.avif') }}" alt="Adventure" />
-            <div class="content">
-              <span class="pill">Adventure</span>
-              <p class="desc">
-                Add excitement to your journey with trekking, rafting and
-                thrilling outdoor activities.
-              </p>
-            </div>
-          </a>
-
-          <a href="#" target="_blank" class="category_card">
-            <img loading="lazy" src="{{ asset('assets/images/blog/culture.avif') }}" alt="Culture and Heritage" />
-            <div class="content">
-              <span class="pill">Culture & Heritage</span>
-              <p class="desc">
-                Experience local traditions, architecture, food and
-                fascinating cultural heritage.
-              </p>
-            </div>
-          </a>
+          @forelse($categories as $category)
+            <a href="#" target="_blank" class="category_card">
+              <img loading="lazy"
+                src="{{ $category->image ? asset('storage/' . $category->image) : asset('assets/images/blog/default.jpg') }}"
+                alt="{{ $category->name }}" />
+              <div class="content">
+                <span class="pill">{{ $category->name }}</span>
+                <p class="desc">
+                  {{ $category->description }}
+                </p>
+              </div>
+            </a>
+          @empty
+            <p>No categories available yet.</p>
+          @endforelse
         </div>
       </div>
     </section>
 
+    <!-- MUST VISIT ATTRACTION SECTION -->
     <section class="must-visit-sec">
       <div class="container">
         <div class="heading">
-          <h3>Must-Visit <span>Attractions</span></h3>
-          <p>
-            Add these unforgettable places to your travel wishlist and make
-            your next trip truly special.
-          </p>
+          <h3>{{ $landingPage->must_visit_heading ?? 'Must-Visit Attractions' }}</h3>
+          @if($landingPage->must_visit_description ?? null)
+            <p>{{ $landingPage->must_visit_description }}</p>
+          @else
+            <p>
+              Add these unforgettable places to your travel wishlist and make
+              your next trip truly special.
+            </p>
+          @endif
         </div>
 
         <div class="attraction-list">
@@ -540,7 +293,8 @@
                     <span class="category">{{ implode(' • ', array_slice($attraction->best_for_tags, 0, 2)) }}</span>
                   @endif
                 </div>
-                <h4><a href="{{ route('attraction.show', $attraction->slug) }}" target="_blank">{{ $attraction->name }}</a></h4>
+                <h4><a href="{{ route('attraction.show', $attraction->slug) }}" target="_blank">{{ $attraction->name }}</a>
+                </h4>
                 <p class="desc">
                   {{ $attraction->short_description }}
                 </p>
@@ -553,271 +307,144 @@
         </div>
       </div>
     </section>
+
+    <!-- PROMO SECTION -->
     <section class="app-promo">
       <div class="container">
         <div class="app-promo-inner">
           <div class="app-promo-text">
-            <span class="eyebrow">Plan Your Trip</span>
-            <h3>Can't Decide Where to Go?</h3>
-            <p>
-              Tell us what kind of experience you're looking for, and we'll
-              help you plan a trip around the places you want to explore.
-            </p>
+            <span class="eyebrow">{{ $landingPage->promo_eyebrow ?? 'Plan Your Trip' }}</span>
+            <h3>{{ $landingPage->promo_heading ?? "Can't Decide Where to Go?" }}</h3>
+            @if($landingPage->promo_description ?? null)
+              <p>{{ $landingPage->promo_description }}</p>
+            @else
+              <p>
+                Tell us what kind of experience you're looking for, and we'll
+                help you plan a trip around the places you want to explore.
+              </p>
+            @endif
 
             <div class="cta-btns">
-              <a href="javascript:void(0)" class="sbmt btn btn-white">
-                Plan My Trip
+              <a href="{{ $landingPage->promo_primary_url ?: 'javascript:void(0)' }}" class="sbmt btn btn-white">
+                {{ $landingPage->promo_primary_text ?? 'Plan My Trip' }}
               </a>
-              <a href="javascript:void(0)" class="btn btn-outline-white">
-                Explore Tour Packages
+              <a href="{{ $landingPage->promo_secondary_url ?: 'javascript:void(0)' }}" class="btn btn-outline-white">
+                {{ $landingPage->promo_secondary_text ?? 'Explore Tour Packages' }}
               </a>
             </div>
           </div>
 
           <div class="app-promo-visual">
             <div class="phone phone--back">
-              <img loading="lazy" src="{{ asset('assets/icon/h3-destination-shape.png') }}" alt="App preview" />
+              <img loading="lazy"
+                src="{{ $landingPage->promo_image ? asset('storage/' . $landingPage->promo_image) : asset('assets/icon/h3-destination-shape.png') }}"
+                alt="App preview" />
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="comman_blog bg-gray">
-      <div class="container">
-        <div class="heading">
-          <h3>Travel <span>Inspiration & Guides</span></h3>
-          <p>
-            Get useful travel tips, destination guides and inspiration to help
-            you plan your next adventure.
-          </p>
-        </div>
+    <!-- GUIDE SECTION -->
+    @if($landingPage->guide_items)
+      <section class="comman_blog bg-gray">
+        <div class="container">
+          <div class="heading">
+            <h3>{{ $landingPage->guides_heading ?? 'Travel Inspiration & Guides' }}</h3>
+            @if($landingPage->guides_description ?? null)
+              <p>{{ $landingPage->guides_description }}</p>
+            @else
+              <p>
+                Get useful travel tips, destination guides and inspiration to help
+                you plan your next adventure.
+              </p>
+            @endif
+          </div>
 
-        <div class="swiper-wrap">
-          <div class="swiper thirdSilder">
-            <div class="swiper-wrapper">
-              <!-- Kashmir -->
-              <div class="swiper-slide">
-                <div class="blog_card">
-                  <div class="img">
-                    <img loading="lazy" src="{{ asset('assets/images/blog/kashmir.jpg') }}"
-                      alt="Beautiful Kashmir travel destination" />
-                    <span class="tag">Kashmir</span>
-                  </div>
+          <div class="swiper-wrap">
+            <div class="swiper thirdSilder">
+              <div class="swiper-wrapper">
+                @foreach($landingPage->guide_items as $item)
+                  <div class="swiper-slide">
+                    <a href="{{ $item['link_url'] ?: 'javascript:void()' }}" target="_blank" class="blog_card">
+                      <div class="img">
+                        <img loading="lazy"
+                          src="{{ !empty($item['image']) ? asset('storage/' . $item['image']) : asset('assets/images/blog/default.jpg') }}"
+                          alt="{{ $item['title'] }}" />
+                        @if(!empty($item['category']))
+                          <span class="tag">{{ $item['category'] }}</span>
+                        @endif
+                      </div>
 
-                  <div class="content">
-                    <h4>Best Places to Visit in Kashmir</h4>
+                      <div class="content">
+                        <h4>{{ $item['title'] }}</h4>
+                        <p>{{ $item['description'] }}</p>
 
-                    <p>
-                      Discover the most beautiful destinations and experiences
-                      to add to your Kashmir itinerary.
-                    </p>
-
-                    <a href="javascript:void()" class="btn btn-outline-primary">
-                      Read Guide
-                      <img loading="lazy" src="{{ asset('assets/icon/arrow.svg') }}" alt="" />
+                        <span class="btn btn-outline-primary">
+                          Read Guide
+                          <img loading="lazy" src="{{ asset('assets/icon/arrow.svg') }}" alt="" />
+                        </span>
+                      </div>
                     </a>
                   </div>
-                </div>
-              </div>
-
-              <!-- Goa -->
-              <div class="swiper-slide">
-                <div class="blog_card">
-                  <div class="img">
-                    <img loading="lazy" src="{{ asset('assets/images/blog/goa.jpg') }}"
-                      alt="Goa beaches and travel destination" />
-                    <span class="tag">Goa</span>
-                  </div>
-
-                  <div class="content">
-                    <h4>Top Things to Do in Goa</h4>
-
-                    <p>
-                      From beaches and water activities to local experiences,
-                      discover what makes Goa special.
-                    </p>
-
-                    <a href="javascript:void()" class="btn btn-outline-primary">
-                      Read Guide
-                      <img loading="lazy" src="{{ asset('assets/icon/arrow.svg') }}" alt="" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Rajasthan -->
-              <div class="swiper-slide">
-                <div class="blog_card">
-                  <div class="img">
-                    <img loading="lazy" src="{{ asset('assets/images/blog/hawamahal.jpg') }}"
-                      alt="Rajasthan travel destination" />
-                    <span class="tag">Rajasthan</span>
-                  </div>
-
-                  <div class="content">
-                    <h4>Complete Rajasthan Travel Guide</h4>
-
-                    <p>
-                      Explore royal cities, historic forts, cultural
-                      experiences and unforgettable destinations.
-                    </p>
-
-                    <a href="javascript:void()" class="btn btn-outline-primary">
-                      Read Guide
-                      <img loading="lazy" src="{{ asset('assets/icon/arrow.svg') }}" alt="" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Manali -->
-              <div class="swiper-slide">
-                <div class="blog_card">
-                  <div class="img">
-                    <img loading="lazy" src="{{ asset('assets/images/blog/manali.jpg') }}"
-                      alt="Manali mountains and travel destination" />
-                    <span class="tag">Manali</span>
-                  </div>
-
-                  <div class="content">
-                    <h4>Best Places to Visit in Manali</h4>
-
-                    <p>
-                      Explore scenic mountains, adventure activities and
-                      peaceful escapes for your next Manali trip.
-                    </p>
-
-                    <a href="javascript:void()" class="btn btn-outline-primary">
-                      Read Guide
-                      <img loading="lazy" src="{{ asset('assets/icon/arrow.svg') }}" alt="" />
-                    </a>
-                  </div>
-                </div>
+                @endforeach
               </div>
             </div>
-          </div>
 
-          <!-- View All -->
-          <div class="btn-center">
-            <a href="javascript:void()" class="btn btn-primary">
-              View All Travel Guides
-            </a>
-          </div>
-
-          <!-- Slider Navigation -->
-          <div class="swiper-group">
-            <button type="button" class="thirdSilder-prev btn-prev">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                <path fill="#fff"
-                  d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
-              </svg>
-            </button>
-
-            <button type="button" class="thirdSilder-next btn-next">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                <path fill="#fff"
-                  d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="attraction_accordion">
-      <div class="container">
-        <div class="heading">
-          <h3>Frequently Asked <span>Questions</span></h3>
-        </div>
-
-        <div class="accordion-wrapper">
-          <div class="accordion-item">
-            <div class="accordion-body">
-              <div class="accordion-header active">
-                <h4>What is an attraction?</h4>
-                <span class="accordion-icon">−</span>
-              </div>
-
-              <div class="accordion-content">
-                <p>
-                  An attraction is a place, landmark, natural site, cultural
-                  location or experience that travellers can visit and enjoy
-                  during their journey.
-                </p>
-              </div>
+            <div class="btn-center">
+              <a href="javascript:void()" class="btn btn-primary">
+                View All Travel Guides
+              </a>
             </div>
-          </div>
 
-          <div class="accordion-item">
-            <div class="accordion-body">
-              <div class="accordion-header">
-                <h4>Can I include attractions in my tour package?</h4>
-                <span class="accordion-icon">+</span>
-              </div>
+            <div class="swiper-group">
+              <button type="button" class="thirdSilder-prev btn-prev">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                  <path fill="#fff"
+                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
+                </svg>
+              </button>
 
-              <div class="accordion-content">
-                <p>
-                  Yes. You can discuss your preferred attractions with our
-                  travel team and create an itinerary based on your travel
-                  requirements.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <div class="accordion-body">
-              <div class="accordion-header">
-                <h4>Can I create a customised trip?</h4>
-                <span class="accordion-icon">+</span>
-              </div>
-
-              <div class="accordion-content">
-                <p>
-                  Yes. Our team can help you plan a customised journey based
-                  on your destination, travel dates, interests and
-                  requirements.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <div class="accordion-body">
-              <div class="accordion-header">
-                <h4>How do I find attractions for a destination?</h4>
-                <span class="accordion-icon">+</span>
-              </div>
-
-              <div class="accordion-content">
-                <p>
-                  Use the search and destination filters above to explore
-                  attractions by location or category.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <div class="accordion-body">
-              <div class="accordion-header">
-                <h4>Can I visit multiple attractions in one trip?</h4>
-                <span class="accordion-icon">+</span>
-              </div>
-
-              <div class="accordion-content">
-                <p>
-                  Yes. Multiple attractions can be included in your itinerary
-                  depending on your travel duration, destination and preferred
-                  experiences.
-                </p>
-              </div>
+              <button type="button" class="thirdSilder-next btn-next">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                  <path fill="#fff"
+                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    @endif
+
+    <!-- FAQ SECTION -->
+    @if($landingPage->faqs)
+      <section class="attraction_accordion">
+        <div class="container">
+          <div class="heading">
+            <h3>{{ $landingPage->faqs_heading ?? 'Frequently Asked Questions' }}</h3>
+          </div>
+
+          <div class="accordion-wrapper">
+            @foreach($landingPage->faqs as $index => $faq)
+              <div class="accordion-item">
+                <div class="accordion-body">
+                  <div class="accordion-header @if($index === 0) active @endif">
+                    <h4>{{ $faq['question'] }}</h4>
+                    <span class="accordion-icon">{{ $index === 0 ? '−' : '+' }}</span>
+                  </div>
+
+                  <div class="accordion-content">
+                    <p>{{ $faq['answer'] }}</p>
+                  </div>
+                </div>
+              </div>
+            @endforeach
+          </div>
+        </div>
+      </section>
+    @endif
+
   </main>
 
 @endsection
