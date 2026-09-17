@@ -2,20 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Activity;
-use Illuminate\Http\Request;
-use App\Models\Destination;
-use App\Models\Category;
-use App\Models\SubCategory;
-use App\Models\Attraction;
-use App\Models\TourPackage;
+use App\Models\Blog;
 use App\Models\Review;
-use App\Models\TourPackageEnquiry;
+use App\Models\Activity;
+use App\Models\Category;
+use App\Models\Attraction;
+use App\Models\BlogComment;
+use App\Models\TourPackage;
+use App\Models\SubCategory;
+use App\Models\Destination;
+use App\Models\BlogCategory;
+use Illuminate\Http\Request;
 use App\Models\ActivityCategory;
-use App\Models\LandingPageActivity;
-use App\Models\LandingPageDestination;
-use App\Models\LandingPageAttraction;
+use App\Models\TourPackageEnquiry;
 use App\Models\AttractionCategory;
+use App\Models\LandingPageActivity;
+use App\Models\LandingPageAttraction;
+use App\Models\LandingPageDestination;
 
 class FrontController extends Controller
 {
@@ -491,6 +494,92 @@ class FrontController extends Controller
         }
 
         return back()->with('success', 'Thanks! Our team will get in touch with you shortly.');
+    }
+
+
+
+    public function blogs()
+    {
+        // Categories with their published blogs (only categories that actually have posts)
+        $categories = BlogCategory::active()
+            ->ordered()
+            ->with([
+                'blogs' => function ($q) {
+                    $q->published()->orderByDesc('published_at')->take(8);
+                }
+            ])
+            ->get()
+            ->filter(fn($category) => $category->blogs->isNotEmpty())
+            ->values();
+
+        // Latest 4 blogs overall, for the "Latest Travel Stories" section
+        $latestBlogs = Blog::published()
+            ->with('category')
+            ->ordered()
+            ->take(4)
+            ->get();
+
+        $destinations = Destination::published()
+            ->where('is_featured', true)
+            ->orderBy('sort_order')
+            ->take(5)
+            ->get();
+
+        return view('front-pages.blogs', compact('categories', 'latestBlogs', 'destinations'));
+    }
+
+    public function blogDetail($slug)
+    {
+        $blog = Blog::with([
+            'comments',
+            'category',
+            'author',
+            'destinations',
+            'attractions',
+            'activities',
+            'tourPackages' => function ($q) {
+                $q->withAvg('reviews', 'rating')
+                    ->withCount('reviews');
+            },
+        ])
+            ->published()
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        // increment views (simple counter — no session/IP dedup for now)
+        $blog->increment('views');
+
+        $popularStories = Blog::published()
+            ->where('id', '!=', $blog->id)
+            ->orderByDesc('views')
+            ->take(3)
+            ->get();
+
+        return view('front-pages.blog-detail', compact('blog', 'popularStories'));
+    }
+
+    public function storeComment(Request $request, Blog $blog)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'comment' => 'required|string|max:2000',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')->store('comments', 'public');
+        }
+
+        $blog->comments()->create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'comment' => $validated['comment'],
+            'photo' => $validated['photo'] ?? null,
+            'status' => 'pending', // change to 'approved' if you don't want moderation
+        ]);
+
+        return back()->with('success', 'Thanks! Your comment has been submitted for review.');
     }
 
 }

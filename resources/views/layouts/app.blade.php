@@ -706,7 +706,7 @@
                                     <li><a href="contact.html" target="_blank">Contact Us</a></li>
                                     <li><a href="javascript:void()">Careers</a></li>
                                     <li><a href="javascript:void()">Reviews</a></li>
-                                    <li><a href="blog.html" target="_blank">Blog</a></li>
+                                    <li><a href="{{ route('blogs') }}" target="_blank">Blogs</a></li>
                                 </ul>
                             </div>
                             <div class="col">
@@ -1018,7 +1018,7 @@
                             <a href="about.html" class="nav-main-link">About</a>
                         </li>
                         <li>
-                            <a href="blog.html" class="nav-main-link">Blogs</a>
+                            <a href="{{ route('blogs') }}" class="nav-main-link">Blogs</a>
                         </li>
                         <li>
                             <a href="contact.html" class="nav-main-link">Contact Us</a>

@@ -20,7 +20,9 @@ use App\Http\Controllers\Admin\{
     TourPackageEnquiryController,
     LandingPageActivityController,
     LandingPageDestinationController,
-    LandingPageAttractionController
+    LandingPageAttractionController,
+    BlogCategoryController,
+    BlogController
 };
 
 use Illuminate\Support\Facades\Route;
@@ -45,9 +47,12 @@ Route::controller(FrontController::class)->group(function () {
     Route::get('/activities', 'activities')->name('activities');
     Route::get('/activities/{slug}', 'activitiesDetail')->name('activities.show');
 
+    Route::get('/blogs', 'blogs')->name('blogs');
+    Route::get('/blog/{slug}', 'blogDetail')->name('blog.detail');
 
     Route::post('/reviews', 'reviewStore')->name('review.store');
     Route::post('/enquiries', 'enquiryStore')->name('enquiries.store');
+    Route::post('/blog/{blog:slug}/comment', 'storeComment')->name('blog.comment.store');
 });
 
 
@@ -90,6 +95,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('landing-pages/attraction', [LandingPageAttractionController::class, 'edit'])->name('landing-pages.attraction.edit');
         Route::put('landing-pages/attraction', [LandingPageAttractionController::class, 'update'])->name('landing-pages.attraction.update');
+
+        Route::resource('blog-category', BlogCategoryController::class);
+        Route::post('blog-category/status/toggle', [BlogCategoryController::class, 'toggleStatus'])->name('blog-category.status');
+
+        Route::resource('blog', BlogController::class);
+        Route::post('blog/status/toggle', [BlogController::class, 'toggleStatus'])->name('blog.status');
 
         // Admin Settings routes
         Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');
