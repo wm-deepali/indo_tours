@@ -49,6 +49,16 @@ class Activity extends Model
         'status',
         'featured',
         'sort_order',
+
+        'h1',
+        'meta_title',
+        'meta_description',
+        'canonical_url',
+        'robots',
+        'og_title',
+        'og_description',
+        'og_image',
+        'twitter_card_image'
     ];
 
     protected $casts = [

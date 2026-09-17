@@ -286,7 +286,8 @@
                                 <option value="">Select Category</option>
                                 @foreach($categories as $cat)
                                     <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>
-                                        {{ $cat->name }}</option>
+                                        {{ $cat->name }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('category_id')
@@ -615,6 +616,35 @@
                             <div class="hint">Auto-fills from the slug — edit anytime to override</div>
                         </div>
 
+                        <div class="form-field">
+                            <label for="robots">Robots</label>
+                            <input type="text" id="robots" name="robots" class="form-control-styled"
+                                value="{{ old('robots') }}" placeholder="index, follow">
+                            <div class="hint">Leave blank to default to "index, follow"</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="twitter_title">Twitter Title</label>
+                            <input type="text" id="twitter_title" name="twitter_title" class="form-control-styled"
+                                value="{{ old('twitter_title') }}" placeholder="Auto-filled from OG Title">
+                            <div class="hint">Auto-fills from OG Title — edit anytime to override</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="twitter_description">Twitter Description</label>
+                            <textarea id="twitter_description" name="twitter_description" rows="3"
+                                class="form-control-styled"
+                                placeholder="Auto-filled from OG Description">{{ old('twitter_description') }}</textarea>
+                            <div class="hint">Auto-fills from OG Description — edit anytime to override</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="twitter_card_image">Twitter Card Image</label>
+                            <input type="file" id="twitter_card_image" name="twitter_card_image"
+                                class="form-control-styled" accept="image/*">
+                            <div class="hint">Leave blank to fall back to OG Image</div>
+                        </div>
+
                     </div>
 
                     <div class="form-actions">
@@ -654,10 +684,29 @@
     })();
 
     let ogTitleEdited = false, ogDescEdited = false, canonicalEdited = false;
+    let twitterTitleEdited = false, twitterDescEdited = false;
 
     document.getElementById('og_title').addEventListener('input', () => ogTitleEdited = true);
     document.getElementById('og_description').addEventListener('input', () => ogDescEdited = true);
     document.getElementById('canonical_url').addEventListener('input', () => canonicalEdited = true);
+    document.getElementById('twitter_title').addEventListener('input', () => twitterTitleEdited = true);
+    document.getElementById('twitter_description').addEventListener('input', () => twitterDescEdited = true);
+
+    document.getElementById('meta_title').addEventListener('keyup', function () {
+        if (!ogTitleEdited) document.getElementById('og_title').value = this.value;
+    });
+
+    document.getElementById('meta_description').addEventListener('keyup', function () {
+        if (!ogDescEdited) document.getElementById('og_description').value = this.value;
+    });
+
+    document.getElementById('og_title').addEventListener('keyup', function () {
+        if (!twitterTitleEdited) document.getElementById('twitter_title').value = this.value;
+    });
+
+    document.getElementById('og_description').addEventListener('keyup', function () {
+        if (!twitterDescEdited) document.getElementById('twitter_description').value = this.value;
+    });
 
     document.getElementById('name').addEventListener('keyup', function () {
         const slug = this.value
@@ -672,14 +721,6 @@
         if (!canonicalEdited) {
             document.getElementById('canonical_url').value = '{{ url('/') }}/' + slug;
         }
-    });
-
-    document.getElementById('meta_title').addEventListener('keyup', function () {
-        if (!ogTitleEdited) document.getElementById('og_title').value = this.value;
-    });
-
-    document.getElementById('meta_description').addEventListener('keyup', function () {
-        if (!ogDescEdited) document.getElementById('og_description').value = this.value;
     });
 
     // ---- Highlight repeater ----
@@ -747,7 +788,7 @@
         row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
     });
 
-   
+
 </script>
 
 @include('admin.footer')

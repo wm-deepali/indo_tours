@@ -1,14 +1,24 @@
 @extends('layouts.app')
 
-@section('title', 'Blog Detail | Indo Tours & Adventures')
-@section('meta_description', '')
+@section('title', $blog->meta_title ?? $blog->title . ' | Indo Tours & Adventures')
+@section('meta_description', $blog->meta_description ?? $blog->short_description)
+@section('canonical', $blog->canonical_url ?: url()->current())
+@section('robots', $blog->robots ?: 'index, follow')
+
+@section('og_title', $blog->og_title ?? $blog->meta_title ?? $blog->title)
+@section('og_description', $blog->og_description ?? $blog->meta_description ?? $blog->short_description)
+@section('og_image', $blog->og_image ? asset('storage/' . $blog->og_image) : $blog->featured_image_url)
+
+@section('twitter_title', $blog->og_title ?? $blog->meta_title ?? $blog->title)
+@section('twitter_description', $blog->og_description ?? $blog->meta_description ?? $blog->short_description)
+@section('twitter_image', $blog->twitter_card_image ? asset('storage/' . $blog->twitter_card_image) : $blog->featured_image_url)
+
 
 @push('styles')
   <link rel="stylesheet" href="{{ asset('assets/sass/blog-detail/detail.css') }}" />
 @endpush
 
 @section('content')
-
 
   <main>
 
@@ -648,3 +658,47 @@
   </main>
 
 @endsection
+
+@push('scripts')
+    @php
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'BreadcrumbList',
+                    'itemListElement' => [
+                        ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => route('home')],
+                        ['@type' => 'ListItem', 'position' => 2, 'name' => 'Blog', 'item' => route('blogs')],
+                        ['@type' => 'ListItem', 'position' => 3, 'name' => $blog->title, 'item' => url()->current()],
+                    ],
+                ],
+                [
+                    '@type' => 'BlogPosting',
+                    '@id' => url()->current() . '#article',
+                    'headline' => $blog->h1 ?: $blog->title,
+                    'description' => $blog->meta_description ?? $blog->short_description,
+                    'image' => $blog->featured_image_url,
+                    'datePublished' => $blog->published_at?->toIso8601String(),
+                    'dateModified' => $blog->updated_at?->toIso8601String(),
+                    'mainEntityOfPage' => url()->current(),
+                    'author' => [
+                        '@type' => 'Person',
+                        'name' => $blog->author->name ?? 'Travel Team',
+                    ],
+                    'publisher' => [
+                        '@type' => 'Organization',
+                        'name' => 'Indo Tours & Adventures',
+                        'logo' => [
+                            '@type' => 'ImageObject',
+                            'url' => asset('assets/icon/favicon/favicon.png'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    @endphp
+
+    <script type="application/ld+json">
+        {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
+@endpush

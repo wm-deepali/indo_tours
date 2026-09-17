@@ -47,6 +47,9 @@ class SubCategoryController extends Controller
         if ($request->hasFile('og_image')) {
             $validated['og_image'] = $request->file('og_image')->store('subcategories/og', 'public');
         }
+        if ($request->hasFile('twitter_card_image')) {
+            $validated['twitter_card_image'] = $request->file('twitter_card_image')->store('subcategories/twitter', 'public');
+        }
 
         $subCategory = SubCategory::create($validated);
         $this->saveHighlights($subCategory, $request);
@@ -88,6 +91,10 @@ class SubCategoryController extends Controller
             $this->deleteOldImage($subcategory->og_image);
             $validated['og_image'] = $request->file('og_image')->store('subcategories/og', 'public');
         }
+        if ($request->hasFile('twitter_card_image')) {
+            $this->deleteOldImage($subcategory->twitter_card_image);
+            $validated['twitter_card_image'] = $request->file('twitter_card_image')->store('subcategories/twitter', 'public');
+        }
 
         $subcategory->update($validated);
         $this->saveHighlights($subcategory, $request);
@@ -103,6 +110,7 @@ class SubCategoryController extends Controller
         $this->deleteOldImage($subcategory->banner_image_two);
         $this->deleteOldImage($subcategory->cta_image);
         $this->deleteOldImage($subcategory->og_image);
+        $this->deleteOldImage($subcategory->twitter_card_image);
 
         $subcategory->delete();
         return redirect()->route('admin.subcategories.index')->with('success', 'Sub Category deleted successfully.');
@@ -162,6 +170,10 @@ class SubCategoryController extends Controller
             'og_description' => 'nullable|string',
             'og_image' => 'nullable|image|max:2048',
             'canonical_url' => 'nullable|string|max:255',
+            'robots' => 'nullable|string|max:255',
+            'twitter_title' => 'nullable|string|max:255',
+            'twitter_description' => 'nullable|string',
+            'twitter_card_image' => 'nullable|image|max:2048',
 
             'highlight_ids' => 'nullable|array',
             'highlight_ids.*' => 'nullable|integer',

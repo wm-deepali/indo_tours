@@ -66,8 +66,12 @@ class TourPackageController extends Controller
         $validated['slug'] = Str::slug($request->name);
         $validated['status'] = $request->status ?? 'draft';
         $validated['featured'] = $request->boolean('featured');
+        $validated['h1'] = $validated['h1'] ?: $validated['name'];
+        $validated['og_title'] = $validated['og_title'] ?: $validated['meta_title'];
+        $validated['og_description'] = $validated['og_description'] ?: $validated['meta_description'];
+        $validated['canonical_url'] = $validated['canonical_url'] ?: url('/tour-package/' . $validated['slug']);
 
-        foreach (['main_image', 'top_image', 'bottom_left_image', 'bottom_right_image', 'og_image', 'group_offer_image'] as $field) {
+        foreach (['main_image', 'top_image', 'bottom_left_image', 'bottom_right_image', 'og_image', 'twitter_card_image', 'group_offer_image'] as $field) {
             if ($request->hasFile($field)) {
                 $validated[$field] = $request->file($field)->store('tourpackages/' . $field, 'public');
             }
@@ -117,6 +121,10 @@ class TourPackageController extends Controller
 
         $validated['status'] = $request->status ?? $tourpackage->status;
         $validated['featured'] = $request->boolean('featured');
+        $validated['h1'] = $validated['h1'] ?: $tourpackage->name;
+        $validated['og_title'] = $validated['og_title'] ?: $validated['meta_title'];
+        $validated['og_description'] = $validated['og_description'] ?: $validated['meta_description'];
+        $validated['canonical_url'] = $validated['canonical_url'] ?: $tourpackage->canonical_url ?: url('/tour-package/' . $tourpackage->slug);
 
         foreach (['main_image', 'top_image', 'bottom_left_image', 'bottom_right_image', 'og_image', 'group_offer_image'] as $field) {
             if ($request->hasFile($field)) {
@@ -218,6 +226,9 @@ class TourPackageController extends Controller
             'promo_button_url' => 'nullable|string|max:255',
             'promo_end_at' => 'nullable|date',
 
+            'h1' => 'nullable|string|max:255',
+            'robots' => 'nullable|string|max:50',
+            'twitter_card_image' => 'nullable|image|max:2048',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
             'og_title' => 'nullable|string|max:255',

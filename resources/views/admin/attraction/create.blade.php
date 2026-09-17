@@ -844,6 +844,13 @@
                         </div>
 
                         <div class="form-field">
+                            <label for="twitter_card_image">Twitter Card Image</label>
+                            <input type="file" id="twitter_card_image" name="twitter_card_image"
+                                class="form-control-styled" accept="image/*">
+                            <div class="hint">Leave blank to automatically use the OG Image / Attraction Image</div>
+                        </div>
+
+                        <div class="form-field">
                             <label for="canonical_url">Canonical URL</label>
                             <input type="text" id="canonical_url" name="canonical_url"
                                 class="form-control-styled @error('canonical_url') is-invalid @enderror"
@@ -851,6 +858,15 @@
                             <div class="hint">Auto-fills from the slug — edit anytime to override</div>
                             @error('canonical_url')
                             <div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="form-field">
+                            <label for="robots">Robots</label>
+                            <select id="robots" name="robots" class="form-control-styled">
+                                <option value="index, follow" {{ old('robots', 'index, follow') == 'index, follow' ? 'selected' : '' }}>Index, Follow</option>
+                                <option value="noindex, follow" {{ old('robots') == 'noindex, follow' ? 'selected' : '' }}>No Index, Follow</option>
+                                <option value="noindex, nofollow" {{ old('robots') == 'noindex, nofollow' ? 'selected' : '' }}>No Index, No Follow</option>
+                            </select>
                         </div>
 
                     </div>

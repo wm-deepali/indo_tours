@@ -1,8 +1,5 @@
 @extends('layouts.app')
 
-@section('title', 'Home | Indo Tours & Adventures')
-@section('meta_description', 'Indo Tours & Adventures is a leading travel company offering a wide range of tour packages, including domestic and international destinations. Explore the world with our expertly crafted itineraries and exceptional services.')
-
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/sass/home/home.css') }}" />
 @endpush

@@ -2,6 +2,16 @@
 
 @section('title', $tourPackage->meta_title ?? $tourPackage->name . ' | Indo Tours & Adventures')
 @section('meta_description', $tourPackage->meta_description ?? Str::limit(strip_tags($tourPackage->overview_content), 160))
+@section('canonical', $tourPackage->canonical_url ?: url()->current())
+@section('robots', $tourPackage->robots ?: 'index, follow')
+
+@section('og_title', $tourPackage->og_title ?? $tourPackage->meta_title ?? $tourPackage->name)
+@section('og_description', $tourPackage->og_description ?? $tourPackage->meta_description ?? Str::limit(strip_tags($tourPackage->overview_content), 160))
+@section('og_image', asset('storage/' . ($tourPackage->og_image ?: $tourPackage->main_image)))
+
+@section('twitter_title', $tourPackage->og_title ?? $tourPackage->meta_title ?? $tourPackage->name)
+@section('twitter_description', $tourPackage->og_description ?? $tourPackage->meta_description ?? Str::limit(strip_tags($tourPackage->overview_content), 160))
+@section('twitter_image', asset('storage/' . ($tourPackage->twitter_card_image ?: $tourPackage->main_image)))
 
 @push('styles')
   <link rel="stylesheet" href="{{ asset('assets/sass/listing-detail/detail.css') }}" />
@@ -1159,6 +1169,90 @@
 @endsection
 
 @push('scripts')
+  @php
+    $breadcrumbItems = [
+      ['name' => 'Home', 'url' => url('/')],
+    ];
+    if ($tourPackage->subCategory) {
+      $breadcrumbItems[] = ['name' => $tourPackage->subCategory->name, 'url' => route('subcategory.show', $tourPackage->subCategory->slug)];
+    }
+    $breadcrumbItems[] = ['name' => $tourPackage->name, 'url' => url()->current()];
+
+    $schema = [
+      '@context' => 'https://schema.org',
+      '@graph' => [
+        [
+          '@type' => 'BreadcrumbList',
+          'itemListElement' => collect($breadcrumbItems)->map(function ($item, $i) {
+            return [
+              '@type' => 'ListItem',
+              'position' => $i + 1,
+              'name' => $item['name'],
+              'item' => $item['url'],
+            ];
+          })->values()->all(),
+        ],
+        array_filter([
+          '@type' => 'TouristTrip',
+          '@id' => url()->current() . '#trip',
+          'name' => $tourPackage->name,
+          'description' => $tourPackage->meta_description ?? Str::limit(strip_tags($tourPackage->overview_content), 160),
+          'url' => url()->current(),
+          'image' => $tourPackage->main_image ? asset('storage/' . $tourPackage->main_image) : null,
+          'touristType' => $locationParts->isNotEmpty() ? $locationParts->implode(', ') : null,
+          'offers' => $tourPackage->price ? [
+            '@type' => 'Offer',
+            'price' => $tourPackage->price,
+            'priceCurrency' => 'INR',
+            'url' => url()->current(),
+            'availability' => 'https://schema.org/InStock',
+          ] : null,
+          'aggregateRating' => $reviewCount ? [
+            '@type' => 'AggregateRating',
+            'ratingValue' => $avgRating,
+            'reviewCount' => $reviewCount,
+          ] : null,
+          'review' => $tourPackage->reviews->isNotEmpty() ? $tourPackage->reviews->map(function ($review) {
+            return [
+              '@type' => 'Review',
+              'author' => [
+                '@type' => 'Person',
+                'name' => $review->full_name,
+              ],
+              'datePublished' => $review->created_at->toDateString(),
+              'reviewBody' => $review->review,
+              'reviewRating' => [
+                '@type' => 'Rating',
+                'ratingValue' => $review->rating,
+                'bestRating' => 5,
+              ],
+            ];
+          })->values()->all() : null,
+        ]),
+      ],
+    ];
+
+    if ($tourPackage->faqs->isNotEmpty()) {
+      $schema['@graph'][] = [
+        '@type' => 'FAQPage',
+        'mainEntity' => $tourPackage->faqs->map(function ($faq) {
+          return [
+            '@type' => 'Question',
+            'name' => $faq->question,
+            'acceptedAnswer' => [
+              '@type' => 'Answer',
+              'text' => $faq->answer,
+            ],
+          ];
+        })->values()->all(),
+      ];
+    }
+  @endphp
+
+  <script type="application/ld+json">
+    {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+  </script>
+
   <script>
     $(function () {
       $(".hotel_wrapper .hw-daytag").on("click", function () {

@@ -2,6 +2,16 @@
 
 @section('title', ($attraction->meta_title ?: $attraction->h1 ?: $attraction->name) . ' | Indo Tours & Adventures')
 @section('meta_description', $attraction->meta_description ?: $attraction->short_description)
+@section('canonical', $attraction->canonical_url ?: url()->current())
+@section('robots', $attraction->robots ?: 'index, follow')
+
+@section('og_title', $attraction->og_title ?: $attraction->meta_title ?: $attraction->name)
+@section('og_description', $attraction->og_description ?: $attraction->meta_description ?: $attraction->short_description)
+@section('og_image', asset('storage/' . ($attraction->og_image ?: $attraction->image)))
+
+@section('twitter_title', $attraction->og_title ?: $attraction->meta_title ?: $attraction->name)
+@section('twitter_description', $attraction->og_description ?: $attraction->meta_description ?: $attraction->short_description)
+@section('twitter_image', asset('storage/' . ($attraction->twitter_card_image ?: $attraction->og_image ?: $attraction->image)))
 
 @push('styles')
   <link rel="stylesheet" href="{{ asset('assets/sass/attraction-detail/detail.css') }}" />
@@ -992,3 +1002,68 @@
   </main>
 
 @endsection
+
+@push('scripts')
+    @php
+        $breadcrumbItems = [
+            ['name' => 'Home', 'url' => route('home')],
+            ['name' => 'Attractions', 'url' => route('attractions')],
+        ];
+        if ($attraction->country) {
+            $breadcrumbItems[] = ['name' => $attraction->country->name, 'url' => url()->current()];
+        }
+        if ($attraction->state) {
+            $breadcrumbItems[] = ['name' => $attraction->state->name, 'url' => url()->current()];
+        }
+        $breadcrumbItems[] = ['name' => $attraction->name, 'url' => url()->current()];
+
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'BreadcrumbList',
+                    'itemListElement' => collect($breadcrumbItems)->map(fn($item, $i) => [
+                        '@type' => 'ListItem',
+                        'position' => $i + 1,
+                        'name' => $item['name'],
+                        'item' => $item['url'],
+                    ])->values()->all(),
+                ],
+                [
+                    '@type' => 'TouristAttraction',
+                    '@id' => url()->current() . '#attraction',
+                    'name' => $attraction->name,
+                    'description' => $attraction->meta_description ?: $attraction->short_description,
+                    'url' => url()->current(),
+                    'image' => asset('storage/' . ($attraction->image ?: $attraction->about_image)),
+                    'address' => [
+                        '@type' => 'PostalAddress',
+                        'addressLocality' => $attraction->city?->name,
+                        'addressRegion' => $attraction->state?->name,
+                        'addressCountry' => $attraction->country?->name,
+                    ],
+                    'aggregateRating' => $attraction->rating ? [
+                        '@type' => 'AggregateRating',
+                        'ratingValue' => $attraction->rating,
+                        'reviewCount' => $attraction->review_count ?: 1,
+                    ] : null,
+                ],
+            ],
+        ];
+
+        if ($attraction->faqs->isNotEmpty()) {
+            $schema['@graph'][] = [
+                '@type' => 'FAQPage',
+                'mainEntity' => $attraction->faqs->map(fn($faq) => [
+                    '@type' => 'Question',
+                    'name' => $faq->question,
+                    'acceptedAnswer' => ['@type' => 'Answer', 'text' => $faq->answer],
+                ])->values()->all(),
+            ];
+        }
+    @endphp
+
+    <script type="application/ld+json">
+        {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
+@endpush

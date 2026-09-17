@@ -1005,12 +1005,32 @@
                         </div>
 
                         <div class="form-field">
+                            <label for="twitter_card_image">Twitter Card Image</label>
+                            @if($attraction->twitter_card_image)
+                                <img src="{{ asset('storage/' . $attraction->twitter_card_image) }}"
+                                    class="current-img-preview" alt="">
+                            @endif
+                            <input type="file" id="twitter_card_image" name="twitter_card_image"
+                                class="form-control-styled" accept="image/*">
+                            <div class="hint">Leave blank to keep the current image</div>
+                        </div>
+
+                        <div class="form-field">
                             <label for="canonical_url">Canonical URL</label>
                             <input type="text" id="canonical_url" name="canonical_url"
                                 class="form-control-styled @error('canonical_url') is-invalid @enderror"
                                 value="{{ old('canonical_url', $attraction->canonical_url) }}">
                             @error('canonical_url')
                             <div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="form-field">
+                            <label for="robots">Robots</label>
+                            <select id="robots" name="robots" class="form-control-styled">
+                                <option value="index, follow" {{ old('robots', $attraction->robots ?: 'index, follow') == 'index, follow' ? 'selected' : '' }}>Index, Follow</option>
+                                <option value="noindex, follow" {{ old('robots', $attraction->robots) == 'noindex, follow' ? 'selected' : '' }}>No Index, Follow</option>
+                                <option value="noindex, nofollow" {{ old('robots', $attraction->robots) == 'noindex, nofollow' ? 'selected' : '' }}>No Index, No Follow</option>
+                            </select>
                         </div>
 
                     </div>

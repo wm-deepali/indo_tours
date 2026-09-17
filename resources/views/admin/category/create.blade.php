@@ -596,6 +596,17 @@
                         </div>
 
                         <div class="form-field">
+                            <label for="robots">Robots</label>
+                            <select id="robots" name="robots" class="form-control-styled">
+                                <option value="index, follow" {{ old('robots', 'index, follow') == 'index, follow' ? 'selected' : '' }}>index, follow (default)</option>
+                                <option value="noindex, follow" {{ old('robots') == 'noindex, follow' ? 'selected' : '' }}>noindex, follow</option>
+                                <option value="index, nofollow" {{ old('robots') == 'index, nofollow' ? 'selected' : '' }}>index, nofollow</option>
+                                <option value="noindex, nofollow" {{ old('robots') == 'noindex, nofollow' ? 'selected' : '' }}>noindex, nofollow</option>
+                            </select>
+                            <div class="hint">Controls whether search engines index this page and follow its links</div>
+                        </div>
+
+                        <div class="form-field">
                             <label for="og_title">OG Title</label>
                             <input type="text" id="og_title" name="og_title"
                                 class="form-control-styled @error('og_title') is-invalid @enderror"
@@ -617,6 +628,32 @@
                             <input type="file" id="og_image" name="og_image" class="form-control-styled"
                                 accept="image/*">
                             <div class="hint">Leave blank to automatically use the Category Image as OG Image</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="twitter_title">Twitter Title</label>
+                            <input type="text" id="twitter_title" name="twitter_title"
+                                class="form-control-styled @error('twitter_title') is-invalid @enderror"
+                                value="{{ old('twitter_title') }}" placeholder="Auto-filled from Meta Title">
+                            <div class="hint">Auto-fills from Meta Title — edit anytime to override</div>
+                            @error('twitter_title')
+                            <div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="form-field">
+                            <label for="twitter_description">Twitter Description</label>
+                            <textarea id="twitter_description" name="twitter_description" rows="3"
+                                class="form-control-styled"
+                                placeholder="Auto-filled from Meta Description">{{ old('twitter_description') }}</textarea>
+                            <div class="hint">Auto-fills from Meta Description — edit anytime to override</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="twitter_card_image">Twitter Card Image</label>
+                            <input type="file" id="twitter_card_image" name="twitter_card_image"
+                                class="form-control-styled" accept="image/*">
+                            <div class="hint">Leave blank to automatically use the OG Image (or Category Image) as the
+                                Twitter Card image</div>
                         </div>
 
                         <div class="form-field">
@@ -674,11 +711,14 @@
     })();
 
     let h1Edited = false, ogTitleEdited = false, ogDescEdited = false, canonicalEdited = false;
+    let twitterTitleEdited = false, twitterDescEdited = false;
 
     document.getElementById('h1').addEventListener('input', () => h1Edited = true);
     document.getElementById('og_title').addEventListener('input', () => ogTitleEdited = true);
     document.getElementById('og_description').addEventListener('input', () => ogDescEdited = true);
     document.getElementById('canonical_url').addEventListener('input', () => canonicalEdited = true);
+    document.getElementById('twitter_title').addEventListener('input', () => twitterTitleEdited = true);
+    document.getElementById('twitter_description').addEventListener('input', () => twitterDescEdited = true);
 
     document.getElementById('name').addEventListener('keyup', function () {
         const slug = this.value
@@ -700,10 +740,12 @@
 
     document.getElementById('meta_title').addEventListener('keyup', function () {
         if (!ogTitleEdited) document.getElementById('og_title').value = this.value;
+        if (!twitterTitleEdited) document.getElementById('twitter_title').value = this.value;
     });
 
     document.getElementById('meta_description').addEventListener('keyup', function () {
         if (!ogDescEdited) document.getElementById('og_description').value = this.value;
+        if (!twitterDescEdited) document.getElementById('twitter_description').value = this.value;
     });
 
     // ---- Fact strip repeater ----

@@ -42,6 +42,7 @@ class Category extends Model
         'plan_heading',
         'plan_heading_highlight',
         'plan_intro',
+
         'h1',
         'meta_title',
         'meta_description',
@@ -49,6 +50,10 @@ class Category extends Model
         'og_description',
         'og_image',
         'canonical_url',
+        'robots',
+        'twitter_title',
+        'twitter_description',
+        'twitter_card_image'
     ];
 
     protected $casts = [

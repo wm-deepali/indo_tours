@@ -59,6 +59,12 @@ class AttractionController extends Controller
             $validated['og_image'] = $validated['image'] ?? null;
         }
 
+        if ($request->hasFile('twitter_card_image')) {
+            $validated['twitter_card_image'] = $request->file('twitter_card_image')->store('attractions/seo', 'public');
+        } else {
+            $validated['twitter_card_image'] = $validated['og_image'] ?? null;
+        }
+
         if ($request->hasFile('about_image')) {
             $validated['about_image'] = $request->file('about_image')->store('attractions/about', 'public');
         }
@@ -152,6 +158,13 @@ class AttractionController extends Controller
                 Storage::disk('public')->delete($attraction->og_image);
             }
             $validated['og_image'] = $request->file('og_image')->store('attractions/seo', 'public');
+        }
+
+        if ($request->hasFile('twitter_card_image')) {
+            if ($attraction->twitter_card_image) {
+                Storage::disk('public')->delete($attraction->twitter_card_image);
+            }
+            $validated['twitter_card_image'] = $request->file('twitter_card_image')->store('attractions/seo', 'public');
         }
 
         if ($request->hasFile('about_image')) {
@@ -728,6 +741,8 @@ class AttractionController extends Controller
             'og_description' => 'nullable|string',
             'og_image' => 'nullable|image',
             'canonical_url' => 'nullable|string|max:255',
+            'twitter_card_image' => 'nullable|image',
+            'robots' => 'nullable|string|max:50',
 
             'gallery_images.*' => 'nullable|image',
             'gallery_titles.*' => 'nullable|string|max:255',

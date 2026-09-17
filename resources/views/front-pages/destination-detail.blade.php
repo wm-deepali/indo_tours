@@ -1,8 +1,17 @@
 @extends('layouts.app')
 
-@section('title', $destination->meta_title ?: $destination->name . ' | Indo Tours & Adventures')
-@section('meta_description', $destination->meta_description ?: $destination->short_description)
+@section('title', $destination->meta_title ?? $destination->name . ' | Indo Tours & Adventures')
+@section('meta_description', $destination->meta_description ?? $destination->short_description)
 @section('canonical', $destination->canonical_url ?: url()->current())
+@section('robots', $destination->robots ?: 'index, follow')
+
+@section('og_title', $destination->og_title ?? $destination->meta_title ?? $destination->name)
+@section('og_description', $destination->og_description ?? $destination->meta_description ?? $destination->short_description)
+@section('og_image', asset('storage/' . ($destination->og_image ?: $destination->image)))
+
+@section('twitter_title', $destination->og_title ?? $destination->meta_title ?? $destination->name)
+@section('twitter_description', $destination->og_description ?? $destination->meta_description ?? $destination->short_description)
+@section('twitter_image', asset('storage/' . ($destination->twitter_card_image ?: $destination->image)))
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/sass/destination-detail/detail.css') }}" />
@@ -827,25 +836,76 @@
 @endsection
 
 @push('scripts')
+    @php
+        $breadcrumbItems = [
+            ['name' => 'Home', 'url' => route('home')],
+            ['name' => 'Destinations', 'url' => route('destinations')],
+        ];
+        if ($destination->country) {
+            $breadcrumbItems[] = ['name' => $destination->country->name, 'url' => url()->current()];
+        }
+        $breadcrumbItems[] = ['name' => $destination->name, 'url' => url()->current()];
+
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'BreadcrumbList',
+                    'itemListElement' => collect($breadcrumbItems)->map(function ($item, $i) {
+                        return [
+                            '@type' => 'ListItem',
+                            'position' => $i + 1,
+                            'name' => $item['name'],
+                            'item' => $item['url'],
+                        ];
+                    })->values()->all(),
+                ],
+                [
+                    '@type' => 'TouristAttraction',
+                    '@id' => url()->current() . '#destination',
+                    'name' => $destination->name,
+                    'description' => $destination->meta_description ?? $destination->short_description,
+                    'url' => url()->current(),
+                    'image' => $destination->image ? asset('storage/' . $destination->image) : null,
+                    'address' => [
+                        '@type' => 'PostalAddress',
+                        'addressLocality' => $destination->city?->name,
+                        'addressRegion' => $destination->state?->name,
+                        'addressCountry' => $destination->country?->name,
+                    ],
+                ],
+            ],
+        ];
+
+        if ($destination->faqs->isNotEmpty()) {
+            $schema['@graph'][] = [
+                '@type' => 'FAQPage',
+                'mainEntity' => $destination->faqs->map(function ($faq) {
+                    return [
+                        '@type' => 'Question',
+                        'name' => $faq->question,
+                        'acceptedAnswer' => [
+                            '@type' => 'Answer',
+                            'text' => $faq->answer,
+                        ],
+                    ];
+                })->values()->all(),
+            ];
+        }
+    @endphp
+
+    <script type="application/ld+json">
+        {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const areas = document.querySelectorAll(".detail-secB .area");
-
             if (!areas.length) return;
-
-            // First area is active by default
-            areas.forEach((area, index) => {
-                area.classList.toggle("is-open", index === 0);
-            });
-
-            // Open only the clicked area
+            areas.forEach((area, index) => area.classList.toggle("is-open", index === 0));
             areas.forEach((area) => {
                 area.addEventListener("click", () => {
-                    areas.forEach((item) => {
-                        item.classList.remove("is-open");
-                    });
-
+                    areas.forEach((item) => item.classList.remove("is-open"));
                     area.classList.add("is-open");
                 });
             });

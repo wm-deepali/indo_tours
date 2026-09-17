@@ -1,7 +1,18 @@
 @extends('layouts.app')
 
-@section('title', 'Activities Detail | Indo Tours & Adventures')
-@section('meta_description', 'Indo Tours & Adventures is a leading travel company offering a wide range of tour packages, including domestic and international destinations. Explore the world with our expertly crafted itineraries and exceptional services.')
+@section('title', ($activity->meta_title ?: $activity->h1 ?: $activity->name) . ' | Indo Tours & Adventures')
+@section('meta_description', $activity->meta_description ?: ($activity->about_content ? Str::limit($activity->about_content, 155) : 'Indo Tours & Adventures is a leading travel company offering a wide range of tour packages, including domestic and international destinations.'))
+@section('canonical', $activity->canonical_url ?: url()->current())
+@section('robots', $activity->robots ?: 'index, follow')
+
+@section('og_title', $activity->og_title ?: $activity->meta_title ?: $activity->name)
+@section('og_description', $activity->og_description ?: $activity->meta_description ?: $activity->about_content)
+@section('og_image', asset('storage/' . ($activity->og_image ?: $activity->main_image)))
+
+@section('twitter_title', $activity->og_title ?: $activity->meta_title ?: $activity->name)
+@section('twitter_description', $activity->og_description ?: $activity->meta_description ?: $activity->about_content)
+@section('twitter_image', asset('storage/' . ($activity->twitter_card_image ?: $activity->og_image ?: $activity->main_image)))
+
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/sass/activities-detail/detail.css') }}" />
@@ -859,8 +870,68 @@
 
 @endsection
 
-
 @push('scripts')
+    @php
+        $breadcrumbItems = [['name' => 'Home', 'url' => route('home')]];
+        if ($activity->city) {
+            $breadcrumbItems[] = ['name' => $activity->city->name, 'url' => url('/' . $activity->city->slug . '/')];
+        }
+        $breadcrumbItems[] = ['name' => 'Activities', 'url' => url()->current()];
+        $breadcrumbItems[] = ['name' => $activity->name, 'url' => url()->current()];
+
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'BreadcrumbList',
+                    'itemListElement' => collect($breadcrumbItems)->map(fn($item, $i) => [
+                        '@type' => 'ListItem',
+                        'position' => $i + 1,
+                        'name' => $item['name'],
+                        'item' => $item['url'],
+                    ])->values()->all(),
+                ],
+                [
+                    '@type' => 'TouristAttraction',
+                    '@id' => url()->current() . '#activity',
+                    'name' => $activity->name,
+                    'description' => $activity->meta_description ?: $activity->about_content,
+                    'url' => url()->current(),
+                    'image' => asset('storage/' . $activity->main_image),
+                    'address' => [
+                        '@type' => 'PostalAddress',
+                        'addressLocality' => $activity->city?->name,
+                        'addressRegion' => $activity->state?->name,
+                        'addressCountry' => $activity->country?->name,
+                    ],
+                ],
+            ],
+        ];
+
+        if ($reviewCount) {
+            $schema['@graph'][1]['aggregateRating'] = [
+                '@type' => 'AggregateRating',
+                'ratingValue' => $avgRating,
+                'reviewCount' => $reviewCount,
+            ];
+        }
+
+        if ($activity->faqs->isNotEmpty()) {
+            $schema['@graph'][] = [
+                '@type' => 'FAQPage',
+                'mainEntity' => $activity->faqs->map(fn($faq) => [
+                    '@type' => 'Question',
+                    'name' => $faq->question,
+                    'acceptedAnswer' => ['@type' => 'Answer', 'text' => $faq->answer],
+                ])->values()->all(),
+            ];
+        }
+    @endphp
+
+    <script type="application/ld+json">
+            {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        </script>
+
     <script>
         $(function () {
             var csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -901,5 +972,5 @@
 
         });
 
-    </script>
+    </script>>
 @endpush

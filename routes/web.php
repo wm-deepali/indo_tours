@@ -30,7 +30,6 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\FrontController;
 
 
-// ── (unchanged — front + customer routes, no admin permission needed here) ──
 Route::controller(FrontController::class)->group(function () {
     Route::get('/', 'home')->name('home');
 

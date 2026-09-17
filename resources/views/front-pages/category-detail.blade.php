@@ -1,7 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'Category Listing | Indo Tours & Adventures')
-@section('meta_description', 'Indo Tours & Adventures is a leading travel company offering a wide range of tour packages, including domestic and international destinations. Explore the world with our expertly crafted itineraries and exceptional services.')
+@section('title', $category->meta_title ?? $category->name . ' | Indo Tours & Adventures')
+@section('meta_description', $category->meta_description ?? 'Indo Tours & Adventures is a leading travel company offering a wide range of tour packages, including domestic and international destinations. Explore the world with our expertly crafted itineraries and exceptional services.')
+@section('canonical', $category->canonical_url ?: url()->current())
+@section('robots', $category->robots ?: 'index, follow')
+
+@section('og_title', $category->og_title ?? $category->meta_title ?? $category->name)
+@section('og_description', $category->og_description ?? $category->meta_description ?? $category->short_description)
+@section('og_image', asset('storage/' . ($category->og_image ?: $category->image)))
+
+@section('twitter_title', $category->twitter_title ?? $category->og_title ?? $category->meta_title ?? $category->name)
+@section('twitter_description', $category->twitter_description ?? $category->og_description ?? $category->meta_description ?? $category->short_description)
+@section('twitter_image', asset('storage/' . ($category->twitter_card_image ?: ($category->og_image ?: $category->image))))
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/sass/category-listing/category-listing.css') }}" />
@@ -800,6 +810,58 @@
 @endsection
 
 @push('scripts')
+
+    @php
+        $categoryBreadcrumbItems = [
+            ['name' => 'Home', 'url' => url('/')],
+            ['name' => $category->name, 'url' => url()->current()],
+        ];
+
+        $categorySchema = [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'BreadcrumbList',
+                    'itemListElement' => collect($categoryBreadcrumbItems)->map(function ($item, $i) {
+                        return [
+                            '@type' => 'ListItem',
+                            'position' => $i + 1,
+                            'name' => $item['name'],
+                            'item' => $item['url'],
+                        ];
+                    })->values()->all(),
+                ],
+                array_filter([
+                    '@type' => 'CollectionPage',
+                    '@id' => url()->current() . '#category',
+                    'name' => $category->h1 ?? $category->heading ?? $category->name,
+                    'description' => $category->meta_description ?? $category->short_description,
+                    'url' => url()->current(),
+                    'image' => $category->image ? asset('storage/' . $category->image) : null,
+                ]),
+            ],
+        ];
+
+        if ($category->faqs->isNotEmpty()) {
+            $categorySchema['@graph'][] = [
+                '@type' => 'FAQPage',
+                'mainEntity' => $category->faqs->map(function ($faq) {
+                    return [
+                        '@type' => 'Question',
+                        'name' => $faq->question,
+                        'acceptedAnswer' => [
+                            '@type' => 'Answer',
+                            'text' => $faq->answer,
+                        ],
+                    ];
+                })->values()->all(),
+            ];
+        }
+    @endphp
+
+    <script type="application/ld+json">
+        {!! json_encode($categorySchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
 
     @if($category->promo_end_at)
         <script>

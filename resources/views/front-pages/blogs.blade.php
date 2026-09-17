@@ -1,8 +1,5 @@
 @extends('layouts.app')
 
-@section('title', 'Blogs | Indo Tours & Adventures')
-@section('meta_description', '')
-
 @push('styles')
   <link rel="stylesheet" href="{{ asset('assets/sass/blog/blog.css') }}" />
 @endpush

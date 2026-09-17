@@ -39,6 +39,7 @@ class Destination extends Model
         'budget_note',
         'sort_order',
         'status',
+        
         'h1',
         'meta_title',
         'meta_description',

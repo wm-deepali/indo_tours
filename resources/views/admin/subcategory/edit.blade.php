@@ -728,6 +728,37 @@
                                 value="{{ old('canonical_url', $subCategory->canonical_url) }}">
                         </div>
 
+                        <div class="form-field">
+                            <label for="robots">Robots</label>
+                            <input type="text" id="robots" name="robots" class="form-control-styled"
+                                value="{{ old('robots', $subCategory->robots) }}" placeholder="index, follow">
+                            <div class="hint">Leave blank to default to "index, follow"</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="twitter_title">Twitter Title</label>
+                            <input type="text" id="twitter_title" name="twitter_title" class="form-control-styled"
+                                value="{{ old('twitter_title', $subCategory->twitter_title) }}">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="twitter_description">Twitter Description</label>
+                            <textarea id="twitter_description" name="twitter_description" rows="3"
+                                class="form-control-styled">{{ old('twitter_description', $subCategory->twitter_description) }}</textarea>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="twitter_card_image">Twitter Card Image</label>
+                            @if($subCategory->twitter_card_image)
+                                <img src="{{ asset('storage/' . $subCategory->twitter_card_image) }}"
+                                    class="current-img-preview">
+                            @endif
+                            <input type="file" id="twitter_card_image" name="twitter_card_image"
+                                class="form-control-styled" accept="image/*">
+                            <div class="hint">Leave blank to keep current image (falls back to OG Image if none set)
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="form-actions">
@@ -849,7 +880,7 @@
         row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
     });
 
-    
+
 </script>
 
 @include('admin.footer')

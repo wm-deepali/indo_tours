@@ -679,6 +679,18 @@
                         </div>
 
                         <div class="form-field">
+                            <label for="robots">Robots</label>
+                            <select id="robots" name="robots" class="form-control-styled">
+                                @php $currentRobots = old('robots', $category->robots ?? 'index, follow'); @endphp
+                                <option value="index, follow" {{ $currentRobots == 'index, follow' ? 'selected' : '' }}>index, follow (default)</option>
+                                <option value="noindex, follow" {{ $currentRobots == 'noindex, follow' ? 'selected' : '' }}>noindex, follow</option>
+                                <option value="index, nofollow" {{ $currentRobots == 'index, nofollow' ? 'selected' : '' }}>index, nofollow</option>
+                                <option value="noindex, nofollow" {{ $currentRobots == 'noindex, nofollow' ? 'selected' : '' }}>noindex, nofollow</option>
+                            </select>
+                            <div class="hint">Controls whether search engines index this page and follow its links</div>
+                        </div>
+
+                        <div class="form-field">
                             <label for="og_title">OG Title</label>
                             <input type="text" id="og_title" name="og_title" class="form-control-styled"
                                 value="{{ old('og_title', $category->og_title) }}">
@@ -697,6 +709,29 @@
                             @endif
                             <input type="file" id="og_image" name="og_image" class="form-control-styled"
                                 accept="image/*">
+                            <div class="hint">Leave blank to keep the current image</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="twitter_title">Twitter Title</label>
+                            <input type="text" id="twitter_title" name="twitter_title" class="form-control-styled"
+                                value="{{ old('twitter_title', $category->twitter_title) }}">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="twitter_description">Twitter Description</label>
+                            <textarea id="twitter_description" name="twitter_description" rows="3"
+                                class="form-control-styled">{{ old('twitter_description', $category->twitter_description) }}</textarea>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="twitter_card_image">Twitter Card Image</label>
+                            @if($category->twitter_card_image)
+                                <img src="{{ asset('storage/' . $category->twitter_card_image) }}"
+                                    class="current-img-preview">
+                            @endif
+                            <input type="file" id="twitter_card_image" name="twitter_card_image"
+                                class="form-control-styled" accept="image/*">
                             <div class="hint">Leave blank to keep the current image</div>
                         </div>
 

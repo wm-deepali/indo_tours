@@ -1,7 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'Listing | Indo Tours & Adventures')
-@section('meta_description', 'Indo Tours & Adventures is a leading travel company offering a wide range of tour packages, including domestic and international destinations. Explore the world with our expertly crafted itineraries and exceptional services.')
+@section('title', $subCategory->meta_title ?? $subCategory->name . ' | Indo Tours & Adventures')
+@section('meta_description', $subCategory->meta_description ?? 'Indo Tours & Adventures is a leading travel company offering a wide range of tour packages, including domestic and international destinations. Explore the world with our expertly crafted itineraries and exceptional services.')
+@section('canonical', $subCategory->canonical_url ?: url()->current())
+@section('robots', $subCategory->robots ?: 'index, follow')
+
+@section('og_title', $subCategory->og_title ?? $subCategory->meta_title ?? $subCategory->name)
+@section('og_description', $subCategory->og_description ?? $subCategory->meta_description ?? $subCategory->intro_text)
+@section('og_image', asset('storage/' . ($subCategory->og_image ?: $subCategory->banner_image_one)))
+
+@section('twitter_title', $subCategory->twitter_title ?? $subCategory->og_title ?? $subCategory->meta_title ?? $subCategory->name)
+@section('twitter_description', $subCategory->twitter_description ?? $subCategory->og_description ?? $subCategory->meta_description ?? $subCategory->intro_text)
+@section('twitter_image', asset('storage/' . ($subCategory->twitter_card_image ?: ($subCategory->og_image ?: $subCategory->banner_image_one))))
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/sass/listing/listing.css') }}" />
@@ -851,6 +861,69 @@
 @endsection
 
 @push('scripts')
+
+    @php
+        $subCategoryBreadcrumbItems = [
+            ['name' => 'Home', 'url' => url('/')],
+        ];
+
+        if ($subCategory->category) {
+            $subCategoryBreadcrumbItems[] = [
+                'name' => $subCategory->category->name,
+                'url' => route('category.show', $subCategory->category->slug),
+            ];
+        }
+
+        $subCategoryBreadcrumbItems[] = [
+            'name' => $subCategory->name,
+            'url' => url()->current(),
+        ];
+
+        $subCategorySchema = [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'BreadcrumbList',
+                    'itemListElement' => collect($subCategoryBreadcrumbItems)->map(function ($item, $i) {
+                        return [
+                            '@type' => 'ListItem',
+                            'position' => $i + 1,
+                            'name' => $item['name'],
+                            'item' => $item['url'],
+                        ];
+                    })->values()->all(),
+                ],
+                array_filter([
+                    '@type' => 'CollectionPage',
+                    '@id' => url()->current() . '#subcategory',
+                    'name' => $subCategory->h1 ?? $subCategory->name,
+                    'description' => $subCategory->meta_description ?? $subCategory->intro_text,
+                    'url' => url()->current(),
+                    'image' => $subCategory->banner_image_one ? asset('storage/' . $subCategory->banner_image_one) : null,
+                ]),
+            ],
+        ];
+
+        if ($subCategory->faqs->isNotEmpty()) {
+            $subCategorySchema['@graph'][] = [
+                '@type' => 'FAQPage',
+                'mainEntity' => $subCategory->faqs->map(function ($faq) {
+                    return [
+                        '@type' => 'Question',
+                        'name' => $faq->question,
+                        'acceptedAnswer' => [
+                            '@type' => 'Answer',
+                            'text' => $faq->answer,
+                        ],
+                    ];
+                })->values()->all(),
+            ];
+        }
+    @endphp
+
+    <script type="application/ld+json">
+        {!! json_encode($subCategorySchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
 
     <script>
         const readMoreBtn = document.getElementById("readMoreBtn");

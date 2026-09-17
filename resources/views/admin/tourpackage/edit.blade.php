@@ -1037,6 +1037,12 @@
                     <div class="cat-tab-panel" data-panel="seo">
 
                         <div class="form-field">
+                            <label for="h1">H1 Tag</label>
+                            <input type="text" id="h1" name="h1" class="form-control-styled"
+                                value="{{ old('h1', $tourPackage->h1) }}">
+                        </div>
+
+                        <div class="form-field">
                             <label for="meta_title">Meta Title</label>
                             <input type="text" id="meta_title" name="meta_title" class="form-control-styled"
                                 value="{{ old('meta_title', $tourPackage->meta_title) }}">
@@ -1070,9 +1076,28 @@
                         </div>
 
                         <div class="form-field">
+                            <label for="twitter_card_image">Twitter Card Image</label>
+                            @if($tourPackage->twitter_card_image)<img
+                                src="{{ asset('storage/' . $tourPackage->twitter_card_image) }}"
+                            class="current-img-preview">@endif
+                            <input type="file" id="twitter_card_image" name="twitter_card_image"
+                                class="form-control-styled" accept="image/*">
+                            <div class="hint">Leave blank to keep current</div>
+                        </div>
+
+                        <div class="form-field">
                             <label for="canonical_url">Canonical URL</label>
                             <input type="text" id="canonical_url" name="canonical_url" class="form-control-styled"
                                 value="{{ old('canonical_url', $tourPackage->canonical_url) }}">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="robots">Robots</label>
+                            <select id="robots" name="robots" class="form-control-styled">
+                                <option value="index, follow" {{ old('robots', $tourPackage->robots ?: 'index, follow') == 'index, follow' ? 'selected' : '' }}>Index, Follow</option>
+                                <option value="noindex, follow" {{ old('robots', $tourPackage->robots) == 'noindex, follow' ? 'selected' : '' }}>No Index, Follow</option>
+                                <option value="noindex, nofollow" {{ old('robots', $tourPackage->robots) == 'noindex, nofollow' ? 'selected' : '' }}>No Index, No Follow</option>
+                            </select>
                         </div>
 
                     </div>

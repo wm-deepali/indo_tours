@@ -147,6 +147,8 @@ class ActivityController extends Controller
             'banner_top_image' => 'activities/banner',
             'banner_left_image' => 'activities/banner',
             'banner_right_image' => 'activities/banner',
+            'og_image' => 'activities/seo',
+            'twitter_card_image' => 'activities/seo',
         ];
 
         foreach ($map as $field => $folder) {
@@ -364,6 +366,16 @@ class ActivityController extends Controller
             'package_save_texts.*' => 'nullable|string|max:50',
 
             'attraction_ids.*' => 'nullable|exists:attractions,id',
+
+            'h1' => 'nullable|string|max:255',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+            'canonical_url' => 'nullable|string|max:500',
+            'robots' => 'nullable|string|max:50',
+            'og_title' => 'nullable|string|max:255',
+            'og_description' => 'nullable|string|max:500',
+            'og_image' => 'nullable|image',
+            'twitter_card_image' => 'nullable|image',
         ]);
     }
 

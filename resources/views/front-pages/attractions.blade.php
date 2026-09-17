@@ -1,8 +1,5 @@
 @extends('layouts.app')
 
-@section('title', 'Attractions | Indo Tours & Adventures')
-@section('meta_description', 'Explore a variety of attractions across domestic and international destinations. Discover the world with our expertly crafted itineraries and exceptional services.')
-
 @push('styles')
   <link rel="stylesheet" href="{{ asset('assets/sass/attractions/attractions.css')}}" />
 @endpush

@@ -45,12 +45,16 @@ class TourPackage extends Model
         'promo_button_text',
         'promo_button_url',
         'promo_end_at',
+        
+        'h1',
         'meta_title',
         'meta_description',
         'og_title',
         'og_description',
         'og_image',
+        'twitter_card_image',
         'canonical_url',
+        'robots',
     ];
 
     protected $casts = [

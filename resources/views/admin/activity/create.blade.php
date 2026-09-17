@@ -346,6 +346,7 @@
                         <button type="button" class="cat-tab" data-tab="policies">Policies</button>
                         <button type="button" class="cat-tab" data-tab="attractions">Attractions</button>
                         <button type="button" class="cat-tab" data-tab="faqs">FAQs</button>
+                        <button type="button" class="cat-tab" data-tab="seo">SEO</button>
                     </div>
 
                     {{-- ============ GENERAL ============ --}}
@@ -698,6 +699,75 @@
                         <div class="hint" style="margin-top:10px;">A row is skipped if question or answer is left blank.
                         </div>
                     </div>
+
+                    {{-- ============ SEO ============ --}}
+                    <div class="cat-tab-panel" data-panel="seo">
+
+                        <div class="form-field">
+                            <label for="h1">H1 Heading</label>
+                            <input type="text" id="h1" name="h1" class="form-control-styled" value="{{ old('h1') }}"
+                                placeholder="Defaults to Activity Name">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="meta_title">Meta Title</label>
+                            <input type="text" id="meta_title" name="meta_title" class="form-control-styled"
+                                value="{{ old('meta_title') }}" placeholder="Defaults to Activity Name">
+                            <div class="hint">Recommended: under 60 characters</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="meta_description">Meta Description</label>
+                            <textarea id="meta_description" name="meta_description" rows="3"
+                                class="form-control-styled">{{ old('meta_description') }}</textarea>
+                            <div class="hint">Recommended: under 160 characters</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="canonical_url">Canonical URL</label>
+                            <input type="text" id="canonical_url" name="canonical_url" class="form-control-styled"
+                                value="{{ old('canonical_url') }}" placeholder="Leave blank to auto-use the page URL">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="robots">Robots</label>
+                            <select id="robots" name="robots" class="form-control-styled">
+                                <option value="index, follow" {{ old('robots', 'index, follow') == 'index, follow' ? 'selected' : '' }}>Index, Follow</option>
+                                <option value="noindex, follow" {{ old('robots') == 'noindex, follow' ? 'selected' : '' }}>No Index, Follow</option>
+                                <option value="noindex, nofollow" {{ old('robots') == 'noindex, nofollow' ? 'selected' : '' }}>No Index, No Follow</option>
+                            </select>
+                        </div>
+
+                        <h4 class="sub-block-title">Social Sharing (Open Graph / Twitter)</h4>
+
+                        <div class="form-field">
+                            <label for="og_title">OG Title</label>
+                            <input type="text" id="og_title" name="og_title" class="form-control-styled"
+                                value="{{ old('og_title') }}" placeholder="Defaults to Meta Title">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="og_description">OG Description</label>
+                            <textarea id="og_description" name="og_description" rows="3"
+                                class="form-control-styled">{{ old('og_description') }}</textarea>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="og_image">OG Image</label>
+                            <input type="file" id="og_image" name="og_image" class="form-control-styled"
+                                accept="image/*">
+                            <div class="hint">Defaults to the Main Banner Image if left blank</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="twitter_card_image">Twitter Card Image</label>
+                            <input type="file" id="twitter_card_image" name="twitter_card_image"
+                                class="form-control-styled" accept="image/*">
+                            <div class="hint">Defaults to OG Image / Main Banner Image if left blank</div>
+                        </div>
+
+                    </div>
+
                     <div class="form-actions">
                         <button type="submit" class="btn-primary-dash">
                             <i class="fa fa-check"></i> Save Activity

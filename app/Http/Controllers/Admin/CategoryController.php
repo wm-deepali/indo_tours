@@ -39,6 +39,9 @@ class CategoryController extends Controller
         if ($request->hasFile('og_image')) {
             $validated['og_image'] = $request->file('og_image')->store('categories/og', 'public');
         }
+        if ($request->hasFile('twitter_card_image')) {
+            $validated['twitter_card_image'] = $request->file('twitter_card_image')->store('categories/twitter', 'public');
+        }
 
         $category = Category::create($validated);
         $this->saveFacts($category, $request);
@@ -78,6 +81,12 @@ class CategoryController extends Controller
             }
             $validated['og_image'] = $request->file('og_image')->store('categories/og', 'public');
         }
+        if ($request->hasFile('twitter_card_image')) {
+            if ($category->twitter_card_image) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($category->twitter_card_image);
+            }
+            $validated['twitter_card_image'] = $request->file('twitter_card_image')->store('categories/twitter', 'public');
+        }
 
         $category->update($validated);
         $this->saveFacts($category, $request);
@@ -116,9 +125,13 @@ class CategoryController extends Controller
             'h1' => 'nullable|string|max:255',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
+            'robots' => 'nullable|string|in:index, follow,noindex, follow,index, nofollow,noindex, nofollow',
             'og_title' => 'nullable|string|max:255',
             'og_description' => 'nullable|string',
             'og_image' => 'nullable|image|max:2048',
+            'twitter_title' => 'nullable|string|max:255',
+            'twitter_description' => 'nullable|string',
+            'twitter_card_image' => 'nullable|image|max:2048',
             'canonical_url' => 'nullable|string|max:255',
 
             'listing_eyebrow' => 'nullable|string|max:255',

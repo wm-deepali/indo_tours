@@ -740,6 +740,13 @@
                     <div class="cat-tab-panel" data-panel="seo">
 
                         <div class="form-field">
+                            <label for="h1">H1 Tag</label>
+                            <input type="text" id="h1" name="h1" class="form-control-styled" value="{{ old('h1') }}"
+                                placeholder="Auto-fills from Package Name">
+                            <div class="hint">Auto-fills from Package Name — edit anytime to override</div>
+                        </div>
+
+                        <div class="form-field">
                             <label for="meta_title">Meta Title</label>
                             <input type="text" id="meta_title" name="meta_title" class="form-control-styled"
                                 value="{{ old('meta_title') }}">
@@ -772,9 +779,25 @@
                         </div>
 
                         <div class="form-field">
+                            <label for="twitter_card_image">Twitter Card Image</label>
+                            <input type="file" id="twitter_card_image" name="twitter_card_image"
+                                class="form-control-styled" accept="image/*">
+                            <div class="hint">Leave blank to automatically use the OG Image / Main Image</div>
+                        </div>
+
+                        <div class="form-field">
                             <label for="canonical_url">Canonical URL</label>
                             <input type="text" id="canonical_url" name="canonical_url" class="form-control-styled"
                                 value="{{ old('canonical_url') }}" placeholder="Auto-generated from slug">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="robots">Robots</label>
+                            <select id="robots" name="robots" class="form-control-styled">
+                                <option value="index, follow" {{ old('robots', 'index, follow') == 'index, follow' ? 'selected' : '' }}>Index, Follow</option>
+                                <option value="noindex, follow" {{ old('robots') == 'noindex, follow' ? 'selected' : '' }}>No Index, Follow</option>
+                                <option value="noindex, nofollow" {{ old('robots') == 'noindex, nofollow' ? 'selected' : '' }}>No Index, No Follow</option>
+                            </select>
                         </div>
 
                     </div>
@@ -815,6 +838,8 @@
     })();
 
     let ogTitleEdited = false, ogDescEdited = false, canonicalEdited = false;
+    let h1Edited = false;
+    document.getElementById('h1').addEventListener('input', () => h1Edited = true);
     document.getElementById('og_title').addEventListener('input', () => ogTitleEdited = true);
     document.getElementById('og_description').addEventListener('input', () => ogDescEdited = true);
     document.getElementById('canonical_url').addEventListener('input', () => canonicalEdited = true);
@@ -824,6 +849,9 @@
             .replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
         document.getElementById('slug').value = slug;
         if (!canonicalEdited) document.getElementById('canonical_url').value = '{{ url('/tour-package') }}/' + slug;
+        if (!h1Edited) {
+            document.getElementById('h1').value = this.value;
+        }
     });
 
     document.getElementById('meta_title').addEventListener('keyup', function () {

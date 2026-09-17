@@ -38,13 +38,17 @@ class Attraction extends Model
         'state_id',
         'city_id',
         'map_location',
+        
         'h1',
         'meta_title',
         'meta_description',
         'og_title',
         'og_description',
         'og_image',
+        'twitter_card_image',
         'canonical_url',
+        'robots',
+
         'promo_eyebrow',
         'promo_title',
         'promo_description',

@@ -5,11 +5,25 @@
     <meta charset="UTF-8" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-        @yield('title', 'Home | Indo Tours & Adventures')
-    </title>
-    <meta name="description" content="@yield('meta_description', 'Indo Tours & Adventures')" />
+    <title>@yield('title', $seo->meta_title ?? 'Home | Indo Tours & Adventures')</title>
+    <meta name="description"
+        content="@yield('meta_description', $seo->meta_description ?? 'Indo Tours & Adventures')" />
     <link rel="canonical" href="@yield('canonical', url()->current())" />
+    <meta name="robots" content="@yield('robots', 'index, follow')" />
+
+    <meta property="og:title"
+        content="@yield('og_title', $seo->og_title ?? ($seo->meta_title ?? 'Indo Tours & Adventures'))" />
+    <meta property="og:description"
+        content="@yield('og_description', $seo->og_description ?? ($seo->meta_description ?? ''))" />
+    <meta property="og:image"
+        content="@yield('og_image', !empty($seo->og_image) ? asset('storage/' . $seo->og_image) : asset('assets/images/og-default.jpg'))" />
+
+    <meta name="twitter:card" content="{{ $seo->twitter_card_type ?? 'summary_large_image' }}" />
+    <meta name="twitter:title" content="@yield('twitter_title', $seo->twitter_title ?? ($seo->meta_title ?? ''))" />
+    <meta name="twitter:description"
+        content="@yield('twitter_description', $seo->twitter_description ?? ($seo->meta_description ?? ''))" />
+    <meta name="twitter:image"
+        content="@yield('twitter_image', !empty($seo->twitter_image) ? asset('storage/' . $seo->twitter_image) : asset('assets/images/og-default.jpg'))" />
 
     <link rel="icon" type="image/png" href="{{ asset('assets/icon/favicon/favicon.png') }}">
     <!-- ================= Google Fonts ================= -->

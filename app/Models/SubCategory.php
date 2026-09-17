@@ -49,6 +49,10 @@ class SubCategory extends Model
         'og_description',
         'og_image',
         'canonical_url',
+        'robots',
+        'twitter_title',
+        'twitter_description',
+        'twitter_card_image',
     ];
 
     protected $casts = [
