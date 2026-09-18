@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Destination;
 use App\Models\LandingPageActivity;
 use Illuminate\Http\Request;
-use App\Models\Attraction;
 use Illuminate\Support\Facades\Storage;
 
 class LandingPageActivityController extends Controller
@@ -18,7 +18,7 @@ class LandingPageActivityController extends Controller
     public function edit()
     {
         $landingPage = LandingPageActivity::firstOrCreate([]);
-        $attractions = Attraction::where('status', 'active')->orderBy('name')->get();
+        $attractions = Destination::where('status', 'published')->orderBy('name')->get();
 
         return view('admin.landing-pages.activities-edit', compact('landingPage', 'attractions'));
     }

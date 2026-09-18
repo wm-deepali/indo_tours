@@ -46,7 +46,7 @@ class LandingPageDestinationController extends Controller
             'why_descriptions.*' => 'nullable|string|max:500',
 
             // ---- Highlight Section ----
-            'highlight_image' => 'nullable|image',
+            'highlight_image' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp,avif|max:5120',
             'highlight_tag' => 'nullable|string|max:100',
             'highlight_heading' => 'nullable|string|max:255',
             'highlight_description' => 'nullable|string|max:1000',
@@ -57,7 +57,7 @@ class LandingPageDestinationController extends Controller
             // ---- Experiences ----
             'experiences_heading' => 'nullable|string|max:255',
             'experiences_description' => 'nullable|string|max:1000',
-            'experience_images.*' => 'nullable|image',
+            'experience_images.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp,avif|max:5120',
             'experience_existing_images.*' => 'nullable|string',
             'experience_titles.*' => 'nullable|string|max:150',
             'experience_descriptions.*' => 'nullable|string|max:500',
@@ -66,7 +66,7 @@ class LandingPageDestinationController extends Controller
             // ---- Travel Guides ----
             'guides_heading' => 'nullable|string|max:255',
             'guides_description' => 'nullable|string|max:1000',
-            'guide_images.*' => 'nullable|image',
+            'guide_images.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp,avif|max:5120',
             'guide_existing_images.*' => 'nullable|string',
             'guide_categories.*' => 'nullable|string|max:100',
             'guide_titles.*' => 'nullable|string|max:150',
@@ -138,7 +138,7 @@ class LandingPageDestinationController extends Controller
         $landingPage->save();
 
         return redirect()
-            ->route('admin.landing-pages.destinations.edit')
+            ->route('admin.landing-pages.destination.edit')
             ->with('success', 'Destinations landing page updated successfully.');
     }
 

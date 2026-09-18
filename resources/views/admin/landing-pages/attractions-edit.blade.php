@@ -19,36 +19,226 @@
             --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
-        .cat-page { background: var(--bg); padding: 24px 28px; min-height: 100vh; font-family: var(--font); color: var(--text-primary); box-sizing: border-box; }
-        .cat-page * { box-sizing: border-box; }
-        .cat-page-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
-        .cat-page-header h1 { font-size: 20px; font-weight: 650; margin: 0; }
-        .cat-breadcrumb { font-size: 12.5px; color: var(--text-hint); margin-top: 3px; }
-        .cat-breadcrumb a { color: var(--accent); text-decoration: none; }
-        .cat-breadcrumb span { margin: 0 5px; }
-        .btn-primary-dash { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: #fff !important; border: none; border-radius: var(--radius-sm); padding: 9px 18px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none !important; box-shadow: 0 1px 3px rgba(48, 61, 137, .25); }
-        .btn-primary-dash:hover { background: #252f70; }
-        .btn-secondary-dash { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); color: var(--text-primary) !important; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 18px; font-size: 13px; font-weight: 500; cursor: pointer; text-decoration: none !important; }
-        .btn-secondary-dash:hover { background: var(--bg); }
-        .cat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); max-width: 100vw; overflow: hidden; }
-        .form-field { margin-bottom: 18px; }
-        .form-field label { display: block; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; letter-spacing: .02em; }
-        .form-field .hint { font-size: 11.5px; color: var(--text-hint); margin-top: 4px; }
-        .form-control-styled { width: 100%; height: 40px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0 12px; font-size: 13.5px; font-family: var(--font); color: var(--text-primary); outline: none; transition: border-color .15s, box-shadow .15s; background: var(--surface); }
-        textarea.form-control-styled { height: auto; padding: 10px 12px; resize: vertical; }
-        .form-control-styled:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(48, 61, 137, .12); }
-        .form-error { color: #b22222; font-size: 12px; margin-top: 5px; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-        .form-actions { display: flex; gap: 10px; padding: 20px 24px; border-top: 1px solid var(--border); background: var(--surface); }
-        .cat-tabs { display: flex; gap: 2px; padding: 0 24px; border-bottom: 1px solid var(--border); background: var(--surface); overflow-x: auto; }
-        .cat-tab { appearance: none; background: none; border: none; border-bottom: 2px solid transparent; padding: 14px 16px; font-family: var(--font); font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; white-space: nowrap; }
-        .cat-tab:hover { color: var(--text-primary); }
-        .cat-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-        .cat-tab-panel { display: none; padding: 24px; }
-        .cat-tab-panel.active { display: block; }
-        .current-img-preview { width: 96px; height: 64px; border-radius: var(--radius-sm); object-fit: cover; border: 1px solid var(--border); margin-bottom: 10px; display: block; }
-        .gallery-row { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 14px; background: var(--bg); }
-        .sub-block-title { font-size: 14px; font-weight: 650; margin: 0 0 12px; padding-top: 4px; }
+        .cat-page {
+            background: var(--bg);
+            padding: 24px 28px;
+            min-height: 100vh;
+            font-family: var(--font);
+            color: var(--text-primary);
+            box-sizing: border-box;
+        }
+
+        .cat-page * {
+            box-sizing: border-box;
+        }
+
+        .cat-page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .cat-page-header h1 {
+            font-size: 20px;
+            font-weight: 650;
+            margin: 0;
+        }
+
+        .cat-breadcrumb {
+            font-size: 12.5px;
+            color: var(--text-hint);
+            margin-top: 3px;
+        }
+
+        .cat-breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .cat-breadcrumb span {
+            margin: 0 5px;
+        }
+
+        .btn-primary-dash {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--accent);
+            color: #fff !important;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 9px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none !important;
+            box-shadow: 0 1px 3px rgba(48, 61, 137, .25);
+        }
+
+        .btn-primary-dash:hover {
+            background: #252f70;
+        }
+
+        .btn-secondary-dash {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--surface);
+            color: var(--text-primary) !important;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 9px 18px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none !important;
+        }
+
+        .btn-secondary-dash:hover {
+            background: var(--bg);
+        }
+
+        .cat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-card);
+            max-width: 100vw;
+            overflow: hidden;
+        }
+
+        .form-field {
+            margin-bottom: 18px;
+        }
+
+        .form-field label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            letter-spacing: .02em;
+        }
+
+        .form-field .hint {
+            font-size: 11.5px;
+            color: var(--text-hint);
+            margin-top: 4px;
+        }
+
+        .form-control-styled {
+            width: 100%;
+            height: 40px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0 12px;
+            font-size: 13.5px;
+            font-family: var(--font);
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color .15s, box-shadow .15s;
+            background: var(--surface);
+        }
+
+        textarea.form-control-styled {
+            height: auto;
+            padding: 10px 12px;
+            resize: vertical;
+        }
+
+        .form-control-styled:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(48, 61, 137, .12);
+        }
+
+        .form-error {
+            color: #b22222;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            padding: 20px 24px;
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .cat-tabs {
+            display: flex;
+            gap: 2px;
+            padding: 0 24px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            overflow-x: auto;
+        }
+
+        .cat-tab {
+            appearance: none;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 14px 16px;
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .cat-tab:hover {
+            color: var(--text-primary);
+        }
+
+        .cat-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .cat-tab-panel {
+            display: none;
+            padding: 24px;
+        }
+
+        .cat-tab-panel.active {
+            display: block;
+        }
+
+        .current-img-preview {
+            width: 96px;
+            height: 64px;
+            border-radius: var(--radius-sm);
+            object-fit: cover;
+            border: 1px solid var(--border);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .gallery-row {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-bottom: 14px;
+            background: var(--bg);
+        }
+
+        .sub-block-title {
+            font-size: 14px;
+            font-weight: 650;
+            margin: 0 0 12px;
+            padding-top: 4px;
+        }
     </style>
 
     <div class="app-content content container-fluid">
@@ -70,7 +260,7 @@
             </div>
 
             @if(session('success'))
-            <div class="alert alert-info" style="margin-bottom:16px;">{{ session('success') }}</div>
+                <div class="alert alert-info" style="margin-bottom:16px;">{{ session('success') }}</div>
             @endif
 
             <div class="cat-card">
@@ -98,7 +288,8 @@
                                 class="form-control-styled @error('hero_heading') is-invalid @enderror"
                                 value="{{ old('hero_heading', $landingPage->hero_heading) }}"
                                 placeholder="e.g. Find Your Perfect Attraction">
-                            @error('hero_heading')<div class="form-error">{{ $message }}</div>@enderror
+                            @error('hero_heading')
+                            <div class="form-error">{{ $message }}</div>@enderror
                         </div>
 
                         <div class="form-field">
@@ -110,13 +301,16 @@
                         <div class="form-field">
                             <label for="hero_video">Background Video</label>
                             @if($landingPage->hero_video)
-                                <div class="hint" style="margin-bottom:8px;">Current: {{ basename($landingPage->hero_video) }}</div>
+                                <div class="hint" style="margin-bottom:8px;">Current:
+                                    {{ basename($landingPage->hero_video) }}</div>
                             @endif
-                            <input type="file" id="hero_video" name="hero_video" class="form-control-styled" accept="video/*">
+                            <input type="file" id="hero_video" name="hero_video" class="form-control-styled"
+                                accept="video/*">
                             <div class="hint">Leave blank to keep the current video (mp4/mov/webm, max 50MB)</div>
                         </div>
 
-                        <div class="hint">The Destination filter dropdown pulls live from the Destinations module. The Category filter is not yet backed by data.</div>
+                        <div class="hint">The Destination filter dropdown pulls live from the Destinations module. The
+                            Category filter is not yet backed by data.</div>
 
                     </div>
 
@@ -125,7 +319,8 @@
 
                         <div class="form-field">
                             <label for="destinations_heading">Heading</label>
-                            <input type="text" id="destinations_heading" name="destinations_heading" class="form-control-styled"
+                            <input type="text" id="destinations_heading" name="destinations_heading"
+                                class="form-control-styled"
                                 value="{{ old('destinations_heading', $landingPage->destinations_heading) }}"
                                 placeholder="e.g. Explore Attractions by Destination">
                         </div>
@@ -136,7 +331,8 @@
                                 class="form-control-styled">{{ old('destinations_description', $landingPage->destinations_description) }}</textarea>
                         </div>
 
-                        <div class="hint">The destination cards themselves come from the Destinations module and can't be edited here.</div>
+                        <div class="hint">The destination cards themselves come from the Destinations module and can't
+                            be edited here.</div>
 
                     </div>
 
@@ -156,7 +352,8 @@
                                 class="form-control-styled">{{ old('featured_description', $landingPage->featured_description) }}</textarea>
                         </div>
 
-                        <div class="hint">Cards are pulled from Attractions marked "Featured" — manage which ones appear from the Attractions module.</div>
+                        <div class="hint">Cards are pulled from Attractions marked "Featured" — manage which ones appear
+                            from the Attractions module.</div>
 
                     </div>
 
@@ -165,7 +362,8 @@
 
                         <div class="form-field">
                             <label for="must_visit_heading">Heading</label>
-                            <input type="text" id="must_visit_heading" name="must_visit_heading" class="form-control-styled"
+                            <input type="text" id="must_visit_heading" name="must_visit_heading"
+                                class="form-control-styled"
                                 value="{{ old('must_visit_heading', $landingPage->must_visit_heading) }}"
                                 placeholder="e.g. Must-Visit Attractions">
                         </div>
@@ -176,7 +374,8 @@
                                 class="form-control-styled">{{ old('must_visit_description', $landingPage->must_visit_description) }}</textarea>
                         </div>
 
-                        <div class="hint">Cards are the 6 highest-rated published Attractions — manage ratings from the Attractions module.</div>
+                        <div class="hint">Cards are the 6 highest-rated published Attractions — manage ratings from the
+                            Attractions module.</div>
 
                     </div>
 
@@ -186,10 +385,11 @@
                         <div class="form-field">
                             <label for="promo_image">Image</label>
                             @if($landingPage->promo_image)
-                            <img src="{{ asset('storage/' . $landingPage->promo_image) }}"
-                                class="current-img-preview" alt="">
+                                <img src="{{ asset('storage/' . $landingPage->promo_image) }}" class="current-img-preview"
+                                    alt="">
                             @endif
-                            <input type="file" id="promo_image" name="promo_image" class="form-control-styled" accept="image/*">
+                            <input type="file" id="promo_image" name="promo_image" class="form-control-styled"
+                                accept="image/*">
                             <div class="hint">Leave blank to keep the current image</div>
                         </div>
 
@@ -216,13 +416,15 @@
                         <div class="form-row">
                             <div class="form-field">
                                 <label for="promo_primary_text">Primary Button Text</label>
-                                <input type="text" id="promo_primary_text" name="promo_primary_text" class="form-control-styled"
+                                <input type="text" id="promo_primary_text" name="promo_primary_text"
+                                    class="form-control-styled"
                                     value="{{ old('promo_primary_text', $landingPage->promo_primary_text) }}"
                                     placeholder="e.g. Plan My Trip">
                             </div>
                             <div class="form-field">
                                 <label for="promo_primary_url">Primary Button Link</label>
-                                <input type="text" id="promo_primary_url" name="promo_primary_url" class="form-control-styled"
+                                <input type="text" id="promo_primary_url" name="promo_primary_url"
+                                    class="form-control-styled"
                                     value="{{ old('promo_primary_url', $landingPage->promo_primary_url) }}">
                             </div>
                         </div>
@@ -230,13 +432,15 @@
                         <div class="form-row">
                             <div class="form-field">
                                 <label for="promo_secondary_text">Secondary Button Text</label>
-                                <input type="text" id="promo_secondary_text" name="promo_secondary_text" class="form-control-styled"
+                                <input type="text" id="promo_secondary_text" name="promo_secondary_text"
+                                    class="form-control-styled"
                                     value="{{ old('promo_secondary_text', $landingPage->promo_secondary_text) }}"
                                     placeholder="e.g. Explore Tour Packages">
                             </div>
                             <div class="form-field">
                                 <label for="promo_secondary_url">Secondary Button Link</label>
-                                <input type="text" id="promo_secondary_url" name="promo_secondary_url" class="form-control-styled"
+                                <input type="text" id="promo_secondary_url" name="promo_secondary_url"
+                                    class="form-control-styled"
                                     value="{{ old('promo_secondary_url', $landingPage->promo_secondary_url) }}">
                             </div>
                         </div>
@@ -264,7 +468,8 @@
                         <button type="button" class="btn-secondary-dash" id="add-guide-item-row">
                             <i class="fa fa-plus"></i> Add Guide
                         </button>
-                        <div class="hint" style="margin-top:10px;">Leave a card's image blank to keep its current image.</div>
+                        <div class="hint" style="margin-top:10px;">Leave a card's image blank to keep its current image.
+                        </div>
 
                     </div>
 
@@ -307,6 +512,8 @@
 </script>
 
 <script>
+    const APP_URL = "{{ rtrim(config('app.asset_url'), '/') }}";
+
     document.querySelectorAll('#lp-tabs .cat-tab').forEach(function (tabBtn) {
         tabBtn.addEventListener('click', function () {
             document.querySelectorAll('#lp-tabs .cat-tab').forEach(b => b.classList.remove('active'));
@@ -338,7 +545,7 @@
         row.innerHTML = `
         <div class="form-field">
             <label>Image</label>
-            ${data && data.image ? `<img src="/storage/${data.image}" class="current-img-preview" alt="">` : ''}
+            ${data && data.image ? `<img src="${APP_URL}/storage/${data.image}" class="current-img-preview" alt="">` : ''}
             <input type="file" name="guide_images[${idx}]" class="form-control-styled" accept="image/*">
             <input type="hidden" name="guide_existing_images[${idx}]" value="${data && data.image ? data.image : ''}">
         </div>

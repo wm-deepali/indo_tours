@@ -334,8 +334,8 @@ class FrontController extends Controller
 
         $relatedDestinations = collect();
         if ($landingPage && !empty($landingPage->related_destination_ids)) {
-            $attractionsById = Attraction::whereIn('id', $landingPage->related_destination_ids)
-                ->where('status', 'active')
+            $attractionsById = Destination::whereIn('id', $landingPage->related_destination_ids)
+                ->where('status', 'published')
                 ->get()
                 ->keyBy('id');
 

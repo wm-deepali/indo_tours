@@ -28,4 +28,4 @@
     .form-row .form-field { padding: 0; margin-bottom: 0; }
     .form-actions { display: flex; gap: 10px; padding: 20px 24px; border-top: 1px solid var(--border); background: var(--surface); }
     .current-img-preview { width: 96px; height: 64px; border-radius: var(--radius-sm); object-fit: cover; border: 1px solid var(--border); margin-bottom: 10px; display: block; }
-</style>/_form.blade.php
+</style>

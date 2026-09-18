@@ -104,7 +104,7 @@ class LandingPageAttractionController extends Controller
         $landingPage->save();
 
         return redirect()
-            ->route('admin.landing-pages.attractions.edit')
+            ->route('admin.landing-pages.attraction.edit')
             ->with('success', 'Attractions landing page updated successfully.');
     }
 

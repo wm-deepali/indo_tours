@@ -626,7 +626,7 @@
                             <i class="fa fa-plus"></i> Add Destination
                         </button>
                         <div class="hint" style="margin-top:10px;">
-                            Pick existing Attraction records to feature here. Row order sets the display order.
+                            Pick existing Destination records to feature here. Row order sets the display order.
                         </div>
 
                     </div>
@@ -699,6 +699,8 @@
 </script>
 
 <script>
+    const APP_URL = "{{ rtrim(config('app.asset_url'), '/') }}";
+
     document.querySelectorAll('#lp-tabs .cat-tab').forEach(function (tabBtn) {
         tabBtn.addEventListener('click', function () {
             document.querySelectorAll('#lp-tabs .cat-tab').forEach(b => b.classList.remove('active'));
@@ -755,7 +757,7 @@
         <div class="form-row">
             <div class="form-field">
                 <label>Slide Image</label>
-                ${data && data.image ? `<img src="/storage/${data.image}" class="current-img-preview" alt="">` : ''}
+                ${data && data.image ? `<img src="${APP_URL}/storage/${data.image}" class="current-img-preview" alt="">` : ''}
                 <input type="file" name="hero_slide_images[${idx}]" class="form-control-styled" accept="image/*">
                 <input type="hidden" name="hero_slide_existing_images[${idx}]" value="${data && data.image ? data.image : ''}">
                 <div class="hint">Leave blank to keep the current image</div>
@@ -874,9 +876,9 @@
 
         row.innerHTML = `
         <div class="form-field">
-            <label>Destination (Attraction)</label>
+            <label>Destination</label>
             <select name="related_destination_ids[${idx}]" class="form-control-styled">
-                <option value="">Select Attraction</option>
+                <option value="">Select Destination</option>
                 ${optionsHtml}
             </select>
         </div>

@@ -466,9 +466,9 @@
 
                           @if($galleries->isNotEmpty())
                             <div class="hw-gallery">
-                              <a href="{{ asset('storage/' . $mainImage->image) }}" data-fancybox="hotel-{{ $stay->id }}"
+                              <a href="{{ asset($mainImage->image) }}" data-fancybox="hotel-{{ $stay->id }}"
                                 class="hw-gallery-main">
-                                <img loading="lazy" src="{{ asset('storage/' . $mainImage->image) }}"
+                                <img loading="lazy" src="{{ asset($mainImage->image) }}"
                                   alt="{{ $stay->hotel->name ?? '' }}" />
                                 @if($stay->hotel && $stay->hotel->rating)
                                   <span class="hw-rating-badge">
@@ -482,9 +482,9 @@
 
                               @foreach($thumbs as $index => $thumb)
                                 @php $isLastThumb = $loop->last && $remainingCount > 0; @endphp
-                                <a href="{{ asset('storage/' . $thumb->image) }}" data-fancybox="hotel-{{ $stay->id }}"
+                                <a href="{{ asset($thumb->image) }}" data-fancybox="hotel-{{ $stay->id }}"
                                   class="hw-thumb {{ $isLastThumb ? 'hw-thumb--more' : '' }}">
-                                  <img loading="lazy" src="{{ asset('storage/' . $thumb->image) }}" alt="" />
+                                  <img loading="lazy" src="{{ asset($thumb->image) }}" alt="" />
                                   @if($isLastThumb)
                                     <div class="hw-more-overlay">
                                       <span>View all</span>
