@@ -524,47 +524,8 @@
 
                         <h4 class="sub-block-title">Quick Info</h4>
 
-                        <div class="form-row">
-                            <div class="form-field">
-                                <label for="duration_text">Duration</label>
-                                <input type="text" id="duration_text" name="duration_text" class="form-control-styled"
-                                    value="{{ old('duration_text', $activity->duration_text) }}">
-                            </div>
-                            <div class="form-field">
-                                <label for="free_cancellation_text">Free Cancellation Text</label>
-                                <input type="text" id="free_cancellation_text" name="free_cancellation_text"
-                                    class="form-control-styled"
-                                    value="{{ old('free_cancellation_text', $activity->free_cancellation_text) }}">
-                            </div>
-                            <div class="form-field">
-                                <label for="rating">Rating</label>
-                                <input type="number" id="rating" name="rating" step="0.1" min="0" max="5"
-                                    class="form-control-styled @error('rating') is-invalid @enderror"
-                                    value="{{ old('rating', $activity->rating) }}">
-                                @error('rating')
-                                <div class="form-error">{{ $message }}</div>@enderror
-                            </div>
-                        </div>
+                        @include('admin.activity._quick-info-fields', ['activity' => $activity])
 
-                        <div class="form-row">
-                            <div class="form-field">
-                                <label for="review_count">Review Count</label>
-                                <input type="number" id="review_count" name="review_count" min="0"
-                                    class="form-control-styled"
-                                    value="{{ old('review_count', $activity->review_count) }}">
-                            </div>
-                            <div class="form-field">
-                                <label for="starting_price">Starting Price</label>
-                                <input type="number" id="starting_price" name="starting_price" min="0" step="0.01"
-                                    class="form-control-styled"
-                                    value="{{ old('starting_price', $activity->starting_price) }}">
-                            </div>
-                            <div class="form-field">
-                                <label for="price_unit">Price Unit</label>
-                                <input type="text" id="price_unit" name="price_unit" class="form-control-styled"
-                                    value="{{ old('price_unit', $activity->price_unit) }}">
-                            </div>
-                        </div>
 
                         <div class="form-field">
                             <label for="status">Status</label>

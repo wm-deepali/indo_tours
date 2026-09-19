@@ -14,6 +14,8 @@ class SubCategory extends Model
         'name',
         'slug',
         'status',
+        'show_in_header',
+        'header_sort_order',
         'offer_tag_text',
         'h1',
         'intro_text',
@@ -57,7 +59,15 @@ class SubCategory extends Model
 
     protected $casts = [
         'promo_end_at' => 'datetime',
+        'show_in_header' => 'boolean',
     ];
+
+    public function scopeInHeader($query)
+    {
+        return $query->where('show_in_header', true)
+            ->where('status', 'published')   // change if your status values differ
+            ->orderBy('header_sort_order');
+    }
 
     public function category(): BelongsTo
     {

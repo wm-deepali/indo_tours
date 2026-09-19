@@ -498,48 +498,9 @@
 
                         <h4 class="sub-block-title">Quick Info</h4>
 
-                        <div class="form-row">
-                            <div class="form-field">
-                                <label for="duration_text">Duration</label>
-                                <input type="text" id="duration_text" name="duration_text" class="form-control-styled"
-                                    value="{{ old('duration_text') }}" placeholder="e.g. 2-3 hrs">
-                            </div>
-                            <div class="form-field">
-                                <label for="free_cancellation_text">Free Cancellation Text</label>
-                                <input type="text" id="free_cancellation_text" name="free_cancellation_text"
-                                    class="form-control-styled" value="{{ old('free_cancellation_text') }}"
-                                    placeholder="e.g. Free Cancellation">
-                                <div class="hint">Leave blank to hide this badge</div>
-                            </div>
-                            <div class="form-field">
-                                <label for="rating">Rating</label>
-                                <input type="number" id="rating" name="rating" step="0.1" min="0" max="5"
-                                    class="form-control-styled @error('rating') is-invalid @enderror"
-                                    value="{{ old('rating') }}" placeholder="e.g. 4.7">
-                                @error('rating')
-                                <div class="form-error">{{ $message }}</div>@enderror
-                            </div>
-                        </div>
+                        @include('admin.activity._quick-info-fields', ['activity' => null])
 
-                        <div class="form-row">
-                            <div class="form-field">
-                                <label for="review_count">Review Count</label>
-                                <input type="number" id="review_count" name="review_count" min="0"
-                                    class="form-control-styled" value="{{ old('review_count', 0) }}">
-                            </div>
-                            <div class="form-field">
-                                <label for="starting_price">Starting Price</label>
-                                <input type="number" id="starting_price" name="starting_price" min="0" step="0.01"
-                                    class="form-control-styled" value="{{ old('starting_price') }}"
-                                    placeholder="e.g. 4675">
-                            </div>
-                            <div class="form-field">
-                                <label for="price_unit">Price Unit</label>
-                                <input type="text" id="price_unit" name="price_unit" class="form-control-styled"
-                                    value="{{ old('price_unit', '/ Adult') }}">
-                            </div>
-                        </div>
-
+                    
                         <div class="form-field">
                             <label for="status">Status</label>
                             <select id="status" name="status" class="form-control-styled">

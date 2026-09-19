@@ -267,6 +267,43 @@
             width: auto;
             height: auto;
         }
+
+        .amenity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 10px;
+        }
+
+        .amenity-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .amenity-option input {
+            width: auto;
+            height: auto;
+        }
+
+        .amenity-option img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        .amenity-option:has(input:checked) {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
     </style>
 
     <div class="app-content content container-fluid">
@@ -297,7 +334,7 @@
                     <div class="cat-tabs" id="tp-tabs">
                         <button type="button" class="cat-tab active" data-tab="general">General</button>
                         <button type="button" class="cat-tab" data-tab="banner">Banner</button>
-                        <button type="button" class="cat-tab" data-tab="features">Features</button>
+                        <button type="button" class="cat-tab" data-tab="amenities">Amenities</button>
                         <button type="button" class="cat-tab" data-tab="duration">Duration Options</button>
                         <button type="button" class="cat-tab" data-tab="route">Route</button>
                         <button type="button" class="cat-tab" data-tab="overview">Overview</button>
@@ -396,19 +433,7 @@
                             </div>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-field">
-                                <label for="duration_text">Duration Text</label>
-                                <input type="text" id="duration_text" name="duration_text" class="form-control-styled"
-                                    value="{{ old('duration_text', $tourPackage->duration_text) }}">
-                            </div>
-                            <div class="form-field">
-                                <label for="price_unit_text">Price Unit Text</label>
-                                <input type="text" id="price_unit_text" name="price_unit_text"
-                                    class="form-control-styled"
-                                    value="{{ old('price_unit_text', $tourPackage->price_unit_text) }}">
-                            </div>
-                        </div>
+                        @include('admin.tourpackage._duration-fields', ['package' => $tourPackage])
 
                         <div class="form-row">
                             <div class="form-field">
@@ -486,39 +511,38 @@
 
                     </div>
 
-                    {{-- ============ FEATURES ============ --}}
-                    <div class="cat-tab-panel" data-panel="features">
+                    {{-- ============ AMENITIES ============ --}}
+                    <div class="cat-tab-panel" data-panel="amenities">
                         <div class="form-field">
-                            <label>Feature Pills</label>
-                            <input type="hidden" name="deleted_features" id="deleted_features" value="">
-                            <div id="existing-feature-rows">
-                                @foreach($tourPackage->features as $feature)
-                                    <div class="gallery-row existing-row" data-id="{{ $feature->id }}">
-                                        <input type="hidden" name="feature_ids[{{ $loop->index }}]"
-                                            value="{{ $feature->id }}">
-                                        <div class="form-row">
-                                            <div class="form-field">
-                                                <label>Icon Image</label>
-                                                @if($feature->icon_image)<img
-                                                    src="{{ asset('storage/' . $feature->icon_image) }}"
-                                                class="current-img-preview" style="width:40px;height:40px;">@endif
-                                                <input type="file" name="feature_images[{{ $loop->index }}]"
-                                                    class="form-control-styled" accept="image/*">
-                                            </div>
-                                            <div class="form-field">
-                                                <label>Text</label>
-                                                <input type="text" name="feature_texts[{{ $loop->index }}]"
-                                                    class="form-control-styled" value="{{ $feature->text }}">
-                                            </div>
-                                        </div>
-                                        <button type="button" class="btn-secondary-dash remove-existing"
-                                            data-target="deleted_features"><i class="fa fa-trash"></i> Remove</button>
-                                    </div>
-                                @endforeach
+                            <label>Select Amenities</label>
+
+                            @php $selectedAmenities = old('amenity_ids', $tourPackage->amenities->pluck('id')->all()); @endphp
+
+                            @if($amenities->isEmpty())
+                                <div class="hint">
+                                    No amenities yet.
+                                    <a href="{{ route('admin.amenities.create') }}" target="_blank">Add one</a>, then reload
+                                    this page.
+                                </div>
+                            @else
+                                <div class="amenity-grid">
+                                    @foreach($amenities as $amenity)
+                                        <label class="amenity-option">
+                                            <input type="checkbox" name="amenity_ids[]" value="{{ $amenity->id }}" {{ in_array($amenity->id, $selectedAmenities) ? 'checked' : '' }}>
+                                            @if($amenity->icon)
+                                                <img src="{{ $amenity->icon_url }}" alt="">
+                                            @endif
+                                            <span>{{ $amenity->name }}@if(isset($amenity->is_active) && !$amenity->is_active)
+                                            (inactive)@endif</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            @endif
+
+                            <div class="hint" style="margin-top:10px;">
+                                Manage the list under <a href="{{ route('admin.amenities.index') }}"
+                                    target="_blank">Amenities</a>
                             </div>
-                            <div id="new-feature-rows"></div>
-                            <button type="button" class="btn-secondary-dash" id="add-feature-row"><i
-                                    class="fa fa-plus"></i> Add Feature</button>
                         </div>
                     </div>
 
@@ -1160,28 +1184,6 @@
         });
     });
 
-    // ---- Features repeater ----
-    let featureIndex = {{ $tourPackage->features->count() }};
-    document.getElementById('add-feature-row').addEventListener('click', function () {
-        const row = document.createElement('div');
-        row.className = 'gallery-row';
-        row.innerHTML = `
-            <div class="form-row">
-                <div class="form-field">
-                    <label>Icon Image</label>
-                    <input type="file" name="feature_images[${featureIndex}]" class="form-control-styled" accept="image/*">
-                </div>
-                <div class="form-field">
-                    <label>Text</label>
-                    <input type="text" name="feature_texts[${featureIndex}]" class="form-control-styled">
-                </div>
-            </div>
-            <button type="button" class="btn-secondary-dash remove-new-row"><i class="fa fa-trash"></i> Remove</button>
-        `;
-        document.getElementById('new-feature-rows').appendChild(row);
-        featureIndex++;
-        row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
-    });
 
     // ---- Duration options repeater ----
     let duroptIndex = {{ $tourPackage->durationOptions->count() }};

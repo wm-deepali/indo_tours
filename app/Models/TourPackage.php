@@ -27,9 +27,13 @@ class TourPackage extends Model
         'bottom_right_image',
         'video_url',
         'duration_text',
+        'duration_days',
+        'duration_nights',
         'old_price',
         'price',
         'price_unit_text',
+        'rating',
+        'review_count',
         'overview_title',
         'overview_content',
         'map_embed_url',
@@ -45,7 +49,7 @@ class TourPackage extends Model
         'promo_button_text',
         'promo_button_url',
         'promo_end_at',
-        
+
         'h1',
         'meta_title',
         'meta_description',
@@ -61,6 +65,8 @@ class TourPackage extends Model
         'featured' => 'boolean',
         'old_price' => 'decimal:2',
         'price' => 'decimal:2',
+        'rating' => 'float',
+        'review_count' => 'integer',
     ];
 
     public function getRouteKeyName(): string
@@ -98,9 +104,10 @@ class TourPackage extends Model
         return $this->belongsTo(City::class);
     }
 
-    public function features(): HasMany
+    public function amenities()
     {
-        return $this->hasMany(TourPackageFeature::class)->orderBy('sort_order');
+        return $this->belongsToMany(\App\Models\Amenity::class, 'amenity_tour_package')
+            ->orderBy('amenities.sort_order');
     }
 
     public function durationOptions(): HasMany
@@ -179,4 +186,13 @@ class TourPackage extends Model
         return $this->morphMany(Review::class, 'reviewable')->where('status', 'published');
     }
 
+    public function refreshRating(): void
+    {
+        $stats = $this->reviews()->selectRaw('COUNT(*) as c, AVG(rating) as a')->first();
+
+        $this->forceFill([
+            'review_count' => (int) $stats->c,
+            'rating' => $stats->c ? round($stats->a, 1) : null,
+        ])->saveQuietly();
+    }
 }

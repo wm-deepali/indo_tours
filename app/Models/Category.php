@@ -17,6 +17,8 @@ class Category extends Model
         'detail_content',
         'image',
         'status',
+        'show_in_header',
+        'header_sort_order',
         'cta_title',
         'cta_badge_text',
         'cta_description',
@@ -58,7 +60,15 @@ class Category extends Model
 
     protected $casts = [
         'promo_end_at' => 'datetime',
+        'show_in_header' => 'boolean',
     ];
+
+    public function scopeInHeader($query)
+    {
+        return $query->where('show_in_header', true)
+            ->where('status', 'published')   // change if your status values differ
+            ->orderBy('header_sort_order');
+    }
 
     public function subCategories()
     {

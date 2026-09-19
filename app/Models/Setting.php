@@ -40,4 +40,9 @@ class Setting extends Model
     protected $casts = [
         'maintenance_mode' => 'boolean',
     ];
+
+    public static function current(): self
+    {
+        return static::firstOrCreate(['id' => 1]);
+    }
 }

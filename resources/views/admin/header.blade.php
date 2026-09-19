@@ -44,11 +44,12 @@
 
         {{-- ───────────── TOURS ───────────── --}}
         <li class="{{ request()->routeIs([
-            'admin.categories.*',
-            'admin.subcategories.*',
-            'admin.tourpackages.*',
-            'admin.hotels.*',
-        ]) ? 'active' : '' }}">
+    'admin.categories.*',
+    'admin.subcategories.*',
+    'admin.tourpackages.*',
+    'admin.hotels.*',
+    'admin.amenities.*'
+]) ? 'active' : '' }}">
             <a href="#"><i class="fa-solid fa-route"></i> Tours</a>
             <ul>
                 <li class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
@@ -71,17 +72,23 @@
                         <i class="fa-solid fa-hotel"></i> Hotels
                     </a>
                 </li>
+                <li class="nav-item {{ request()->routeIs('admin.amenities.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.amenities.index') }}">
+                        <i class="fa fa-star"></i>
+                        <span class="menu-title">Amenities</span>
+                    </a>
+                </li>
             </ul>
         </li>
 
         {{-- ───────────── EXPLORE (Destinations / Attractions / Activities) ───────────── --}}
         <li class="{{ request()->routeIs([
-            'admin.destinations.*',
-            'admin.attraction-categories.*',
-            'admin.attractions.*',
-            'admin.activity-categories.*',
-            'admin.activities.*',
-        ]) ? 'active' : '' }}">
+    'admin.destinations.*',
+    'admin.attraction-categories.*',
+    'admin.attractions.*',
+    'admin.activity-categories.*',
+    'admin.activities.*',
+]) ? 'active' : '' }}">
             <a href="#"><i class="fa-solid fa-earth-asia"></i> Explore</a>
             <ul>
                 <li class="{{ request()->routeIs('admin.destinations.*') ? 'active' : '' }}">
@@ -116,9 +123,9 @@
 
         {{-- ───────────── ENQUIRIES ───────────── --}}
         <li class="{{ request()->routeIs([
-            'admin.package-enquiries.*',
-            'admin.contact-submissions.*',
-        ]) ? 'active' : '' }}">
+    'admin.package-enquiries.*',
+    'admin.contact-submissions.*',
+]) ? 'active' : '' }}">
             <a href="#"><i class="fa-solid fa-inbox"></i> Enquiries</a>
             <ul>
                 <li class="{{ request()->routeIs('admin.package-enquiries.*') ? 'active' : '' }}">
@@ -143,9 +150,9 @@
 
         {{-- ───────────── BLOG ───────────── --}}
         <li class="{{ request()->routeIs([
-            'admin.blog-category.*',
-            'admin.blog.*',
-        ]) ? 'active' : '' }}">
+    'admin.blog-category.*',
+    'admin.blog.*',
+]) ? 'active' : '' }}">
             <a href="#"><i class="fa-solid fa-newspaper"></i> Blog</a>
             <ul>
                 <li class="{{ request()->routeIs('admin.blog-category.*') ? 'active' : '' }}">
@@ -163,10 +170,10 @@
 
         {{-- ───────────── CONTENT MANAGEMENT ───────────── --}}
         <li class="{{ request()->routeIs([
-            'admin.pages.*',
-            'admin.contact-page.*',
-            'admin.landing-pages.*',
-        ]) ? 'active' : '' }}">
+    'admin.pages.*',
+    'admin.contact-page.*',
+    'admin.landing-pages.*',
+]) ? 'active' : '' }}">
             <a href="#"><i class="fa-solid fa-file-lines"></i> Content Management</a>
             <ul>
                 <li class="{{ request()->routeIs('admin.pages.*') ? 'active' : '' }}">
@@ -210,7 +217,8 @@
         <li class="{{ request()->routeIs(['admin.settings.*', 'admin.seo-setting.*']) ? 'active' : '' }}">
             <a href="#"><i class="fa-solid fa-gear"></i> Settings</a>
             <ul>
-                <li class="{{ request()->routeIs('admin.settings.*') && request()->query('tab', 'general') === 'general' ? 'active' : '' }}">
+                <li
+                    class="{{ request()->routeIs('admin.settings.*') && request()->query('tab', 'general') === 'general' ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.index', ['tab' => 'general']) }}">
                         <i class="fa-solid fa-sliders"></i> General Setting
                     </a>
@@ -220,17 +228,20 @@
                         <i class="fa-solid fa-magnifying-glass-chart"></i> SEO Settings
                     </a>
                 </li>
-                <li class="{{ request()->routeIs('admin.settings.*') && request()->query('tab') === 'smtp' ? 'active' : '' }}">
+                <li
+                    class="{{ request()->routeIs('admin.settings.*') && request()->query('tab') === 'smtp' ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.index', ['tab' => 'smtp']) }}">
                         <i class="fa-solid fa-envelope-circle-check"></i> SMTP
                     </a>
                 </li>
-                <li class="{{ request()->routeIs('admin.settings.*') && request()->query('tab') === 'sms' ? 'active' : '' }}">
+                <li
+                    class="{{ request()->routeIs('admin.settings.*') && request()->query('tab') === 'sms' ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.index', ['tab' => 'sms']) }}">
                         <i class="fa-solid fa-comment-sms"></i> SMS
                     </a>
                 </li>
-                <li class="{{ request()->routeIs('admin.settings.*') && request()->query('tab') === 'tracking' ? 'active' : '' }}">
+                <li
+                    class="{{ request()->routeIs('admin.settings.*') && request()->query('tab') === 'tracking' ? 'active' : '' }}">
                     <a href="{{ route('admin.settings.index', ['tab' => 'tracking']) }}">
                         <i class="fa-brands fa-google"></i> Google Tracking &amp; Pixels
                     </a>

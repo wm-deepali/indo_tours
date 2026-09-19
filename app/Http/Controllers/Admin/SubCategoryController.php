@@ -34,6 +34,8 @@ class SubCategoryController extends Controller
 
         $validated['slug'] = Str::slug($request->name);
         $validated['status'] = $request->status ?? 'draft';
+        $validated['show_in_header'] = $request->boolean('show_in_header');
+        $validated['header_sort_order'] = $validated['header_sort_order'] ?? 0;
 
         if ($request->hasFile('banner_image_one')) {
             $validated['banner_image_one'] = $request->file('banner_image_one')->store('subcategories/banner', 'public');
@@ -74,6 +76,8 @@ class SubCategoryController extends Controller
         $validated = $request->validate($this->rules());
 
         $validated['status'] = $request->status ?? $subcategory->status;
+        $validated['show_in_header'] = $request->boolean('show_in_header');
+        $validated['header_sort_order'] = $validated['header_sort_order'] ?? 0;
 
         if ($request->hasFile('banner_image_one')) {
             $this->deleteOldImage($subcategory->banner_image_one);
@@ -129,6 +133,8 @@ class SubCategoryController extends Controller
             'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
             'status' => 'nullable|in:draft,published,unpublished',
+            'show_in_header' => 'nullable|boolean',
+            'header_sort_order' => 'nullable|integer|min:0',
 
             'offer_tag_text' => 'nullable|string|max:255',
             'h1' => 'nullable|string|max:255',

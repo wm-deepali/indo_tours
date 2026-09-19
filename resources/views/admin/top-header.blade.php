@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="en" data-textdirection="ltr" class="loading">
 <head>
+  @php
+      $siteName    = $setting->site_name ?: 'Indo Tours & Adventures';
+      $siteTagline = $setting->tagline ?: $siteName;
+      $adminLogo   = !empty($setting->logo)
+          ? asset('storage/' . $setting->logo)
+          : asset('assets/images/logo.png');
+      $adminFavicon = !empty($setting->favicon)
+          ? asset('storage/' . $setting->favicon)
+          : asset('assets/img/corporate/wm-ecommerce/wmecommerce.webp');
+  @endphp
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-  <meta name="description" content="Indo Tours & Adventures Single Vendor E-Commerce Package Starts 24,999/-">
-  <meta name="keywords" content="Indo Tours & Adventures Admin">
+  <meta name="description" content="{{ $siteTagline }}">
+  <meta name="keywords" content="{{ $siteName }} Admin">
   <meta name="author" content="Webmingo">
   <meta name="csrf-token" content="{{ csrf_token() }}" />
-  <title>Admin Dashboard | Indo Tours & Adventures</title>
+  <title>Admin Dashboard | {{ $siteName }}</title>
 
-  @php
-      $favicon = '';
-  @endphp
-
-  @if($favicon)
-      <link rel="icon" type="image/png" href="{{ asset('storage/' . $favicon) }}">
-      <link rel="shortcut icon" href="{{ asset('storage/' . $favicon) }}">
-  @else
-      <link rel="icon" type="image/png" href="{{ asset('assets/img/corporate/wm-ecommerce/wmecommerce.webp') }}">
-  @endif
+  <link rel="icon" type="image/png" href="{{ $adminFavicon }}">
+  <link rel="shortcut icon" href="{{ $adminFavicon }}">
 
   <!-- VENDOR CSS — exact same order as original -->
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
@@ -225,18 +227,10 @@ body {
         <div class="top-main-header">
             <!-- Logo -->
             <div class="admin-logo">
-                @php
-                    $dashboardLogo = '';
-                @endphp
-
-                @if($dashboardLogo)
-                    <img src="{{ asset('storage/' . $dashboardLogo) }}" alt="Admin Logo">
-                @else
-                    <img src="{{ asset('assets/images/logo.png') }}" alt="Indo Tours & Adventures">
-                @endif
+                <img src="{{ $adminLogo }}" alt="{{ $siteName }}">
 
                 <div class="admin-logo-text">
-                    <span class="admin-logo-brand">Indo Tours & Adventures</span>
+                    <span class="admin-logo-brand">{{ $siteName }}</span>
                     <span class="admin-logo-sub">Admin Panel</span>
                 </div>
             </div>

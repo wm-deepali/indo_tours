@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Page;
 use App\Models\Category;
 use App\Models\SeoSetting;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
@@ -25,7 +26,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \App\Models\Review::observe(\App\Observers\ReviewObserver::class);
         View::composer('*', function ($view) {
+            static $setting = null;
+
+            if ($setting === null) {
+                try {
+                    $setting = Setting::current();
+                } catch (\Throwable $e) {
+                    // settings table missing (fresh install / migrate ke time)
+                    $setting = new Setting();
+                }
+            }
+            $view->with('setting', $setting);
+
             $view->with('footerPages', Cache::remember(
                 'footer_pages',
                 now()->addHour(),

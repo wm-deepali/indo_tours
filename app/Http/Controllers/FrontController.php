@@ -159,7 +159,7 @@ class FrontController extends Controller
                 'country',
                 'state',
                 'city',
-                'features',
+                'amenities',
                 'durationOptions',
                 'routeStops',
                 'highlights',

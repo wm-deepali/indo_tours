@@ -25,12 +25,14 @@ use App\Http\Controllers\Admin\{
     BlogController,
     PageController,
     ContactPageController,
-    ContactSubmissionController
+    ContactSubmissionController,
+    AmenityController
 };
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\FrontController;
+use App\Http\Controllers\SearchController;
 
 
 Route::controller(FrontController::class)->group(function () {
@@ -61,8 +63,11 @@ Route::controller(FrontController::class)->group(function () {
     Route::post('/contact', 'contactStore')->name('contact.store');
     Route::get('/thank-you', 'thankYou')->name('thankyou');
 
+    Route::view('/about-us', 'front-pages.about')->name('about');
+
 });
 
+Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 // Admin Routes list
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -88,6 +93,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('activities', ActivityController::class);
 
         Route::resource('hotels', HotelController::class);
+        Route::resource('amenities', AmenityController::class)->except('show');
         Route::resource('categories', CategoryController::class);
         Route::resource('subcategories', SubCategoryController::class);
         Route::resource('tourpackages', TourPackageController::class);

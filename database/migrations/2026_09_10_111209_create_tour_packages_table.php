@@ -54,15 +54,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('tour_package_features', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('tour_package_id')->constrained()->cascadeOnDelete();
-            $table->string('icon_image')->nullable();
-            $table->string('text');
-            $table->unsignedInteger('sort_order')->default(0);
-            $table->timestamps();
-        });
-
         Schema::create('tour_package_duration_options', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tour_package_id')->constrained()->cascadeOnDelete();

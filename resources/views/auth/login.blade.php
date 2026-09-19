@@ -133,9 +133,11 @@
 </style>
 
 @php
-    $loginLogo = '';
-    $siteName = 'Indo Tours & Adventures';
-    $tagline = 'By Indo Tours & Adventures';
+    $siteName  = $setting->site_name ?: 'Indo Tours & Adventures';
+    $tagline   = $setting->tagline ?: 'By ' . $siteName;
+    $loginLogo = !empty($setting->logo)
+        ? asset('storage/' . $setting->logo)
+        : asset('assets/images/logo.png');
 @endphp
 
 <div class="login-wrapper">
@@ -144,17 +146,13 @@
         <!-- LEFT SIDE -->
         <div class="login-left">
 
-    <div class="logo-box">
-        @if($loginLogo)
-            <img src="{{ asset('storage/' . $loginLogo) }}" alt="{{ $siteName }}">
-        @else
-            <img src="{{ asset('assets/images/logo.png') }}" alt="{{ $siteName }}">
-        @endif
-    </div>
+            <div class="logo-box">
+                <img src="{{ $loginLogo }}" alt="{{ $siteName }}">
+            </div>
 
-    <h2>{{ $siteName }}</h2>
-    <p>{{ $tagline }}</p>
-</div>
+            <h2>{{ $siteName }}</h2>
+            <p>{{ $tagline }}</p>
+        </div>
 
         <!-- RIGHT SIDE -->
         <div class="login-right">
@@ -198,7 +196,7 @@
                         <input class="form-check-input" type="checkbox"
                             name="remember" id="remember"
                             {{ old('remember') ? 'checked' : '' }}>
-                        <label class="form-check-label">
+                        <label class="form-check-label" for="remember">
                             Remember Me
                         </label>
                     </div>

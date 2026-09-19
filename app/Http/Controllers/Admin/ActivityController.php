@@ -50,6 +50,17 @@ class ActivityController extends Controller
         $validated['map_points'] = $this->parseList($request->input('map_points', []));
         $validated['status'] = $request->input('status', 'draft');
         $validated['featured'] = $request->boolean('featured');
+        $validated['duration_text'] = Activity::formatDuration(
+            $validated['duration_from'],
+            $validated['duration_to'] ?? null,
+            $validated['duration_unit']
+        );
+        $validated['duration_hours'] = Activity::durationInHours(
+            $validated['duration_from'],
+            $validated['duration_to'] ?? null,
+            $validated['duration_unit']
+        );
+        $validated['free_cancellation_text'] = !empty($validated['free_cancellation_hours']) ? 'Free Cancellation' : null;
 
         $activity = Activity::create($validated);
 
@@ -104,6 +115,17 @@ class ActivityController extends Controller
         $validated['map_points'] = $this->parseList($request->input('map_points', []));
         $validated['status'] = $request->input('status', $activity->status);
         $validated['featured'] = $request->boolean('featured');
+        $validated['duration_text'] = Activity::formatDuration(
+            $validated['duration_from'],
+            $validated['duration_to'] ?? null,
+            $validated['duration_unit']
+        );
+        $validated['duration_hours'] = Activity::durationInHours(
+            $validated['duration_from'],
+            $validated['duration_to'] ?? null,
+            $validated['duration_unit']
+        );
+        $validated['free_cancellation_text'] = !empty($validated['free_cancellation_hours']) ? 'Free Cancellation' : null;
 
         $activity->update($validated);
 
@@ -331,6 +353,10 @@ class ActivityController extends Controller
 
             'duration_text' => 'nullable|string|max:50',
             'free_cancellation_text' => 'nullable|string|max:100',
+            'duration_from' => 'required|numeric|min:0.25|max:999',
+            'duration_to' => 'nullable|numeric|gt:duration_from|max:999',
+            'duration_unit' => ['required', \Illuminate\Validation\Rule::in(array_keys(config('search.duration_units')))],
+            'free_cancellation_hours' => ['nullable', \Illuminate\Validation\Rule::in(config('search.cancellation_hours'))],
 
             'rating' => 'nullable|numeric|min:0|max:5',
             'review_count' => 'nullable|integer|min:0',

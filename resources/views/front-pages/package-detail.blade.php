@@ -265,19 +265,19 @@
                 </div>
               @endif
 
-              @if($tourPackage->features->isNotEmpty())
-                <div class="feature-row">
-                  @foreach($tourPackage->features as $feature)
-                    <div class="feature-pill">
-                      @if($feature->icon_image)
-                        <img loading="lazy" src="{{ asset('storage/' . $feature->icon_image) }}" alt="" width="20"
-                          height="20" />
-                      @endif
-                      {{ $feature->text }}
-                    </div>
-                  @endforeach
-                </div>
-              @endif
+              @php $amenities = $tourPackage->amenities->where('is_active', true); @endphp
+@if($amenities->isNotEmpty())
+  <div class="feature-row">
+    @foreach($amenities as $amenity)
+      <div class="feature-pill">
+        @if($amenity->icon)
+          <img loading="lazy" src="{{ $amenity->icon_url }}" alt="" width="20" height="20" />
+        @endif
+        {{ $amenity->name }}
+      </div>
+    @endforeach
+  </div>
+@endif
 
               <div class="section-divider"></div>
 

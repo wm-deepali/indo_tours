@@ -3,29 +3,43 @@
 
 <head>
     <meta charset="UTF-8" />
+    @php
+        $siteName       = $setting->site_name ?? 'Indo Tours & Adventures';
+        $siteTagline    = $setting->tagline ?? '';
+        $siteLogo       = !empty($setting->logo) ? asset('storage/' . $setting->logo) : asset('assets/images/logo.png');
+        $siteFavicon    = !empty($setting->favicon) ? asset('storage/' . $setting->favicon) : asset('assets/icon/favicon/favicon.png');
+        $phoneTel       = preg_replace('/[^0-9+]/', '', $setting->phone ?? '');
+        $waNumber       = preg_replace('/\D/', '', $setting->whatsapp ?? '');
+        $waLink         = $waNumber ? 'https://wa.me/' . $waNumber : 'javascript:void(0)';
+        $currencyCode   = $setting->currency ?? 'INR';
+        $currencySymbol = $setting->currency_symbol ?? '₹';
+        $defaultTitle   = $siteName . ($siteTagline ? ' | ' . $siteTagline : '');
+        $defaultDesc    = $siteTagline ?: $siteName;
+    @endphp
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@yield('title', $seo->meta_title ?? 'Home | Indo Tours & Adventures')</title>
+    <title>@yield('title', $seo->meta_title ?? $defaultTitle)</title>
     <meta name="description"
-        content="@yield('meta_description', $seo->meta_description ?? 'Indo Tours & Adventures')" />
+        content="@yield('meta_description', $seo->meta_description ?? $defaultDesc)" />
     <link rel="canonical" href="@yield('canonical', url()->current())" />
     <meta name="robots" content="@yield('robots', 'index, follow')" />
 
+    <meta property="og:site_name" content="{{ $siteName }}" />
     <meta property="og:title"
-        content="@yield('og_title', $seo->og_title ?? ($seo->meta_title ?? 'Indo Tours & Adventures'))" />
+        content="@yield('og_title', $seo->og_title ?? ($seo->meta_title ?? $siteName))" />
     <meta property="og:description"
-        content="@yield('og_description', $seo->og_description ?? ($seo->meta_description ?? ''))" />
+        content="@yield('og_description', $seo->og_description ?? ($seo->meta_description ?? $defaultDesc))" />
     <meta property="og:image"
         content="@yield('og_image', !empty($seo->og_image) ? asset('storage/' . $seo->og_image) : asset('assets/images/og-default.jpg'))" />
 
     <meta name="twitter:card" content="{{ $seo->twitter_card_type ?? 'summary_large_image' }}" />
-    <meta name="twitter:title" content="@yield('twitter_title', $seo->twitter_title ?? ($seo->meta_title ?? ''))" />
+    <meta name="twitter:title" content="@yield('twitter_title', $seo->twitter_title ?? ($seo->meta_title ?? $siteName))" />
     <meta name="twitter:description"
-        content="@yield('twitter_description', $seo->twitter_description ?? ($seo->meta_description ?? ''))" />
+        content="@yield('twitter_description', $seo->twitter_description ?? ($seo->meta_description ?? $defaultDesc))" />
     <meta name="twitter:image"
         content="@yield('twitter_image', !empty($seo->twitter_image) ? asset('storage/' . $seo->twitter_image) : asset('assets/images/og-default.jpg'))" />
 
-    <link rel="icon" type="image/png" href="{{ asset('assets/icon/favicon/favicon.png') }}">
+    <link rel="icon" type="image/png" href="{{ $siteFavicon }}">
     <!-- ================= Google Fonts ================= -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
@@ -59,8 +73,15 @@
         <div class="container">
             <nav class="menu">
                 <a href="{{ route('home') }}" class="logo">
-                    <img loading="lazy" src="{{ asset('assets/images/logo.png') }}" alt="Tourex" />
+                    <img loading="lazy" src="{{ $siteLogo }}" alt="{{ $siteName }}" />
                 </a>
+
+                @inject('headerMenu', 'App\Services\HeaderMenu')
+                @php
+                    $indiaGroups = $headerMenu->forScope('india');
+                    $internationalGroups = $headerMenu->forScope('international');
+                    $activityGroups = $headerMenu->activities();
+                @endphp
 
                 <div class="nav-links">
                     <div class="nav-item has-dropdown" data-dropdown>
@@ -73,85 +94,7 @@
                         </button>
 
                         <div class="dropdown" data-dropdown-panel>
-                            <div class="dropdown-inner">
-                                <div class="dropdown-col">
-                                    <h4>
-                                        <span class="col-icon">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-                                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                        </span>
-                                        Popular Destinations
-                                    </h4>
-                                    <a href="listing.html" target="_blank">Ladakh Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Kashmir Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Manali Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Kerala Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Goa Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Rajasthan Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Himachal Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Uttarakhand Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Sikkim Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Meghalaya Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Andaman Tour Packages</a>
-                                    <a href="listing.html" target="_blank">North East Tour Packages</a>
-                                </div>
-
-                                <div class="dropdown-col">
-                                    <h4>
-                                        <span class="col-icon">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                                <path
-                                                    d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 10-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"
-                                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                        </span>
-                                        Honeymoon Packages
-                                    </h4>
-                                    <a href="listing.html" target="_blank">Kashmir Honeymoon Packages</a>
-                                    <a href="listing.html" target="_blank">Kerala Honeymoon Packages</a>
-                                    <a href="listing.html" target="_blank">Goa Honeymoon Packages</a>
-                                    <a href="listing.html" target="_blank">Andaman Honeymoon Packages</a>
-                                    <a href="listing.html" target="_blank">Manali Honeymoon Packages</a>
-                                    <a href="listing.html" target="_blank">Shimla Honeymoon Packages</a>
-                                    <a href="listing.html" target="_blank">Sikkim Honeymoon Packages</a>
-                                    <a href="listing.html" target="_blank">Udaipur Honeymoon Packages</a>
-                                    <a href="listing.html" target="_blank">Munnar Honeymoon Packages</a>
-                                    <a href="listing.html" target="_blank">Ooty Honeymoon Packages</a>
-                                    <a href="listing.html" target="_blank">Darjeeling Honeymoon Packages</a>
-                                    <a href="listing.html" target="_blank">Nainital Honeymoon Packages</a>
-                                </div>
-
-                                <div class="dropdown-col">
-                                    <h4>
-                                        <span class="col-icon">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                                <path
-                                                    d="M17 20v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2M10 10a4 4 0 100-8 4 4 0 000 8zM23 20v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"
-                                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                        </span>
-                                        Family Packages
-                                    </h4>
-                                    <a href="listing.html" target="_blank">Kerala Family Packages</a>
-                                    <a href="listing.html" target="_blank">Kashmir Family Packages</a>
-                                    <a href="listing.html" target="_blank">Goa Family Packages</a>
-                                    <a href="listing.html" target="_blank">Rajasthan Family Packages</a>
-                                    <a href="listing.html" target="_blank">Himachal Family Packages</a>
-                                    <a href="listing.html" target="_blank">Manali Family Packages</a>
-                                    <a href="listing.html" target="_blank">Uttarakhand Family Packages</a>
-                                    <a href="listing.html" target="_blank">Sikkim Family Packages</a>
-                                    <a href="listing.html" target="_blank">Andaman Family Packages</a>
-                                    <a href="listing.html" target="_blank">Meghalaya Family Packages</a>
-                                    <a href="listing.html" target="_blank">Ooty Family Packages</a>
-                                    <a href="listing.html" target="_blank">Darjeeling Family Packages</a>
-                                </div>
-                            </div>
-
+                            @include('layouts.header-dropdown-columns', ['groups' => $indiaGroups])
                             <div class="dropdown-footer">
                                 <span>Looking for more places to explore?</span>
                                 <a href="listing.html" target="_blank" class="footer-link">View all India packages →</a>
@@ -169,84 +112,7 @@
                         </button>
 
                         <div class="dropdown" data-dropdown-panel>
-                            <div class="dropdown-inner">
-                                <div class="dropdown-col">
-                                    <h4>
-                                        <span class="col-icon">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-                                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                        </span>
-                                        Popular Destinations
-                                    </h4>
-                                    <a href="listing.html" target="_blank">Dubai Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Bali Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Thailand Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Singapore Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Maldives Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Vietnam Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Europe Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Switzerland Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Mauritius Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Malaysia Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Australia Tour Packages</a>
-                                    <a href="listing.html" target="_blank">Japan Tour Packages</a>
-                                </div>
-
-                                <div class="dropdown-col">
-                                    <h4>
-                                        <span class="col-icon">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                                <path
-                                                    d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 10-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"
-                                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                        </span>
-                                        Honeymoon Packages
-                                    </h4>
-                                    <a href="listing.html" target="_blank">Maldives Honeymoon</a>
-                                    <a href="listing.html" target="_blank">Bali Honeymoon Packages</a>
-                                    <a href="listing.html" target="_blank">Dubai Honeymoon Packages</a>
-                                    <a href="listing.html" target="_blank">Thailand Honeymoon</a>
-                                    <a href="listing.html" target="_blank">Mauritius Honeymoon</a>
-                                    <a href="listing.html" target="_blank">Seychelles Honeymoon</a>
-                                    <a href="listing.html" target="_blank">Europe Honeymoon Packages</a>
-                                    <a href="listing.html" target="_blank">Switzerland Honeymoon</a>
-                                    <a href="listing.html" target="_blank">Vietnam Honeymoon</a>
-                                    <a href="listing.html" target="_blank">Singapore Honeymoon</a>
-                                    <a href="listing.html" target="_blank">Malaysia Honeymoon</a>
-                                    <a href="listing.html" target="_blank">Australia Honeymoon</a>
-                                </div>
-
-                                <div class="dropdown-col">
-                                    <h4>
-                                        <span class="col-icon">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                                <path
-                                                    d="M17 20v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2M10 10a4 4 0 100-8 4 4 0 000 8zM23 20v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"
-                                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                        </span>
-                                        Family Holidays
-                                    </h4>
-                                    <a href="listing.html" target="_blank">Dubai Family Packages</a>
-                                    <a href="listing.html" target="_blank">Singapore Family Packages</a>
-                                    <a href="listing.html" target="_blank">Thailand Family Packages</a>
-                                    <a href="listing.html" target="_blank">Bali Family Packages</a>
-                                    <a href="listing.html" target="_blank">Malaysia Family Packages</a>
-                                    <a href="listing.html" target="_blank">Vietnam Family Packages</a>
-                                    <a href="listing.html" target="_blank">Europe Family Packages</a>
-                                    <a href="listing.html" target="_blank">Australia Family Packages</a>
-                                    <a href="listing.html" target="_blank">Japan Family Packages</a>
-                                    <a href="listing.html" target="_blank">Mauritius Family Packages</a>
-                                    <a href="listing.html" target="_blank">Switzerland Family Packages</a>
-                                    <a href="listing.html" target="_blank">Maldives Family Packages</a>
-                                </div>
-                            </div>
+                            @include('layouts.header-dropdown-columns', ['groups' => $internationalGroups])
 
                             <div class="dropdown-footer">
                                 <span>Ready to explore the world?</span>
@@ -266,83 +132,11 @@
                         </button>
 
                         <div class="dropdown" data-dropdown-panel>
-                            <div class="dropdown-inner">
-                                <div class="dropdown-col">
-                                    <h4>
-                                        <span class="col-icon">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-                                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                        </span>
-                                        Adventure Activities
-                                    </h4>
-                                    <a href="attractions.html" target="_blank">Attractions</a>
-                                    <a href="{{ route('destinations') }}" target="_blank">Destination</a>
-                                    <a href="listing.html" target="_blank">Trekking</a>
-                                    <a href="listing.html" target="_blank">Scuba Diving</a>
-                                    <a href="listing.html" target="_blank">River Rafting</a>
-                                    <a href="listing.html" target="_blank">Paragliding</a>
-                                    <a href="listing.html" target="_blank">Camping</a>
-                                    <a href="listing.html" target="_blank">Bungee Jumping</a>
-                                    <a href="listing.html" target="_blank">Ziplining</a>
-                                    <a href="listing.html" target="_blank">Skiing</a>
-                                    <a href="listing.html" target="_blank">Snowboarding</a>
-                                    <a href="listing.html" target="_blank">Kayaking</a>
-                                </div>
-
-                                <div class="dropdown-col">
-                                    <h4>
-                                        <span class="col-icon">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                                <path d="M12 21s7-4.4 7-10.2A7 7 0 005 10.8C5 16.6 12 21 12 21Z"
-                                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M9 10.5l2 2 4-4" stroke="currentColor" stroke-width="1.8"
-                                                    stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                        </span>
-                                        Experiences
-                                    </h4>
-                                    <a href="listing.html" target="_blank">Cultural Experiences</a>
-                                    <a href="listing.html" target="_blank">Food &amp; Culinary Tours</a>
-                                    <a href="listing.html" target="_blank">Wildlife Safaris</a>
-                                    <a href="listing.html" target="_blank">Local Village Tours</a>
-                                    <a href="listing.html" target="_blank">Heritage Walks</a>
-                                    <a href="listing.html" target="_blank">Sunset Experiences</a>
-                                    <a href="listing.html" target="_blank">Photography Tours</a>
-                                    <a href="listing.html" target="_blank">Boat Experiences</a>
-                                    <a href="listing.html" target="_blank">Desert Experiences</a>
-                                    <a href="listing.html" target="_blank">Wellness Retreats</a>
-                                </div>
-
-                                <div class="dropdown-col">
-                                    <h4>
-                                        <span class="col-icon">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                                <path d="M3 12l18-7-7 18-3-8-8-3z" stroke="currentColor"
-                                                    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                        </span>
-                                        Popular Places
-                                    </h4>
-                                    <a href="listing.html" target="_blank">Goa Activities</a>
-                                    <a href="listing.html" target="_blank">Manali Activities</a>
-                                    <a href="listing.html" target="_blank">Rishikesh Activities</a>
-                                    <a href="listing.html" target="_blank">Dubai Activities</a>
-                                    <a href="listing.html" target="_blank">Bali Activities</a>
-                                    <a href="listing.html" target="_blank">Thailand Activities</a>
-                                    <a href="listing.html" target="_blank">Kashmir Activities</a>
-                                    <a href="listing.html" target="_blank">Ladakh Activities</a>
-                                    <a href="listing.html" target="_blank">Andaman Activities</a>
-                                    <a href="listing.html" target="_blank">Kerala Activities</a>
-                                </div>
-                            </div>
+                          @include('layouts.header-dropdown-columns', ['groups' => $activityGroups])
 
                             <div class="dropdown-footer">
                                 <span>Looking for something exciting?</span>
-                                <a href="listing.html" target="_blank" class="footer-link">Explore all activities →</a>
+                                <a href="{{ route('activities') }}" target="_blank" class="footer-link">Explore all activities →</a>
                             </div>
                         </div>
                     </div>
@@ -363,90 +157,7 @@
                             </button>
                         </div>
 
-                        <div class="search-panel" data-dropdown-panel>
-                            <div class="search-panel-inner">
-                                <div class="panel-field">
-                                    <div class="panel-search-input">
-                                        <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="1.4"
-                                                d="M7.333 12.667A5.333 5.333 0 107.333 2a5.333 5.333 0 000 10.667zM14 14l-2.9-2.9" />
-                                        </svg>
-                                        <input type="text" placeholder="Search for" />
-                                    </div>
-                                </div>
-
-                                <div class="panel-field">
-                                    <h5>Product Type</h5>
-                                    <div class="chip-group">
-                                        <button type="button" class="chip">Tour</button>
-                                        <button type="button" class="chip">Activity</button>
-                                    </div>
-                                </div>
-
-                                <div class="panel-divider"></div>
-
-                                <div class="panel-field">
-                                    <h5>Trip Duration</h5>
-                                    <div class="chip-group">
-                                        <button type="button" class="chip">Upto 1 Day</button>
-                                        <button type="button" class="chip is-active">
-                                            2 to 3 days
-                                        </button>
-                                        <button type="button" class="chip">3 to 5 days</button>
-                                        <button type="button" class="chip">5 to 7 days</button>
-                                        <button type="button" class="chip">7+ Days</button>
-                                    </div>
-                                </div>
-
-                                <div class="panel-divider"></div>
-
-                                <div class="panel-field">
-                                    <h5>Price Range</h5>
-
-                                    <div class="range-slider" data-range-slider>
-                                        <div class="range-track"></div>
-                                        <div class="range-fill" data-range-fill></div>
-                                        <button type="button" class="range-handle" data-range-handle="min"
-                                            aria-label="Minimum price">
-                                            <span class="range-tooltip" data-range-tooltip="min">0</span>
-                                        </button>
-                                        <button type="button" class="range-handle" data-range-handle="max"
-                                            aria-label="Maximum price">
-                                            <span class="range-tooltip" data-range-tooltip="max">5L</span>
-                                        </button>
-                                    </div>
-
-                                    <div class="price-inputs">
-                                        <label class="price-field">
-                                            <span>Min</span>
-                                            <input type="number" data-price="min" value="0" />
-                                        </label>
-                                        <label class="price-field">
-                                            <span>Max</span>
-                                            <input type="number" data-price="max" value="500000" />
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="panel-divider"></div>
-
-                                <label class="panel-checkbox">
-                                    <input type="checkbox" />
-                                    <span class="checkbox-box"></span>
-                                    I want Flights to be included
-                                </label>
-                            </div>
-
-                            <div class="search-panel-footer">
-                                <button type="button" class="link-btn" data-clear-all>
-                                    Clear All
-                                </button>
-                                <button type="button" class="btn-search">
-                                    Search For Products
-                                </button>
-                            </div>
-                        </div>
+                       @include('layouts.header-search-panel')
                     </div>
 
                     <div class="currency-select">
@@ -457,7 +168,7 @@
                             <path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round"
                                 stroke-width="2" d="M5 17h62v38H5z" />
                         </svg>
-                        <span>INR ₹</span>
+                        <span>{{ $currencyCode }} {{ $currencySymbol }}</span>
                         <svg class="chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
                             <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
                                 stroke-linejoin="round" />
@@ -473,7 +184,7 @@
                         </svg>
                     </button>
 
-                    <a href="javascript:void()" data-model=".enquire-pop" class="btn btn-white on-destop">
+                    <a href="javascript:void(0)" data-model=".enquire-pop" class="btn btn-white on-destop">
                         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
                             <path d="M0 0h24v24H0z" fill="none" />
                             <path fill="currentColor"
@@ -617,8 +328,7 @@
             <div class="footer-middle">
                 <div class="container">
                     <div class="colA">
-                        <img loading="lazy" class="logo" src="{{ asset('assets/images/logo.png') }}"
-                            alt="TripPlanner" />
+                        <img loading="lazy" class="logo" src="{{ $siteLogo }}" alt="{{ $siteName }}" />
 
                         <div class="form">
                             <div class="form-group">
@@ -637,66 +347,110 @@
                         </div>
 
                         <ul class="social">
-                            <li>
-                                <a href="javascript:void()"><svg xmlns="http://www.w3.org/2000/svg" width="1em"
-                                        height="1em" viewBox="0 0 24 24">
-                                        <path d="M0 0h24v24H0z" fill="none" />
-                                        <path fill="currentColor"
-                                            d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4z" />
-                                    </svg>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void()"><svg xmlns="http://www.w3.org/2000/svg" width="1em"
-                                        height="1em" viewBox="0 0 24 24">
-                                        <path d="M0 0h24v24H0z" fill="none" />
-                                        <g fill="none" stroke="currentColor" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M12 16a4 4 0 1 0 0-8a4 4 0 0 0 0 8" />
-                                            <path
-                                                d="M3 16V8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5Z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="m17.5 6.51l.01-.011" />
-                                        </g>
-                                    </svg>
-                                </a>
-                            </li>
+                            @if(!empty($setting->facebook))
+                                <li>
+                                    <a href="{{ $setting->facebook }}" target="_blank" rel="noopener"
+                                        aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="1em"
+                                            height="1em" viewBox="0 0 24 24">
+                                            <path d="M0 0h24v24H0z" fill="none" />
+                                            <path fill="currentColor"
+                                                d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4z" />
+                                        </svg>
+                                    </a>
+                                </li>
+                            @endif
 
-                            <li>
-                                <a href="javascript:void()"><svg xmlns="http://www.w3.org/2000/svg" width="1em"
-                                        height="1em" viewBox="0 0 24 24">
-                                        <path d="M0 0h24v24H0z" fill="none" />
-                                        <path fill="currentColor"
-                                            d="M22.213 5.656a8.4 8.4 0 0 1-2.402.658A4.2 4.2 0 0 0 21.649 4c-.82.488-1.719.83-2.655 1.015a4.182 4.182 0 0 0-7.126 3.814a11.87 11.87 0 0 1-8.621-4.37a4.17 4.17 0 0 0-.566 2.103c0 1.45.739 2.731 1.86 3.481a4.2 4.2 0 0 1-1.894-.523v.051a4.185 4.185 0 0 0 3.355 4.102a4.2 4.2 0 0 1-1.89.072A4.185 4.185 0 0 0 8.02 16.65a8.4 8.4 0 0 1-6.192 1.732a11.83 11.83 0 0 0 6.41 1.88c7.694 0 11.9-6.373 11.9-11.9q0-.271-.012-.541a8.5 8.5 0 0 0 2.086-2.164" />
-                                    </svg>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void()"><svg xmlns="http://www.w3.org/2000/svg" width="1em"
-                                        height="1em" viewBox="0 0 24 24">
-                                        <path d="M0 0h24v24H0z" fill="none" />
-                                        <g fill="none" stroke="currentColor" stroke-width="1.5">
-                                            <path fill="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                d="m14 12l-3.5 2v-4z" />
-                                            <path
-                                                d="M2 12.708v-1.416c0-2.895 0-4.343.905-5.274c.906-.932 2.332-.972 5.183-1.053C9.438 4.927 10.818 4.9 12 4.9s2.561.027 3.912.065c2.851.081 4.277.121 5.182 1.053S22 8.398 22 11.292v1.415c0 2.896 0 4.343-.905 5.275c-.906.931-2.331.972-5.183 1.052c-1.35.039-2.73.066-3.912.066s-2.561-.027-3.912-.066c-2.851-.08-4.277-.12-5.183-1.052S2 15.602 2 12.708Z" />
-                                        </g>
-                                    </svg>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="tel:+911234567890">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
-                                        viewBox="0 0 24 24">
-                                        <path d="M0 0h24v24H0z" fill="none" />
-                                        <path fill="currentColor"
-                                            d="m21 15.46l-5.27-.61l-2.52 2.52a15.05 15.05 0 0 1-6.59-6.59l2.53-2.53L8.54 3H3.03C2.45 13.18 10.82 21.55 21 20.97z" />
-                                    </svg>
+                            @if(!empty($setting->instagram))
+                                <li>
+                                    <a href="{{ $setting->instagram }}" target="_blank" rel="noopener"
+                                        aria-label="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="1em"
+                                            height="1em" viewBox="0 0 24 24">
+                                            <path d="M0 0h24v24H0z" fill="none" />
+                                            <g fill="none" stroke="currentColor" stroke-width="1.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M12 16a4 4 0 1 0 0-8a4 4 0 0 0 0 8" />
+                                                <path
+                                                    d="M3 16V8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5Z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="m17.5 6.51l.01-.011" />
+                                            </g>
+                                        </svg>
+                                    </a>
+                                </li>
+                            @endif
 
-                                    +91 12345 67890
-                                </a>
-                            </li>
+                            @if(!empty($setting->twitter))
+                                <li>
+                                    <a href="{{ $setting->twitter }}" target="_blank" rel="noopener"
+                                        aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" width="1em"
+                                            height="1em" viewBox="0 0 24 24">
+                                            <path d="M0 0h24v24H0z" fill="none" />
+                                            <path fill="currentColor"
+                                                d="M22.213 5.656a8.4 8.4 0 0 1-2.402.658A4.2 4.2 0 0 0 21.649 4c-.82.488-1.719.83-2.655 1.015a4.182 4.182 0 0 0-7.126 3.814a11.87 11.87 0 0 1-8.621-4.37a4.17 4.17 0 0 0-.566 2.103c0 1.45.739 2.731 1.86 3.481a4.2 4.2 0 0 1-1.894-.523v.051a4.185 4.185 0 0 0 3.355 4.102a4.2 4.2 0 0 1-1.89.072A4.185 4.185 0 0 0 8.02 16.65a8.4 8.4 0 0 1-6.192 1.732a11.83 11.83 0 0 0 6.41 1.88c7.694 0 11.9-6.373 11.9-11.9q0-.271-.012-.541a8.5 8.5 0 0 0 2.086-2.164" />
+                                        </svg>
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if(!empty($setting->youtube))
+                                <li>
+                                    <a href="{{ $setting->youtube }}" target="_blank" rel="noopener"
+                                        aria-label="YouTube"><svg xmlns="http://www.w3.org/2000/svg" width="1em"
+                                            height="1em" viewBox="0 0 24 24">
+                                            <path d="M0 0h24v24H0z" fill="none" />
+                                            <g fill="none" stroke="currentColor" stroke-width="1.5">
+                                                <path fill="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" d="m14 12l-3.5 2v-4z" />
+                                                <path
+                                                    d="M2 12.708v-1.416c0-2.895 0-4.343.905-5.274c.906-.932 2.332-.972 5.183-1.053C9.438 4.927 10.818 4.9 12 4.9s2.561.027 3.912.065c2.851.081 4.277.121 5.182 1.053S22 8.398 22 11.292v1.415c0 2.896 0 4.343-.905 5.275c-.906.931-2.331.972-5.183 1.052c-1.35.039-2.73.066-3.912.066s-2.561-.027-3.912-.066c-2.851-.08-4.277-.12-5.183-1.052S2 15.602 2 12.708Z" />
+                                            </g>
+                                        </svg>
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if(!empty($setting->linkedin))
+                                <li>
+                                    <a href="{{ $setting->linkedin }}" target="_blank" rel="noopener"
+                                        aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="1em"
+                                            height="1em" viewBox="0 0 24 24">
+                                            <path d="M0 0h24v24H0z" fill="none" />
+                                            <path fill="currentColor"
+                                                d="M6.94 5a2 2 0 1 1-4-.002a2 2 0 0 1 4 .002M7 8.48H3V21h4zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91z" />
+                                        </svg>
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if(!empty($setting->pinterest))
+                                <li>
+                                    <a href="{{ $setting->pinterest }}" target="_blank" rel="noopener"
+                                        aria-label="Pinterest"><svg xmlns="http://www.w3.org/2000/svg" width="1em"
+                                            height="1em" viewBox="0 0 24 24">
+                                            <path d="M0 0h24v24H0z" fill="none" />
+                                            <path fill="currentColor"
+                                                d="M12.04 2C6.5 2 3 5.98 3 10.32c0 2 1.07 4.5 2.78 5.28c.26.12.4.07.46-.18c.05-.19.28-1.12.39-1.55c.03-.14.02-.26-.09-.4c-.57-.69-1.02-1.96-1.02-3.15c0-3.05 2.31-6 6.24-6c3.4 0 5.78 2.31 5.78 5.62c0 3.74-1.89 6.33-4.34 6.33c-1.35 0-2.37-1.12-2.04-2.49c.39-1.64 1.14-3.4 1.14-4.58c0-1.06-.57-1.94-1.75-1.94c-1.39 0-2.5 1.43-2.5 3.35c0 1.22.41 2.04.41 2.04l-1.67 7.06c-.5 2.1-.07 4.68-.04 4.94c.02.15.22.19.31.07c.13-.17 1.79-2.22 2.36-4.27c.16-.58.9-3.53.9-3.53c.44.85 1.73 1.57 3.1 1.57c4.08 0 6.85-3.72 6.85-8.7C21.97 5.6 18.71 2 12.04 2" />
+                                        </svg>
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if(!empty($setting->phone))
+                                <li>
+                                    <a href="tel:{{ $phoneTel }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
+                                            viewBox="0 0 24 24">
+                                            <path d="M0 0h24v24H0z" fill="none" />
+                                            <path fill="currentColor"
+                                                d="m21 15.46l-5.27-.61l-2.52 2.52a15.05 15.05 0 0 1-6.59-6.59l2.53-2.53L8.54 3H3.03C2.45 13.18 10.82 21.55 21 20.97z" />
+                                        </svg>
+
+                                        {{ $setting->phone }}
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
+
                     </div>
 
                     <div class="colB">
@@ -716,10 +470,10 @@
                             <div class="col">
                                 <h5>Company</h5>
                                 <ul>
-                                    <li><a href="about.html" target="_blank">About Us</a></li>
-                                    <li><a href="contact.html" target="_blank">Contact Us</a></li>
-                                    <li><a href="javascript:void()">Careers</a></li>
-                                    <li><a href="javascript:void()">Reviews</a></li>
+                                    <li><a href="{{ route('about') }}" target="_blank">About Us</a></li>
+                                    <li><a href="{{ route('contact.us') }}" target="_blank">Contact Us</a></li>
+                                    <li><a href="javascript:void(0)">Careers</a></li>
+                                    <li><a href="javascript:void(0)">Reviews</a></li>
                                     <li><a href="{{ route('blogs') }}" target="_blank">Blogs</a></li>
                                 </ul>
                             </div>
@@ -735,8 +489,8 @@
                         </div>
 
                         <div class="act-btn">
-                            <a href="javascript:void()" class="btn btn-white">Get The App</a>
-                            <a href="javascript:void()" class="btn btn-primary">Partner With Us</a>
+                            <a href="javascript:void(0)" class="btn btn-white">Get The App</a>
+                            <a href="javascript:void(0)" class="btn btn-primary">Partner With Us</a>
                         </div>
                     </div>
                 </div>
@@ -745,9 +499,9 @@
             <div class="footer-bottom">
                 <div class="container">
                     <p class="copyright">
-                        © 2026 TripPlanner.com — All rights reserved.
+                        {{ $setting->footer_copyright ?? '© ' . date('Y') . ' ' . $siteName . ' — All rights reserved.' }}
                     </p>
-                    <p class="copyright">Made with care for travelers everywhere</p>
+                    <p class="copyright">{{ $siteTagline ?: 'Made with care for travelers everywhere' }}</p>
                 </div>
             </div>
         </div>
@@ -756,15 +510,17 @@
     <div class="overlay"></div>
     <!-- ================= Modals ================= -->
     <ul class="fixed-media">
-        <li class="wts">
-            <a href="#" target="_blank" aria-label="WhatsApp">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path fill="currentColor"
-                        d="M19.05 4.91A9.82 9.82 0 0 0 12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01m-7.01 15.24c-1.48 0-2.93-.4-4.2-1.15l-.3-.18l-3.12.82l.83-3.04l-.2-.31a8.26 8.26 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24c2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c.02 4.54-3.68 8.23-8.22 8.23m4.52-6.16c-.25-.12-1.47-.72-1.69-.81c-.23-.08-.39-.12-.56.12c-.17.25-.64.81-.78.97c-.14.17-.29.19-.54.06c-.25-.12-1.05-.39-1.99-1.23c-.74-.66-1.23-1.47-1.38-1.72c-.14-.25-.02-.38.11-.51c.11-.11.25-.29.37-.43s.17-.25.25-.41c.08-.17.04-.31-.02-.43s-.56-1.34-.76-1.84c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31c-.22.25-.86.85-.86 2.07s.89 2.4 1.01 2.56c.12.17 1.75 2.67 4.23 3.74c.59.26 1.05.41 1.41.52c.59.19 1.13.16 1.56.1c.48-.07 1.47-.6 1.67-1.18c.21-.58.21-1.07.14-1.18s-.22-.16-.47-.28">
-                    </path>
-                </svg>
-            </a>
-        </li>
+        @if($waNumber)
+            <li class="wts">
+                <a href="{{ $waLink }}" target="_blank" rel="noopener" aria-label="WhatsApp">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                            d="M19.05 4.91A9.82 9.82 0 0 0 12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01m-7.01 15.24c-1.48 0-2.93-.4-4.2-1.15l-.3-.18l-3.12.82l.83-3.04l-.2-.31a8.26 8.26 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24c2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c.02 4.54-3.68 8.23-8.22 8.23m4.52-6.16c-.25-.12-1.47-.72-1.69-.81c-.23-.08-.39-.12-.56.12c-.17.25-.64.81-.78.97c-.14.17-.29.19-.54.06c-.25-.12-1.05-.39-1.99-1.23c-.74-.66-1.23-1.47-1.38-1.72c-.14-.25-.02-.38.11-.51c.11-.11.25-.29.37-.43s.17-.25.25-.41c.08-.17.04-.31-.02-.43s-.56-1.34-.76-1.84c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31c-.22.25-.86.85-.86 2.07s.89 2.4 1.01 2.56c.12.17 1.75 2.67 4.23 3.74c.59.26 1.05.41 1.41.52c.59.19 1.13.16 1.56.1c.48-.07 1.47-.6 1.67-1.18c.21-.58.21-1.07.14-1.18s-.22-.16-.47-.28">
+                        </path>
+                    </svg>
+                </a>
+            </li>
+        @endif
 
         <li>
             <a class="req-btn" href="#" data-model=".enquire-pop">
@@ -785,7 +541,7 @@
         <div class="model-body">
             <!-- Login / Signup -->
             <div class="login-wrap">
-                <img loading="lazy" class="leaf-icon" src="{{ asset('assets/images/logo.png') }}" alt="Logo" />
+                <img loading="lazy" class="leaf-icon" src="{{ $siteLogo }}" alt="{{ $siteName }}" />
 
                 <h3 class="main-title">Login or Sign up</h3>
 
@@ -841,7 +597,7 @@
 
             <!-- OTP Verification -->
             <div class="otp-field" style="display: none">
-                <img loading="lazy" class="leaf-icon" src="{{ asset('assets/images/logo.png') }}" alt="Logo" />
+                <img loading="lazy" class="leaf-icon" src="{{ $siteLogo }}" alt="{{ $siteName }}" />
 
                 <div class="bk_btn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 12 24">
@@ -1026,18 +782,18 @@
                         </li>
 
                         <li>
-                            <a href="about.html" class="nav-main-link">About</a>
+                            <a href="{{ route('about') }}" class="nav-main-link">About</a>
                         </li>
                         <li>
                             <a href="{{ route('blogs') }}" class="nav-main-link">Blogs</a>
                         </li>
                         <li>
-                            <a href="contact.html" class="nav-main-link">Contact Us</a>
+                            <a href="{{ route('contact.us') }}" class="nav-main-link">Contact Us</a>
                         </li>
                     </ul>
 
                     <div class="bottom-list">
-                        <a href="javascript:void()" data-model=".enquire-pop" class="btn btn-primary">Enquire Now</a>
+                        <a href="javascript:void(0)" data-model=".enquire-pop" class="btn btn-primary">Enquire Now</a>
                     </div>
                 </div>
 
@@ -1051,79 +807,8 @@
                         India Packages
                     </button>
 
-                    <div class="accordion-group">
-                        <div class="accordion-item">
-                            <button type="button" class="accordion-trigger">
-                                Popular Destinations
-                                <svg class="chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
-                                    <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.6"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </button>
-                            <ul class="accordion-source" hidden>
-                                <li><a href="listing.html" target="_blank">Ladakh Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Kashmir Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Manali Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Kerala Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Goa Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Rajasthan Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Himachal Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Uttarakhand Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Sikkim Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Meghalaya Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Andaman Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">North East Tour Packages</a></li>
-                            </ul>
-                        </div>
+                    @include('layouts.header-accordion', ['groups' => $indiaGroups])
 
-                        <div class="accordion-item">
-                            <button type="button" class="accordion-trigger">
-                                Honeymoon Packages
-                                <svg class="chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
-                                    <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.6"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </button>
-                            <ul class="accordion-source" hidden>
-                                <li><a href="listing.html" target="_blank">Kashmir Honeymoon Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Kerala Honeymoon Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Goa Honeymoon Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Andaman Honeymoon Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Manali Honeymoon Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Shimla Honeymoon Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Sikkim Honeymoon Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Udaipur Honeymoon Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Munnar Honeymoon Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Ooty Honeymoon Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Darjeeling Honeymoon Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Nainital Honeymoon Packages</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="accordion-item">
-                            <button type="button" class="accordion-trigger">
-                                Family Packages
-                                <svg class="chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
-                                    <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.6"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </button>
-                            <ul class="accordion-source" hidden>
-                                <li><a href="listing.html" target="_blank">Kerala Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Kashmir Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Goa Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Rajasthan Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Himachal Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Manali Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Uttarakhand Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Sikkim Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Andaman Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Meghalaya Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Ooty Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Darjeeling Family Packages</a></li>
-                            </ul>
-                        </div>
-                    </div>
 
                     <a href="listing.html" target="_blank" class="panel-view-all">View all India packages →</a>
                 </div>
@@ -1138,79 +823,7 @@
                         International Packages
                     </button>
 
-                    <div class="accordion-group">
-                        <div class="accordion-item">
-                            <button type="button" class="accordion-trigger">
-                                Popular Destinations
-                                <svg class="chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
-                                    <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.6"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </button>
-                            <ul class="accordion-source" hidden>
-                                <li><a href="listing.html" target="_blank">Dubai Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Bali Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Thailand Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Singapore Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Maldives Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Vietnam Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Europe Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Switzerland Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Mauritius Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Malaysia Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Australia Tour Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Japan Tour Packages</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="accordion-item">
-                            <button type="button" class="accordion-trigger">
-                                Honeymoon Packages
-                                <svg class="chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
-                                    <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.6"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </button>
-                            <ul class="accordion-source" hidden>
-                                <li><a href="listing.html" target="_blank">Maldives Honeymoon</a></li>
-                                <li><a href="listing.html" target="_blank">Bali Honeymoon Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Dubai Honeymoon Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Thailand Honeymoon</a></li>
-                                <li><a href="listing.html" target="_blank">Mauritius Honeymoon</a></li>
-                                <li><a href="listing.html" target="_blank">Seychelles Honeymoon</a></li>
-                                <li><a href="listing.html" target="_blank">Europe Honeymoon Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Switzerland Honeymoon</a></li>
-                                <li><a href="listing.html" target="_blank">Vietnam Honeymoon</a></li>
-                                <li><a href="listing.html" target="_blank">Singapore Honeymoon</a></li>
-                                <li><a href="listing.html" target="_blank">Malaysia Honeymoon</a></li>
-                                <li><a href="listing.html" target="_blank">Australia Honeymoon</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="accordion-item">
-                            <button type="button" class="accordion-trigger">
-                                Family Holidays
-                                <svg class="chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
-                                    <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.6"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </button>
-                            <ul class="accordion-source" hidden>
-                                <li><a href="listing.html" target="_blank">Dubai Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Singapore Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Thailand Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Bali Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Malaysia Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Vietnam Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Europe Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Australia Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Japan Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Mauritius Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Switzerland Family Packages</a></li>
-                                <li><a href="listing.html" target="_blank">Maldives Family Packages</a></li>
-                            </ul>
-                        </div>
-                    </div>
+                    @include('layouts.header-accordion', ['groups' => $internationalGroups])
 
                     <a href="listing.html" target="_blank" class="panel-view-all">View all international packages →</a>
                 </div>
@@ -1225,77 +838,10 @@
                         Activities
                     </button>
 
-                    <div class="accordion-group">
-                        <div class="accordion-item">
-                            <button type="button" class="accordion-trigger">
-                                Adventure Activities
-                                <svg class="chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
-                                    <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.6"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </button>
-                            <ul class="accordion-source" hidden>
-                                <li><a href="attractions.html" target="_blank">Attractions</a></li>
-                                <li><a href="{{ route('destinations') }}" target="_blank">Destination</a></li>
-                                <li><a href="listing.html" target="_blank">Trekking</a></li>
-                                <li><a href="listing.html" target="_blank">Scuba Diving</a></li>
-                                <li><a href="listing.html" target="_blank">River Rafting</a></li>
-                                <li><a href="listing.html" target="_blank">Paragliding</a></li>
-                                <li><a href="listing.html" target="_blank">Camping</a></li>
-                                <li><a href="listing.html" target="_blank">Bungee Jumping</a></li>
-                                <li><a href="listing.html" target="_blank">Ziplining</a></li>
-                                <li><a href="listing.html" target="_blank">Skiing</a></li>
-                                <li><a href="listing.html" target="_blank">Snowboarding</a></li>
-                                <li><a href="listing.html" target="_blank">Kayaking</a></li>
-                            </ul>
-                        </div>
+                    @include('layouts.header-accordion', ['groups' => $activityGroups])
 
-                        <div class="accordion-item">
-                            <button type="button" class="accordion-trigger">
-                                Experiences
-                                <svg class="chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
-                                    <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.6"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </button>
-                            <ul class="accordion-source" hidden>
-                                <li><a href="listing.html" target="_blank">Cultural Experiences</a></li>
-                                <li><a href="listing.html" target="_blank">Food &amp; Culinary Tours</a></li>
-                                <li><a href="listing.html" target="_blank">Wildlife Safaris</a></li>
-                                <li><a href="listing.html" target="_blank">Local Village Tours</a></li>
-                                <li><a href="listing.html" target="_blank">Heritage Walks</a></li>
-                                <li><a href="listing.html" target="_blank">Sunset Experiences</a></li>
-                                <li><a href="listing.html" target="_blank">Photography Tours</a></li>
-                                <li><a href="listing.html" target="_blank">Boat Experiences</a></li>
-                                <li><a href="listing.html" target="_blank">Desert Experiences</a></li>
-                                <li><a href="listing.html" target="_blank">Wellness Retreats</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="accordion-item">
-                            <button type="button" class="accordion-trigger">
-                                Popular Places
-                                <svg class="chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
-                                    <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.6"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </button>
-                            <ul class="accordion-source" hidden>
-                                <li><a href="listing.html" target="_blank">Goa Activities</a></li>
-                                <li><a href="listing.html" target="_blank">Manali Activities</a></li>
-                                <li><a href="listing.html" target="_blank">Rishikesh Activities</a></li>
-                                <li><a href="listing.html" target="_blank">Dubai Activities</a></li>
-                                <li><a href="listing.html" target="_blank">Bali Activities</a></li>
-                                <li><a href="listing.html" target="_blank">Thailand Activities</a></li>
-                                <li><a href="listing.html" target="_blank">Kashmir Activities</a></li>
-                                <li><a href="listing.html" target="_blank">Ladakh Activities</a></li>
-                                <li><a href="listing.html" target="_blank">Andaman Activities</a></li>
-                                <li><a href="listing.html" target="_blank">Kerala Activities</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <a href="listing.html" target="_blank" class="panel-view-all">Explore all activities →</a>
+                    <a href="{{ route('activities') }}" target="_blank" class="panel-view-all">Explore all activities
+                        →</a>
                 </div>
 
                 <!-- ===================== LEVEL 3 : DETAIL PANEL (generic, reused for har sub-category) ===================== -->
@@ -1320,7 +866,7 @@
     <div class="footer-strip">
         <ul>
             <li>
-                <a href="tel:javascript:void()">
+                <a href="{{ $phoneTel ? 'tel:' . $phoneTel : 'javascript:void(0)' }}">
                     <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd"
                             d="M3.08334 7.26667C4.94871 11.3275 8.26304 14.5457 12.3771 16.2906L12.3896 16.2958L13.1854 16.65C13.677 16.8692 14.229 16.9126 14.7488 16.7728C15.2685 16.633 15.7243 16.3185 16.0396 15.8823L17.3667 14.0458C17.4057 13.9917 17.4225 13.9248 17.4135 13.8587C17.4046 13.7926 17.3707 13.7324 17.3188 13.6906L15.0021 11.8208C14.9748 11.7988 14.9432 11.7825 14.9094 11.7729C14.8756 11.7634 14.8403 11.7608 14.8054 11.7652C14.7706 11.7697 14.737 11.7812 14.7067 11.799C14.6764 11.8168 14.6501 11.8405 14.6292 11.8687L13.7271 13.0854C13.6208 13.229 13.4686 13.3318 13.2957 13.3767C13.1228 13.4216 12.9398 13.4059 12.7771 13.3323C9.69486 11.936 7.22547 9.46661 5.82917 6.38437C5.75554 6.22166 5.73987 6.03863 5.78479 5.86576C5.82971 5.6929 5.93251 5.54065 6.07605 5.43438L7.29168 4.53125C7.31992 4.51037 7.34365 4.484 7.36144 4.45371C7.37923 4.42342 7.39071 4.38985 7.39518 4.35501C7.39966 4.32018 7.39704 4.28479 7.38749 4.25099C7.37794 4.21719 7.36164 4.18567 7.33959 4.15833L5.47084 1.84167C5.42903 1.78972 5.36888 1.75579 5.30279 1.74688C5.23671 1.73796 5.16972 1.75474 5.11563 1.79375L3.26876 3.12708C2.82959 3.44386 2.51366 3.90294 2.37466 4.42629C2.23565 4.94964 2.28215 5.50497 2.50626 5.99792L3.08334 7.26667ZM11.7604 17.726C7.29074 15.8281 3.69022 12.3305 1.66355 7.91771L1.66147 7.91563L1.08438 6.64479C0.710862 5.82337 0.633246 4.89796 0.864722 4.0258C1.0962 3.15364 1.62249 2.38851 2.35417 1.86042L4.20105 0.527084C4.57931 0.254084 5.04783 0.136485 5.51018 0.198493C5.97253 0.2605 6.39351 0.497397 6.68647 0.860417L8.55626 3.17813C8.71056 3.36935 8.82461 3.58979 8.89156 3.82621C8.95851 4.06262 8.97697 4.31014 8.94583 4.55387C8.9147 4.7976 8.83461 5.03252 8.71038 5.24452C8.58615 5.45652 8.42034 5.64121 8.22293 5.7875L7.52501 6.30417C8.70499 8.59202 10.5684 10.4554 12.8563 11.6354L13.374 10.9375C13.5203 10.7402 13.7049 10.5746 13.9168 10.4504C14.1287 10.3263 14.3635 10.2463 14.6071 10.2151C14.8507 10.184 15.0981 10.2024 15.3344 10.2693C15.5707 10.3361 15.7911 10.45 15.9823 10.6042L18.3 12.474C18.6633 12.7669 18.9004 13.1881 18.9624 13.6507C19.0244 14.1133 18.9067 14.5821 18.6333 14.9604L17.3063 16.7979C16.7809 17.5249 16.0215 18.049 15.1553 18.2821C14.2892 18.5153 13.3693 18.4432 12.55 18.0781L11.7604 17.726Z"
@@ -1330,8 +876,8 @@
                 </a>
             </li>
             <li>
-                <a href="tel:javascript:void()">
-                    <svg xmlns="https://wa.link/xcbqes" width="25" height="25" viewBox="0 0 25 25" fill="none">
+                <a href="{{ $waLink }}" target="_blank" rel="noopener">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
                         <path
                             d="M21.3125 3.63757C20.1665 2.47998 18.8015 1.56216 17.297 0.937638C15.7926 0.313117 14.1789 -0.00560014 12.55 7.4462e-05C5.725 7.4462e-05 0.1625 5.56257 0.1625 12.3876C0.1625 14.5751 0.7375 16.7001 1.8125 18.5751L0.0625 25.0001L6.625 23.2751C8.4375 24.2626 10.475 24.7876 12.55 24.7876C19.375 24.7876 24.9375 19.2251 24.9375 12.4001C24.9375 9.08757 23.65 5.97507 21.3125 3.63757ZM12.55 22.6876C10.7 22.6876 8.8875 22.1876 7.3 21.2501L6.925 21.0251L3.025 22.0501L4.0625 18.2501L3.8125 17.8626C2.78468 16.2213 2.23892 14.3241 2.2375 12.3876C2.2375 6.71257 6.8625 2.08757 12.5375 2.08757C15.2875 2.08757 17.875 3.16257 19.8125 5.11257C20.7719 6.06753 21.5321 7.2034 22.0492 8.45436C22.5664 9.70531 22.83 11.0465 22.825 12.4001C22.85 18.0751 18.225 22.6876 12.55 22.6876ZM18.2 14.9876C17.8875 14.8376 16.3625 14.0876 16.0875 13.9751C15.8 13.8751 15.6 13.8251 15.3875 14.1251C15.175 14.4376 14.5875 15.1376 14.4125 15.3376C14.2375 15.5501 14.05 15.5751 13.7375 15.4126C13.425 15.2626 12.425 14.9251 11.25 13.8751C10.325 13.0501 9.7125 12.0376 9.525 11.7251C9.35 11.4126 9.5 11.2501 9.6625 11.0876C9.8 10.9501 9.975 10.7251 10.125 10.5501C10.275 10.3751 10.3375 10.2376 10.4375 10.0376C10.5375 9.82507 10.4875 9.65007 10.4125 9.50007C10.3375 9.35007 9.7125 7.82507 9.4625 7.20007C9.2125 6.60007 8.95 6.67507 8.7625 6.66257H8.1625C7.95 6.66257 7.625 6.73757 7.3375 7.05007C7.0625 7.36257 6.2625 8.11257 6.2625 9.63757C6.2625 11.1626 7.375 12.6376 7.525 12.8376C7.675 13.0501 9.7125 16.1751 12.8125 17.5126C13.55 17.8376 14.125 18.0251 14.575 18.1626C15.3125 18.4001 15.9875 18.3626 16.525 18.2876C17.125 18.2001 18.3625 17.5376 18.6125 16.8126C18.875 16.0876 18.875 15.4751 18.7875 15.3376C18.7 15.2001 18.5125 15.1376 18.2 14.9876Z"
                             fill="black"></path>
@@ -1340,7 +886,7 @@
                 </a>
             </li>
             <li>
-                <a href="tel:javascript:void()" data-model=".enquire-pop">
+                <a href="javascript:void(0)" data-model=".enquire-pop">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" width="30px" height="30px"
                         viewBox="2 2 21 21">
                         <path
@@ -1352,7 +898,6 @@
             </li>
         </ul>
     </div>
-    <!-- ================= jQuery ================= -->
     <!-- ================= jQuery ================= -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="

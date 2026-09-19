@@ -31,6 +31,11 @@ class Activity extends Model
         'banner_right_label',
         'banner_right_title',
         'duration_text',
+        'duration_from',
+        'duration_to',
+        'duration_unit',
+        'duration_hours',
+        'free_cancellation_hours',
         'free_cancellation_text',
         'rating',
         'review_count',
@@ -70,6 +75,9 @@ class Activity extends Model
         'rating' => 'float',
         'starting_price' => 'float',
         'review_count' => 'integer',
+        'duration_from' => 'float',
+        'duration_to' => 'float',
+        'duration_hours' => 'float',
     ];
 
     public function category(): BelongsTo
@@ -123,6 +131,57 @@ class Activity extends Model
         return $this->belongsToMany(Attraction::class, 'activity_attraction')
             ->withPivot('sort_order')
             ->orderBy('activity_attraction.sort_order');
+    }
+
+    public static function formatDuration($from, $to = null, string $unit = 'hours'): string
+    {
+        if ($from === null || $from === '') {
+            return '';
+        }
+
+        $fmt = fn($n) => rtrim(rtrim(number_format((float) $n, 2, '.', ''), '0'), '.');
+        $isRange = $to !== null && $to !== '' && (float) $to > (float) $from;
+        $top = $isRange ? (float) $to : (float) $from;
+        $range = $isRange ? $fmt($from) . '–' . $fmt($to) : $fmt($from);
+
+        $label = match ($unit) {
+            'minutes' => 'mins',
+            'days' => $top > 1 ? 'Days' : 'Day',
+            default => $top > 1 ? 'hrs' : 'hr',
+        };
+
+        return $range . ' ' . $label;
+    }
+
+    public static function durationInHours($from, $to, string $unit): ?float
+    {
+        $top = max((float) $from, (float) $to);
+
+        if (!$top) {
+            return null;
+        }
+
+        return match ($unit) {
+            'minutes' => round($top / 60, 2),
+            'days' => $top * 24,
+            default => $top,
+        };
+    }
+
+    // "/ Adult" style, for pages that still want the short form
+    public function getPriceUnitShortAttribute(): string
+    {
+        return $this->price_unit ? '/ ' . preg_replace('/^Per\s+/i', '', $this->price_unit) : '';
+    }
+
+    public function refreshRating(): void
+    {
+        $stats = $this->reviews()->selectRaw('COUNT(*) as c, AVG(rating) as a')->first();
+
+        $this->forceFill([
+            'review_count' => (int) $stats->c,
+            'rating' => $stats->c ? round($stats->a, 1) : null,
+        ])->saveQuietly();
     }
 
 }

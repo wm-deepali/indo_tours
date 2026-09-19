@@ -29,6 +29,8 @@ class CategoryController extends Controller
 
         $validated['slug'] = Str::slug($request->name);
         $validated['status'] = $request->status ?? 'draft';
+        $validated['show_in_header'] = $request->boolean('show_in_header');
+        $validated['header_sort_order'] = $validated['header_sort_order'] ?? 0;
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('categories', 'public');
@@ -62,6 +64,8 @@ class CategoryController extends Controller
         $validated = $request->validate($this->rules());
 
         $validated['status'] = $request->status ?? $category->status;
+        $validated['show_in_header'] = $request->boolean('show_in_header');
+        $validated['header_sort_order'] = $validated['header_sort_order'] ?? 0;
 
         if ($request->hasFile('image')) {
             if ($category->image) {
@@ -112,6 +116,8 @@ class CategoryController extends Controller
             'detail_content' => 'nullable|string',
             'image' => 'nullable|image|max:2048',
             'status' => 'nullable|in:draft,published,unpublished',
+            'show_in_header' => 'nullable|boolean',
+            'header_sort_order' => 'nullable|integer|min:0',
 
             'cta_title' => 'nullable|string|max:255',
             'cta_badge_text' => 'nullable|string|max:100',
@@ -125,7 +131,16 @@ class CategoryController extends Controller
             'h1' => 'nullable|string|max:255',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
-            'robots' => 'nullable|string|in:index, follow,noindex, follow,index, nofollow,noindex, nofollow',
+            'robots' => [
+                'nullable',
+                'string',
+                \Illuminate\Validation\Rule::in([
+                    'index, follow',
+                    'noindex, follow',
+                    'index, nofollow',
+                    'noindex, nofollow',
+                ])
+            ],
             'og_title' => 'nullable|string|max:255',
             'og_description' => 'nullable|string',
             'og_image' => 'nullable|image|max:2048',

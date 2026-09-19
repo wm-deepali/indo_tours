@@ -27,6 +27,8 @@ class ActivityCategoryController extends Controller
         $data = $this->validateCategory($request);
 
         $data['slug'] = $this->uniqueSlug($data['name']);
+        $data['show_in_header'] = $request->boolean('show_in_header');
+        $data['header_sort_order'] = $data['header_sort_order'] ?? 0;
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('activity-categories', 'public');
@@ -46,6 +48,9 @@ class ActivityCategoryController extends Controller
     public function update(Request $request, ActivityCategory $activityCategory)
     {
         $data = $this->validateCategory($request, $activityCategory->id);
+
+        $data['show_in_header'] = $request->boolean('show_in_header');
+        $data['header_sort_order'] = $data['header_sort_order'] ?? 0;
 
         if ($data['name'] !== $activityCategory->name) {
             $data['slug'] = $this->uniqueSlug($data['name'], $activityCategory->id);
@@ -79,11 +84,13 @@ class ActivityCategoryController extends Controller
     private function validateCategory(Request $request, ?int $ignoreId = null): array
     {
         return $request->validate([
-            'name'        => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'status'      => 'required|in:active,inactive',
-            'sort_order'  => 'nullable|integer|min:0',
-            'image'       => 'nullable|image|max:2048',
+            'status' => 'required|in:active,inactive',
+            'sort_order' => 'nullable|integer|min:0',
+            'image' => 'nullable|image|max:2048',
+            'show_in_header' => 'nullable|boolean',
+            'header_sort_order' => 'nullable|integer|min:0',
         ]);
     }
 
@@ -95,7 +102,7 @@ class ActivityCategoryController extends Controller
 
         while (
             ActivityCategory::where('slug', $slug)
-                ->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))
+                ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
                 ->exists()
         ) {
             $slug = $base . '-' . $i++;

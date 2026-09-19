@@ -264,6 +264,20 @@
         .gallery-row .remove-faq-row {
             margin-top: 10px;
         }
+
+        .form-field .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-field .checkbox-row input {
+            width: auto;
+            height: auto;
+        }
     </style>
 
     <div class="app-content content container-fluid">
@@ -339,6 +353,28 @@
                                 <option value="published" {{ old('status', $subCategory->status) == 'published' ? 'selected' : '' }}>Published</option>
                                 <option value="unpublished" {{ old('status', $subCategory->status) == 'unpublished' ? 'selected' : '' }}>Unpublished</option>
                             </select>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label>Header Menu</label>
+                                <input type="hidden" name="show_in_header" value="0">
+                                <label class="checkbox-row">
+                                    <input type="checkbox" name="show_in_header" value="1" {{ old('show_in_header', $subCategory->show_in_header) ? 'checked' : '' }}>
+                                    Show in header menu accordion
+                                </label>
+                                <div class="hint">Lists this sub category's packages as an accordion in the India /
+                                    International header menu</div>
+                            </div>
+                            <div class="form-field">
+                                <label for="header_sort_order">Header Sort Order</label>
+                                <input type="number" min="0" id="header_sort_order" name="header_sort_order"
+                                    class="form-control-styled"
+                                    value="{{ old('header_sort_order', $subCategory->header_sort_order) }}">
+                                <div class="hint">Lower numbers appear first among the accordions</div>
+                                @error('header_sort_order')
+                                <div class="form-error">{{ $message }}</div>@enderror
+                            </div>
                         </div>
 
                     </div>
