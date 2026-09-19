@@ -726,13 +726,10 @@
                             <div class="col">
                                 <h5>Support & Policies</h5>
                                 <ul>
-                                    <li><a href="term-conditon.html" target="_blank">Terms & Conditions</a></li>
-                                    <li><a href="privacy-policy.html" target="_blank">Privacy Policies</a></li>
-                                    <li><a href="javascript:void()">Copyright Policies</a></li>
-                                    <li><a href="javascript:void()">Help Center</a></li>
-                                    <li><a href="term-conditon.html">Terms & Conditions</a></li>
-                                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                                    <li><a href="javascript:void()">Cancellation Policy</a></li>
+                                    @foreach($footerPages as $footerPage)
+                                        <li><a href="{{ route('pages.show', $footerPage) }}">{{ $footerPage->title }}</a>
+                                        </li>
+                                    @endforeach
                                 </ul>
                             </div>
                         </div>

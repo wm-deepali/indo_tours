@@ -7,18 +7,20 @@ use App\Models\Review;
 use App\Models\Activity;
 use App\Models\Category;
 use App\Models\Attraction;
-use App\Models\BlogComment;
+use App\Models\ContactPage;
 use App\Models\TourPackage;
 use App\Models\SubCategory;
 use App\Models\Destination;
 use App\Models\BlogCategory;
 use Illuminate\Http\Request;
 use App\Models\ActivityCategory;
+use App\Models\ContactSubmission;
 use App\Models\TourPackageEnquiry;
 use App\Models\AttractionCategory;
 use App\Models\LandingPageActivity;
 use App\Models\LandingPageAttraction;
 use App\Models\LandingPageDestination;
+use App\Models\Page;
 
 class FrontController extends Controller
 {
@@ -580,6 +582,72 @@ class FrontController extends Controller
         ]);
 
         return back()->with('success', 'Thanks! Your comment has been submitted for review.');
+    }
+
+    public function pageDetail(Page $page)
+    {
+        abort_unless($page->is_active, 404);
+
+        $fallbackDescription = \Illuminate\Support\Str::limit(strip_tags($page->content), 160);
+
+        return view('front-pages.pages', compact('page', 'fallbackDescription'));
+    }
+
+    public function contact()
+    {
+        $contactPage = ContactPage::first();
+
+        return view('front-pages.contact', compact('contactPage'));
+    }
+
+    public function contactStore(Request $request)
+    {
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:100',
+            'last_name' => 'required|string|max:100',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'message' => 'required|string|max:2000',
+            'newsletter' => 'nullable|boolean',
+        ]);
+
+        ContactSubmission::create([
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'message' => $validated['message'],
+            'newsletter' => $request->boolean('newsletter'),
+        ]);
+
+            return redirect()->route('thankyou', ['context' => 'contact']);
+
+    }
+
+    public function thankYou(Request $request)
+    {
+        $context = $request->query('context');
+
+        $copy = match ($context) {
+            'contact' => [
+                'heading' => 'Thank You!',
+                'message' => "Thank you for reaching out to IND Tour Adventure. We've received your message and our travel expert will get in touch with you shortly.",
+            ],
+            'enquiry' => [
+                'heading' => 'Enquiry Received!',
+                'message' => "Thank you for your enquiry. Our travel expert will get in touch with you shortly to help plan your trip.",
+            ],
+            'newsletter' => [
+                'heading' => "You're Subscribed!",
+                'message' => "Thanks for signing up — you'll now receive our latest offers and travel updates straight to your inbox.",
+            ],
+            default => [
+                'heading' => 'Thank You!',
+                'message' => "Thank you for reaching out to IND Tour Adventure. We've received your enquiry and our travel expert will get in touch with you shortly.",
+            ],
+        };
+
+        return view('front-pages.thank-you', $copy);
     }
 
 }

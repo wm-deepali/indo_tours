@@ -2,13 +2,13 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Route;
+use App\Models\Page;
 use App\Models\Category;
 use App\Models\SeoSetting;
-
-
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,14 +23,21 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot()
+    public function boot(): void
     {
-
         View::composer('*', function ($view) {
-            $view->with('footerCategories', Category::where('status', 'published')->orderBy('name')->get());
-        });
+            $view->with('footerPages', Cache::remember(
+                'footer_pages',
+                now()->addHour(),
+                fn () => Page::where('is_active', true)->orderBy('title')->get()
+            ));
 
-        View::composer('*', function ($view) {
+            $view->with('footerCategories', Cache::remember(
+                'footer_categories',
+                now()->addHour(),
+                fn () => Category::where('status', 'published')->orderBy('name')->get()
+            ));
+
             $routeName = optional(Route::getCurrentRoute())->getName();
 
             $map = [
@@ -45,8 +52,9 @@ class AppServiceProvider extends ServiceProvider
 
             $pageKey = $map[$routeName] ?? null;
 
-            $view->with('seo', $pageKey ? SeoSetting::forPage($pageKey) : null);
+            $view->with('seo', $pageKey
+                ? Cache::remember("seo_setting_{$pageKey}", now()->addHour(), fn () => SeoSetting::forPage($pageKey))
+                : null);
         });
-
     }
 }

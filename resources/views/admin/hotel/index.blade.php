@@ -250,7 +250,7 @@
                             <tr>
                                 <td>
                                     @if($hotel->galleries->first())
-                                        <img src="{{ asset('storage/' . $hotel->galleries->first()->image) }}" class="dest-thumb"
+                                        <img src="{{ asset($hotel->galleries->first()->image) }}" class="dest-thumb"
                                             alt="{{ $hotel->name }}">
                                     @else
                                         <div class="dest-thumb"

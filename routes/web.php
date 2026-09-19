@@ -22,7 +22,10 @@ use App\Http\Controllers\Admin\{
     LandingPageDestinationController,
     LandingPageAttractionController,
     BlogCategoryController,
-    BlogController
+    BlogController,
+    PageController,
+    ContactPageController,
+    ContactSubmissionController
 };
 
 use Illuminate\Support\Facades\Route;
@@ -52,6 +55,12 @@ Route::controller(FrontController::class)->group(function () {
     Route::post('/reviews', 'reviewStore')->name('review.store');
     Route::post('/enquiries', 'enquiryStore')->name('enquiries.store');
     Route::post('/blog/{blog:slug}/comment', 'storeComment')->name('blog.comment.store');
+
+    Route::get('/pages/{page:slug}', 'pageDetail')->name('pages.show');
+    Route::get('/contact-us', 'contact')->name('contact.us');
+    Route::post('/contact', 'contactStore')->name('contact.store');
+    Route::get('/thank-you', 'thankYou')->name('thankyou');
+
 });
 
 
@@ -111,6 +120,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::resource('package-enquiries', TourPackageEnquiryController::class)->only(['index', 'show', 'destroy']);
         Route::patch('package-enquiries/{package_enquiry}/status', [TourPackageEnquiryController::class, 'updateStatus'])->name('package-enquiries.status');
+
+        Route::resource('pages', PageController::class)->except(['show']);
+
+        Route::get('contact-page', [ContactPageController::class, 'edit'])->name('contact-page.edit');
+        Route::put('contact-page', [ContactPageController::class, 'update'])->name('contact-page.update');
+
+        Route::resource('contact-submissions', ContactSubmissionController::class)->only(['index', 'show', 'destroy']);
 
         Route::prefix('seo-setting')->name('seo-setting.')->group(function () {
             Route::get('/', [SeoSettingController::class, 'index'])->name('index');
