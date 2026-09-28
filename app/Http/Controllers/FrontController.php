@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Models\Page;
 use App\Models\Review;
 use App\Models\Activity;
 use App\Models\Category;
 use App\Models\Attraction;
+use App\Models\Testimonial;
 use App\Models\ContactPage;
 use App\Models\TourPackage;
 use App\Models\SubCategory;
 use App\Models\Destination;
 use App\Models\BlogCategory;
 use Illuminate\Http\Request;
+use App\Models\AboutPageContent;
 use App\Models\ActivityCategory;
 use App\Models\ContactSubmission;
 use App\Models\TourPackageEnquiry;
@@ -20,7 +23,6 @@ use App\Models\AttractionCategory;
 use App\Models\LandingPageActivity;
 use App\Models\LandingPageAttraction;
 use App\Models\LandingPageDestination;
-use App\Models\Page;
 
 class FrontController extends Controller
 {
@@ -600,6 +602,14 @@ class FrontController extends Controller
         return view('front-pages.contact', compact('contactPage'));
     }
 
+    public function about()
+    {
+        $content = AboutPageContent::instance();
+        $testimonials = Testimonial::published()->orderBy('sort_order')->get();
+
+        return view('front-pages.about', compact('content', 'testimonials'));
+    }
+
     public function contactStore(Request $request)
     {
         $validated = $request->validate([
@@ -620,7 +630,7 @@ class FrontController extends Controller
             'newsletter' => $request->boolean('newsletter'),
         ]);
 
-            return redirect()->route('thankyou', ['context' => 'contact']);
+        return redirect()->route('thankyou', ['context' => 'contact']);
 
     }
 

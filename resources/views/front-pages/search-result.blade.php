@@ -32,18 +32,18 @@
 
         <section class="sec-hero">
             <div class="sec-hero-bg">
-                <img loading="lazy" src="{{ asset('assets/images/blog/dubai.jpg') }}" alt="Search results" />
+                <img loading="lazy"
+                    src="{{ $searchPageContent->hero_image ? asset('storage/' . $searchPageContent->hero_image) : asset('assets/images/blog/dubai.jpg') }}"
+                    alt="Search results" />
                 <div class="sec-hero-overlay"></div>
             </div>
 
             <div class="container">
                 <div class="sec-hero-head">
-                    <h1>Explore Trips That Match Your Search</h1>
-                    <p>
-                        Discover handpicked tours and holiday packages based on your
-                        destination, travel style and preferences.
-                    </p>
+                    <h1>{{ $searchPageContent->hero_title }}</h1>
+                    <p>{{ $searchPageContent->hero_description }}</p>
                 </div>
+
 
                 <form class="sec-hero-form" action="{{ url('/search') }}" method="GET">
                     <div class="search-field">
@@ -236,8 +236,8 @@
                                             <h5 class="js-accordion-toggle">Category</h5>
                                             <div class="filter-group-body">
                                                 @foreach($categories as $cat)
-                                                    <label class="filter-check">
-                                                        <input type="checkbox" name="category[]" value="{{ $cat->id }}" {{ in_array((string) $cat->id, $selected['category'], true) ? 'checked' : '' }} />
+                                                    <label class="filter-check"> <input type="checkbox" name="category[]"
+                                                            value="{{ $cat->id }}" {{ in_array((string) $cat->id, $selected['category'], true) ? 'checked' : '' }} />
                                                         <span class="box"></span>
                                                         {{ $cat->name }}
                                                     </label>
@@ -245,8 +245,8 @@
                                                     @if($cat->subCategories->isNotEmpty())
                                                         <div class="filter-subgroup">
                                                             @foreach($cat->subCategories as $sub)
-                                                                <label class="filter-check filter-check--sub">
-                                                                    <input type="checkbox" name="sub_category[]" value="{{ $sub->id }}" {{ in_array((string) $sub->id, $selected['subCategory'], true) ? 'checked' : '' }} />
+                                                                <label class="filter-check filter-check--sub"><input type="checkbox"
+                                                                        name="sub_category[]" value="{{ $sub->id }}" {{ in_array((string) $sub->id, $selected['subCategory'], true) ? 'checked' : '' }} />
                                                                     <span class="box"></span>
                                                                     {{ $sub->name }}
                                                                 </label>
@@ -286,7 +286,7 @@
                                         </div>
                                     </div>
 
-                                     {{-- Rating (now applies to tours too) --}}
+                                    {{-- Rating (now applies to tours too) --}}
                                     <div class="filter-group" data-group="rating">
                                         <h5 class="js-accordion-toggle">Rating</h5>
                                         <div class="filter-group-body">
@@ -309,8 +309,8 @@
                                             <h5 class="js-accordion-toggle">Category</h5>
                                             <div class="filter-group-body">
                                                 @foreach($activityCategories as $cat)
-                                                    <label class="filter-check">
-                                                        <input type="checkbox" name="activity_category[]" value="{{ $cat->id }}" {{ in_array((string) $cat->id, $selected['activityCategory'], true) ? 'checked' : '' }} />
+                                                    <label class="filter-check"><input type="checkbox" name="activity_category[]"
+                                                            value="{{ $cat->id }}" {{ in_array((string) $cat->id, $selected['activityCategory'], true) ? 'checked' : '' }} />
                                                         <span class="box"></span>
                                                         {{ $cat->name }}
                                                     </label>
@@ -445,211 +445,50 @@
                 <div class="swiper-wrap">
                     <div class="swiper destSlider">
                         <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <a href="listing-detail.html" class="dest-card">
-                                    <div class="dest-card-img">
-                                        <img loading="lazy" src="assets/images/blog/beach.jpg" alt="Bali" />
-                                    </div>
-                                    <div class="dest-card-content">
-                                        <span class="pkg-count">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M20 6 9 17l-5-5" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                            18 Packages
-                                        </span>
-                                        <div class="place">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="12" cy="10" r="3" />
-                                                <path
-                                                    d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8" />
-                                            </svg>
-                                            Indonesia
+                            @foreach ($featuredDestinations as $destination)
+                                <div class="swiper-slide">
+                                    <a href="{{ route('destination.show', $destination) }}" class="dest-card">
+                                        <div class="dest-card-img">
+                                            <img loading="lazy"
+                                                src="{{ $destination->image ? asset('storage/' . $destination->image) : asset('assets/images/blog/beach.jpg') }}"
+                                                alt="{{ $destination->name }}" />
                                         </div>
-                                        <h5>Bali</h5>
-                                        <div class="foot">
-                                            <p class="price"><small>Starting from</small>₹45,000</p>
-                                            <span class="arrow-btn">
+                                        <div class="dest-card-content">
+                                            <span class="pkg-count">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                    <path d="M5 12h14M13 6l6 6-6 6" />
+                                                    <path d="M20 6 9 17l-5-5" stroke-linecap="round" stroke-linejoin="round" />
                                                 </svg>
+                                                {{ $destination->tour_packages_count }} Packages
                                             </span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <a href="listing-detail.html" class="dest-card">
-                                    <div class="dest-card-img">
-                                        <img loading="lazy" src="assets/images/blog/mount.jpg" alt="Maldives" />
-                                    </div>
-                                    <div class="dest-card-content">
-                                        <span class="pkg-count">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M20 6 9 17l-5-5" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                            12 Packages
-                                        </span>
-                                        <div class="place">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="12" cy="10" r="3" />
-                                                <path
-                                                    d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8" />
-                                            </svg>
-                                            South Asia
-                                        </div>
-                                        <h5>Maldives</h5>
-                                        <div class="foot">
-                                            <p class="price"><small>Starting from</small>₹95,000</p>
-                                            <span class="arrow-btn">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                    <path d="M5 12h14M13 6l6 6-6 6" />
+                                            <div class="place">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <circle cx="12" cy="10" r="3" />
+                                                    <path
+                                                        d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8" />
                                                 </svg>
-                                            </span>
+                                                {{ $destination->country?->name }}
+                                            </div>
+                                            <h5>{{ $destination->name }}</h5>
+                                            <div class="foot">
+                                                <p class="price">
+                                                    <small>Starting from</small>
+                                                    @if ($destination->tourPackages->min('price'))
+                                                        ₹{{ number_format($destination->tourPackages->min('price')) }}
+                                                    @else
+                                                        —
+                                                    @endif
+                                                </p>
+                                                <span class="arrow-btn">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                        <path d="M5 12h14M13 6l6 6-6 6" />
+                                                    </svg>
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <a href="listing-detail.html" class="dest-card">
-                                    <div class="dest-card-img">
-                                        <img loading="lazy" src="assets/images/blog/kashmir.jpg" alt="Switzerland" />
-                                    </div>
-                                    <div class="dest-card-content">
-                                        <span class="pkg-count">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M20 6 9 17l-5-5" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                            9 Packages
-                                        </span>
-                                        <div class="place">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="12" cy="10" r="3" />
-                                                <path
-                                                    d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8" />
-                                            </svg>
-                                            Europe
-                                        </div>
-                                        <h5>Switzerland</h5>
-                                        <div class="foot">
-                                            <p class="price">
-                                                <small>Starting from</small>₹1,65,000
-                                            </p>
-                                            <span class="arrow-btn">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                    <path d="M5 12h14M13 6l6 6-6 6" />
-                                                </svg>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <a href="listing-detail.html" class="dest-card">
-                                    <div class="dest-card-img">
-                                        <img loading="lazy" src="assets/images/blog/mount.jpg" alt="Thailand" />
-                                    </div>
-                                    <div class="dest-card-content">
-                                        <span class="pkg-count">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M20 6 9 17l-5-5" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                            22 Packages
-                                        </span>
-                                        <div class="place">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="12" cy="10" r="3" />
-                                                <path
-                                                    d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8" />
-                                            </svg>
-                                            Southeast Asia
-                                        </div>
-                                        <h5>Thailand</h5>
-                                        <div class="foot">
-                                            <p class="price"><small>Starting from</small>₹38,000</p>
-                                            <span class="arrow-btn">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                    <path d="M5 12h14M13 6l6 6-6 6" />
-                                                </svg>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <a href="listing-detail.html" class="dest-card">
-                                    <div class="dest-card-img">
-                                        <img loading="lazy" src="assets/images/blog/culture.avif" alt="Singapore" />
-                                    </div>
-                                    <div class="dest-card-content">
-                                        <span class="pkg-count">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M20 6 9 17l-5-5" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                            15 Packages
-                                        </span>
-                                        <div class="place">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="12" cy="10" r="3" />
-                                                <path
-                                                    d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8" />
-                                            </svg>
-                                            Southeast Asia
-                                        </div>
-                                        <h5>Singapore</h5>
-                                        <div class="foot">
-                                            <p class="price"><small>Starting from</small>₹58,000</p>
-                                            <span class="arrow-btn">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                    <path d="M5 12h14M13 6l6 6-6 6" />
-                                                </svg>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <a href="listing-detail.html" class="dest-card">
-                                    <div class="dest-card-img">
-                                        <img loading="lazy" src="assets/images/blog/kashmir.jpg" alt="Kashmir" />
-                                    </div>
-                                    <div class="dest-card-content">
-                                        <span class="pkg-count">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M20 6 9 17l-5-5" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                            27 Packages
-                                        </span>
-                                        <div class="place">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="12" cy="10" r="3" />
-                                                <path
-                                                    d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8" />
-                                            </svg>
-                                            India
-                                        </div>
-                                        <h5>Kashmir</h5>
-                                        <div class="foot">
-                                            <p class="price"><small>Starting from</small>₹22,000</p>
-                                            <span class="arrow-btn">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                    <path d="M5 12h14M13 6l6 6-6 6" />
-                                                </svg>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
+                                    </a>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
 
@@ -670,7 +509,7 @@
                 </div>
 
                 <div class="center-btn">
-                    <a href="destinations.html" class="btn btn-outline-primary">View All Destinations</a>
+                    <a href="{{ route('destinations') }}" class="btn btn-outline-primary">View All Destinations</a>
                 </div>
             </div>
         </section>
@@ -680,72 +519,27 @@
             <div class="container">
                 <div class="heading">
                     <h3>Why Book <span>With Us</span></h3>
-                    <p>
-                        Trusted by thousands of travellers for seamless, well-planned
-                        trips.
-                    </p>
+                    <p>Trusted by thousands of travellers for seamless, well-planned trips.</p>
                 </div>
 
                 <div class="usp-grid">
-                    <div class="usp-item">
-                        <div class="usp-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 2 2 7l10 5 10-5-10-5Z" />
-                                <path d="M2 17l10 5 10-5" />
-                                <path d="M2 12l10 5 10-5" />
-                            </svg>
+                    @foreach ($searchPageContent->usps as $usp)
+                        <div class="usp-item">
+                            <div class="usp-icon">
+                                @if (!empty($usp['icon']))
+                                    <img src="{{ asset('storage/' . $usp['icon']) }}" alt="{{ $usp['title'] }}"
+                                        style="width:28px;height:28px;">
+                                @else
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="9" />
+                                    </svg>
+                                @endif
+                            </div>
+                            <h5>{{ $usp['title'] }}</h5>
+                            <p>{{ $usp['description'] }}</p>
                         </div>
-                        <h5>Expertly Planned Trips</h5>
-                        <p>
-                            Itineraries curated by travel specialists with on-ground
-                            destination knowledge.
-                        </p>
-                    </div>
-
-                    <div class="usp-item">
-                        <div class="usp-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="9" />
-                                <path d="M12 7v5l3 3" />
-                            </svg>
-                        </div>
-                        <h5>Best Price Assistance</h5>
-                        <p>
-                            Transparent pricing with no hidden costs, plus help finding the
-                            best available deal.
-                        </p>
-                    </div>
-
-                    <div class="usp-item">
-                        <div class="usp-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path
-                                    d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                            </svg>
-                        </div>
-                        <h5>Dedicated Travel Support</h5>
-                        <p>
-                            A real person to call before, during and after your trip — not a
-                            chatbot queue.
-                        </p>
-                    </div>
-
-                    <div class="usp-item">
-                        <div class="usp-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M4 6h16M4 12h10M4 18h6" />
-                            </svg>
-                        </div>
-                        <h5>Flexible Customization</h5>
-                        <p>
-                            Tailor hotels, activities and duration to match exactly what
-                            you're looking for.
-                        </p>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </section>
@@ -763,107 +557,35 @@
 
                 <div class="swiper TestimonialSlider">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <div class="card">
-                                <div class="header">
-                                    <img loading="lazy" src="assets/images/home/client1.png" alt="Rahul Sharma" />
-                                    <div class="name">
-                                        <h6>Rahul Sharma</h6>
-                                        <p>Dubai Traveller</p>
+                        @forelse ($testimonials as $testimonial)
+                            <div class="swiper-slide">
+                                <div class="card">
+                                    <div class="header">
+                                        <img loading="lazy"
+                                            src="{{ $testimonial->image ? asset('storage/' . $testimonial->image) : asset('assets/images/home/client1.png') }}"
+                                            alt="{{ $testimonial->name }}" />
+                                        <div class="name">
+                                            <h6>{{ $testimonial->name }}</h6>
+                                            <p>{{ $testimonial->designation }}</p>
+                                        </div>
+                                        <div class="quotes"></div>
                                     </div>
-                                    <div class="quotes"></div>
-                                </div>
-                                <p class="quote">
-                                    "The package options made it very easy to compare
-                                    destinations, duration and pricing. We found exactly what we
-                                    were looking for."
-                                </p>
-                                <div class="stars"></div>
-                            </div>
-                        </div>
-
-                        <div class="swiper-slide">
-                            <div class="card">
-                                <div class="header">
-                                    <img loading="lazy" src="assets/images/home/client2.png" alt="Priya Mehta" />
-                                    <div class="name">
-                                        <h6>Priya Mehta</h6>
-                                        <p>Family Traveller</p>
+                                    <p class="quote">"{{ $testimonial->quote }}"</p>
+                                    <div class="stars" data-rating="{{ $testimonial->rating }}">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <i class="fa {{ $i <= $testimonial->rating ? 'fa-star' : 'fa-star-o' }}"></i>
+                                        @endfor
                                     </div>
-                                    <div class="quotes"></div>
                                 </div>
-                                <p class="quote">
-                                    "We were able to find a family-friendly package within our
-                                    budget. The entire search and enquiry process was smooth."
-                                </p>
-                                <div class="stars"></div>
                             </div>
-                        </div>
-
-                        <div class="swiper-slide">
-                            <div class="card">
-                                <div class="header">
-                                    <img loading="lazy" src="assets/images/home/client3.png" alt="Amit Verma" />
-                                    <div class="name">
-                                        <h6>Amit Verma</h6>
-                                        <p>Holiday Traveller</p>
-                                    </div>
-                                    <div class="quotes"></div>
-                                </div>
-                                <p class="quote">
-                                    "The search filters helped us narrow down the right holiday
-                                    package quickly. The package details were clear and useful."
-                                </p>
-                                <div class="stars"></div>
-                            </div>
-                        </div>
-
-                        <div class="swiper-slide">
-                            <div class="card">
-                                <div class="header">
-                                    <img loading="lazy" src="assets/images/home/client2.png" alt="Neha Kapoor" />
-                                    <div class="name">
-                                        <h6>Neha Kapoor</h6>
-                                        <p>Couple Traveller</p>
-                                    </div>
-                                    <div class="quotes"></div>
-                                </div>
-                                <p class="quote">
-                                    "There were plenty of options to choose from, and updating
-                                    the search made it simple to explore different packages."
-                                </p>
-                                <div class="stars"></div>
-                            </div>
-                        </div>
+                        @empty
+                            {{-- no testimonials yet; section renders empty rather than breaking the slider --}}
+                        @endforelse
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ============ APP PROMO / CTA ============ -->
-        <section class="app-promo">
-            <div class="container">
-                <div class="app-promo-inner">
-                    <div class="app-promo-text">
-                        <span class="eyebrow">Need Help Planning?</span>
-                        <h3>Can't Find Your Perfect Trip?</h3>
-                        <p>
-                            Tell us what you're looking for and our travel experts will help
-                            create a package that fits your plans and budget.
-                        </p>
-                        <div class="cta-btns">
-                            <a href="javascript:void(0)" class="sbmt btn btn-white js-open-enquiry">Plan My Trip</a>
-                            <a href="javascript:void(0)" class="btn btn-outline-white js-open-enquiry">Enquire Now</a>
-                        </div>
-                    </div>
-                    <div class="app-promo-visual">
-                        <div class="phone phone--back">
-                            <img loading="lazy" src="assets/icon/h3-destination-shape.png" alt="Plan your trip" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
     </main>
 
 

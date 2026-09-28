@@ -7,7 +7,9 @@ use App\Models\ActivityCategory;
 use App\Models\Category;
 use App\Models\Destination;
 use App\Models\SubCategory;
+use App\Models\Testimonial;
 use App\Models\TourPackage;
+use App\Models\SearchPageContent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -62,9 +64,11 @@ class SearchController extends Controller
             : collect();
 
         $categories = $type === 'tour'
-            ? Category::with(['subCategories' => function ($q) {
+            ? Category::with([
+                'subCategories' => function ($q) {
                     $q->whereHas('tourPackages', fn($t) => $t->where('status', 'published'))->orderBy('name');
-                }])
+                }
+            ])
                 ->whereHas('subCategories.tourPackages', fn($t) => $t->where('status', 'published'))
                 ->orderBy('name')->get(['id', 'name'])
             : collect();
@@ -77,12 +81,25 @@ class SearchController extends Controller
         $priceMin = (int) config('search.price.min');
         $priceMax = (int) config('search.price.max');
 
+        $featuredDestinations = Destination::published()
+            ->where('is_featured', true)
+            ->with(['country', 'state', 'city'])
+            ->withCount(['tourPackages' => fn($q) => $q->where('status', 'published')])
+            ->orderBy('sort_order')
+            ->get();
+
+        $testimonials = Testimonial::published()->orderBy('sort_order')->get();
+        $searchPageContent = SearchPageContent::instance();
+
         return view('front-pages.search-result', [
             'type' => $type,
             'results' => $results,
             'counts' => $counts,
             'selected' => $selected,
             'destinations' => $destinations,
+            'featuredDestinations' => $featuredDestinations,
+            'testimonials' => $testimonials,
+            'searchPageContent' => $searchPageContent,
             'categories' => $categories,
             'activityCategories' => $activityCategories,
             'durations' => collect(config('search.durations'))->filter(fn($d) => in_array($type, $d['types'], true)),

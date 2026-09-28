@@ -188,6 +188,13 @@
                     </a>
                 </li>
 
+                <li class="{{ request()->routeIs('admin.search-page-content.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.search-page-content.edit') }}">
+                        <i class="fa-solid fa-magnifying-glass"></i> Search Page Content
+                    </a>
+                </li>
+
+                
                 <li class="{{ request()->routeIs('admin.landing-pages.*') ? 'active' : '' }}">
                     <a href="#" class="submenu-toggle">
                         <i class="fa-solid fa-window-restore"></i> Landing Pages
@@ -206,6 +213,11 @@
                         <li class="{{ request()->routeIs('admin.landing-pages.activities.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.landing-pages.activities.edit') }}">
                                 <i class="fa-solid fa-person-hiking"></i> Activities Page
+                            </a>
+                        </li>
+                        <li class="{{ request()->routeIs('admin.landing-pages.about.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.landing-pages.about.edit') }}">
+                                <i class="fa-solid fa-circle-info"></i> About Page
                             </a>
                         </li>
                     </ul>

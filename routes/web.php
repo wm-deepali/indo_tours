@@ -26,7 +26,10 @@ use App\Http\Controllers\Admin\{
     PageController,
     ContactPageController,
     ContactSubmissionController,
-    AmenityController
+    AmenityController,
+    TestimonialController,
+    SearchPageContentController,
+    AboutPageContentController
 };
 
 use Illuminate\Support\Facades\Route;
@@ -63,7 +66,7 @@ Route::controller(FrontController::class)->group(function () {
     Route::post('/contact', 'contactStore')->name('contact.store');
     Route::get('/thank-you', 'thankYou')->name('thankyou');
 
-    Route::view('/about-us', 'front-pages.about')->name('about');
+    Route::get('/about-us', 'about')->name('about');
 
 });
 
@@ -133,6 +136,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('contact-page', [ContactPageController::class, 'update'])->name('contact-page.update');
 
         Route::resource('contact-submissions', ContactSubmissionController::class)->only(['index', 'show', 'destroy']);
+
+        Route::resource('testimonials', TestimonialController::class)->except(['show']);
+
+        Route::get('search-page-content', [SearchPageContentController::class, 'edit'])->name('search-page-content.edit');
+        Route::put('search-page-content', [SearchPageContentController::class, 'update'])->name('search-page-content.update');
+
+        Route::get('landing-pages/about', [AboutPageContentController::class, 'edit'])->name('landing-pages.about.edit');
+        Route::put('landing-pages/about', [AboutPageContentController::class, 'update'])->name('landing-pages.about.update');
 
         Route::prefix('seo-setting')->name('seo-setting.')->group(function () {
             Route::get('/', [SeoSettingController::class, 'index'])->name('index');
