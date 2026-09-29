@@ -4,6 +4,9 @@
 <div class="main-section">
     @include('admin.header')
 
+    {{-- Select2 (searchable dropdowns). Remove this line if your admin layout already loads select2 CSS --}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+
     <style>
         :root {
             --bg: #f1f2f4;
@@ -299,6 +302,56 @@
             border-color: var(--accent);
             background: var(--accent-light);
         }
+
+        /* ---- Select2 (searchable dropdown) styling to match .form-control-styled ---- */
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            height: 40px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 38px;
+            padding-left: 12px;
+            font-size: 13.5px;
+            font-family: var(--font);
+            color: var(--text-primary);
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 38px;
+            right: 6px;
+        }
+
+        .select2-container--default.select2-container--focus .select2-selection--single,
+        .select2-container--default.select2-container--open .select2-selection--single {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(48, 61, 137, .12);
+        }
+
+        .select2-dropdown {
+            border-color: var(--border);
+            border-radius: var(--radius-sm);
+            font-family: var(--font);
+            font-size: 13.5px;
+        }
+
+        .select2-container--default .select2-search--dropdown .select2-search__field {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 6px 10px;
+            outline: none;
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected],
+        .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+            background-color: var(--accent);
+        }
     </style>
 
     <div class="app-content content container-fluid">
@@ -350,7 +403,8 @@
                         <div class="form-field">
                             <label for="sub_category_id">Parent Sub Category</label>
                             <select id="sub_category_id" name="sub_category_id"
-                                class="form-control-styled @error('sub_category_id') is-invalid @enderror" required>
+                                class="form-control-styled searchable-select @error('sub_category_id') is-invalid @enderror"
+                                required>
                                 <option value="">Select Sub Category</option>
                                 @foreach($subCategories as $sc)
                                     <option value="{{ $sc->id }}" {{ old('sub_category_id') == $sc->id ? 'selected' : '' }}>
@@ -400,7 +454,8 @@
                             <label>Location</label>
                             <div class="form-row-3">
                                 <div>
-                                    <select id="country_id" name="country_id" class="form-control-styled">
+                                    <select id="country_id" name="country_id"
+                                        class="form-control-styled searchable-select">
                                         <option value="">Select Country</option>
                                         @foreach($countries as $country)
                                             <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>{{ $country->name }}</option>
@@ -408,12 +463,12 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <select id="state_id" name="state_id" class="form-control-styled">
+                                    <select id="state_id" name="state_id" class="form-control-styled searchable-select">
                                         <option value="">Select State</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <select id="city_id" name="city_id" class="form-control-styled">
+                                    <select id="city_id" name="city_id" class="form-control-styled searchable-select">
                                         <option value="">Select City</option>
                                     </select>
                                 </div>
@@ -861,6 +916,16 @@
 </div>
 
 <script>
+    // ---- Searchable dropdowns (Select2) ----
+    // Any <select class="searchable-select"> gets a search box. Call initSearchable(row) after adding dynamic rows.
+    function initSearchable(scope) {
+        if (typeof window.jQuery === 'undefined' || !jQuery.fn.select2) return;
+        jQuery(scope || document).find('select.searchable-select').each(function () {
+            if (jQuery(this).hasClass('select2-hidden-accessible')) return;
+            jQuery(this).select2({ width: '100%' });
+        });
+    }
+
     document.querySelectorAll('#tp-tabs .cat-tab').forEach(function (tabBtn) {
         tabBtn.addEventListener('click', function () {
             document.querySelectorAll('#tp-tabs .cat-tab').forEach(b => b.classList.remove('active'));
@@ -906,23 +971,34 @@
     });
 
     // ---- Location cascading dropdowns ----
-    document.getElementById('country_id').addEventListener('change', function () {
-        const stateSelect = document.getElementById('state_id');
-        const citySelect = document.getElementById('city_id');
-        stateSelect.innerHTML = '<option value="">Select State</option>';
-        citySelect.innerHTML = '<option value="">Select City</option>';
-        if (!this.value) return;
-        fetch(`/admin/location/states/${this.value}`).then(r => r.json()).then(states => {
-            states.forEach(s => stateSelect.insertAdjacentHTML('beforeend', `<option value="${s.id}">${s.name}</option>`));
-        });
-    });
+    // Uses jQuery events because Select2 fires jQuery "change" (native addEventListener would not catch it).
+    // Bound on window load so it works even if jQuery/Select2 are loaded in the footer.
+    window.addEventListener('load', function () {
+        initSearchable();
 
-    document.getElementById('state_id').addEventListener('change', function () {
-        const citySelect = document.getElementById('city_id');
-        citySelect.innerHTML = '<option value="">Select City</option>';
-        if (!this.value) return;
-        fetch(`/admin/location/cities/${this.value}`).then(r => r.json()).then(cities => {
-            cities.forEach(c => citySelect.insertAdjacentHTML('beforeend', `<option value="${c.id}">${c.name}</option>`));
+        const $ = window.jQuery;
+        if (!$) return;
+
+        $('#country_id').on('change', function () {
+            const $state = $('#state_id');
+            const $city = $('#city_id');
+            $state.html('<option value="">Select State</option>').trigger('change.select2');
+            $city.html('<option value="">Select City</option>').trigger('change.select2');
+            if (!this.value) return;
+            fetch(`/admin/location/states/${this.value}`).then(r => r.json()).then(states => {
+                states.forEach(s => $state.append(new Option(s.name, s.id)));
+                $state.trigger('change.select2');
+            });
+        });
+
+        $('#state_id').on('change', function () {
+            const $city = $('#city_id');
+            $city.html('<option value="">Select City</option>').trigger('change.select2');
+            if (!this.value) return;
+            fetch(`/admin/location/cities/${this.value}`).then(r => r.json()).then(cities => {
+                cities.forEach(c => $city.append(new Option(c.name, c.id)));
+                $city.trigger('change.select2');
+            });
         });
     });
 
@@ -1031,7 +1107,7 @@
             <div class="form-row">
                 <div class="form-field">
                     <label>Hotel</label>
-                    <select name="hotel_ids[${hotelIndex}]" class="form-control-styled">
+                    <select name="hotel_ids[${hotelIndex}]" class="form-control-styled searchable-select">
                         ${hotelOptionsHtml()}
                     </select>
                     <div class="hint">Star rating, images and location pulled from the Hotel's own record</div>
@@ -1063,6 +1139,7 @@
             <button type="button" class="btn-secondary-dash remove-new-row"><i class="fa fa-trash"></i> Remove</button>
         `;
         document.getElementById('new-hotel-rows').appendChild(row);
+        initSearchable(row);
         hotelIndex++;
         row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
     });
@@ -1156,11 +1233,12 @@
         row.innerHTML = `
         <div class="form-field">
             <label>Destination</label>
-            <select name="destination_ids[]" class="form-control-styled">${destinationOptionsHtml()}</select>
+            <select name="destination_ids[]" class="form-control-styled searchable-select">${destinationOptionsHtml()}</select>
         </div>
         <button type="button" class="btn-secondary-dash remove-new-row"><i class="fa fa-trash"></i> Remove</button>
     `;
         document.getElementById('new-destination-rows').appendChild(row);
+        initSearchable(row);
         row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
     });
 
@@ -1177,11 +1255,12 @@
         row.innerHTML = `
         <div class="form-field">
             <label>Attraction</label>
-            <select name="attraction_ids[]" class="form-control-styled">${attractionOptionsHtml()}</select>
+            <select name="attraction_ids[]" class="form-control-styled searchable-select">${attractionOptionsHtml()}</select>
         </div>
         <button type="button" class="btn-secondary-dash remove-new-row"><i class="fa fa-trash"></i> Remove</button>
     `;
         document.getElementById('new-attraction-rows').appendChild(row);
+        initSearchable(row);
         row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
     });
 
@@ -1198,13 +1277,17 @@
         row.innerHTML = `
         <div class="form-field">
             <label>Activity</label>
-            <select name="activity_ids[]" class="form-control-styled">${activityOptionsHtml()}</select>
+            <select name="activity_ids[]" class="form-control-styled searchable-select">${activityOptionsHtml()}</select>
         </div>
         <button type="button" class="btn-secondary-dash remove-new-row"><i class="fa fa-trash"></i> Remove</button>
     `;
         document.getElementById('new-activity-rows').appendChild(row);
+        initSearchable(row);
         row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
     });
 </script>
 
 @include('admin.footer')
+
+{{-- Select2 JS — loaded after the footer so jQuery is already available. Remove if your layout already loads select2 --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>

@@ -131,6 +131,10 @@ class BlogController extends Controller
             'status'            => 'required|in:draft,published',
             'published_at'      => 'nullable|date',
 
+            'is_journey_story'   => 'nullable|boolean',
+            'card_title'         => 'nullable|string|max:100',
+            'journey_sort_order' => 'nullable|integer|min:0',
+
             'destination_heading'     => 'nullable|string|max:255',
             'destination_description' => 'nullable|string|max:1000',
             'attraction_heading'      => 'nullable|string|max:255',
@@ -160,6 +164,10 @@ class BlogController extends Controller
             : Blog::uniqueSlug($request->title, $id);
 
         $data['robots'] = $request->robots ?: 'index,follow';
+
+        // Journey Stories: unchecked/blank values ko safe defaults do (column NOT NULL hai)
+        $data['is_journey_story']   = $request->boolean('is_journey_story');
+        $data['journey_sort_order'] = (int) $request->input('journey_sort_order', 0);
 
         return $data;
     }

@@ -207,7 +207,12 @@
                                 d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
                             </svg>
                           </a>
-                          <button data-model=".enquire-pop" data-package-id="{{ $package->id }}" class="btn btn-primary">
+                          <button data-model=".enquire-pop" class="btn btn-primary" data-enquiry-type="Tour Package"
+                            data-enquiry-id="{{ $package->id }}" data-enquiry-for="{{ $package->name }}"
+                            data-enquiry-image="{{ $package->main_image ? asset('storage/' . $package->main_image) : '' }}"
+                            data-enquiry-price="{{ $package->price ? 'INR ' . number_format($package->price) : '' }}"
+                            data-enquiry-old-price="{{ $package->old_price && $package->old_price > $package->price ? 'INR ' . number_format($package->old_price) : '' }}"
+                            data-enquiry-save="{{ $package->old_price && $package->old_price > $package->price ? 'SAVE INR ' . number_format($package->old_price - $package->price) : '' }}">
                             Enquire Now
                           </button>
                         </div>
@@ -526,7 +531,10 @@
               <a href="{{ $attraction->offer_button_url ?? '' }}" class="btn btn-white">
                 {{ $attraction->offer_button_text ?: 'Explore Packages' }}
               </a>
-              <a href="javascript:void()" data-model=".enquire-pop" class="btn btn-outline-white">
+              <a href="javascript:void(0)" data-model=".enquire-pop" class="btn btn-outline-white"
+                data-enquiry-type="Attraction" data-enquiry-id="{{ $attraction->id }}"
+                data-enquiry-for="{{ $attraction->name }}"
+                data-enquiry-image="{{ $attraction->image ? asset('storage/' . $attraction->image) : '' }}">
                 Get A Quote
               </a>
             </div>
@@ -778,9 +786,12 @@
               <a href="{{ $attraction->promo_button_url ?? "" }}" class="sbmt btn btn-white">
                 {{ $attraction->promo_button_text ?: 'Plan My ' . $attraction->name . ' Trip' }}
               </a>
-              <a href="javascript:void(0)" data-model=".enquire-pop" class="btn btn-outline-white">
+              <button class="btn btn-outline-white" type="button" data-model=".enquire-pop"
+                data-enquiry-type="Attraction" data-enquiry-id="{{ $attraction->id }}"
+                data-enquiry-for="{{ $attraction->name }} - {{ $experience->title }}"
+                data-enquiry-image="{{ $experience->image ? asset('storage/' . $experience->image) : '' }}">
                 Enquire Now
-              </a>
+              </button>
             </div>
           </div>
 
@@ -866,7 +877,12 @@
                                 d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
                             </svg>
                           </a>
-                          <button data-model=".enquire-pop" data-package-id="{{ $package->id }}" class="btn btn-primary">
+                          <button data-model=".enquire-pop" class="btn btn-primary" data-enquiry-type="Tour Package"
+                            data-enquiry-id="{{ $package->id }}" data-enquiry-for="{{ $package->name }}"
+                            data-enquiry-image="{{ $package->main_image ? asset('storage/' . $package->main_image) : '' }}"
+                            data-enquiry-price="{{ $package->price ? 'INR ' . number_format($package->price) : '' }}"
+                            data-enquiry-old-price="{{ $package->old_price && $package->old_price > $package->price ? 'INR ' . number_format($package->old_price) : '' }}"
+                            data-enquiry-save="{{ $package->old_price && $package->old_price > $package->price ? 'SAVE INR ' . number_format($package->old_price - $package->price) : '' }}">
                             Enquire Now
                           </button>
                         </div>
@@ -1004,66 +1020,66 @@
 @endsection
 
 @push('scripts')
-    @php
-        $breadcrumbItems = [
-            ['name' => 'Home', 'url' => route('home')],
-            ['name' => 'Attractions', 'url' => route('attractions')],
-        ];
-        if ($attraction->country) {
-            $breadcrumbItems[] = ['name' => $attraction->country->name, 'url' => url()->current()];
-        }
-        if ($attraction->state) {
-            $breadcrumbItems[] = ['name' => $attraction->state->name, 'url' => url()->current()];
-        }
-        $breadcrumbItems[] = ['name' => $attraction->name, 'url' => url()->current()];
+  @php
+    $breadcrumbItems = [
+      ['name' => 'Home', 'url' => route('home')],
+      ['name' => 'Attractions', 'url' => route('attractions')],
+    ];
+    if ($attraction->country) {
+      $breadcrumbItems[] = ['name' => $attraction->country->name, 'url' => url()->current()];
+    }
+    if ($attraction->state) {
+      $breadcrumbItems[] = ['name' => $attraction->state->name, 'url' => url()->current()];
+    }
+    $breadcrumbItems[] = ['name' => $attraction->name, 'url' => url()->current()];
 
-        $schema = [
-            '@context' => 'https://schema.org',
-            '@graph' => [
-                [
-                    '@type' => 'BreadcrumbList',
-                    'itemListElement' => collect($breadcrumbItems)->map(fn($item, $i) => [
-                        '@type' => 'ListItem',
-                        'position' => $i + 1,
-                        'name' => $item['name'],
-                        'item' => $item['url'],
-                    ])->values()->all(),
-                ],
-                [
-                    '@type' => 'TouristAttraction',
-                    '@id' => url()->current() . '#attraction',
-                    'name' => $attraction->name,
-                    'description' => $attraction->meta_description ?: $attraction->short_description,
-                    'url' => url()->current(),
-                    'image' => asset('storage/' . ($attraction->image ?: $attraction->about_image)),
-                    'address' => [
-                        '@type' => 'PostalAddress',
-                        'addressLocality' => $attraction->city?->name,
-                        'addressRegion' => $attraction->state?->name,
-                        'addressCountry' => $attraction->country?->name,
-                    ],
-                    'aggregateRating' => $attraction->rating ? [
-                        '@type' => 'AggregateRating',
-                        'ratingValue' => $attraction->rating,
-                        'reviewCount' => $attraction->review_count ?: 1,
-                    ] : null,
-                ],
-            ],
-        ];
+    $schema = [
+      '@context' => 'https://schema.org',
+      '@graph' => [
+        [
+          '@type' => 'BreadcrumbList',
+          'itemListElement' => collect($breadcrumbItems)->map(fn($item, $i) => [
+            '@type' => 'ListItem',
+            'position' => $i + 1,
+            'name' => $item['name'],
+            'item' => $item['url'],
+          ])->values()->all(),
+        ],
+        [
+          '@type' => 'TouristAttraction',
+          '@id' => url()->current() . '#attraction',
+          'name' => $attraction->name,
+          'description' => $attraction->meta_description ?: $attraction->short_description,
+          'url' => url()->current(),
+          'image' => asset('storage/' . ($attraction->image ?: $attraction->about_image)),
+          'address' => [
+            '@type' => 'PostalAddress',
+            'addressLocality' => $attraction->city?->name,
+            'addressRegion' => $attraction->state?->name,
+            'addressCountry' => $attraction->country?->name,
+          ],
+          'aggregateRating' => $attraction->rating ? [
+            '@type' => 'AggregateRating',
+            'ratingValue' => $attraction->rating,
+            'reviewCount' => $attraction->review_count ?: 1,
+          ] : null,
+        ],
+      ],
+    ];
 
-        if ($attraction->faqs->isNotEmpty()) {
-            $schema['@graph'][] = [
-                '@type' => 'FAQPage',
-                'mainEntity' => $attraction->faqs->map(fn($faq) => [
-                    '@type' => 'Question',
-                    'name' => $faq->question,
-                    'acceptedAnswer' => ['@type' => 'Answer', 'text' => $faq->answer],
-                ])->values()->all(),
-            ];
-        }
-    @endphp
+    if ($attraction->faqs->isNotEmpty()) {
+      $schema['@graph'][] = [
+        '@type' => 'FAQPage',
+        'mainEntity' => $attraction->faqs->map(fn($faq) => [
+          '@type' => 'Question',
+          'name' => $faq->question,
+          'acceptedAnswer' => ['@type' => 'Answer', 'text' => $faq->answer],
+        ])->values()->all(),
+      ];
+    }
+  @endphp
 
-    <script type="application/ld+json">
-        {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
-    </script>
+  <script type="application/ld+json">
+                {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+            </script>
 @endpush

@@ -223,7 +223,9 @@
                             @endif
 
                             @if($category->cta_button2_text)
-                                <a href="javascript:void()" data-model=".enquire-pop" class="btn btn-outline-white">
+                                <a href="javascript:void(0)" data-model=".enquire-pop" class="btn btn-outline-white"
+                                    data-enquiry-type="Category" data-enquiry-for="{{ $category->name }}"
+                                    data-enquiry-image="{{ $category->image ? asset('storage/' . $category->image) : '' }}">
                                     {{ $category->cta_button2_text }}
                                 </a>
                             @endif
@@ -316,29 +318,30 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
                             @endforeach
-                            </div>
-                        </div>
-
-                        <div class="swiper-group">
-                            <button type="button" class="thirdSilder-prev btn-prev">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                    <path fill="#ffff"
-                                        d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0">
-                                    </path>
-                                </svg>
-                            </button>
-
-                            <button type="button" class="thirdSilder-next btn-next">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                    <path fill="#ffff"
-                                        d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0">
-                                    </path>
-                                </svg>
-                            </button>
                         </div>
                     </div>
+
+                    <div class="swiper-group">
+                        <button type="button" class="thirdSilder-prev btn-prev">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                                <path fill="#ffff"
+                                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0">
+                                </path>
+                            </svg>
+                        </button>
+
+                        <button type="button" class="thirdSilder-next btn-next">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                                <path fill="#ffff"
+                                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
+            </div>
         </section>
 
         <!-- PROMO BANNER SECTION -->
@@ -860,8 +863,8 @@
     @endphp
 
     <script type="application/ld+json">
-        {!! json_encode($categorySchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
-    </script>
+                {!! json_encode($categorySchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+            </script>
 
     @if($category->promo_end_at)
         <script>

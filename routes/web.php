@@ -29,7 +29,8 @@ use App\Http\Controllers\Admin\{
     AmenityController,
     TestimonialController,
     SearchPageContentController,
-    AboutPageContentController
+    AboutPageContentController,
+    HomePageContentController
 };
 
 use Illuminate\Support\Facades\Route;
@@ -56,17 +57,17 @@ Route::controller(FrontController::class)->group(function () {
 
     Route::get('/blogs', 'blogs')->name('blogs');
     Route::get('/blog/{slug}', 'blogDetail')->name('blog.detail');
+    Route::get('/about-us', 'about')->name('about');
+    Route::get('/pages/{page:slug}', 'pageDetail')->name('pages.show');
+    Route::get('/contact-us', 'contact')->name('contact.us');
 
     Route::post('/reviews', 'reviewStore')->name('review.store');
     Route::post('/enquiries', 'enquiryStore')->name('enquiries.store');
     Route::post('/blog/{blog:slug}/comment', 'storeComment')->name('blog.comment.store');
-
-    Route::get('/pages/{page:slug}', 'pageDetail')->name('pages.show');
-    Route::get('/contact-us', 'contact')->name('contact.us');
     Route::post('/contact', 'contactStore')->name('contact.store');
+    Route::post('/enquiry', 'quickEnquirystore')->middleware('throttle:10,1')->name('enquiry.store');
     Route::get('/thank-you', 'thankYou')->name('thankyou');
 
-    Route::get('/about-us', 'about')->name('about');
 
 });
 
@@ -144,6 +145,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('landing-pages/about', [AboutPageContentController::class, 'edit'])->name('landing-pages.about.edit');
         Route::put('landing-pages/about', [AboutPageContentController::class, 'update'])->name('landing-pages.about.update');
+
+        Route::get('landing-pages/home', [HomePageContentController::class, 'edit'])->name('landing-pages.home.edit');
+        Route::put('landing-pages/home', [HomePageContentController::class, 'update']) ->name('landing-pages.home.update');
 
         Route::prefix('seo-setting')->name('seo-setting.')->group(function () {
             Route::get('/', [SeoSettingController::class, 'index'])->name('index');

@@ -42,6 +42,79 @@
             </a>
         </li>
 
+
+        {{-- ───────────── DESTINATIONS (listing + landing page together) ───────────── --}}
+        <li class="{{ request()->routeIs([
+    'admin.destinations.*',
+    'admin.landing-pages.destination.*'
+]) ? 'active' : '' }}">
+            <a href="#"><i class="fa-solid fa-map-location-dot"></i> Destinations</a>
+            <ul>
+                <li class="{{ request()->routeIs('admin.destinations.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.destinations.index') }}">
+                        <i class="fa-solid fa-list"></i> Manage Destinations
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.landing-pages.destination.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.landing-pages.destination.edit') }}">
+                        <i class="fa-solid fa-window-restore"></i> Landing Page
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        {{-- ───────────── ATTRACTIONS (categories + listing + landing page together) ───────────── --}}
+        <li class="{{ request()->routeIs([
+    'admin.attraction-categories.*',
+    'admin.attractions.*',
+    'admin.landing-pages.attraction.*'
+]) ? 'active' : '' }}">
+            <a href="#"><i class="fa-solid fa-landmark"></i> Attractions</a>
+            <ul>
+                <li class="{{ request()->routeIs('admin.attraction-categories.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.attraction-categories.index') }}">
+                        <i class="fa-solid fa-shapes"></i> Attraction Categories
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.attractions.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.attractions.index') }}">
+                        <i class="fa-solid fa-list"></i> Manage Attractions
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.landing-pages.attraction.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.landing-pages.attraction.edit') }}">
+                        <i class="fa-solid fa-window-restore"></i> Landing Page
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        {{-- ───────────── ACTIVITIES (categories + listing + landing page together) ───────────── --}}
+        <li class="{{ request()->routeIs([
+    'admin.activity-categories.*',
+    'admin.activities.*',
+    'admin.landing-pages.activities.*'
+]) ? 'active' : '' }}">
+            <a href="#"><i class="fa-solid fa-person-hiking"></i> Activities</a>
+            <ul>
+                <li class="{{ request()->routeIs('admin.activity-categories.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.activity-categories.index') }}">
+                        <i class="fa-solid fa-list-check"></i> Activity Categories
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.activities.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.activities.index') }}">
+                        <i class="fa-solid fa-list"></i> Manage Activities
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.landing-pages.activities.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.landing-pages.activities.edit') }}">
+                        <i class="fa-solid fa-window-restore"></i> Landing Page
+                    </a>
+                </li>
+            </ul>
+        </li>
+
         {{-- ───────────── TOURS ───────────── --}}
         <li class="{{ request()->routeIs([
     'admin.categories.*',
@@ -52,6 +125,16 @@
 ]) ? 'active' : '' }}">
             <a href="#"><i class="fa-solid fa-route"></i> Tours</a>
             <ul>
+                <li class="{{ request()->routeIs('admin.hotels.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.hotels.index') }}">
+                        <i class="fa-solid fa-hotel"></i> Hotels
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.amenities.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.amenities.index') }}">
+                        <i class="fa fa-star"></i> Amenities
+                    </a>
+                </li>
                 <li class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.categories.index') }}">
                         <i class="fa-solid fa-layer-group"></i> Tour Categories
@@ -67,86 +150,9 @@
                         <i class="fa-solid fa-suitcase-rolling"></i> Tour Packages
                     </a>
                 </li>
-                <li class="{{ request()->routeIs('admin.hotels.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.hotels.index') }}">
-                        <i class="fa-solid fa-hotel"></i> Hotels
-                    </a>
-                </li>
-                <li class="nav-item {{ request()->routeIs('admin.amenities.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.amenities.index') }}">
-                        <i class="fa fa-star"></i>
-                        <span class="menu-title">Amenities</span>
-                    </a>
-                </li>
             </ul>
         </li>
 
-        {{-- ───────────── EXPLORE (Destinations / Attractions / Activities) ───────────── --}}
-        <li class="{{ request()->routeIs([
-    'admin.destinations.*',
-    'admin.attraction-categories.*',
-    'admin.attractions.*',
-    'admin.activity-categories.*',
-    'admin.activities.*',
-]) ? 'active' : '' }}">
-            <a href="#"><i class="fa-solid fa-earth-asia"></i> Explore</a>
-            <ul>
-                <li class="{{ request()->routeIs('admin.destinations.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.destinations.index') }}">
-                        <i class="fa-solid fa-map-location-dot"></i> Destinations
-                    </a>
-                </li>
-
-                <li class="{{ request()->routeIs('admin.attraction-categories.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.attraction-categories.index') }}">
-                        <i class="fa-solid fa-shapes"></i> Attraction Categories
-                    </a>
-                </li>
-                <li class="{{ request()->routeIs('admin.attractions.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.attractions.index') }}">
-                        <i class="fa-solid fa-landmark"></i> Attractions
-                    </a>
-                </li>
-
-                <li class="{{ request()->routeIs('admin.activity-categories.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.activity-categories.index') }}">
-                        <i class="fa-solid fa-list-check"></i> Activity Categories
-                    </a>
-                </li>
-                <li class="{{ request()->routeIs('admin.activities.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.activities.index') }}">
-                        <i class="fa-solid fa-person-hiking"></i> Activities
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        {{-- ───────────── ENQUIRIES ───────────── --}}
-        <li class="{{ request()->routeIs([
-    'admin.package-enquiries.*',
-    'admin.contact-submissions.*',
-]) ? 'active' : '' }}">
-            <a href="#"><i class="fa-solid fa-inbox"></i> Enquiries</a>
-            <ul>
-                <li class="{{ request()->routeIs('admin.package-enquiries.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.package-enquiries.index') }}">
-                        <i class="fa-solid fa-envelope-open-text"></i> Package Enquiries
-                    </a>
-                </li>
-                <li class="{{ request()->routeIs('admin.contact-submissions.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.contact-submissions.index') }}">
-                        <i class="fa-solid fa-message"></i> Contact Submissions
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        {{-- ───────────── REVIEWS ───────────── --}}
-        <li class="{{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
-            <a href="{{ route('admin.reviews.index') }}">
-                <i class="fa-solid fa-star"></i> Reviews
-            </a>
-        </li>
 
         {{-- ───────────── BLOG ───────────── --}}
         <li class="{{ request()->routeIs([
@@ -172,58 +178,64 @@
         <li class="{{ request()->routeIs([
     'admin.pages.*',
     'admin.contact-page.*',
-    'admin.landing-pages.*',
+    'admin.search-page-content.*',
+    'admin.landing-pages.about.*',
 ]) ? 'active' : '' }}">
             <a href="#"><i class="fa-solid fa-file-lines"></i> Content Management</a>
             <ul>
-                <li class="{{ request()->routeIs('admin.pages.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.pages.index') }}">
-                        <i class="fa-solid fa-file-circle-plus"></i> Pages
+                <li class="{{ request()->routeIs('admin.landing-pages.home.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.landing-pages.home.edit') }}">
+                        <i class="fa-solid fa-house"></i> Home Page
                     </a>
                 </li>
-
-                <li class="{{ request()->routeIs('admin.contact-page.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.contact-page.edit') }}">
-                        <i class="fa-solid fa-address-card"></i> Contact Page
-                    </a>
-                </li>
-
                 <li class="{{ request()->routeIs('admin.search-page-content.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.search-page-content.edit') }}">
                         <i class="fa-solid fa-magnifying-glass"></i> Search Page Content
                     </a>
                 </li>
-
-                
-                <li class="{{ request()->routeIs('admin.landing-pages.*') ? 'active' : '' }}">
-                    <a href="#" class="submenu-toggle">
-                        <i class="fa-solid fa-window-restore"></i> Landing Pages
+                <li class="{{ request()->routeIs('admin.landing-pages.about.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.landing-pages.about.edit') }}">
+                        <i class="fa-solid fa-circle-info"></i> About Page
                     </a>
-                    <ul>
-                        <li class="{{ request()->routeIs('admin.landing-pages.destination.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.landing-pages.destination.edit') }}">
-                                <i class="fa-solid fa-map-location-dot"></i> Destination Page
-                            </a>
-                        </li>
-                        <li class="{{ request()->routeIs('admin.landing-pages.attraction.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.landing-pages.attraction.edit') }}">
-                                <i class="fa-solid fa-landmark"></i> Attraction Page
-                            </a>
-                        </li>
-                        <li class="{{ request()->routeIs('admin.landing-pages.activities.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.landing-pages.activities.edit') }}">
-                                <i class="fa-solid fa-person-hiking"></i> Activities Page
-                            </a>
-                        </li>
-                        <li class="{{ request()->routeIs('admin.landing-pages.about.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.landing-pages.about.edit') }}">
-                                <i class="fa-solid fa-circle-info"></i> About Page
-                            </a>
-                        </li>
-                    </ul>
+                </li>
+                <li class="{{ request()->routeIs('admin.contact-page.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.contact-page.edit') }}">
+                        <i class="fa-solid fa-address-card"></i> Contact Page
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.pages.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.pages.index') }}">
+                        <i class="fa-solid fa-file-circle-plus"></i> Pages
+                    </a>
                 </li>
             </ul>
         </li>
+
+        {{-- ───────────── ENQUIRIES & REVIEWS ───────────── --}}
+        <li class="{{ request()->routeIs([
+    'admin.package-enquiries.*',
+    'admin.contact-submissions.*',
+]) ? 'active' : '' }}">
+            <a href="#"><i class="fa-solid fa-inbox"></i> Enquiries & Reviews</a>
+            <ul>
+                <li class="{{ request()->routeIs('admin.package-enquiries.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.package-enquiries.index') }}">
+                        <i class="fa-solid fa-envelope-open-text"></i> Package Enquiries
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.contact-submissions.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.contact-submissions.index') }}">
+                        <i class="fa-solid fa-message"></i> Contact Submissions
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.reviews.index') }}">
+                        <i class="fa-solid fa-star"></i> Reviews
+                    </a>
+                </li>
+            </ul>
+        </li>
+
 
         {{-- ───────────── SETTINGS ───────────── --}}
         <li class="{{ request()->routeIs(['admin.settings.*', 'admin.seo-setting.*']) ? 'active' : '' }}">
@@ -271,7 +283,6 @@
                     </a>
                 </li>
                 <li>
-                    {{-- The logout route has no name; using its URL (see note below) --}}
                     <a href="{{ url('/admin/logout') }}">
                         <i class="fa-solid fa-right-from-bracket"></i> Logout
                     </a>

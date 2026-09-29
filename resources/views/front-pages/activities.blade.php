@@ -234,8 +234,9 @@
               @endif
 
               @if($landingPage->group_offer_cta2_text ?? null)
-                <a href="{{ $landingPage->group_offer_cta2_url ?: 'javascript:void()' }}" data-model=".enquire-pop"
-                  class="btn btn-outline-white">
+                <a href="{{ $landingPage->group_offer_cta2_url ?: 'javascript:void(0)' }}" data-model=".enquire-pop"
+                  class="btn btn-outline-white" data-enquiry-type="Activities Page"
+                  data-enquiry-for="Activities Group Offer">
                   {{ $landingPage->group_offer_cta2_text }}
                 </a>
               @endif

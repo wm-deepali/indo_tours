@@ -174,7 +174,7 @@
                   </div>
 
                   <div class="field field--file">
-                    <label class="field__label field__label--static">Add a Photo (optional)</label>
+                    <!-- <label class="field__label field__label--static">Add a Photo (optional)</label> -->
                     <input type="file" name="photo" accept="image/*" class="field__file" />
                     @error('photo') <span class="error_text">{{ $message }}</span> @enderror
                   </div>
@@ -197,66 +197,68 @@
               </div>
             </div>
 
-            <div class="form_wrapper">
-              <div class="grid_card">
-                <!-- Newsletter Card -->
-                <div class="card card--newsletter">
-                  <h4>Get Travel Inspiration & Updates</h4>
-                  <div class="divider"></div>
+          </div>
 
-                  <form id="newsletterForm">
-                    <div class="subscribe_row">
-                      <input type="email" name="email" placeholder="Enter your email address" class="subscribe_input"
-                        required />
-                      <button type="submit" class="btn btn-primary">
-                        Subscribe
-                      </button>
-                    </div>
+          <div class="form_wrapper">
+            <div class="grid_card">
+              <!-- Newsletter Card -->
+              <div class="card card--newsletter">
+                <h4>Get Travel Inspiration & Updates</h4>
+                <div class="divider"></div>
 
-                    <label class="checkbox_field">
-                      <input type="checkbox" name="terms" required />
-                      <span class="box"></span>
-                      <span class="text">
-                        I agree to receive travel updates and accept the terms
-                        &amp; conditions
-                      </span>
-                    </label>
-                  </form>
-                </div>
-
-                <!-- Popular Stories Card -->
-                <div class="card card--stories">
-                  <h4>Popular Travel Stories</h4>
-                  <div class="divider"></div>
-
-                  <div class="story_list">
-                    @foreach($popularStories as $story)
-                      <a href="{{ route('blog.detail', $story->slug) }}" target="_blank" class="story_item">
-                        <div class="story_thumb">
-                          <img loading="lazy" src="{{ $story->featured_image_url }}" alt="{{ $story->title }}" />
-                        </div>
-                        <div class="story_info">
-                          <p class="story_title">{{ $story->title }}</p>
-                          <span class="story_views">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16">
-                              <path d="M0 0h16v16H0z" fill="none" />
-                              <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width=".929">
-                                <path
-                                  d="M8 3.895C12.447 3.895 14.5 8 14.5 8s-2.053 4.105-6.5 4.105S1.5 8 1.5 8S3.553 3.895 8 3.895Z" />
-                                <path d="M9.94 8a2 2 0 1 1-3.999 0a2 2 0 0 1 4 0Z" />
-                              </g>
-                            </svg>
-                            {{ number_format($story->views) }} Views
-                          </span>
-                        </div>
-                      </a>
-                    @endforeach
+                <form id="newsletterForm">
+                  <div class="subscribe_row">
+                    <input type="email" name="email" placeholder="Enter your email address" class="subscribe_input"
+                      required />
+                    <button type="submit" class="btn btn-primary">
+                      Subscribe
+                    </button>
                   </div>
+
+                  <label class="checkbox_field">
+                    <input type="checkbox" name="terms" required />
+                    <span class="box"></span>
+                    <span class="text">
+                      I agree to receive travel updates and accept the terms
+                      &amp; conditions
+                    </span>
+                  </label>
+                </form>
+              </div>
+
+              <!-- Popular Stories Card -->
+              <div class="card card--stories">
+                <h4>Popular Travel Stories</h4>
+                <div class="divider"></div>
+
+                <div class="story_list">
+                  @foreach($popularStories as $story)
+                    <a href="{{ route('blog.detail', $story->slug) }}" target="_blank" class="story_item">
+                      <div class="story_thumb">
+                        <img loading="lazy" src="{{ $story->featured_image_url }}" alt="{{ $story->title }}" />
+                      </div>
+                      <div class="story_info">
+                        <p class="story_title">{{ $story->title }}</p>
+                        <span class="story_views">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16">
+                            <path d="M0 0h16v16H0z" fill="none" />
+                            <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width=".929">
+                              <path
+                                d="M8 3.895C12.447 3.895 14.5 8 14.5 8s-2.053 4.105-6.5 4.105S1.5 8 1.5 8S3.553 3.895 8 3.895Z" />
+                              <path d="M9.94 8a2 2 0 1 1-3.999 0a2 2 0 0 1 4 0Z" />
+                            </g>
+                          </svg>
+                          {{ number_format($story->views) }} Views
+                        </span>
+                      </div>
+                    </a>
+                  @endforeach
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
     </section>
 
     <!-- GROUP OFFER BANNER -->
@@ -284,7 +286,9 @@
               <a href="listing.html" class="btn btn-white">
                 Explore Packages
               </a>
-              <a href="javascript:void()" data-model=".enquire-pop" class="btn btn-outline-white">
+              <a href="javascript:void(0)" data-model=".enquire-pop" class="btn btn-outline-white"
+                data-enquiry-type="Blog" data-enquiry-for="{{ $blog->title }}"
+                data-enquiry-image="{{ $blog->featured_image_url }}">
                 Get A Quote
               </a>
             </div>
@@ -371,7 +375,12 @@
                                 d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
                             </svg>
                           </a>
-                          <button data-model=".enquire-pop" data-package-id="{{ $package->id }}" class="btn btn-primary">
+                          <button data-model=".enquire-pop" class="btn btn-primary" data-enquiry-type="Tour Package"
+                            data-enquiry-id="{{ $package->id }}" data-enquiry-for="{{ $package->name }}"
+                            data-enquiry-image="{{ $packageImg }}"
+                            data-enquiry-price="{{ $package->price ? 'INR ' . number_format($package->price) : '' }}"
+                            data-enquiry-old-price="{{ $hasDiscount ? 'INR ' . number_format($package->old_price) : '' }}"
+                            data-enquiry-save="{{ $saveAmount ? 'SAVE INR ' . $saveAmount : '' }}">
                             Enquire Now
                           </button>
                         </div>
@@ -660,45 +669,45 @@
 @endsection
 
 @push('scripts')
-    @php
-        $schema = [
-            '@context' => 'https://schema.org',
-            '@graph' => [
-                [
-                    '@type' => 'BreadcrumbList',
-                    'itemListElement' => [
-                        ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => route('home')],
-                        ['@type' => 'ListItem', 'position' => 2, 'name' => 'Blog', 'item' => route('blogs')],
-                        ['@type' => 'ListItem', 'position' => 3, 'name' => $blog->title, 'item' => url()->current()],
-                    ],
-                ],
-                [
-                    '@type' => 'BlogPosting',
-                    '@id' => url()->current() . '#article',
-                    'headline' => $blog->h1 ?: $blog->title,
-                    'description' => $blog->meta_description ?? $blog->short_description,
-                    'image' => $blog->featured_image_url,
-                    'datePublished' => $blog->published_at?->toIso8601String(),
-                    'dateModified' => $blog->updated_at?->toIso8601String(),
-                    'mainEntityOfPage' => url()->current(),
-                    'author' => [
-                        '@type' => 'Person',
-                        'name' => $blog->author->name ?? 'Travel Team',
-                    ],
-                    'publisher' => [
-                        '@type' => 'Organization',
-                        'name' => 'Indo Tours & Adventures',
-                        'logo' => [
-                            '@type' => 'ImageObject',
-                            'url' => asset('assets/icon/favicon/favicon.png'),
-                        ],
-                    ],
-                ],
+  @php
+    $schema = [
+      '@context' => 'https://schema.org',
+      '@graph' => [
+        [
+          '@type' => 'BreadcrumbList',
+          'itemListElement' => [
+            ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => route('home')],
+            ['@type' => 'ListItem', 'position' => 2, 'name' => 'Blog', 'item' => route('blogs')],
+            ['@type' => 'ListItem', 'position' => 3, 'name' => $blog->title, 'item' => url()->current()],
+          ],
+        ],
+        [
+          '@type' => 'BlogPosting',
+          '@id' => url()->current() . '#article',
+          'headline' => $blog->h1 ?: $blog->title,
+          'description' => $blog->meta_description ?? $blog->short_description,
+          'image' => $blog->featured_image_url,
+          'datePublished' => $blog->published_at?->toIso8601String(),
+          'dateModified' => $blog->updated_at?->toIso8601String(),
+          'mainEntityOfPage' => url()->current(),
+          'author' => [
+            '@type' => 'Person',
+            'name' => $blog->author->name ?? 'Travel Team',
+          ],
+          'publisher' => [
+            '@type' => 'Organization',
+            'name' => 'Indo Tours & Adventures',
+            'logo' => [
+              '@type' => 'ImageObject',
+              'url' => asset('assets/icon/favicon/favicon.png'),
             ],
-        ];
-    @endphp
+          ],
+        ],
+      ],
+    ];
+  @endphp
 
-    <script type="application/ld+json">
-        {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
-    </script>
+  <script type="application/ld+json">
+              {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+          </script>
 @endpush

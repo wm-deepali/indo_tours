@@ -17,6 +17,9 @@ class Blog extends Model
         'title',
         'slug',
         'tag',
+        'is_journey_story',
+        'card_title',
+        'journey_sort_order',
         'featured_image',
         'short_description',
         'content',
@@ -50,6 +53,7 @@ class Blog extends Model
     protected $casts = [
         'published_at' => 'date',
         'views' => 'integer',
+        'is_journey_story' => 'boolean',
     ];
 
     protected static function booted(): void
@@ -147,6 +151,11 @@ class Blog extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(BlogComment::class)->approved()->latest();
+    }
+
+    public function scopeJourneyStories($query)
+    {
+        return $query->where('is_journey_story', true)->orderBy('journey_sort_order')->latest('id');
     }
 
 }

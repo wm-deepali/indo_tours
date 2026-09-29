@@ -73,6 +73,37 @@
         </div>
     </div>
 
+    {{-- Journey Stories (blog listing page top slider) --}}
+    <div class="section-card">
+        <h3>Journey Stories</h3>
+
+        <div class="form-row">
+            <div class="form-field">
+                <label for="card_title">Card Title (short)</label>
+                <input type="text" id="card_title" name="card_title" class="form-control-styled"
+                    value="{{ old('card_title', $blog->card_title) }}" placeholder="e.g. Manali (blank = blog title)">
+                @error('card_title')<div class="form-error">{{ $message }}</div>@enderror
+            </div>
+
+            <div class="form-field">
+                <label for="journey_sort_order">Journey Order</label>
+                <input type="number" id="journey_sort_order" name="journey_sort_order" min="0" class="form-control-styled"
+                    value="{{ old('journey_sort_order', $blog->journey_sort_order ?? 0) }}">
+                @error('journey_sort_order')<div class="form-error">{{ $message }}</div>@enderror
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label class="checkbox-item">
+                <input type="hidden" name="is_journey_story" value="0">
+                <input type="checkbox" name="is_journey_story" value="1"
+                    {{ old('is_journey_story', $blog->is_journey_story ?? false) ? 'checked' : '' }}>
+                Show in Journey Stories slider
+            </label>
+            <div class="hint">The card's second line uses the blog's Tag field above.</div>
+        </div>
+    </div>
+
     {{-- Featured Image --}}
     <div class="section-card">
         <h3>Featured Image</h3>

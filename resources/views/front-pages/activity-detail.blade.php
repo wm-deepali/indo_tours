@@ -326,7 +326,11 @@
                                 @endif
 
                                 <a href="#package-options" class="btn btn-primary sidebar-btn">Select Package</a>
-                                <button class="btn btn-outline-primary sidebar-btn" type="button" data-model=".enquire-pop">
+                                <button class="btn btn-outline-primary sidebar-btn" type="button" data-model=".enquire-pop"
+                                    data-enquiry-type="Activity" data-enquiry-id="{{ $activity->id }}"
+                                    data-enquiry-for="{{ $activity->name }}"
+                                    data-enquiry-image="{{ $activity->main_image ? asset('storage/' . $activity->main_image) : '' }}"
+                                    data-enquiry-price="{{ $activity->starting_price ? 'From ₹ ' . number_format($activity->starting_price) : '' }}">
                                     Have a Question?
                                 </button>
                             </div>
@@ -396,8 +400,15 @@
 
                                     <div class="package-actions">
                                         <a href="tel:+911234567890" class="btn btn-outline-primary">Call Us</a>
-                                        <button type="button" data-model=".enquire-pop" class="btn btn-primary">Enquire
-                                            Now</button>
+                                        <button type="button" data-model=".enquire-pop" class="btn btn-primary"
+                                            data-enquiry-type="Activity" data-enquiry-id="{{ $activity->id }}"
+                                            data-enquiry-for="{{ $activity->name }} - {{ $package->title }}"
+                                            data-enquiry-image="{{ $activity->main_image ? asset('storage/' . $activity->main_image) : '' }}"
+                                            data-enquiry-price="{{ $package->new_price ? '₹ ' . number_format($package->new_price) : '' }}"
+                                            data-enquiry-old-price="{{ $package->new_price && $package->old_price ? '₹ ' . number_format($package->old_price) : '' }}"
+                                            data-enquiry-save="{{ $package->save_text }}">
+                                            Enquire Now
+                                        </button>
                                     </div>
                                 </div>
                             @endforeach
@@ -739,7 +750,11 @@
                                                         </svg>
                                                     </a>
 
-                                                    <button data-model=".enquire-pop" class="btn btn-primary">
+                                                    <button data-model=".enquire-pop" class="btn btn-primary"
+                                                        data-enquiry-type="Activity" data-enquiry-id="{{ $related->id }}"
+                                                        data-enquiry-for="{{ $related->name }}"
+                                                        data-enquiry-image="{{ $related->main_image ? asset('storage/' . $related->main_image) : '' }}"
+                                                        data-enquiry-price="{{ $related->starting_price ? 'From ₹ ' . number_format($related->starting_price) : '' }}">
                                                         Enquire Now
                                                     </button>
                                                 </div>
@@ -929,8 +944,8 @@
     @endphp
 
     <script type="application/ld+json">
-            {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
-        </script>
+                            {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+                        </script>
 
     <script>
         $(function () {
@@ -972,5 +987,5 @@
 
         });
 
-    </script>>
+    </script>
 @endpush

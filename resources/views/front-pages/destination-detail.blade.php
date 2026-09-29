@@ -213,8 +213,13 @@
                                                                 d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
                                                         </svg>
                                                     </a>
-                                                    <button data-model=".enquire-pop" data-package-id="{{ $package->id }}"
-                                                        class="btn btn-primary">
+                                                    <button data-model=".enquire-pop" class="btn btn-primary"
+                                                        data-enquiry-type="Tour Package" data-enquiry-id="{{ $package->id }}"
+                                                        data-enquiry-for="{{ $package->name }}"
+                                                        data-enquiry-image="{{ $package->main_image ? asset('storage/' . $package->main_image) : '' }}"
+                                                        data-enquiry-price="{{ $package->price ? 'INR ' . number_format($package->price) : '' }}"
+                                                        data-enquiry-old-price="{{ $package->old_price && $package->old_price > $package->price ? 'INR ' . number_format($package->old_price) : '' }}"
+                                                        data-enquiry-save="{{ $package->old_price && $package->old_price > $package->price ? 'SAVE INR ' . number_format($package->old_price - $package->price) : '' }}">
                                                         Enquire Now
                                                     </button>
                                                 </div>
@@ -264,7 +269,12 @@
                             <p class="verdict__value">
                                 {{ $destination->recommended_for }}
                             </p>
-                            <button class="btn btn-white" type="button">Enquire Now</button>
+                            <button class="btn btn-white" type="button" data-model=".enquire-pop"
+                                data-enquiry-type="Destination" data-enquiry-id="{{ $destination->id }}"
+                                data-enquiry-for="{{ $destination->name }}"
+                                data-enquiry-image="{{ $destination->image ? asset('storage/' . $destination->image) : '' }}">
+                                Enquire Now
+                            </button>
                         </div>
                     </div>
 
@@ -342,7 +352,10 @@
                                     </p>
                                 @endif
 
-                                <a href="javascript:void(0)" class="btn btn-outline-white">
+                                <a href="javascript:void(0)" data-model=".enquire-pop" class="btn btn-outline-white"
+                                    data-enquiry-type="Destination" data-enquiry-id="{{ $destination->id }}"
+                                    data-enquiry-for="{{ $destination->name }} - {{ $area->name }}"
+                                    data-enquiry-image="{{ $area->image ? asset('storage/' . $area->image) : '' }}">
                                     Enquire Now
                                 </a>
                             </div>
@@ -453,7 +466,10 @@
                             <a href="{{ $banner->cta_primary_link ?? '' }}" class="btn btn-white">
                                 {{ $banner->cta_primary_text ?? 'Explore Packages' }}
                             </a>
-                            <a href="javascript:void()" data-model=".enquire-pop" class="btn btn-outline-white">
+                            <a href="javascript:void(0)" data-model=".enquire-pop" class="btn btn-outline-white"
+                                data-enquiry-type="Destination" data-enquiry-id="{{ $destination->id }}"
+                                data-enquiry-for="{{ $destination->name }}"
+                                data-enquiry-image="{{ $destination->image ? asset('storage/' . $destination->image) : '' }}">
                                 {{ $banner->cta_secondary_text ?? 'Get A Quote' }}
                             </a>
                         </div>
@@ -490,7 +506,12 @@
                                 @endif
                                 <h4>{{ $activity->title }}</h4>
                                 <p>{{ $activity->description }}</p>
-                                <button type="button" class="btn btn-white" data-model=".enquire-pop">Enquire Now</button>
+                                <button type="button" class="btn btn-white" data-model=".enquire-pop"
+                                    data-enquiry-type="Destination" data-enquiry-id="{{ $destination->id }}"
+                                    data-enquiry-for="{{ $destination->name }} - {{ $activity->title }}"
+                                    data-enquiry-image="{{ $activity->image ? asset('storage/' . $activity->image) : '' }}">
+                                    Enquire Now
+                                </button>
                             </div>
                         </div>
                     @endforeach
@@ -758,8 +779,13 @@
                                                                 d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
                                                         </svg>
                                                     </a>
-                                                    <button data-model=".enquire-pop" data-package-id="{{ $package->id }}"
-                                                        class="btn btn-primary">
+                                                    <button data-model=".enquire-pop" class="btn btn-primary"
+                                                        data-enquiry-type="Tour Package" data-enquiry-id="{{ $package->id }}"
+                                                        data-enquiry-for="{{ $package->name }}"
+                                                        data-enquiry-image="{{ $package->main_image ? asset('storage/' . $package->main_image) : '' }}"
+                                                        data-enquiry-price="{{ $package->price ? 'INR ' . number_format($package->price) : '' }}"
+                                                        data-enquiry-old-price="{{ $package->old_price && $package->old_price > $package->price ? 'INR ' . number_format($package->old_price) : '' }}"
+                                                        data-enquiry-save="{{ $package->old_price && $package->old_price > $package->price ? 'SAVE INR ' . number_format($package->old_price - $package->price) : '' }}">
                                                         Enquire Now
                                                     </button>
                                                 </div>
@@ -895,8 +921,8 @@
     @endphp
 
     <script type="application/ld+json">
-        {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
-    </script>
+                                {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+                            </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {

@@ -195,4 +195,20 @@ class TourPackage extends Model
             'rating' => $stats->c ? round($stats->a, 1) : null,
         ])->saveQuietly();
     }
+
+    // Add inside App\Models\TourPackage
+
+    public function scopePublished($query)
+    {
+        // adjust to your actual status value
+        return $query->where('status', 'published');
+    }
+
+    public function getSavingsAttribute(): float
+    {
+        return ($this->old_price && $this->old_price > $this->price)
+            ? (float) ($this->old_price - $this->price)
+            : 0;
+    }
+
 }

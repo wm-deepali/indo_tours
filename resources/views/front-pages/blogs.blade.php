@@ -8,6 +8,7 @@
 
   <main>
 
+    <!-- BANNER SECTION -->
     <section class="banner">
       <div class="bg">
         <nav class="breadcrumb left breadcrumb-light" aria-label="Breadcrumb">
@@ -41,97 +42,56 @@
       </div>
     </section>
 
-    <section class="blog-secA">
-      <div class="container">
-        <div class="heading">
-          <h3>Indo Tours & Adventures <span>Journey Stories</span></h3>
-          <p>
-            Discover inspiring journeys, unforgettable experiences, and
-            destinations worth exploring.
-          </p>
-        </div>
-        <div class="swiper-wrap">
-          <div class="swiper fourSilder">
-            <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <a href="blog-detail-secondary.html" target="_blank" class="journey_card">
-                  <div class="img">
-                    <img loading="lazy" src="assets/images/blog/manali.jpg" alt="Manali mountains" />
+     <!-- JOURNEY STORIES SECTION -->
+    @if ($journeyStories->isNotEmpty())
+      <section class="blog-secA">
+        <div class="container">
+          <div class="heading">
+            <h3>Indo Tours & Adventures <span>Journey Stories</span></h3>
+            <p>
+              Discover inspiring journeys, unforgettable experiences, and
+              destinations worth exploring.
+            </p>
+          </div>
+          <div class="swiper-wrap">
+            <div class="swiper fourSilder">
+              <div class="swiper-wrapper">
+                @foreach ($journeyStories as $story)
+                  <div class="swiper-slide">
+                    <a href="{{ route('blog.detail', $story->slug) }}" target="_blank" class="journey_card">
+                      <div class="img">
+                        <img loading="lazy" src="{{ $story->featured_image_url }}" alt="{{ $story->title }}" />
+                      </div>
+                      <div class="content">
+                        <h5>{{ $story->card_title ?: $story->title }}</h5>
+                        @if ($story->tag)
+                          <p>{{ $story->tag }}</p>
+                        @endif
+                      </div>
+                    </a>
                   </div>
-                  <div class="content">
-                    <h5>Manali</h5>
-                    <p>Mountain Escape</p>
-                  </div>
-                </a>
-              </div>
-
-              <div class="swiper-slide">
-                <a href="blog-detail-secondary.html" target="_blank" class="journey_card">
-                  <div class="img">
-                    <img loading="lazy" src="assets/images/blog/goa.jpg" alt="Goa beach" />
-                  </div>
-                  <div class="content">
-                    <h5>Goa</h5>
-                    <p>Beach Getaway</p>
-                  </div>
-                </a>
-              </div>
-
-              <div class="swiper-slide">
-                <a href="blog-detail-secondary.html" target="_blank" class="journey_card">
-                  <div class="img">
-                    <img loading="lazy" src="assets/images/blog/dubai.jpg" alt="Dubai skyline" />
-                  </div>
-                  <div class="content">
-                    <h5>Dubai</h5>
-                    <p>Luxury Escape</p>
-                  </div>
-                </a>
-              </div>
-
-              <div class="swiper-slide">
-                <a href="blog-detail-secondary.html" target="_blank" class="journey_card">
-                  <div class="img">
-                    <img loading="lazy" src="assets/images/blog/kashmir.jpg" alt="Kashmir landscape" />
-                  </div>
-                  <div class="content">
-                    <h5>Kashmir</h5>
-                    <p>Valley Adventure</p>
-                  </div>
-                </a>
-              </div>
-
-              <div class="swiper-slide">
-                <a href="blog-detail-secondary.html" target="_blank" class="journey_card">
-                  <div class="img">
-                    <img loading="lazy" src="assets/images/blog/goa.jpg" alt="Goa beach" />
-                  </div>
-                  <div class="content">
-                    <h5>Goa</h5>
-                    <p>Beach Getaway</p>
-                  </div>
-                </a>
+                @endforeach
               </div>
             </div>
-          </div>
 
-          <div class="swiper-group">
-            <button type="button" class="fourSilder-prev btn-prev">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                <path fill="#fff"
-                  d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
-              </svg>
-            </button>
-            <button type="button" class="fourSilder-next btn-next">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                <path fill="#fff"
-                  d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
-              </svg>
-            </button>
+            <div class="swiper-group">
+              <button type="button" class="fourSilder-prev btn-prev">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                  <path fill="#fff"
+                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
+                </svg>
+              </button>
+              <button type="button" class="fourSilder-next btn-next">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                  <path fill="#fff"
+                    d="M609.408 149.376L277.76 489.6a32 32 0 0 0 0 44.672l331.648 340.352a29.12 29.12 0 0 0 41.728 0a30.59 30.59 0 0 0 0-42.752L339.264 511.936l311.872-319.872a30.59 30.59 0 0 0 0-42.688a29.12 29.12 0 0 0-41.728 0" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    @endif
 
     <!-- CATEGORIES SECTION -->
     @foreach($categories as $index => $category)

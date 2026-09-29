@@ -295,7 +295,11 @@
                 <p class="desc">
                   {{ $attraction->short_description }}
                 </p>
-                <button data-model=".enquire-pop" class="btn btn-primary">Enquire Now</button>
+                <button data-model=".enquire-pop" class="btn btn-primary" data-enquiry-type="Attraction"
+                  data-enquiry-id="{{ $attraction->id }}" data-enquiry-for="{{ $attraction->name }}"
+                  data-enquiry-image="{{ $attraction->image ? asset('storage/' . $attraction->image) : '' }}">
+                  Enquire Now
+                </button>
               </div>
             </div>
           @empty

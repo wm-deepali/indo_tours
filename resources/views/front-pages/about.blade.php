@@ -423,5 +423,3 @@
         </section>
     </main>
 @endsection
-
-@

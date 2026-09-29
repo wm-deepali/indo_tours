@@ -4,36 +4,35 @@
 <head>
     <meta charset="UTF-8" />
     @php
-        $siteName       = $setting->site_name ?? 'Indo Tours & Adventures';
-        $siteTagline    = $setting->tagline ?? '';
-        $siteLogo       = !empty($setting->logo) ? asset('storage/' . $setting->logo) : asset('assets/images/logo.png');
-        $siteFavicon    = !empty($setting->favicon) ? asset('storage/' . $setting->favicon) : asset('assets/icon/favicon/favicon.png');
-        $phoneTel       = preg_replace('/[^0-9+]/', '', $setting->phone ?? '');
-        $waNumber       = preg_replace('/\D/', '', $setting->whatsapp ?? '');
-        $waLink         = $waNumber ? 'https://wa.me/' . $waNumber : 'javascript:void(0)';
-        $currencyCode   = $setting->currency ?? 'INR';
+        $siteName = $setting->site_name ?? 'Indo Tours & Adventures';
+        $siteTagline = $setting->tagline ?? '';
+        $siteLogo = !empty($setting->logo) ? asset('storage/' . $setting->logo) : asset('assets/images/logo.png');
+        $siteFavicon = !empty($setting->favicon) ? asset('storage/' . $setting->favicon) : asset('assets/icon/favicon/favicon.png');
+        $phoneTel = preg_replace('/[^0-9+]/', '', $setting->phone ?? '');
+        $waNumber = preg_replace('/\D/', '', $setting->whatsapp ?? '');
+        $waLink = $waNumber ? 'https://wa.me/' . $waNumber : 'javascript:void(0)';
+        $currencyCode = $setting->currency ?? 'INR';
         $currencySymbol = $setting->currency_symbol ?? '₹';
-        $defaultTitle   = $siteName . ($siteTagline ? ' | ' . $siteTagline : '');
-        $defaultDesc    = $siteTagline ?: $siteName;
+        $defaultTitle = $siteName . ($siteTagline ? ' | ' . $siteTagline : '');
+        $defaultDesc = $siteTagline ?: $siteName;
     @endphp
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@yield('title', $seo->meta_title ?? $defaultTitle)</title>
-    <meta name="description"
-        content="@yield('meta_description', $seo->meta_description ?? $defaultDesc)" />
+    <meta name="description" content="@yield('meta_description', $seo->meta_description ?? $defaultDesc)" />
     <link rel="canonical" href="@yield('canonical', url()->current())" />
     <meta name="robots" content="@yield('robots', 'index, follow')" />
 
     <meta property="og:site_name" content="{{ $siteName }}" />
-    <meta property="og:title"
-        content="@yield('og_title', $seo->og_title ?? ($seo->meta_title ?? $siteName))" />
+    <meta property="og:title" content="@yield('og_title', $seo->og_title ?? ($seo->meta_title ?? $siteName))" />
     <meta property="og:description"
         content="@yield('og_description', $seo->og_description ?? ($seo->meta_description ?? $defaultDesc))" />
     <meta property="og:image"
         content="@yield('og_image', !empty($seo->og_image) ? asset('storage/' . $seo->og_image) : asset('assets/images/og-default.jpg'))" />
 
     <meta name="twitter:card" content="{{ $seo->twitter_card_type ?? 'summary_large_image' }}" />
-    <meta name="twitter:title" content="@yield('twitter_title', $seo->twitter_title ?? ($seo->meta_title ?? $siteName))" />
+    <meta name="twitter:title"
+        content="@yield('twitter_title', $seo->twitter_title ?? ($seo->meta_title ?? $siteName))" />
     <meta name="twitter:description"
         content="@yield('twitter_description', $seo->twitter_description ?? ($seo->meta_description ?? $defaultDesc))" />
     <meta name="twitter:image"
@@ -132,11 +131,12 @@
                         </button>
 
                         <div class="dropdown" data-dropdown-panel>
-                          @include('layouts.header-dropdown-columns', ['groups' => $activityGroups])
+                            @include('layouts.header-dropdown-columns', ['groups' => $activityGroups])
 
                             <div class="dropdown-footer">
                                 <span>Looking for something exciting?</span>
-                                <a href="{{ route('activities') }}" target="_blank" class="footer-link">Explore all activities →</a>
+                                <a href="{{ route('activities') }}" target="_blank" class="footer-link">Explore all
+                                    activities →</a>
                             </div>
                         </div>
                     </div>
@@ -157,7 +157,7 @@
                             </button>
                         </div>
 
-                       @include('layouts.header-search-panel')
+                        @include('layouts.header-search-panel')
                     </div>
 
                     <div class="currency-select">
@@ -399,8 +399,8 @@
                                             height="1em" viewBox="0 0 24 24">
                                             <path d="M0 0h24v24H0z" fill="none" />
                                             <g fill="none" stroke="currentColor" stroke-width="1.5">
-                                                <path fill="currentColor" stroke-linecap="round"
-                                                    stroke-linejoin="round" d="m14 12l-3.5 2v-4z" />
+                                                <path fill="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                    d="m14 12l-3.5 2v-4z" />
                                                 <path
                                                     d="M2 12.708v-1.416c0-2.895 0-4.343.905-5.274c.906-.932 2.332-.972 5.183-1.053C9.438 4.927 10.818 4.9 12 4.9s2.561.027 3.912.065c2.851.081 4.277.121 5.182 1.053S22 8.398 22 11.292v1.415c0 2.896 0 4.343-.905 5.275c-.906.931-2.331.972-5.183 1.052c-1.35.039-2.73.066-3.912.066s-2.561-.027-3.912-.066c-2.851-.08-4.277-.12-5.183-1.052S2 15.602 2 12.708Z" />
                                             </g>
@@ -632,10 +632,116 @@
         </div>
     </div>
 
+    <div class="model filter_trip">
+        <div class="filter_trip__panel">
+            <div class="filter_trip__head">
+                <h4>Filter Your Trip</h4>
+                <button type="button" class="close" aria-label="Close filters">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M5 5L19 19M5 19L19 5" stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="filter_trip__body">
+                <div class="filter_trip__group">
+                    <label>Trip Region</label>
+                    <div class="filter_trip__tabs">
+                        <button type="button" class="m-tab-btn active" data-region="domestic">Domestic</button>
+                        <button type="button" class="m-tab-btn" data-region="international">International</button>
+                    </div>
+                </div>
+
+                <div class="filter_trip__group">
+                    <label>Search</label>
+                    <div class="finder-search">
+                        <input type="text" id="m_search" placeholder="Search by destination or trip name" />
+                    </div>
+                </div>
+
+                <div class="filter_trip__group">
+                    <label>Trip Category</label>
+                    <div class="filter_trip__chips" id="m_categories">
+                        <button type="button" class="m-chip active" data-cat="all">All</button>
+                        <button type="button" class="m-chip" data-cat="adventure">Adventure</button>
+                        <button type="button" class="m-chip" data-cat="beach">Beach</button>
+                        <button type="button" class="m-chip" data-cat="mountain">Mountain</button>
+                        <button type="button" class="m-chip" data-cat="cultural">Cultural</button>
+                        <button type="button" class="m-chip" data-cat="wildlife">Wildlife</button>
+                        <button type="button" class="m-chip" data-cat="cruise">Cruise</button>
+                        <button type="button" class="m-chip" data-cat="city-tour">City Tour</button>
+                        <button type="button" class="m-chip" data-cat="trekking">Trekking</button>
+                    </div>
+                </div>
+
+                <div class="filter_trip__group">
+                    <label>Location</label>
+                    <div class="finder-item select-field">
+                        <select name="location" class="js-nice-select" id="m_location">
+                            <option value="">Location</option>
+                            <option value="kashmir">Kashmir</option>
+                            <option value="goa">Goa</option>
+                            <option value="manali">Manali</option>
+                            <option value="rajasthan">Rajasthan</option>
+                            <option value="kerala">Kerala</option>
+                            <option value="dubai">Dubai</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter_trip__group">
+                    <label>Trip Type</label>
+                    <div class="finder-item select-field">
+                        <select name="trip-type" class="js-nice-select" id="m_trip_type">
+                            <option value="">Trip Type</option>
+                            <option value="solo">Solo</option>
+                            <option value="couple">Couple</option>
+                            <option value="family">Family</option>
+                            <option value="group">Group</option>
+                            <option value="honeymoon">Honeymoon</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter_trip__group">
+                    <label>Duration</label>
+                    <div class="finder-item select-field">
+                        <select name="duration" class="js-nice-select" id="m_duration">
+                            <option value="">Duration</option>
+                            <option value="1-3">1-3 Days</option>
+                            <option value="4-6">4-6 Days</option>
+                            <option value="7-9">7-9 Days</option>
+                            <option value="10plus">10+ Days</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter_trip__group">
+                    <label>Budget</label>
+                    <div class="finder-item select-field">
+                        <select name="budget" class="js-nice-select" id="m_budget">
+                            <option value="">Budget</option>
+                            <option value="under20k">Under ₹20,000</option>
+                            <option value="20-40k">₹20,000 - ₹40,000</option>
+                            <option value="40-60k">₹40,000 - ₹60,000</option>
+                            <option value="60kplus">₹60,000+</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter_trip__foot">
+                <button type="button" class="btn-reset" id="filterReset">Reset</button>
+                <button type="button" class="btn btn-primary btn-apply" id="filterApply">Search</button>
+            </div>
+        </div>
+    </div>
+
     <div class="enquire-pop model">
         <div class="sale-banner">
-            <span class="sale-banner__title">Monsoon Sale is LIVE</span>
-            <span class="sale-banner__timer">Ends in <strong>4d : 14h : 44m</strong></span>
+            <span class="sale-banner__title">Plan Your Perfect Trip</span>
+            <span class="sale-banner__timer">Our travel expert will call you shortly</span>
             <button type="button" class="close" aria-label="Close enquiry form">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     stroke-width="2">
@@ -646,22 +752,23 @@
 
         <div class="model-body">
 
-            <div class="product-strip">
-                <div class="product-strip__img">
-                    <img loading="lazy" src="{{ asset('assets/images/home/card2.jpg') }}"
-                        alt="Journey Through Iceland Hidden Treasures" />
+            {{-- Dynamic: JS bharta hai, context na ho toh hidden --}}
+            <div class="product-strip" data-enquire-strip hidden>
+                <div class="product-strip__img" data-enquire-img-wrap>
+                    <img loading="lazy" src="" alt="" data-enquire-img />
                 </div>
                 <div class="product-strip__info">
-                    <p class="product-strip__title">Journey Through Iceland Hidden Treasures | Group Tour…</p>
+                    <p class="product-strip__title" data-enquire-title></p>
                     <div class="product-strip__price">
-                        <span class="price">INR 3,38,325</span>
-                        <span class="price-strike">INR 4,49,865</span>
-                        <span class="price-save">SAVE INR 1,11,540</span>
+                        <span class="price" data-enquire-price></span>
+                        <span class="price-strike" data-enquire-old></span>
+                        <span class="price-save" data-enquire-save></span>
                     </div>
                 </div>
             </div>
 
-            <form id="enquiryForm" class="enquiry-form">
+            <form id="enquiryForm" class="enquiry-form" action="{{ route('enquiry.store') }}" method="POST" novalidate>
+                @csrf
 
                 <div class="field">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -671,6 +778,7 @@
                     </svg>
                     <input type="text" name="FullName" placeholder=" " class="field__input has-icon" required />
                     <label class="field__label">Full Name<span>*</span></label>
+                    <small class="field-error" data-error-for="FullName"></small>
                 </div>
 
                 <div class="field">
@@ -681,6 +789,7 @@
                     </svg>
                     <input type="email" name="EmailID" placeholder=" " class="field__input has-icon" required />
                     <label class="field__label">Email<span>*</span></label>
+                    <small class="field-error" data-error-for="EmailID"></small>
                 </div>
 
                 <div class="field-row field-row--phone">
@@ -697,6 +806,7 @@
                         <input type="tel" name="PhoneNo" placeholder=" " class="field__input" maxlength="14"
                             inputmode="numeric" required />
                         <label class="field__label">Your Phone<span>*</span></label>
+                        <small class="field-error" data-error-for="PhoneNo"></small>
                     </div>
                 </div>
 
@@ -710,12 +820,14 @@
                         <input type="text" name="dates" id="txtModifyEventDate" placeholder=" "
                             class="field__input has-icon" autocomplete="off" required />
                         <label class="field__label">Travel Date<span>*</span></label>
+                        <small class="field-error" data-error-for="dates"></small>
                     </div>
 
                     <div class="field">
                         <input type="number" name="TravellerCount" placeholder=" " class="field__input" min="1"
                             required />
                         <label class="field__label">Traveller Count<span>*</span></label>
+                        <small class="field-error" data-error-for="TravellerCount"></small>
                     </div>
                 </div>
 
@@ -724,17 +836,21 @@
                     <label class="field__label">Message...</label>
                 </div>
 
-                <div class="captcha"></div>
+                <div style="position:absolute;left:-9999px;" aria-hidden="true">
+                    <input type="text" name="website" tabindex="-1" autocomplete="off">
+                </div>
 
                 <input type="hidden" name="EnquiryType" value="Quick Enquiry" />
                 <input type="hidden" name="EnquiryFor" value="Quick Enquiry" />
-                <input type="hidden" name="BrochureFile" value="" />
+                <input type="hidden" name="EnquiryRefId" value="" />
+                <input type="hidden" name="SourceUrl" value="" />
+
+                <div class="form-alert" data-form-alert style="display:none;"></div>
 
                 <button type="submit" class="btn btn-primary smt">Connect with an Expert</button>
             </form>
         </div>
     </div>
-
 
     <!-- Overlay itself — body ke end me ya header ke bahar rakho, kahi bhi ek hi baar -->
     <div class="ham-pop" data-ham-pop>
@@ -898,6 +1014,7 @@
             </li>
         </ul>
     </div>
+
     <!-- ================= jQuery ================= -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
@@ -922,6 +1039,129 @@
     <script type="text/javascript" src="{{ asset('assets/js/animate.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/fancybox.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
+
+    <script>
+        (function () {
+            const modal = document.querySelector('.enquire-pop');
+            if (!modal) return;
+
+            const form = modal.querySelector('#enquiryForm');
+            const strip = modal.querySelector('[data-enquire-strip]');
+            const imgWrap = modal.querySelector('[data-enquire-img-wrap]');
+            const img = modal.querySelector('[data-enquire-img]');
+            const titleEl = modal.querySelector('[data-enquire-title]');
+            const priceEl = modal.querySelector('[data-enquire-price]');
+            const oldEl = modal.querySelector('[data-enquire-old]');
+            const saveEl = modal.querySelector('[data-enquire-save]');
+
+            function toggle(el, text) {
+                el.textContent = text || '';
+                el.style.display = text ? '' : 'none';
+            }
+
+            function setContext(d) {
+                form.querySelector('[name="EnquiryType"]').value = d.type;
+                form.querySelector('[name="EnquiryFor"]').value = d.name || d.type;
+                form.querySelector('[name="EnquiryRefId"]').value = d.id || '';
+
+                if (!d.name) { strip.hidden = true; return; }
+
+                titleEl.textContent = d.name;
+                toggle(priceEl, d.price);
+                toggle(oldEl, d.oldPrice);
+                toggle(saveEl, d.save);
+
+                if (d.image) { img.src = d.image; img.alt = d.name; imgWrap.style.display = ''; }
+                else { imgWrap.style.display = 'none'; }
+
+                strip.hidden = false;
+            }
+
+            document.addEventListener('click', function (e) {
+                const btn = e.target.closest('[data-model=".enquire-pop"]');
+                if (!btn) return;
+
+                setContext({
+                    type: btn.dataset.enquiryType || (btn.dataset.packageId ? 'Tour Package' : 'Quick Enquiry'),
+                    id: btn.dataset.enquiryId || btn.dataset.packageId || '',
+                    name: btn.dataset.enquiryFor || '',
+                    image: btn.dataset.enquiryImage || '',
+                    price: btn.dataset.enquiryPrice || '',
+                    oldPrice: btn.dataset.enquiryOldPrice || '',
+                    save: btn.dataset.enquirySave || '',
+                });
+            });
+        })();
+    </script>
+    <script>
+        (function () {
+            const forms = document.querySelectorAll('#enquiryForm, #offerEnquiryForm');
+            const csrf = document.querySelector('meta[name="csrf-token"]')?.content;
+
+            forms.forEach(function (form) {
+                form.setAttribute('action', "{{ route('enquiry.store') }}");
+
+                form.addEventListener('submit', async function (e) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+
+                    const btn = form.querySelector('button[type="submit"]');
+                    const alertBox = form.querySelector('[data-form-alert]');
+                    const originalText = btn.textContent;
+                    let redirecting = false;
+
+                    form.querySelectorAll('.field-error').forEach(el => el.textContent = '');
+                    if (alertBox) { alertBox.style.display = 'none'; alertBox.className = 'form-alert'; }
+
+                    const src = form.querySelector('[name="SourceUrl"]');
+                    if (src) src.value = window.location.href;
+
+                    btn.disabled = true;
+                    btn.textContent = 'Sending...';
+
+                    try {
+                        const res = await fetch(form.getAttribute('action'), {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': csrf,
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest',
+                            },
+                            body: new FormData(form),
+                        });
+
+                        const json = await res.json().catch(() => ({}));
+
+                        if (res.ok && json.status) {
+                            redirecting = true;
+                            window.location.href = json.redirect || "{{ route('thankyou', ['context' => 'enquiry']) }}";
+                            return;
+                        } else if (res.status === 422 && json.errors) {
+                            Object.entries(json.errors).forEach(([field, msgs]) => {
+                                const el = form.querySelector('[data-error-for="' + field + '"]');
+                                if (el) el.textContent = msgs[0];
+                            });
+                        } else if (alertBox) {
+                            alertBox.textContent = json.message || 'Something went wrong. Please try again.';
+                            alertBox.classList.add('is-error');
+                            alertBox.style.display = 'block';
+                        }
+                    } catch (err) {
+                        if (alertBox) {
+                            alertBox.textContent = 'Network error. Please try again.';
+                            alertBox.classList.add('is-error');
+                            alertBox.style.display = 'block';
+                        }
+                    } finally {
+                        if (!redirecting) {
+                            btn.disabled = false;
+                            btn.textContent = originalText;
+                        }
+                    }
+                });
+            });
+        })();
+    </script>
 
     @stack('scripts')
 </body>

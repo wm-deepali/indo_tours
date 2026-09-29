@@ -14,7 +14,10 @@ use App\Models\TourPackage;
 use App\Models\SubCategory;
 use App\Models\Destination;
 use App\Models\BlogCategory;
+use App\Models\QuickEnquiry;
 use Illuminate\Http\Request;
+use App\Models\HomeTourSection;
+use App\Models\HomePageContent;
 use App\Models\AboutPageContent;
 use App\Models\ActivityCategory;
 use App\Models\ContactSubmission;
@@ -23,6 +26,7 @@ use App\Models\AttractionCategory;
 use App\Models\LandingPageActivity;
 use App\Models\LandingPageAttraction;
 use App\Models\LandingPageDestination;
+
 
 class FrontController extends Controller
 {
@@ -42,7 +46,27 @@ class FrontController extends Controller
 
     public function home(Request $request)
     {
-        return view('front-pages.home');
+        $content = HomePageContent::instance();
+        $testimonials = Testimonial::published()->orderBy('sort_order')->get();
+
+        $tourSections = HomeTourSection::active()
+            ->orderBy('sort_order')
+            ->get()
+            ->each(function ($section) {
+                $section->setRelation(
+                    'packages',
+                    TourPackage::published()
+                        ->when($section->sub_category_id, fn($q) => $q->where('sub_category_id', $section->sub_category_id))
+                        ->orderByDesc('featured')
+                        ->latest('id')
+                        ->take($section->limit)
+                        ->get()
+                );
+            })
+            ->filter(fn($s) => $s->packages->isNotEmpty())   // empty sections hide ho jayenge
+            ->groupBy('placement');
+
+        return view('front-pages.home', compact('content', 'testimonials', 'tourSections'));
     }
 
     public function categoryDetail($slug)
@@ -415,6 +439,95 @@ class FrontController extends Controller
         return view('front-pages.activity-detail', compact('activity', 'relatedActivities'));
     }
 
+    public function blogs()
+    {
+        // Categories with their published blogs (only categories that actually have posts)
+        $categories = BlogCategory::active()
+            ->ordered()
+            ->with([
+                'blogs' => function ($q) {
+                    $q->published()->orderByDesc('published_at')->take(8);
+                }
+            ])
+            ->get()
+            ->filter(fn($category) => $category->blogs->isNotEmpty())
+            ->values();
+
+        // Latest 4 blogs overall, for the "Latest Travel Stories" section
+        $latestBlogs = Blog::published()
+            ->with('category')
+            ->ordered()
+            ->take(4)
+            ->get();
+
+        $destinations = Destination::published()
+            ->where('is_featured', true)
+            ->orderBy('sort_order')
+            ->take(5)
+            ->get();
+
+        $journeyStories = Blog::published()
+            ->journeyStories()
+            ->take(10)
+            ->get();
+
+        return view('front-pages.blogs', compact('categories', 'latestBlogs', 'destinations', 'journeyStories'));
+    }
+
+    public function contact()
+    {
+        $contactPage = ContactPage::first();
+
+        return view('front-pages.contact', compact('contactPage'));
+    }
+
+    public function about()
+    {
+        $content = AboutPageContent::instance();
+        $testimonials = Testimonial::published()->orderBy('sort_order')->get();
+
+        return view('front-pages.about', compact('content', 'testimonials'));
+    }
+
+    public function blogDetail($slug)
+    {
+        $blog = Blog::with([
+            'comments',
+            'category',
+            'author',
+            'destinations',
+            'attractions',
+            'activities',
+            'tourPackages' => function ($q) {
+                $q->withAvg('reviews', 'rating')
+                    ->withCount('reviews');
+            },
+        ])
+            ->published()
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        // increment views (simple counter — no session/IP dedup for now)
+        $blog->increment('views');
+
+        $popularStories = Blog::published()
+            ->where('id', '!=', $blog->id)
+            ->orderByDesc('views')
+            ->take(3)
+            ->get();
+
+        return view('front-pages.blog-detail', compact('blog', 'popularStories'));
+    }
+
+    public function pageDetail(Page $page)
+    {
+        abort_unless($page->is_active, 404);
+
+        $fallbackDescription = \Illuminate\Support\Str::limit(strip_tags($page->content), 160);
+
+        return view('front-pages.pages', compact('page', 'fallbackDescription'));
+    }
+
     public function reviewStore(Request $request)
     {
         $types = $this->reviewableTypes();
@@ -500,68 +613,6 @@ class FrontController extends Controller
         return back()->with('success', 'Thanks! Our team will get in touch with you shortly.');
     }
 
-
-
-    public function blogs()
-    {
-        // Categories with their published blogs (only categories that actually have posts)
-        $categories = BlogCategory::active()
-            ->ordered()
-            ->with([
-                'blogs' => function ($q) {
-                    $q->published()->orderByDesc('published_at')->take(8);
-                }
-            ])
-            ->get()
-            ->filter(fn($category) => $category->blogs->isNotEmpty())
-            ->values();
-
-        // Latest 4 blogs overall, for the "Latest Travel Stories" section
-        $latestBlogs = Blog::published()
-            ->with('category')
-            ->ordered()
-            ->take(4)
-            ->get();
-
-        $destinations = Destination::published()
-            ->where('is_featured', true)
-            ->orderBy('sort_order')
-            ->take(5)
-            ->get();
-
-        return view('front-pages.blogs', compact('categories', 'latestBlogs', 'destinations'));
-    }
-
-    public function blogDetail($slug)
-    {
-        $blog = Blog::with([
-            'comments',
-            'category',
-            'author',
-            'destinations',
-            'attractions',
-            'activities',
-            'tourPackages' => function ($q) {
-                $q->withAvg('reviews', 'rating')
-                    ->withCount('reviews');
-            },
-        ])
-            ->published()
-            ->where('slug', $slug)
-            ->firstOrFail();
-
-        // increment views (simple counter — no session/IP dedup for now)
-        $blog->increment('views');
-
-        $popularStories = Blog::published()
-            ->where('id', '!=', $blog->id)
-            ->orderByDesc('views')
-            ->take(3)
-            ->get();
-
-        return view('front-pages.blog-detail', compact('blog', 'popularStories'));
-    }
-
     public function storeComment(Request $request, Blog $blog)
     {
         $validated = $request->validate([
@@ -586,30 +637,6 @@ class FrontController extends Controller
         return back()->with('success', 'Thanks! Your comment has been submitted for review.');
     }
 
-    public function pageDetail(Page $page)
-    {
-        abort_unless($page->is_active, 404);
-
-        $fallbackDescription = \Illuminate\Support\Str::limit(strip_tags($page->content), 160);
-
-        return view('front-pages.pages', compact('page', 'fallbackDescription'));
-    }
-
-    public function contact()
-    {
-        $contactPage = ContactPage::first();
-
-        return view('front-pages.contact', compact('contactPage'));
-    }
-
-    public function about()
-    {
-        $content = AboutPageContent::instance();
-        $testimonials = Testimonial::published()->orderBy('sort_order')->get();
-
-        return view('front-pages.about', compact('content', 'testimonials'));
-    }
-
     public function contactStore(Request $request)
     {
         $validated = $request->validate([
@@ -632,6 +659,79 @@ class FrontController extends Controller
 
         return redirect()->route('thankyou', ['context' => 'contact']);
 
+    }
+
+    public function quickEnquirystore(Request $request)
+    {
+        $redirect = route('thankyou', ['context' => 'enquiry']);
+
+        if ($request->filled('website')) {
+            return response()->json(['status' => true, 'redirect' => $redirect]);
+        }
+
+        $data = $request->validate([
+            'FullName' => ['required', 'string', 'max:120'],
+            'EmailID' => ['required', 'email', 'max:150'],
+            'CountryCode' => ['nullable', 'string', 'max:10'],
+            'PhoneNo' => ['required', 'regex:/^[0-9]{6,14}$/'],
+            'dates' => ['required', 'string', 'max:100'],
+            'TravellerCount' => ['required', 'integer', 'min:1', 'max:500'],
+            'Message' => ['nullable', 'string', 'max:2000'],
+            'EnquiryType' => ['nullable', 'string', 'max:100'],
+            'EnquiryFor' => ['nullable', 'string', 'max:255'],
+            'EnquiryRefId' => ['nullable', 'integer', 'min:1'],
+            'SourceUrl' => ['nullable', 'string', 'max:500'],
+        ], [
+            'PhoneNo.regex' => 'Please enter a valid phone number.',
+        ]);
+
+        $models = [
+            'Tour Package' => TourPackage::class,
+            'Activity' => Activity::class,
+            'Attraction' => Attraction::class,
+            'Destination' => Destination::class,
+        ];
+
+        // In types ka model nahi hai, sirf label save hoga
+        $labelOnly = ['Blog', 'Category', 'Activities Page'];
+
+        $type = $data['EnquiryType'] ?? 'Quick Enquiry';
+        $refId = null;
+        $label = $data['EnquiryFor'] ?? null;
+
+        if (isset($models[$type]) && !empty($data['EnquiryRefId'])) {
+            $record = $models[$type]::find($data['EnquiryRefId']);
+            if ($record) {
+                $refId = $record->id;
+                $label = $label ?: $record->name;
+            }
+        }
+
+        if (!isset($models[$type]) && !in_array($type, $labelOnly, true)) {
+            $type = 'Quick Enquiry';
+        }
+
+
+        QuickEnquiry::create([
+            'full_name' => $data['FullName'],
+            'email' => $data['EmailID'],
+            'country_code' => $data['CountryCode'] ?? '+91',
+            'phone' => $data['PhoneNo'],
+            'travel_dates' => $data['dates'],
+            'traveller_count' => $data['TravellerCount'],
+            'message' => $data['Message'] ?? null,
+            'enquiry_type' => $type,
+            'enquiry_for' => $label ?: 'Quick Enquiry',
+            'enquiry_ref_id' => $refId,
+            'source_url' => $data['SourceUrl'] ?? null,
+            'ip_address' => $request->ip(),
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Thank you! Our travel expert will contact you shortly.',
+            'redirect' => $redirect,
+        ]);
     }
 
     public function thankYou(Request $request)
