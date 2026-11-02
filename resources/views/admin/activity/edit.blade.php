@@ -335,11 +335,13 @@
             </div>
 
             <div class="cat-card">
-                <form action="{{ route('admin.activities.update', $activity) }}" method="POST"
-                    enctype="multipart/form-data">
+
+                <form id="activity-form" action="{{ route('admin.activities.update', $activity) }}" method="POST"
+                    enctype="multipart/form-data" novalidate>
                     @csrf
                     @method('PUT')
 
+                    <div id="form-alert" class="form-alert" style="display:none" role="alert"></div>
                     <div class="cat-tabs" id="activity-tabs">
                         <button type="button" class="cat-tab active" data-tab="general">General</button>
                         <button type="button" class="cat-tab" data-tab="about">About</button>
@@ -762,7 +764,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-primary-dash">
+                        <button type="submit" id="save-btn" class="btn-primary-dash">
                             <i class="fa fa-check"></i> Update Activity
                         </button>
                         <a href="{{ route('admin.activities.index') }}" class="btn-secondary-dash">Cancel</a>
@@ -819,6 +821,21 @@
     {!! json_encode($activity->attractions->pluck('id')) !!}
 </script>
 <script>
+
+    function esc(v) {
+        if (v === null || v === undefined) return '';
+        return String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function escData(d) {
+        if (d === null || d === undefined) return null;
+        const out = {};
+        Object.keys(d).forEach(k => {
+            const v = d[k];
+            out[k] = (typeof v === 'string' || v === null) ? esc(v) : v;
+        });
+        return out;
+    }
+
     document.querySelectorAll('#activity-tabs .cat-tab').forEach(function (tabBtn) {
         tabBtn.addEventListener('click', function () {
             document.querySelectorAll('#activity-tabs .cat-tab').forEach(b => b.classList.remove('active'));
@@ -880,7 +897,7 @@
         const wrap = document.createElement('div');
         wrap.className = 'simple-list-row';
         wrap.innerHTML = `
-            <input type="text" name="${inputName}" class="form-control-styled" placeholder="${placeholder}" value="${value}">
+            <input type="text" name="${inputName}" class="form-control-styled" placeholder="${placeholder}" value="${esc(value)}">
             <button type="button" class="btn-secondary-dash remove-simple-row"><i class="fa fa-times"></i></button>
         `;
         container.appendChild(wrap);
@@ -907,6 +924,7 @@
     let packageIndex = 0;
 
     function addPackageRow(data = null) {
+        data = escData(data);
         const idx = packageIndex;
         const row = document.createElement('div');
         row.className = 'gallery-row';
@@ -973,7 +991,7 @@
         const wrap = document.createElement('div');
         wrap.className = 'simple-list-row';
         wrap.innerHTML = `
-        <input type="text" name="package_includes[${packageIdx}][]" class="form-control-styled" value="${value}">
+        <input type="text" name="package_includes[${packageIdx}][]" class="form-control-styled" value="${esc(value)}">
         <button type="button" class="btn-secondary-dash remove-simple-row"><i class="fa fa-times"></i></button>
     `;
         container.appendChild(wrap);
@@ -989,6 +1007,7 @@
     let policyIndex = 0;
 
     function addPolicyRow(data = null) {
+        data = escData(data);
         const idx = policyIndex;
         const row = document.createElement('div');
         row.className = 'gallery-row';
@@ -1024,7 +1043,7 @@
         const wrap = document.createElement('div');
         wrap.className = 'simple-list-row';
         wrap.innerHTML = `
-        <input type="text" name="policy_points[${policyIdx}][]" class="form-control-styled" value="${value}">
+        <input type="text" name="policy_points[${policyIdx}][]" class="form-control-styled" value="${esc(value)}">
         <button type="button" class="btn-secondary-dash remove-simple-row"><i class="fa fa-times"></i></button>
     `;
         container.appendChild(wrap);
@@ -1037,6 +1056,7 @@
     let faqIndex = 0;
 
     function addFaqRow(data = null) {
+        data = escData(data);
         const idx = faqIndex;
         const row = document.createElement('div');
         row.className = 'gallery-row';
@@ -1116,4 +1136,5 @@
     }
 </script>
 
+@include('admin.partials._ajax-form', ['formId' => 'activity-form', 'tabsId' => 'activity-tabs'])
 @include('admin.footer')

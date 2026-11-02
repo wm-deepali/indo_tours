@@ -300,10 +300,13 @@
             </div>
 
             <div class="cat-card">
-                <form action="{{ route('admin.subcategories.update', $subCategory) }}" method="POST"
-                    enctype="multipart/form-data">
+
+                <form id="subcategory-form" action="{{ route('admin.subcategories.update', $subCategory) }}"
+                    method="POST" enctype="multipart/form-data" novalidate>
                     @csrf
                     @method('PUT')
+
+                    <div id="form-alert" class="form-alert" style="display:none" role="alert"></div>
 
                     <div class="cat-tabs" id="subcat-tabs">
                         <button type="button" class="cat-tab active" data-tab="general">General</button>
@@ -798,7 +801,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-primary-dash">
+                        <button type="submit" id="save-btn" class="btn-primary-dash">
                             <i class="fa fa-check"></i> Update Sub Category
                         </button>
                         <a href="{{ route('admin.subcategories.index') }}" class="btn-secondary-dash">Cancel</a>
@@ -919,4 +922,5 @@
 
 </script>
 
+@include('admin.partials._ajax-form', ['formId' => 'subcategory-form', 'tabsId' => 'subcat-tabs'])
 @include('admin.footer')

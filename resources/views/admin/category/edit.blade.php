@@ -282,10 +282,12 @@
             </div>
 
             <div class="cat-card">
-                <form action="{{ route('admin.categories.update', $category) }}" method="POST"
-                    enctype="multipart/form-data">
+                <form id="category-form" action="{{ route('admin.categories.update', $category) }}" method="POST"
+                    enctype="multipart/form-data" novalidate>
                     @csrf
                     @method('PUT')
+
+                    <div id="form-alert" class="form-alert" style="display:none" role="alert"></div>
 
                     <div class="cat-tabs" id="category-tabs">
                         <button type="button" class="cat-tab active" data-tab="general">General</button>
@@ -414,7 +416,8 @@
                                     placeholder="e.g. Europe's Most Romantic Corners">
                             </div>
                         </div>
-                        <div class="hint" style="margin-top:-10px; margin-bottom:18px;">Shown together as one heading —
+                        <div class="hint" style="margin-top:-10px; margin-bottom:18px;">Shown together as one
+                            heading —
                             the highlighted part is styled differently on the page</div>
 
                         <div class="form-field">
@@ -457,7 +460,8 @@
                             <button type="button" class="btn-secondary-dash" id="add-fact-row">
                                 <i class="fa fa-plus"></i> Add Fact
                             </button>
-                            <div class="hint" style="margin-top:10px;">e.g. Number: "7-10", Label: "Days Ideal" — order
+                            <div class="hint" style="margin-top:10px;">e.g. Number: "7-10", Label: "Days Ideal" —
+                                order
                                 here sets display order</div>
                         </div>
 
@@ -724,7 +728,8 @@
                                 <option value="index, nofollow" {{ $currentRobots == 'index, nofollow' ? 'selected' : '' }}>index, nofollow</option>
                                 <option value="noindex, nofollow" {{ $currentRobots == 'noindex, nofollow' ? 'selected' : '' }}>noindex, nofollow</option>
                             </select>
-                            <div class="hint">Controls whether search engines index this page and follow its links</div>
+                            <div class="hint">Controls whether search engines index this page and follow its links
+                            </div>
                         </div>
 
                         <div class="form-field">
@@ -781,7 +786,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-primary-dash">
+                        <button type="submit" id="save-btn" class="btn-primary-dash">
                             <i class="fa fa-check"></i> Update Category
                         </button>
                         <a href="{{ route('admin.categories.index') }}" class="btn-secondary-dash">Cancel</a>
@@ -906,4 +911,5 @@
 
 </script>
 
+@include('admin.partials._ajax-form', ['formId' => 'category-form', 'tabsId' => 'category-tabs'])
 @include('admin.footer')

@@ -4,23 +4,95 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Category;
-use App\Models\Destination;
-use App\Models\Attraction;
-
+use Illuminate\Support\Str;
 
 class SubCategoryController extends Controller
 {
+    private const IMAGE_FIELDS = [
+        'banner_image_one' => 'subcategories/banner',
+        'banner_image_two' => 'subcategories/banner',
+        'cta_image' => 'subcategories/cta',
+        'og_image' => 'subcategories/og',
+        'twitter_card_image' => 'subcategories/twitter',
+    ];
+
+    // Returned by validate() but they are child-table data, never SubCategory columns
+    private const CHILD_KEYS = [
+        'highlight_ids', 'highlight_titles', 'highlight_values', 'highlight_images', 'deleted_highlights',
+        'perk_ids', 'perk_texts', 'deleted_perks',
+        'faq_ids', 'faq_questions', 'faq_answers', 'deleted_faqs',
+    ];
+
+    private array $pendingDeletes = [];   // old files, removed only after a successful commit
+    private array $uploaded = [];         // new files, removed if the save fails
+
+    private function storeFile($file, string $dir): string
+    {
+        $path = $file->store($dir, 'public');
+        $this->uploaded[] = $path;
+        return $path;
+    }
+
+    private function queueDelete(?string $path): void
+    {
+        if ($path) {
+            $this->pendingDeletes[] = $path;
+        }
+    }
+
+    private function flushDeletes(): void
+    {
+        foreach (array_unique($this->pendingDeletes) as $path) {
+            if (Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->delete($path);
+            }
+        }
+        $this->pendingDeletes = [];
+        $this->uploaded = [];
+    }
+
+    private function rollbackFiles(): void
+    {
+        foreach ($this->uploaded as $path) {
+            Storage::disk('public')->delete($path);
+        }
+        $this->pendingDeletes = [];
+        $this->uploaded = [];
+    }
+
+    private function failure(Request $request, \Throwable $e, string $verb)
+    {
+        report($e);
+        $msg = config('app.debug')
+            ? $e->getMessage()
+            : "Could not {$verb} the sub category. Nothing was saved. Please try again.";
+
+        return $request->expectsJson()
+            ? response()->json(['message' => $msg], 500)
+            : back()->withInput()->with('error', $msg);
+    }
+
+    private function success(Request $request, string $message)
+    {
+        if ($request->expectsJson()) {
+            session()->flash('success', $message);
+            return response()->json(['redirect' => route('admin.subcategories.index')]);
+        }
+
+        return redirect()->route('admin.subcategories.index')->with('success', $message);
+    }
+
     public function index()
     {
         $subCategories = SubCategory::with('category')->latest()->paginate(20);
         return view('admin.subcategory.index', compact('subCategories'));
     }
-
 
     public function create()
     {
@@ -30,41 +102,39 @@ class SubCategoryController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate($this->rules());
+        $validated = $this->validatedData($request);
 
-        $validated['slug'] = Str::slug($request->name);
-        $validated['status'] = $request->status ?? 'draft';
-        $validated['show_in_header'] = $request->boolean('show_in_header');
-        $validated['header_sort_order'] = $validated['header_sort_order'] ?? 0;
+        try {
+            DB::transaction(function () use ($request, $validated) {
+                $validated['slug'] = $this->uniqueSlug($validated['name']);
+                $validated['status'] = $request->status ?? 'draft';
+                $validated['show_in_header'] = $request->boolean('show_in_header');
+                $validated['header_sort_order'] = $validated['header_sort_order'] ?? 0;
 
-        if ($request->hasFile('banner_image_one')) {
-            $validated['banner_image_one'] = $request->file('banner_image_one')->store('subcategories/banner', 'public');
-        }
-        if ($request->hasFile('banner_image_two')) {
-            $validated['banner_image_two'] = $request->file('banner_image_two')->store('subcategories/banner', 'public');
-        }
-        if ($request->hasFile('cta_image')) {
-            $validated['cta_image'] = $request->file('cta_image')->store('subcategories/cta', 'public');
-        }
-        if ($request->hasFile('og_image')) {
-            $validated['og_image'] = $request->file('og_image')->store('subcategories/og', 'public');
-        }
-        if ($request->hasFile('twitter_card_image')) {
-            $validated['twitter_card_image'] = $request->file('twitter_card_image')->store('subcategories/twitter', 'public');
+                foreach (self::IMAGE_FIELDS as $field => $dir) {
+                    if ($request->hasFile($field)) {
+                        $validated[$field] = $this->storeFile($request->file($field), $dir);
+                    }
+                }
+
+                $subCategory = SubCategory::create($validated);
+                $this->saveChildren($subCategory, $request);
+            });
+        } catch (\Throwable $e) {
+            $this->rollbackFiles();
+            return $this->failure($request, $e, 'save');
         }
 
-        $subCategory = SubCategory::create($validated);
-        $this->saveHighlights($subCategory, $request);
-        $this->saveCtaPerks($subCategory, $request);
-        $this->saveFaqs($subCategory, $request);
+        $this->flushDeletes();
 
-        return redirect()->route('admin.subcategories.index')->with('success', 'Sub Category added successfully.');
+        return $this->success($request, 'Sub Category added successfully.');
     }
 
     public function edit(SubCategory $subcategory)
     {
         $subcategory->load(['highlights', 'ctaPerks', 'faqs']);
         $categories = Category::orderBy('name')->get(['id', 'name']);
+
         return view('admin.subcategory.edit', [
             'subCategory' => $subcategory,
             'categories' => $categories,
@@ -73,58 +143,78 @@ class SubCategoryController extends Controller
 
     public function update(Request $request, SubCategory $subcategory)
     {
-        $validated = $request->validate($this->rules());
+        $validated = $this->validatedData($request);
 
-        $validated['status'] = $request->status ?? $subcategory->status;
-        $validated['show_in_header'] = $request->boolean('show_in_header');
-        $validated['header_sort_order'] = $validated['header_sort_order'] ?? 0;
+        try {
+            DB::transaction(function () use ($request, $subcategory, $validated) {
+                $validated['status'] = $request->status ?? $subcategory->status;
+                $validated['show_in_header'] = $request->boolean('show_in_header');
+                $validated['header_sort_order'] = $validated['header_sort_order'] ?? 0;
 
-        if ($request->hasFile('banner_image_one')) {
-            $this->deleteOldImage($subcategory->banner_image_one);
-            $validated['banner_image_one'] = $request->file('banner_image_one')->store('subcategories/banner', 'public');
-        }
-        if ($request->hasFile('banner_image_two')) {
-            $this->deleteOldImage($subcategory->banner_image_two);
-            $validated['banner_image_two'] = $request->file('banner_image_two')->store('subcategories/banner', 'public');
-        }
-        if ($request->hasFile('cta_image')) {
-            $this->deleteOldImage($subcategory->cta_image);
-            $validated['cta_image'] = $request->file('cta_image')->store('subcategories/cta', 'public');
-        }
-        if ($request->hasFile('og_image')) {
-            $this->deleteOldImage($subcategory->og_image);
-            $validated['og_image'] = $request->file('og_image')->store('subcategories/og', 'public');
-        }
-        if ($request->hasFile('twitter_card_image')) {
-            $this->deleteOldImage($subcategory->twitter_card_image);
-            $validated['twitter_card_image'] = $request->file('twitter_card_image')->store('subcategories/twitter', 'public');
+                foreach (self::IMAGE_FIELDS as $field => $dir) {
+                    if ($request->hasFile($field)) {
+                        $this->queueDelete($subcategory->{$field});
+                        $validated[$field] = $this->storeFile($request->file($field), $dir);
+                    }
+                }
+
+                $subcategory->update($validated);
+                $this->saveChildren($subcategory, $request);
+            });
+        } catch (\Throwable $e) {
+            $this->rollbackFiles();
+            return $this->failure($request, $e, 'update');
         }
 
-        $subcategory->update($validated);
-        $this->saveHighlights($subcategory, $request);
-        $this->saveCtaPerks($subcategory, $request);
-        $this->saveFaqs($subcategory, $request);
+        $this->flushDeletes();
 
-        return redirect()->route('admin.subcategories.index')->with('success', 'Sub Category updated successfully.');
+        return $this->success($request, 'Sub Category updated successfully.');
     }
 
     public function destroy(SubCategory $subcategory)
     {
-        $this->deleteOldImage($subcategory->banner_image_one);
-        $this->deleteOldImage($subcategory->banner_image_two);
-        $this->deleteOldImage($subcategory->cta_image);
-        $this->deleteOldImage($subcategory->og_image);
-        $this->deleteOldImage($subcategory->twitter_card_image);
+        $subcategory->load('highlights');
+
+        foreach (array_keys(self::IMAGE_FIELDS) as $field) {
+            $this->queueDelete($subcategory->{$field});
+        }
+        foreach ($subcategory->highlights as $highlight) {
+            $this->queueDelete($highlight->icon_image);
+        }
 
         $subcategory->delete();
+        $this->flushDeletes();
+
         return redirect()->route('admin.subcategories.index')->with('success', 'Sub Category deleted successfully.');
     }
 
-    private function deleteOldImage(?string $path): void
+    private function validatedData(Request $request): array
     {
-        if ($path && Storage::disk('public')->exists($path)) {
-            Storage::disk('public')->delete($path);
-        }
+        $validated = $request->validate($this->rules(), [], $this->attributes());
+
+        return Arr::except($validated, self::CHILD_KEYS);
+    }
+
+    private function saveChildren(SubCategory $subCategory, Request $request): void
+    {
+        $this->saveHighlights($subCategory, $request);
+        $this->saveCtaPerks($subCategory, $request);
+        $this->saveFaqs($subCategory, $request);
+    }
+
+    private function attributes(): array
+    {
+        return [
+            'category_id' => 'parent category',
+            'name' => 'sub category name',
+            'header_sort_order' => 'header sort order',
+            'highlight_titles.*' => 'highlight title',
+            'highlight_values.*' => 'highlight value',
+            'highlight_images.*' => 'highlight icon',
+            'perk_texts.*' => 'perk text',
+            'faq_questions.*' => 'FAQ question',
+            'faq_answers.*' => 'FAQ answer',
+        ];
     }
 
     private function rules(): array
@@ -207,119 +297,114 @@ class SubCategoryController extends Controller
         ];
     }
 
-    private function saveHighlights(SubCategory $subCategory, Request $request): void
+    private function uniqueSlug(string $name, ?int $ignoreId = null): string
     {
-        if ($request->filled('deleted_highlights')) {
-            $ids = array_filter(explode(',', $request->deleted_highlights));
-            if (!empty($ids)) {
-                $toDelete = $subCategory->highlights()->whereIn('id', $ids)->get();
-                foreach ($toDelete as $h) {
-                    $this->deleteOldImage($h->icon_image);
-                }
-                $subCategory->highlights()->whereIn('id', $ids)->delete();
-            }
+        $slug = Str::slug($name);
+        $original = $slug;
+        $i = 1;
+
+        while (
+            SubCategory::where('slug', $slug)
+                ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
+                ->exists()
+        ) {
+            $slug = $original . '-' . $i++;
         }
 
-        if (!$request->filled('highlight_titles') && !$request->filled('highlight_values'))
-            return;
+        return $slug;
+    }
 
-        $titles = $request->highlight_titles ?? [];
+    private function deleteMarked($relation, ?string $csv, ?string $imageColumn = null): void
+    {
+        if (!$csv) {
+            return;
+        }
+        $ids = array_filter(explode(',', $csv));
+        if (empty($ids)) {
+            return;
+        }
+
+        if ($imageColumn) {
+            $relation->whereIn('id', $ids)->get()->each(fn($row) => $this->queueDelete($row->{$imageColumn}));
+        }
+
+        $relation->whereIn('id', $ids)->delete();
+    }
+
+    private function saveHighlights(SubCategory $subCategory, Request $request): void
+    {
+        $this->deleteMarked($subCategory->highlights(), $request->deleted_highlights, 'icon_image');
+
+        if (!$request->filled('highlight_titles') && !$request->filled('highlight_values')) {
+            return;
+        }
+
         $values = $request->highlight_values ?? [];
 
-        foreach ($titles as $i => $title) {
+        foreach (($request->highlight_titles ?? []) as $i => $title) {
             $value = $values[$i] ?? '';
-            if (!$title && !$value)
+            if (!$title && !$value) {
                 continue;
+            }
 
-            $data = [
-                'title' => $title,
-                'value' => $value,
-                'sort_order' => $i,
-            ];
-
-            $highlightId = $request->highlight_ids[$i] ?? null;
+            $data = ['title' => $title, 'value' => $value, 'sort_order' => $i];
+            $id = $request->highlight_ids[$i] ?? null;
 
             if ($request->hasFile("highlight_images.$i")) {
-                if ($highlightId) {
-                    $existing = $subCategory->highlights()->find($highlightId);
-                    if ($existing) {
-                        $this->deleteOldImage($existing->icon_image);
-                    }
+                if ($id) {
+                    $this->queueDelete($subCategory->highlights()->find($id)?->icon_image);
                 }
-                $data['icon_image'] = $request->file("highlight_images.$i")->store('subcategories/highlights', 'public');
+                $data['icon_image'] = $this->storeFile($request->file("highlight_images.$i"), 'subcategories/highlights');
             }
 
-            if ($highlightId) {
-                $subCategory->highlights()->where('id', $highlightId)->update($data);
-            } else {
-                $subCategory->highlights()->create($data);
-            }
+            $id
+                ? $subCategory->highlights()->where('id', $id)->update($data)
+                : $subCategory->highlights()->create($data);
         }
     }
 
     private function saveCtaPerks(SubCategory $subCategory, Request $request): void
     {
-        if ($request->filled('deleted_perks')) {
-            $ids = array_filter(explode(',', $request->deleted_perks));
-            if (!empty($ids))
-                $subCategory->ctaPerks()->whereIn('id', $ids)->delete();
+        $this->deleteMarked($subCategory->ctaPerks(), $request->deleted_perks);
+
+        if (!$request->filled('perk_texts')) {
+            return;
         }
 
-        if (!$request->filled('perk_texts'))
-            return;
-
         foreach ($request->perk_texts as $i => $text) {
-            if (!$text)
+            if (!$text) {
                 continue;
-
-            $perkId = $request->perk_ids[$i] ?? null;
-
-            if ($perkId) {
-                $subCategory->ctaPerks()->where('id', $perkId)->update([
-                    'text' => $text,
-                    'sort_order' => $i,
-                ]);
-            } else {
-                $subCategory->ctaPerks()->create([
-                    'text' => $text,
-                    'sort_order' => $i,
-                ]);
             }
+
+            $data = ['text' => $text, 'sort_order' => $i];
+            $id = $request->perk_ids[$i] ?? null;
+
+            $id
+                ? $subCategory->ctaPerks()->where('id', $id)->update($data)
+                : $subCategory->ctaPerks()->create($data);
         }
     }
 
     private function saveFaqs(SubCategory $subCategory, Request $request): void
     {
-        if ($request->filled('deleted_faqs')) {
-            $ids = array_filter(explode(',', $request->deleted_faqs));
-            if (!empty($ids))
-                $subCategory->faqs()->whereIn('id', $ids)->delete();
-        }
+        $this->deleteMarked($subCategory->faqs(), $request->deleted_faqs);
 
-        if (!$request->filled('faq_questions'))
+        if (!$request->filled('faq_questions')) {
             return;
+        }
 
         foreach ($request->faq_questions as $i => $question) {
             $answer = $request->faq_answers[$i] ?? '';
-            if (!$question && !$answer)
+            if (!$question && !$answer) {
                 continue;
-
-            $faqId = $request->faq_ids[$i] ?? null;
-
-            if ($faqId) {
-                $subCategory->faqs()->where('id', $faqId)->update([
-                    'question' => $question,
-                    'answer' => $answer,
-                    'sort_order' => $i,
-                ]);
-            } else {
-                $subCategory->faqs()->create([
-                    'question' => $question,
-                    'answer' => $answer,
-                    'sort_order' => $i,
-                ]);
             }
+
+            $data = ['question' => $question, 'answer' => $answer, 'sort_order' => $i];
+            $id = $request->faq_ids[$i] ?? null;
+
+            $id
+                ? $subCategory->faqs()->where('id', $id)->update($data)
+                : $subCategory->faqs()->create($data);
         }
     }
-
 }

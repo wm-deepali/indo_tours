@@ -271,8 +271,10 @@
             </div>
 
             <div class="cat-card">
-                <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="category-form" action="{{ route('admin.categories.store') }}" method="POST"
+                    enctype="multipart/form-data" novalidate>
                     @csrf
+                    <div id="form-alert" class="form-alert" style="display:none" role="alert"></div>
 
                     <div class="cat-tabs" id="category-tabs">
                         <button type="button" class="cat-tab active" data-tab="general">General</button>
@@ -701,7 +703,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-primary-dash">
+                        <button type="submit" id="save-btn" class="btn-primary-dash">
                             <i class="fa fa-check"></i> Save Category
                         </button>
                         <a href="{{ route('admin.categories.index') }}" class="btn-secondary-dash">Cancel</a>
@@ -846,4 +848,5 @@
 
 </script>
 
+@include('admin.partials._ajax-form', ['formId' => 'category-form', 'tabsId' => 'category-tabs'])
 @include('admin.footer')

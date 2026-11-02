@@ -1,22 +1,97 @@
 <?php
+// app/Http/Controllers/Admin/CategoryController.php
 
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Models\Destination;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use App\Models\Attraction;
+use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
+    private const IMAGE_FIELDS = [
+        'image' => 'categories',
+        'cta_image' => 'categories/cta',
+        'og_image' => 'categories/og',
+        'twitter_card_image' => 'categories/twitter',
+    ];
+
+    // Returned by validate() but they are child-table data, never Category columns
+    private const CHILD_KEYS = [
+        'fact_ids', 'fact_numbers', 'fact_labels', 'deleted_facts',
+        'perk_ids', 'perk_texts', 'deleted_perks',
+        'faq_ids', 'faq_questions', 'faq_answers', 'deleted_faqs',
+    ];
+
+    private array $pendingDeletes = [];   // old files, removed only after a successful commit
+    private array $uploaded = [];         // new files, removed if the save fails
+
+    private function storeFile($file, string $dir): string
+    {
+        $path = $file->store($dir, 'public');
+        $this->uploaded[] = $path;
+        return $path;
+    }
+
+    private function queueDelete(?string $path): void
+    {
+        if ($path) {
+            $this->pendingDeletes[] = $path;
+        }
+    }
+
+    private function flushDeletes(): void
+    {
+        foreach (array_unique($this->pendingDeletes) as $path) {
+            if (Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->delete($path);
+            }
+        }
+        $this->pendingDeletes = [];
+        $this->uploaded = [];
+    }
+
+    private function rollbackFiles(): void
+    {
+        foreach ($this->uploaded as $path) {
+            Storage::disk('public')->delete($path);
+        }
+        $this->pendingDeletes = [];
+        $this->uploaded = [];
+    }
+
+    private function failure(Request $request, \Throwable $e, string $verb)
+    {
+        report($e);
+        $msg = config('app.debug')
+            ? $e->getMessage()
+            : "Could not {$verb} the category. Nothing was saved. Please try again.";
+
+        return $request->expectsJson()
+            ? response()->json(['message' => $msg], 500)
+            : back()->withInput()->with('error', $msg);
+    }
+
+    private function success(Request $request, string $message)
+    {
+        if ($request->expectsJson()) {
+            session()->flash('success', $message);
+            return response()->json(['redirect' => route('admin.categories.index')]);
+        }
+
+        return redirect()->route('admin.categories.index')->with('success', $message);
+    }
+
     public function index()
     {
         $categories = Category::latest()->paginate(20);
         return view('admin.category.index', compact('categories'));
     }
-
 
     public function create()
     {
@@ -25,32 +100,32 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate($this->rules());
+        $validated = $this->validatedData($request);
 
-        $validated['slug'] = Str::slug($request->name);
-        $validated['status'] = $request->status ?? 'draft';
-        $validated['show_in_header'] = $request->boolean('show_in_header');
-        $validated['header_sort_order'] = $validated['header_sort_order'] ?? 0;
+        try {
+            DB::transaction(function () use ($request, $validated) {
+                $validated['slug'] = $this->uniqueSlug($validated['name']);
+                $validated['status'] = $request->status ?? 'draft';
+                $validated['show_in_header'] = $request->boolean('show_in_header');
+                $validated['header_sort_order'] = $validated['header_sort_order'] ?? 0;
 
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('categories', 'public');
-        }
-        if ($request->hasFile('cta_image')) {
-            $validated['cta_image'] = $request->file('cta_image')->store('categories/cta', 'public');
-        }
-        if ($request->hasFile('og_image')) {
-            $validated['og_image'] = $request->file('og_image')->store('categories/og', 'public');
-        }
-        if ($request->hasFile('twitter_card_image')) {
-            $validated['twitter_card_image'] = $request->file('twitter_card_image')->store('categories/twitter', 'public');
+                foreach (self::IMAGE_FIELDS as $field => $dir) {
+                    if ($request->hasFile($field)) {
+                        $validated[$field] = $this->storeFile($request->file($field), $dir);
+                    }
+                }
+
+                $category = Category::create($validated);
+                $this->saveChildren($category, $request);
+            });
+        } catch (\Throwable $e) {
+            $this->rollbackFiles();
+            return $this->failure($request, $e, 'save');
         }
 
-        $category = Category::create($validated);
-        $this->saveFacts($category, $request);
-        $this->saveCtaPerks($category, $request);
-        $this->saveFaqs($category, $request);
+        $this->flushDeletes();
 
-        return redirect()->route('admin.categories.index')->with('success', 'Category added successfully.');
+        return $this->success($request, 'Category added successfully.');
     }
 
     public function edit(Category $category)
@@ -61,48 +136,71 @@ class CategoryController extends Controller
 
     public function update(Request $request, Category $category)
     {
-        $validated = $request->validate($this->rules());
+        $validated = $this->validatedData($request);
 
-        $validated['status'] = $request->status ?? $category->status;
-        $validated['show_in_header'] = $request->boolean('show_in_header');
-        $validated['header_sort_order'] = $validated['header_sort_order'] ?? 0;
+        try {
+            DB::transaction(function () use ($request, $category, $validated) {
+                $validated['status'] = $request->status ?? $category->status;
+                $validated['show_in_header'] = $request->boolean('show_in_header');
+                $validated['header_sort_order'] = $validated['header_sort_order'] ?? 0;
 
-        if ($request->hasFile('image')) {
-            if ($category->image) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($category->image);
-            }
-            $validated['image'] = $request->file('image')->store('categories', 'public');
-        }
-        if ($request->hasFile('cta_image')) {
-            if ($category->cta_image) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($category->cta_image);
-            }
-            $validated['cta_image'] = $request->file('cta_image')->store('categories/cta', 'public');
-        }
-        if ($request->hasFile('og_image')) {
-            if ($category->og_image) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($category->og_image);
-            }
-            $validated['og_image'] = $request->file('og_image')->store('categories/og', 'public');
-        }
-        if ($request->hasFile('twitter_card_image')) {
-            if ($category->twitter_card_image) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($category->twitter_card_image);
-            }
-            $validated['twitter_card_image'] = $request->file('twitter_card_image')->store('categories/twitter', 'public');
+                foreach (self::IMAGE_FIELDS as $field => $dir) {
+                    if ($request->hasFile($field)) {
+                        $this->queueDelete($category->{$field});
+                        $validated[$field] = $this->storeFile($request->file($field), $dir);
+                    }
+                }
+
+                $category->update($validated);
+                $this->saveChildren($category, $request);
+            });
+        } catch (\Throwable $e) {
+            $this->rollbackFiles();
+            return $this->failure($request, $e, 'update');
         }
 
-        $category->update($validated);
+        $this->flushDeletes();
+
+        return $this->success($request, 'Category updated successfully.');
+    }
+
+    public function destroy(Category $category)
+    {
+        foreach (array_keys(self::IMAGE_FIELDS) as $field) {
+            $this->queueDelete($category->{$field});
+        }
+
+        $category->delete();
+        $this->flushDeletes();
+
+        return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
+    }
+
+    private function validatedData(Request $request): array
+    {
+        $validated = $request->validate($this->rules(), [], $this->attributes());
+
+        return Arr::except($validated, self::CHILD_KEYS);
+    }
+
+    private function saveChildren(Category $category, Request $request): void
+    {
         $this->saveFacts($category, $request);
         $this->saveCtaPerks($category, $request);
         $this->saveFaqs($category, $request);
-
-        return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
     }
-    public function destroy(Category $category)
+
+    private function attributes(): array
     {
-        $category->delete();
-        return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
+        return [
+            'name' => 'category name',
+            'header_sort_order' => 'header sort order',
+            'fact_numbers.*' => 'fact number',
+            'fact_labels.*' => 'fact label',
+            'perk_texts.*' => 'perk text',
+            'faq_questions.*' => 'FAQ question',
+            'faq_answers.*' => 'FAQ answer',
+        ];
     }
 
     private function rules(): array
@@ -134,12 +232,12 @@ class CategoryController extends Controller
             'robots' => [
                 'nullable',
                 'string',
-                \Illuminate\Validation\Rule::in([
+                Rule::in([
                     'index, follow',
                     'noindex, follow',
                     'index, nofollow',
                     'noindex, nofollow',
-                ])
+                ]),
             ],
             'og_title' => 'nullable|string|max:255',
             'og_description' => 'nullable|string',
@@ -193,103 +291,99 @@ class CategoryController extends Controller
         ];
     }
 
-    private function saveFacts(Category $category, Request $request): void
+    private function uniqueSlug(string $name, ?int $ignoreId = null): string
     {
-        if ($request->filled('deleted_facts')) {
-            $ids = array_filter(explode(',', $request->deleted_facts));
-            if (!empty($ids))
-                $category->facts()->whereIn('id', $ids)->delete();
+        $slug = Str::slug($name);
+        $original = $slug;
+        $i = 1;
+
+        while (
+            Category::where('slug', $slug)
+                ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
+                ->exists()
+        ) {
+            $slug = $original . '-' . $i++;
         }
 
-        if (!$request->filled('fact_numbers'))
+        return $slug;
+    }
+
+    private function deleteMarked($relation, ?string $csv): void
+    {
+        if (!$csv) {
             return;
+        }
+        $ids = array_filter(explode(',', $csv));
+        if (!empty($ids)) {
+            $relation->whereIn('id', $ids)->delete();
+        }
+    }
+
+    private function saveFacts(Category $category, Request $request): void
+    {
+        $this->deleteMarked($category->facts(), $request->deleted_facts);
+
+        if (!$request->filled('fact_numbers')) {
+            return;
+        }
 
         foreach ($request->fact_numbers as $i => $number) {
             $label = $request->fact_labels[$i] ?? '';
-            if (!$number && !$label)
+            if (!$number && !$label) {
                 continue;
-
-            $factId = $request->fact_ids[$i] ?? null;
-
-            if ($factId) {
-                $category->facts()->where('id', $factId)->update([
-                    'number' => $number,
-                    'label' => $label,
-                    'sort_order' => $i,
-                ]);
-            } else {
-                $category->facts()->create([
-                    'number' => $number,
-                    'label' => $label,
-                    'sort_order' => $i,
-                ]);
             }
+
+            $data = ['number' => $number, 'label' => $label, 'sort_order' => $i];
+            $id = $request->fact_ids[$i] ?? null;
+
+            $id
+                ? $category->facts()->where('id', $id)->update($data)
+                : $category->facts()->create($data);
         }
     }
 
     private function saveCtaPerks(Category $category, Request $request): void
     {
-        if ($request->filled('deleted_perks')) {
-            $ids = array_filter(explode(',', $request->deleted_perks));
-            if (!empty($ids))
-                $category->ctaPerks()->whereIn('id', $ids)->delete();
+        $this->deleteMarked($category->ctaPerks(), $request->deleted_perks);
+
+        if (!$request->filled('perk_texts')) {
+            return;
         }
 
-        if (!$request->filled('perk_texts'))
-            return;
-
         foreach ($request->perk_texts as $i => $text) {
-            if (!$text)
+            if (!$text) {
                 continue;
-
-            $perkId = $request->perk_ids[$i] ?? null;
-
-            if ($perkId) {
-                $category->ctaPerks()->where('id', $perkId)->update([
-                    'text' => $text,
-                    'sort_order' => $i,
-                ]);
-            } else {
-                $category->ctaPerks()->create([
-                    'text' => $text,
-                    'sort_order' => $i,
-                ]);
             }
+
+            $data = ['text' => $text, 'sort_order' => $i];
+            $id = $request->perk_ids[$i] ?? null;
+
+            $id
+                ? $category->ctaPerks()->where('id', $id)->update($data)
+                : $category->ctaPerks()->create($data);
         }
     }
 
     private function saveFaqs(Category $category, Request $request): void
     {
-        if ($request->filled('deleted_faqs')) {
-            $ids = array_filter(explode(',', $request->deleted_faqs));
-            if (!empty($ids))
-                $category->faqs()->whereIn('id', $ids)->delete();
-        }
+        $this->deleteMarked($category->faqs(), $request->deleted_faqs);
 
-        if (!$request->filled('faq_questions'))
+        if (!$request->filled('faq_questions')) {
             return;
+        }
 
         foreach ($request->faq_questions as $i => $question) {
             $answer = $request->faq_answers[$i] ?? '';
-            if (!$question && !$answer)
+            if (!$question && !$answer) {
                 continue;
-
-            $faqId = $request->faq_ids[$i] ?? null;
-
-            if ($faqId) {
-                $category->faqs()->where('id', $faqId)->update([
-                    'question' => $question,
-                    'answer' => $answer,
-                    'sort_order' => $i,
-                ]);
-            } else {
-                $category->faqs()->create([
-                    'question' => $question,
-                    'answer' => $answer,
-                    'sort_order' => $i,
-                ]);
             }
+
+            $data = ['question' => $question, 'answer' => $answer, 'sort_order' => $i];
+            $id = $request->faq_ids[$i] ?? null;
+
+            $id
+                ? $category->faqs()->where('id', $id)->update($data)
+                : $category->faqs()->create($data);
         }
     }
-
 }

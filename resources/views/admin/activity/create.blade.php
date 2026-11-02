@@ -335,9 +335,10 @@
             </div>
 
             <div class="cat-card">
-                <form action="{{ route('admin.activities.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="activity-form" action="{{ route('admin.activities.store') }}" method="POST"
+                    enctype="multipart/form-data" novalidate>
                     @csrf
-
+                    <div id="form-alert" class="form-alert" style="display:none" role="alert"></div>
                     <div class="cat-tabs" id="activity-tabs">
                         <button type="button" class="cat-tab active" data-tab="general">General</button>
                         <button type="button" class="cat-tab" data-tab="about">About</button>
@@ -500,7 +501,7 @@
 
                         @include('admin.activity._quick-info-fields', ['activity' => null])
 
-                    
+
                         <div class="form-field">
                             <label for="status">Status</label>
                             <select id="status" name="status" class="form-control-styled">
@@ -730,7 +731,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-primary-dash">
+                        <button type="submit" id="save-btn" class="btn-primary-dash">
                             <i class="fa fa-check"></i> Save Activity
                         </button>
                         <a href="{{ route('admin.activities.index') }}" class="btn-secondary-dash">Cancel</a>
@@ -1025,4 +1026,5 @@
     document.getElementById('add-attraction-row').addEventListener('click', () => addAttractionRow());
 </script>
 
+@include('admin.partials._ajax-form', ['formId' => 'activity-form', 'tabsId' => 'activity-tabs'])
 @include('admin.footer')

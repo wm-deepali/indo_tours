@@ -1,12 +1,27 @@
+{{-- resources/views/admin/partials/_ajax-form.blade.php --}}
+{{-- Usage: @include('admin.partials._ajax-form', ['formId' => 'my-form', 'tabsId' => 'my-tabs']) (tabsId optional) --}}
+{{-- Form needs: <div id="form-alert" class="form-alert" style="display:none"></div> and a submit button id="save-btn" --}}
+<style>
+    .form-alert { margin: 16px 24px 0; padding: 14px 16px; border: 1px solid #f1b5b5; background: #fff4f4; color: #8a1f1f; border-radius: 8px; font-size: 13px; }
+    .form-alert strong { display: block; margin-bottom: 6px; }
+    .form-alert ul { margin: 0; padding-left: 18px; }
+    .form-alert a { color: inherit; text-decoration: underline; cursor: pointer; }
+    .form-control-styled.is-invalid { border-color: #b22222; }
+    .select2-container.is-invalid .select2-selection--single { border-color: #b22222; }
+    .btn-primary-dash[disabled] { opacity: .6; cursor: not-allowed; }
+    .cat-tab .tab-badge { display: inline-block; margin-left: 6px; background: #b22222; color: #fff; border-radius: 999px; font-size: 10px; font-weight: 700; padding: 1px 6px; vertical-align: middle; }
+</style>
 <script>
     (function () {
         const form = document.getElementById(@json($formId));
-        const tabsSel = '#' + @json($tabsId) + ' .cat-tab';
+        const tabsSel = '#' + @json($tabsId ?? '') + ' .cat-tab';
+        const hasTabs = @json(!empty($tabsId));
         const alertBox = document.getElementById('form-alert');
         const saveBtn = document.getElementById('save-btn');
         if (!form || !alertBox || !saveBtn) return;
 
         function activateTab(name) {
+            if (!hasTabs) return;
             document.querySelectorAll(tabsSel).forEach(b => b.classList.toggle('active', b.dataset.tab === name));
             document.querySelectorAll('.cat-tab-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === name));
         }
@@ -19,15 +34,24 @@
             form.querySelectorAll('.tab-badge').forEach(el => el.remove());
         }
 
-        // Laravel "duropt_labels.0" -> input name "duropt_labels[0]"; falls back to "amenity_ids[]" style names
+        // Laravel key "package_includes.0.1" -> try name[0][1], name[0][], name[]
         function fieldFor(key) {
             const parts = key.split('.');
-            const name = parts[0] + parts.slice(1).map(p => '[' + p + ']').join('');
-            return form.querySelector('[name="' + CSS.escape(name) + '"]')
-                || form.querySelector('[name="' + CSS.escape(parts[0] + '[]') + '"]');
+            const candidates = [];
+            for (let end = parts.length; end >= 1; end--) {
+                const base = parts[0] + parts.slice(1, end).map(p => '[' + p + ']').join('');
+                candidates.push(base + '[]'.repeat(end < parts.length ? 1 : 0));
+                if (end === parts.length) candidates.unshift(base);
+            }
+            candidates.push(parts[0], parts[0] + '[]');
+            for (const name of candidates) {
+                const el = form.querySelector('[name="' + CSS.escape(name) + '"]');
+                if (el) return el;
+            }
+            return null;
         }
 
-        // Select2 hides the real <select>; use its visible container for styling and message placement
+        // Select2 hides the real <select>; use its visible container
         function visibleFor(field) {
             const next = field.nextElementSibling;
             return field.classList.contains('select2-hidden-accessible') && next && next.classList.contains('select2-container')
@@ -84,14 +108,16 @@
                 items.push({ msg: msgs[0], tab, field });
             });
 
-            Object.entries(perTab).forEach(([tab, count]) => {
-                const btn = form.querySelector('.cat-tab[data-tab="' + tab + '"]');
-                if (!btn) return;
-                const badge = document.createElement('span');
-                badge.className = 'tab-badge';
-                badge.textContent = count;
-                btn.appendChild(badge);
-            });
+            if (hasTabs) {
+                Object.entries(perTab).forEach(([tab, count]) => {
+                    const btn = form.querySelector('.cat-tab[data-tab="' + tab + '"]');
+                    if (!btn) return;
+                    const badge = document.createElement('span');
+                    badge.className = 'tab-badge';
+                    badge.textContent = count;
+                    btn.appendChild(badge);
+                });
+            }
 
             showBanner('Nothing was saved. Please fix the following (everything you entered is still here):', items);
             const firstTab = items.find(i => i.tab)?.tab;
@@ -105,6 +131,11 @@
             const original = saveBtn.innerHTML;
             saveBtn.disabled = true;
             saveBtn.textContent = 'Saving…';
+
+            // CKEditor keeps its own copy of the text; push it back into the <textarea> before FormData reads it
+            if (window.CKEDITOR) {
+                Object.values(CKEDITOR.instances).forEach(inst => inst.updateElement());
+            }
 
             try {
                 const res = await fetch(form.action, {

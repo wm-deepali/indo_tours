@@ -350,8 +350,10 @@
             </div>
 
             <div class="cat-card">
-                <form action="{{ route('admin.attractions.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="attraction-form" action="{{ route('admin.attractions.store') }}" method="POST"
+                    enctype="multipart/form-data" novalidate>
                     @csrf
+                    <div id="form-alert" class="form-alert" style="display:none" role="alert"></div>
 
                     <div class="cat-tabs" id="attraction-tabs">
                         <button type="button" class="cat-tab active" data-tab="general">General</button>
@@ -872,7 +874,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-primary-dash">
+                        <button type="submit" id="save-btn" class="btn-primary-dash">
                             <i class="fa fa-check"></i> Save Attraction
                         </button>
                         <a href="{{ route('admin.attractions.index') }}" class="btn-secondary-dash">Cancel</a>
@@ -1454,4 +1456,5 @@
     document.getElementById('add-faq-row').addEventListener('click', () => addFaqRow());
 </script>
 
+@include('admin.partials._ajax-form', ['formId' => 'attraction-form', 'tabsId' => 'attraction-tabs'])
 @include('admin.footer')

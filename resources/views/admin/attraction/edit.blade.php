@@ -340,10 +340,11 @@
             </div>
 
             <div class="cat-card">
-                <form action="{{ route('admin.attractions.update', $attraction) }}" method="POST"
-                    enctype="multipart/form-data">
+                <form id="attraction-form" action="{{ route('admin.attractions.update', $attraction->id) }}"
+                    method="POST" enctype="multipart/form-data" novalidate>
                     @csrf
                     @method('PUT')
+                    <div id="form-alert" class="form-alert" style="display:none" role="alert"></div>
 
                     <div class="cat-tabs" id="attraction-tabs">
                         <button type="button" class="cat-tab active" data-tab="general">General</button>
@@ -1036,8 +1037,8 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-primary-dash">
-                            <i class="fa fa-check"></i> Update Attraction
+                        <button type="submit" id="save-btn" class="btn-primary-dash"> <i class="fa fa-check"></i> Update
+                            Attraction
                         </button>
                         <a href="{{ route('admin.attractions.index') }}" class="btn-secondary-dash">Cancel</a>
                     </div>
@@ -1104,6 +1105,21 @@
 <script>
     if (window.CKEDITOR) {
         CKEDITOR.replace('about_content');
+        CKEDITOR.replace('about_more_content');
+    }
+
+    function esc(v) {
+        if (v === null || v === undefined) return '';
+        return String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function escData(d) {
+        if (d === null || d === undefined) return null;
+        const out = {};
+        Object.keys(d).forEach(k => {
+            const v = d[k];
+            out[k] = (typeof v === 'string' || v === null) ? esc(v) : v;
+        });
+        return out;
     }
 
     document.querySelectorAll('#attraction-tabs .cat-tab').forEach(function (tabBtn) {
@@ -1328,6 +1344,7 @@
     let itineraryIndex = 0;
 
     function addItineraryRow(data = null) {
+        data = escData(data);
         const idx = itineraryIndex;
         const row = document.createElement('div');
         row.className = 'gallery-row itinerary-row';
@@ -1383,7 +1400,7 @@
         wrap.style.gap = '8px';
         wrap.style.marginBottom = '8px';
         wrap.innerHTML = `
-        <input type="text" name="itinerary_stops[${itineraryIdx}][]" class="form-control-styled" placeholder="e.g. Dal Lake" value="${value}">
+        <input type="text" name="itinerary_stops[${itineraryIdx}][]" class="form-control-styled" placeholder="e.g. Dal Lake" value="${esc(value)}">
         <button type="button" class="btn-secondary-dash remove-stop-btn"><i class="fa fa-times"></i></button>
     `;
         container.appendChild(wrap);
@@ -1415,6 +1432,7 @@
     let seasonIndex = 0;
 
     function addSeasonRow(data = null) {
+        data = escData(data);
         const idx = seasonIndex;
         const row = document.createElement('div');
         row.className = 'gallery-row';
@@ -1462,6 +1480,7 @@
     let transportIndex = 0;
 
     function addTransportRow(data = null) {
+        data = escData(data);
         const idx = transportIndex;
         const row = document.createElement('div');
         row.className = 'gallery-row';
@@ -1507,6 +1526,7 @@
     let budgetIndex = 0;
 
     function addBudgetRow(data = null) {
+        data = escData(data);
         const idx = budgetIndex;
         const row = document.createElement('div');
         row.className = 'gallery-row';
@@ -1565,7 +1585,7 @@
         wrap.style.gap = '8px';
         wrap.style.marginBottom = '8px';
         wrap.innerHTML = `
-        <input type="text" name="budget_features[${tierIdx}][]" class="form-control-styled" placeholder="e.g. Guesthouses and homestays" value="${value}">
+        <input type="text" name="budget_features[${tierIdx}][]" class="form-control-styled" placeholder="e.g. Guesthouses and homestays" value="${esc(value)}">
         <button type="button" class="btn-secondary-dash remove-stop-btn"><i class="fa fa-times"></i></button>
     `;
         container.appendChild(wrap);
@@ -1583,6 +1603,7 @@
     let carryIndex = 0;
 
     function addCarryRow(data = null) {
+        data = escData(data);
         const idx = carryIndex;
         const row = document.createElement('div');
         row.className = 'gallery-row';
@@ -1620,7 +1641,7 @@
         wrap.style.gap = '8px';
         wrap.style.marginBottom = '8px';
         wrap.innerHTML = `
-        <input type="text" name="carry_items[${groupIdx}][]" class="form-control-styled" placeholder="e.g. Comfortable walking shoes" value="${value}">
+        <input type="text" name="carry_items[${groupIdx}][]" class="form-control-styled" placeholder="e.g. Comfortable walking shoes" value="${esc(value)}">
         <button type="button" class="btn-secondary-dash remove-stop-btn"><i class="fa fa-times"></i></button>
     `;
         container.appendChild(wrap);
@@ -1638,6 +1659,7 @@
     let faqIndex = 0;
 
     function addFaqRow(data = null) {
+        data = escData(data);
         const idx = faqIndex;
         const row = document.createElement('div');
         row.className = 'gallery-row';
@@ -1665,4 +1687,5 @@
     }
 </script>
 
+@include('admin.partials._ajax-form', ['formId' => 'attraction-form', 'tabsId' => 'attraction-tabs'])
 @include('admin.footer')
