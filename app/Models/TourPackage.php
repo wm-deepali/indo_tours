@@ -211,4 +211,12 @@ class TourPackage extends Model
             : 0;
     }
 
+    public static function formatDuration(int $days, int $nights): string
+    {
+        $dayLabel = $days === 1 ? 'Day' : 'Days';
+        $nightLabel = $nights === 1 ? 'Night' : 'Nights';
+
+        return "{$days} {$dayLabel} / {$nights} {$nightLabel}";
+    }
+
 }
