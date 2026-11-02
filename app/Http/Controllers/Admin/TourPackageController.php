@@ -16,9 +16,162 @@ use App\Models\SubCategory;
 use App\Models\TourPackage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class TourPackageController extends Controller
 {
+    private const IMAGE_FIELDS = ['main_image', 'top_image', 'bottom_left_image', 'bottom_right_image', 'og_image', 'twitter_card_image', 'group_offer_image'];
+
+    // Returned by validate() but they are child-table / pivot data, never TourPackage columns
+    private const CHILD_KEYS = [
+        'amenity_ids',
+        'destination_ids',
+        'attraction_ids',
+        'activity_ids',
+        'duropt_ids',
+        'duropt_labels',
+        'duropt_prices',
+        'duropt_images',
+        'deleted_duration_options',
+        'stop_ids',
+        'stop_names',
+        'deleted_stops',
+        'highlight_ids',
+        'highlight_texts',
+        'deleted_highlights',
+        'itin_ids',
+        'itin_day_numbers',
+        'itin_titles',
+        'itin_contents',
+        'deleted_itinerary',
+        'hotel_stay_ids',
+        'hotel_ids',
+        'hotel_day_labels',
+        'hotel_titles',
+        'hotel_check_ins',
+        'hotel_check_outs',
+        'hotel_breakfast',
+        'hotel_lunch',
+        'hotel_dinner',
+        'deleted_hotels',
+        'include_ids',
+        'include_texts',
+        'deleted_includes',
+        'exclude_ids',
+        'exclude_texts',
+        'deleted_excludes',
+        'policy_ids',
+        'policy_titles',
+        'policy_contents',
+        'deleted_policies',
+        'faq_ids',
+        'faq_questions',
+        'faq_answers',
+        'deleted_faqs',
+    ];
+
+    private array $pendingDeletes = [];   // old files, removed only after a successful commit
+    private array $uploaded = [];         // new files, removed if the save fails
+
+    private function storeFile($file, string $dir): string
+    {
+        $path = $file->store($dir, 'public');
+        $this->uploaded[] = $path;
+        return $path;
+    }
+
+    private function queueDelete(?string $path): void
+    {
+        if ($path) {
+            $this->pendingDeletes[] = $path;
+        }
+    }
+
+    private function flushDeletes(): void
+    {
+        foreach (array_unique($this->pendingDeletes) as $path) {
+            if (Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->delete($path);
+            }
+        }
+        $this->pendingDeletes = [];
+        $this->uploaded = [];
+    }
+
+    private function rollbackFiles(): void
+    {
+        foreach ($this->uploaded as $path) {
+            Storage::disk('public')->delete($path);
+        }
+        $this->pendingDeletes = [];
+        $this->uploaded = [];
+    }
+
+    private function uniqueSlug(string $name, ?int $ignoreId = null): string
+    {
+        $slug = Str::slug($name);
+        $original = $slug;
+        $i = 1;
+
+        while (
+            TourPackage::where('slug', $slug)
+                ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
+                ->exists()
+        ) {
+            $slug = $original . '-' . $i++;
+        }
+
+        return $slug;
+    }
+
+    private function failure(Request $request, \Throwable $e, string $verb)
+    {
+        report($e);
+        $msg = config('app.debug')
+            ? $e->getMessage()
+            : "Could not {$verb} the tour package. Nothing was saved. Please try again.";
+
+        return $request->expectsJson()
+            ? response()->json(['message' => $msg], 500)
+            : back()->withInput()->with('error', $msg);
+    }
+
+    private function success(Request $request, string $message)
+    {
+        if ($request->expectsJson()) {
+            session()->flash('success', $message);
+            return response()->json(['redirect' => route('admin.tourpackages.index')]);
+        }
+
+        return redirect()->route('admin.tourpackages.index')->with('success', $message);
+    }
+
+    private function validatedData(Request $request): array
+    {
+        $validated = $request->validate($this->rules(), [], $this->attributes());
+
+        return Arr::except($validated, self::CHILD_KEYS);
+    }
+
+    private function attributes(): array
+    {
+        return [
+            'sub_category_id' => 'sub category',
+            'name' => 'package name',
+            'duration_days' => 'days',
+            'duration_nights' => 'nights',
+            'duropt_labels.*' => 'duration option label',
+            'stop_names.*' => 'route stop name',
+            'highlight_texts.*' => 'highlight text',
+            'include_texts.*' => 'include text',
+            'exclude_texts.*' => 'exclude text',
+            'itin_titles.*' => 'itinerary day title',
+            'policy_titles.*' => 'policy title',
+            'faq_questions.*' => 'FAQ question',
+            'hotel_ids.*' => 'hotel',
+        ];
+    }
     private array $relations = [
         'amenities',
         'durationOptions',
@@ -64,32 +217,39 @@ class TourPackageController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate($this->rules());
+        $validated = $this->validatedData($request);
 
-        $validated['slug'] = Str::slug($request->name);
-        $validated['status'] = $request->status ?? 'draft';
+        try {
+            DB::transaction(function () use ($request, $validated) {
+                $validated['slug'] = $this->uniqueSlug($validated['name']);
+                $validated['status'] = $request->status ?? 'draft';
+                $validated['duration_text'] = TourPackage::formatDuration(
+                    (int) $validated['duration_days'],
+                    (int) $validated['duration_nights']
+                );
+                $validated['featured'] = $request->boolean('featured');
+                $validated['h1'] = $validated['h1'] ?: $validated['name'];
+                $validated['og_title'] = $validated['og_title'] ?: $validated['meta_title'];
+                $validated['og_description'] = $validated['og_description'] ?: $validated['meta_description'];
+                $validated['canonical_url'] = $validated['canonical_url'] ?: url('/tour-package/' . $validated['slug']);
 
-        // duration_text is generated from Days + Nights (never typed by hand)
-        $validated['duration_text'] = TourPackage::formatDuration(
-            (int) $validated['duration_days'],
-            (int) $validated['duration_nights']
-        );
-        $validated['featured'] = $request->boolean('featured');
-        $validated['h1'] = $validated['h1'] ?: $validated['name'];
-        $validated['og_title'] = $validated['og_title'] ?: $validated['meta_title'];
-        $validated['og_description'] = $validated['og_description'] ?: $validated['meta_description'];
-        $validated['canonical_url'] = $validated['canonical_url'] ?: url('/tour-package/' . $validated['slug']);
+                foreach (self::IMAGE_FIELDS as $field) {
+                    if ($request->hasFile($field)) {
+                        $validated[$field] = $this->storeFile($request->file($field), 'tourpackages/' . $field);
+                    }
+                }
 
-        foreach (['main_image', 'top_image', 'bottom_left_image', 'bottom_right_image', 'og_image', 'twitter_card_image', 'group_offer_image'] as $field) {
-            if ($request->hasFile($field)) {
-                $validated[$field] = $request->file($field)->store('tourpackages/' . $field, 'public');
-            }
+                $tourPackage = TourPackage::create($validated);
+                $this->saveAllChildren($tourPackage, $request);
+            });
+        } catch (\Throwable $e) {
+            $this->rollbackFiles();
+            return $this->failure($request, $e, 'save');
         }
 
-        $tourPackage = TourPackage::create($validated);
-        $this->saveAllChildren($tourPackage, $request);
+        $this->flushDeletes();
 
-        return redirect()->route('admin.tourpackages.index')->with('success', 'Tour Package added successfully.');
+        return $this->success($request, 'Tour Package added successfully.');
     }
 
     public function edit(TourPackage $tourpackage)
@@ -135,60 +295,59 @@ class TourPackageController extends Controller
 
     public function update(Request $request, TourPackage $tourpackage)
     {
-        $validated = $request->validate($this->rules());
+        $validated = $this->validatedData($request);
 
-        $validated['status'] = $request->status ?? $tourpackage->status;
+        try {
+            DB::transaction(function () use ($request, $tourpackage, $validated) {
+                $validated['status'] = $request->status ?? $tourpackage->status;
+                $validated['duration_text'] = TourPackage::formatDuration(
+                    (int) $validated['duration_days'],
+                    (int) $validated['duration_nights']
+                );
+                $validated['featured'] = $request->boolean('featured');
+                $validated['h1'] = $validated['h1'] ?: $validated['name'];
+                $validated['og_title'] = $validated['og_title'] ?: $validated['meta_title'];
+                $validated['og_description'] = $validated['og_description'] ?: $validated['meta_description'];
+                $validated['canonical_url'] = $validated['canonical_url']
+                    ?: $tourpackage->canonical_url
+                    ?: url('/tour-package/' . $tourpackage->slug);
 
-        // duration_text is generated from Days + Nights (never typed by hand)
-        $validated['duration_text'] = TourPackage::formatDuration(
-            (int) $validated['duration_days'],
-            (int) $validated['duration_nights']
-        );
-        $validated['featured'] = $request->boolean('featured');
-        $validated['h1'] = $validated['h1'] ?: $tourpackage->name;
-        $validated['og_title'] = $validated['og_title'] ?: $validated['meta_title'];
-        $validated['og_description'] = $validated['og_description'] ?: $validated['meta_description'];
-        $validated['canonical_url'] = $validated['canonical_url'] ?: $tourpackage->canonical_url ?: url('/tour-package/' . $tourpackage->slug);
-
-        foreach (['main_image', 'top_image', 'bottom_left_image', 'bottom_right_image', 'og_image', 'twitter_card_image', 'group_offer_image'] as $field) {
-            if ($request->hasFile($field)) {
-                if ($tourpackage->{$field}) {
-                    Storage::disk('public')->delete($tourpackage->{$field});
+                foreach (self::IMAGE_FIELDS as $field) {
+                    if ($request->hasFile($field)) {
+                        $this->queueDelete($tourpackage->{$field});
+                        $validated[$field] = $this->storeFile($request->file($field), 'tourpackages/' . $field);
+                    }
                 }
-                $validated[$field] = $request->file($field)->store('tourpackages/' . $field, 'public');
-            }
+
+                $tourpackage->update($validated);
+                $this->saveAllChildren($tourpackage, $request);
+            });
+        } catch (\Throwable $e) {
+            $this->rollbackFiles();
+            return $this->failure($request, $e, 'update');
         }
 
-        $tourpackage->update($validated);
-        $this->saveAllChildren($tourpackage, $request);
+        $this->flushDeletes();
 
-        return redirect()->route('admin.tourpackages.index')->with('success', 'Tour Package updated successfully.');
+        return $this->success($request, 'Tour Package updated successfully.');
     }
 
     public function destroy(TourPackage $tourpackage)
     {
-        // 'features' is kept here only to clean up icon files from legacy feature rows
         $tourpackage->load(['features', 'durationOptions']);
 
-        foreach (['main_image', 'top_image', 'bottom_left_image', 'bottom_right_image', 'og_image', 'twitter_card_image', 'group_offer_image'] as $field) {
-            if ($tourpackage->{$field}) {
-                Storage::disk('public')->delete($tourpackage->{$field});
-            }
+        foreach (self::IMAGE_FIELDS as $field) {
+            $this->queueDelete($tourpackage->{$field});
         }
-
         foreach ($tourpackage->features as $feature) {
-            if ($feature->icon_image) {
-                Storage::disk('public')->delete($feature->icon_image);
-            }
+            $this->queueDelete($feature->icon_image);
         }
-
         foreach ($tourpackage->durationOptions as $option) {
-            if ($option->image) {
-                Storage::disk('public')->delete($option->image);
-            }
+            $this->queueDelete($option->image);
         }
 
         $tourpackage->delete();
+        $this->flushDeletes();
 
         return redirect()->route('admin.tourpackages.index')->with('success', 'Tour Package deleted successfully.');
     }
@@ -221,10 +380,10 @@ class TourPackageController extends Controller
 
             'banner_tag_text' => 'nullable|string|max:255',
             'banner_intro' => 'nullable|string',
-            'main_image' => 'nullable|image',
-            'top_image' => 'nullable|image',
-            'bottom_left_image' => 'nullable|image',
-            'bottom_right_image' => 'nullable|image',
+            'main_image' => 'nullable|image|max:3072',
+            'top_image' => 'nullable|image|max:3072',
+            'bottom_left_image' => 'nullable|image|max:3072',
+            'bottom_right_image' => 'nullable|image|max:3072',
             'video_url' => 'nullable|string|max:255',
 
             'duration_days' => 'required|integer|min:1|max:30',
@@ -269,7 +428,7 @@ class TourPackageController extends Controller
             'duropt_ids' => 'nullable|array',
             'duropt_ids.*' => 'nullable|integer',
             'duropt_labels' => 'nullable|array',
-            'duropt_labels.*' => 'nullable|string|max:50',
+            'duropt_labels.*' => 'required_with:duropt_ids.*,duropt_prices.*,duropt_images.*|nullable|string|max:50',
             'duropt_prices' => 'nullable|array',
             'duropt_prices.*' => 'nullable|numeric',
             'duropt_images' => 'nullable|array',
@@ -280,14 +439,14 @@ class TourPackageController extends Controller
             'stop_ids' => 'nullable|array',
             'stop_ids.*' => 'nullable|integer',
             'stop_names' => 'nullable|array',
-            'stop_names.*' => 'nullable|string|max:100',
+            'stop_names.*' => 'required_with:stop_ids.*|nullable|string|max:100',
             'deleted_stops' => 'nullable|string',
 
             // Highlights (check-list)
             'highlight_ids' => 'nullable|array',
             'highlight_ids.*' => 'nullable|integer',
             'highlight_texts' => 'nullable|array',
-            'highlight_texts.*' => 'nullable|string|max:255',
+            'highlight_texts.*' => 'required_with:highlight_ids.*|nullable|string|max:255',
             'deleted_highlights' => 'nullable|string',
 
             // Itinerary
@@ -296,16 +455,16 @@ class TourPackageController extends Controller
             'itin_day_numbers' => 'nullable|array',
             'itin_day_numbers.*' => 'nullable|integer',
             'itin_titles' => 'nullable|array',
-            'itin_titles.*' => 'nullable|string|max:255',
+            'itin_titles.*' => 'required_with:itin_ids.*|nullable|string|max:255',
             'itin_contents' => 'nullable|array',
             'itin_contents.*' => 'nullable|string',
             'deleted_itinerary' => 'nullable|string',
 
-            // Hotel stays — now linked to real Hotel records
+            // Hotel stays — linked to real Hotel records
             'hotel_stay_ids' => 'nullable|array',
             'hotel_stay_ids.*' => 'nullable|integer',
             'hotel_ids' => 'nullable|array',
-            'hotel_ids.*' => 'nullable|exists:hotels,id',
+            'hotel_ids.*' => 'required_with:hotel_stay_ids.*,hotel_day_labels.*,hotel_titles.*,hotel_check_ins.*,hotel_check_outs.*|nullable|exists:hotels,id',
             'hotel_day_labels' => 'nullable|array',
             'hotel_day_labels.*' => 'nullable|string|max:50',
             'hotel_titles' => 'nullable|array',
@@ -326,19 +485,19 @@ class TourPackageController extends Controller
             'include_ids' => 'nullable|array',
             'include_ids.*' => 'nullable|integer',
             'include_texts' => 'nullable|array',
-            'include_texts.*' => 'nullable|string|max:255',
+            'include_texts.*' => 'required_with:include_ids.*|nullable|string|max:255',
             'deleted_includes' => 'nullable|string',
             'exclude_ids' => 'nullable|array',
             'exclude_ids.*' => 'nullable|integer',
             'exclude_texts' => 'nullable|array',
-            'exclude_texts.*' => 'nullable|string|max:255',
+            'exclude_texts.*' => 'required_with:exclude_ids.*|nullable|string|max:255',
             'deleted_excludes' => 'nullable|string',
 
             // Policies
             'policy_ids' => 'nullable|array',
             'policy_ids.*' => 'nullable|integer',
             'policy_titles' => 'nullable|array',
-            'policy_titles.*' => 'nullable|string|max:255',
+            'policy_titles.*' => 'required_with:policy_ids.*|nullable|string|max:255',
             'policy_contents' => 'nullable|array',
             'policy_contents.*' => 'nullable|string',
             'deleted_policies' => 'nullable|string',
@@ -347,18 +506,18 @@ class TourPackageController extends Controller
             'faq_ids' => 'nullable|array',
             'faq_ids.*' => 'nullable|integer',
             'faq_questions' => 'nullable|array',
-            'faq_questions.*' => 'nullable|string|max:255',
+            'faq_questions.*' => 'required_with:faq_ids.*,faq_answers.*|nullable|string|max:255',
             'faq_answers' => 'nullable|array',
             'faq_answers.*' => 'nullable|string',
             'deleted_faqs' => 'nullable|string',
 
+            // Linked entities (pivot)
             'destination_ids' => 'nullable|array',
             'destination_ids.*' => 'nullable|exists:destinations,id',
             'attraction_ids' => 'nullable|array',
             'attraction_ids.*' => 'nullable|exists:attractions,id',
             'activity_ids' => 'nullable|array',
             'activity_ids.*' => 'nullable|exists:activities,id',
-
         ];
     }
 
@@ -371,11 +530,7 @@ class TourPackageController extends Controller
             return;
 
         if ($imageColumn) {
-            $relation->whereIn('id', $ids)->get()->each(function ($row) use ($imageColumn) {
-                if ($row->{$imageColumn}) {
-                    Storage::disk('public')->delete($row->{$imageColumn});
-                }
-            });
+            $relation->whereIn('id', $ids)->get()->each(fn($row) => $this->queueDelete($row->{$imageColumn}));
         }
 
         $relation->whereIn('id', $ids)->delete();
@@ -400,11 +555,9 @@ class TourPackageController extends Controller
             if ($request->hasFile("duropt_images.$i")) {
                 if ($id) {
                     $existing = $tp->durationOptions()->find($id);
-                    if ($existing && $existing->image) {
-                        Storage::disk('public')->delete($existing->image);
-                    }
+                    $this->queueDelete($existing?->image);
                 }
-                $data['image'] = $request->file("duropt_images.$i")->store('tourpackages/duration-options', 'public');
+                $data['image'] = $this->storeFile($request->file("duropt_images.$i"), 'tourpackages/duration-options');
             }
 
             $id ? $tp->durationOptions()->where('id', $id)->update($data) : $tp->durationOptions()->create($data);

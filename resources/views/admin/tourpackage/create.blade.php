@@ -352,6 +352,57 @@
         .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
             background-color: var(--accent);
         }
+
+        .form-alert {
+            margin: 16px 24px 0;
+            padding: 14px 16px;
+            border: 1px solid #f1b5b5;
+            background: #fff4f4;
+            color: #8a1f1f;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+        }
+
+        .form-alert strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .form-alert ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .form-alert a {
+            color: inherit;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .form-control-styled.is-invalid {
+            border-color: #b22222;
+        }
+
+        .select2-container.is-invalid .select2-selection--single {
+            border-color: #b22222;
+        }
+
+        .btn-primary-dash[disabled] {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .cat-tab .tab-badge {
+            display: inline-block;
+            margin-left: 6px;
+            background: #b22222;
+            color: #fff;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 1px 6px;
+            vertical-align: middle;
+        }
     </style>
 
     <div class="app-content content container-fluid">
@@ -374,8 +425,11 @@
             </div>
 
             <div class="cat-card">
-                <form action="{{ route('admin.tourpackages.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="tp-form" action="{{ route('admin.tourpackages.store') }}" method="POST"
+                    enctype="multipart/form-data" novalidate>
                     @csrf
+
+                    <div id="form-alert" class="form-alert" style="display:none" role="alert"></div>
 
                     <div class="cat-tabs" id="tp-tabs">
                         <button type="button" class="cat-tab active" data-tab="general">General</button>
@@ -902,7 +956,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-primary-dash">
+                        <button type="submit" id="save-btn" class="btn-primary-dash">
                             <i class="fa fa-check"></i> Save Tour Package
                         </button>
                         <a href="{{ route('admin.tourpackages.index') }}" class="btn-secondary-dash">Cancel</a>
@@ -1287,7 +1341,9 @@
     });
 </script>
 
+@include('admin.partials._ajax-form', ['formId' => 'tp-form', 'tabsId' => 'tp-tabs'])
 @include('admin.footer')
 
-{{-- Select2 JS — loaded after the footer so jQuery is already available. Remove if your layout already loads select2 --}}
+{{-- Select2 JS — loaded after the footer so jQuery is already available. Remove if your layout already loads select2
+--}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>

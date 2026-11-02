@@ -337,6 +337,53 @@
         .cat-tab-panel.active {
             display: block;
         }
+
+        .form-alert {
+            margin: 16px 24px 0;
+            padding: 14px 16px;
+            border: 1px solid #f1b5b5;
+            background: #fff4f4;
+            color: #8a1f1f;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+        }
+
+        .form-alert strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .form-alert ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .form-alert a {
+            color: inherit;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .form-control-styled.is-invalid {
+            border-color: #b22222;
+        }
+
+        .btn-primary-dash[disabled] {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .cat-tab .tab-badge {
+            display: inline-block;
+            margin-left: 6px;
+            background: #b22222;
+            color: #fff;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 1px 6px;
+            vertical-align: middle;
+        }
     </style>
 
     <div class="app-content content container-fluid">
@@ -359,10 +406,12 @@
             </div>
 
             <div class="cat-card">
-                <form action="{{ route('admin.destinations.update', $destination) }}" method="POST"
-                    enctype="multipart/form-data">
+                <form id="destination-form" action="{{ route('admin.destinations.update', $destination) }}"
+                    method="POST" enctype="multipart/form-data" novalidate>
                     @csrf
                     @method('PUT')
+
+                    <div id="form-alert" class="form-alert" style="display:none" role="alert"></div>
 
                     <div class="cat-tabs" id="destination-tabs">
                         <button type="button" class="cat-tab active" data-tab="general">General</button>
@@ -1070,6 +1119,8 @@
                     <div class="cat-tab-panel" data-panel="season">
                         <div class="seo-section-title">Seasons</div>
 
+                        <input type="hidden" name="seasons_submitted" value="1">
+
                         <div id="season-wrapper">
                             @foreach($destination->seasons as $i => $seasonItem)
                                 <div class="gallery-row" style="grid-template-columns: 1fr 1fr 2fr auto;">
@@ -1132,51 +1183,55 @@
                     <div class="cat-tab-panel" data-panel="budget">
                         <div class="seo-section-title">Budget Tiers</div>
 
+                        <input type="hidden" name="budget_tiers_submitted" value="1">
+
                         <div id="budget-tier-wrapper">
                             @foreach($destination->budgetTiers as $i => $tierItem)
-                                <div class="gallery-row" style="grid-template-columns: 1fr 1fr 1fr 1fr auto;">
-                                    <div class="form-field" style="margin:0">
-                                        <label>Name</label>
-                                        <input type="text" name="budget_tier[{{ $i }}][name]" class="form-control-styled"
-                                            value="{{ $tierItem->name }}">
+                                <div>
+                                    <div class="gallery-row" style="grid-template-columns: 1fr 1fr 1fr 1fr auto;">
+                                        <div class="form-field" style="margin:0">
+                                            <label>Name</label>
+                                            <input type="text" name="budget_tier[{{ $i }}][name]"
+                                                class="form-control-styled" value="{{ $tierItem->name }}">
+                                        </div>
+                                        <div class="form-field" style="margin:0">
+                                            <label>Price From</label>
+                                            <input type="text" name="budget_tier[{{ $i }}][price_from]"
+                                                class="form-control-styled" value="{{ $tierItem->price_from }}">
+                                        </div>
+                                        <div class="form-field" style="margin:0">
+                                            <label>Price To</label>
+                                            <input type="text" name="budget_tier[{{ $i }}][price_to]"
+                                                class="form-control-styled" value="{{ $tierItem->price_to }}">
+                                        </div>
+                                        <div class="form-field" style="margin:0">
+                                            <label>Suffix</label>
+                                            <input type="text" name="budget_tier[{{ $i }}][price_suffix]"
+                                                class="form-control-styled" value="{{ $tierItem->price_suffix }}">
+                                        </div> <button type="button" class="gallery-remove"
+                                            onclick="this.closest('div').parentElement.remove()">
+                                            <i class="fa fa-times"></i>
+                                        </button>
                                     </div>
-                                    <div class="form-field" style="margin:0">
-                                        <label>Price From</label>
-                                        <input type="text" name="budget_tier[{{ $i }}][price_from]"
-                                            class="form-control-styled" value="{{ $tierItem->price_from }}">
-                                    </div>
-                                    <div class="form-field" style="margin:0">
-                                        <label>Price To</label>
-                                        <input type="text" name="budget_tier[{{ $i }}][price_to]"
-                                            class="form-control-styled" value="{{ $tierItem->price_to }}">
-                                    </div>
-                                    <div class="form-field" style="margin:0">
-                                        <label>Suffix</label>
-                                        <input type="text" name="budget_tier[{{ $i }}][price_suffix]"
-                                            class="form-control-styled" value="{{ $tierItem->price_suffix }}">
-                                    </div>
-                                    <button type="button" class="gallery-remove"
-                                        onclick="this.closest('div').parentElement.remove()">
-                                        <i class="fa fa-times"></i>
-                                    </button>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-field">
-                                        <label>Description</label>
-                                        <input type="text" name="budget_tier[{{ $i }}][description]"
-                                            class="form-control-styled" value="{{ $tierItem->description }}">
-                                    </div>
-                                    <div class="form-field">
-                                        <label>Badge Text</label>
-                                        <input type="text" name="budget_tier[{{ $i }}][badge_text]"
-                                            class="form-control-styled" value="{{ $tierItem->badge_text }}">
-                                    </div>
-                                    <div class="form-field toggle-row" style="align-self:end; margin-bottom:18px;">
-                                        <label class="switch">
-                                            <input type="checkbox" name="budget_tier[{{ $i }}][is_featured]" value="1" {{ $tierItem->is_featured ? 'checked' : '' }}>
-                                            <span class="switch-slider"></span>
-                                        </label>
-                                        <label style="margin:0">Featured</label>
+                                    <div class="form-row">
+                                        <div class="form-field">
+                                            <label>Description</label>
+                                            <input type="text" name="budget_tier[{{ $i }}][description]"
+                                                class="form-control-styled" value="{{ $tierItem->description }}">
+                                        </div>
+                                        <div class="form-field">
+                                            <label>Badge Text</label>
+                                            <input type="text" name="budget_tier[{{ $i }}][badge_text]"
+                                                class="form-control-styled" value="{{ $tierItem->badge_text }}">
+                                        </div>
+                                        <div class="form-field toggle-row" style="align-self:end; margin-bottom:18px;">
+                                            <label class="switch">
+                                                <input type="checkbox" name="budget_tier[{{ $i }}][is_featured]" value="1"
+                                                    {{ $tierItem->is_featured ? 'checked' : '' }}>
+                                                <span class="switch-slider"></span>
+                                            </label>
+                                            <label style="margin:0">Featured</label>
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
@@ -1187,6 +1242,8 @@
                         </button>
 
                         <div class="seo-section-title" style="margin-top:24px;">Budget Breakdown</div>
+
+                        <input type="hidden" name="budget_breakdown_submitted" value="1">
 
                         <div id="budget-breakdown-wrapper">
                             @foreach($destination->budgetBreakdown as $i => $rowItem)
@@ -1349,7 +1406,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-primary-dash">
+                        <button type="submit" id="save-btn" class="btn-primary-dash">
                             <i class="fa fa-check"></i> Update Destination
                         </button>
                         <a href="{{ route('admin.destinations.index') }}" class="btn-secondary-dash">Cancel</a>
@@ -1373,9 +1430,8 @@
                 'blockQuote', 'undo', 'redo'
             ]
         })
-        .catch(error => {
-            console.error(error);
-        });
+        .then(editor => { window.moreAboutEditor = editor; })
+        .catch(error => console.error(error));
 </script>
 <script>
     // ---- Tabs ----
@@ -1836,11 +1892,11 @@
     }
 
     function addFaqRow() {
-    const wrapper = document.getElementById('faq-wrapper');
-    const row = document.createElement('div');
-    row.className = 'gallery-row';
-    row.style.gridTemplateColumns = '1fr 1fr auto';
-    row.innerHTML = `
+        const wrapper = document.getElementById('faq-wrapper');
+        const row = document.createElement('div');
+        row.className = 'gallery-row';
+        row.style.gridTemplateColumns = '1fr 1fr auto';
+        row.innerHTML = `
         <div class="form-field" style="margin:0">
             <label>Question</label>
             <input type="text" name="faq[${faqIndex}][question]" class="form-control-styled" placeholder="e.g. Where should I stay?">
@@ -1853,10 +1909,11 @@
             <i class="fa fa-times"></i>
         </button>
     `;
-    wrapper.appendChild(row);
-    faqIndex++;
-}
+        wrapper.appendChild(row);
+        faqIndex++;
+    }
 
 </script>
 
+@include('admin.destination._ajax-form')
 @include('admin.footer')

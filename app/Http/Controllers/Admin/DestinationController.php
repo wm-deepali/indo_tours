@@ -11,9 +11,30 @@ use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class DestinationController extends Controller
 {
+    private array $pendingDeletes = [];
+
+    private function deleteImage(?string $path): void
+    {
+        if ($path) {
+            $this->pendingDeletes[] = $path;
+        }
+    }
+
+    private function flushDeletes(): void
+    {
+        foreach (array_unique($this->pendingDeletes) as $path) {
+            if (Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->delete($path);
+            }
+        }
+        $this->pendingDeletes = [];
+    }
+
     public function index()
     {
         $destinations = Destination::with(['country', 'state', 'city'])
@@ -33,53 +54,66 @@ class DestinationController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $this->validateData($request);
+        $validated = $this->validateData($request);   // 422 JSON for fetch, redirect-with-errors otherwise
 
-        $validated['slug'] = $this->uniqueSlug($validated['name']);
+        try {
+            DB::transaction(function () use ($request, $validated) {
+                $validated['slug'] = $this->uniqueSlug($validated['name']);
 
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('destinations', 'public');
+                if ($request->hasFile('image')) {
+                    $validated['image'] = $request->file('image')->store('destinations', 'public');
+                }
+                if ($request->hasFile('og_image')) {
+                    $validated['og_image'] = $request->file('og_image')->store('destinations/seo', 'public');
+                } else {
+                    $validated['og_image'] = $validated['image'] ?? null;
+                }
+                if ($request->hasFile('why_visit_image')) {
+                    $validated['why_visit_image'] = $request->file('why_visit_image')->store('destinations/highlights', 'public');
+                }
+
+                $validated['h1'] = $validated['h1'] ?: $validated['name'];
+                $validated['og_title'] = $validated['og_title'] ?: $validated['meta_title'];
+                $validated['og_description'] = $validated['og_description'] ?: $validated['meta_description'];
+                $validated['canonical_url'] = $validated['canonical_url'] ?: url('/destinations/' . $validated['slug']);
+                $validated['best_for_tags'] = $this->parseTags($request->input('best_for_tags'));
+                $validated['is_featured'] = $request->boolean('is_featured');
+                $validated['status'] = $request->input('status', 'draft');
+                $validated['season_highlights'] = $this->parseSeasonHighlights($request);
+
+                $destination = Destination::create($validated);
+
+                $this->syncBanner($request, $destination);
+                $this->syncActivities($request, $destination);
+                $this->syncGallery($request, $destination);
+                $this->syncMatches($request, $destination);
+                $this->syncAreas($request, $destination);
+                $this->syncHighlights($request, $destination);
+                $this->syncPlaces($request, $destination);
+                $this->syncRoutes($request, $destination);
+                $this->syncJourneyDays($request, $destination);
+                $this->syncSeasons($request, $destination);
+                $this->syncBudgetTiers($request, $destination);
+                $this->syncBudgetBreakdown($request, $destination);
+                $this->syncFaqs($request, $destination);
+            });
+        } catch (\Throwable $e) {
+            report($e);
+            $msg = config('app.debug')
+                ? $e->getMessage()
+                : 'Could not save the destination. Nothing was saved. Please try again.';
+
+            return $request->expectsJson()
+                ? response()->json(['message' => $msg], 500)
+                : back()->withInput()->with('error', $msg);
         }
 
-        if ($request->hasFile('og_image')) {
-            $validated['og_image'] = $request->file('og_image')->store('destinations/seo', 'public');
-        } else {
-            $validated['og_image'] = $validated['image'] ?? null;
+        if ($request->expectsJson()) {
+            session()->flash('success', 'Destination created successfully.');
+            return response()->json(['redirect' => route('admin.destinations.index')]);
         }
 
-        if ($request->hasFile('why_visit_image')) {
-            $validated['why_visit_image'] = $request->file('why_visit_image')->store('destinations/highlights', 'public');
-        }
-
-        $validated['h1'] = $validated['h1'] ?: $validated['name'];
-        $validated['og_title'] = $validated['og_title'] ?: $validated['meta_title'];
-        $validated['og_description'] = $validated['og_description'] ?: $validated['meta_description'];
-        $validated['canonical_url'] = $validated['canonical_url'] ?: url('/destinations/' . $validated['slug']);
-
-        $validated['best_for_tags'] = $this->parseTags($request->input('best_for_tags'));
-        $validated['is_featured'] = $request->boolean('is_featured');
-        $validated['status'] = $request->input('status', 'draft');
-        $validated['season_highlights'] = $this->parseSeasonHighlights($request);
-
-        $destination = Destination::create($validated);
-
-        $this->syncBanner($request, $destination);
-        $this->syncActivities($request, $destination);
-        $this->syncGallery($request, $destination);
-        $this->syncMatches($request, $destination);
-        $this->syncAreas($request, $destination);
-        $this->syncHighlights($request, $destination);
-        $this->syncPlaces($request, $destination);
-        $this->syncRoutes($request, $destination);
-        $this->syncJourneyDays($request, $destination);
-        $this->syncSeasons($request, $destination);
-        $this->syncBudgetTiers($request, $destination);
-        $this->syncBudgetBreakdown($request, $destination);
-        $this->syncFaqs($request, $destination);
-
-        return redirect()
-            ->route('admin.destinations.index')
-            ->with('success', 'Destination created successfully.');
+        return redirect()->route('admin.destinations.index')->with('success', 'Destination created successfully.');
     }
 
     public function edit(Destination $destination)
@@ -96,183 +130,214 @@ class DestinationController extends Controller
     {
         $validated = $this->validateData($request, $destination->id);
 
-        if ($validated['name'] !== $destination->name) {
-            $validated['slug'] = $this->uniqueSlug($validated['name'], $destination->id);
+        try {
+            DB::transaction(function () use ($request, $destination, $validated) {
+                if ($validated['name'] !== $destination->name) {
+                    $validated['slug'] = $this->uniqueSlug($validated['name'], $destination->id);
+                }
+
+                if ($request->hasFile('image')) {
+                    $this->deleteImage($destination->image);
+                    $validated['image'] = $request->file('image')->store('destinations', 'public');
+                }
+
+                if ($request->hasFile('og_image')) {
+                    $this->deleteImage($destination->og_image);
+                    $validated['og_image'] = $request->file('og_image')->store('destinations/seo', 'public');
+                }
+
+                if ($request->hasFile('why_visit_image')) {
+                    $this->deleteImage($destination->why_visit_image);
+                    $validated['why_visit_image'] = $request->file('why_visit_image')->store('destinations/highlights', 'public');
+                }
+
+                $validated['h1'] = $validated['h1'] ?: $validated['name'];
+                $validated['og_title'] = $validated['og_title'] ?: $validated['meta_title'];
+                $validated['og_description'] = $validated['og_description'] ?: $validated['meta_description'];
+                $validated['canonical_url'] = $validated['canonical_url']
+                    ?: url('/destinations/' . ($validated['slug'] ?? $destination->slug));
+
+                $validated['best_for_tags'] = $this->parseTags($request->input('best_for_tags'));
+                $validated['is_featured'] = $request->boolean('is_featured');
+                $validated['status'] = $request->input('status', $destination->status);
+                $validated['season_highlights'] = $this->parseSeasonHighlights($request);
+
+                $destination->update($validated);
+
+                if ($request->filled('remove_gallery_ids')) {
+                    $toDelete = DestinationGallery::where('destination_id', $destination->id)
+                        ->whereIn('id', $request->input('remove_gallery_ids'))
+                        ->get();
+                    foreach ($toDelete as $g) {
+                        $this->deleteImage($g->image);
+                    }
+                    DestinationGallery::whereIn('id', $toDelete->pluck('id'))->delete();
+                }
+
+                if ($request->filled('remove_match_ids')) {
+                    $toDelete = \App\Models\DestinationMatch::where('destination_id', $destination->id)
+                        ->whereIn('id', $request->input('remove_match_ids'))
+                        ->get();
+                    foreach ($toDelete as $m) {
+                        $this->deleteImage($m->icon);
+                    }
+                    \App\Models\DestinationMatch::whereIn('id', $toDelete->pluck('id'))->delete();
+                }
+
+                if ($request->filled('remove_area_ids')) {
+                    $toDelete = \App\Models\DestinationArea::where('destination_id', $destination->id)
+                        ->whereIn('id', $request->input('remove_area_ids'))
+                        ->get();
+                    foreach ($toDelete as $a) {
+                        $this->deleteImage($a->image);
+                    }
+                    \App\Models\DestinationArea::whereIn('id', $toDelete->pluck('id'))->delete();
+                }
+
+                if ($request->filled('remove_highlight_ids')) {
+                    $toDelete = \App\Models\DestinationHighlight::where('destination_id', $destination->id)
+                        ->whereIn('id', $request->input('remove_highlight_ids'))
+                        ->get();
+                    foreach ($toDelete as $h) {
+                        $this->deleteImage($h->icon);
+                    }
+                    \App\Models\DestinationHighlight::whereIn('id', $toDelete->pluck('id'))->delete();
+                }
+
+                if ($request->filled('remove_place_ids')) {
+                    $toDelete = \App\Models\DestinationPlace::where('destination_id', $destination->id)
+                        ->whereIn('id', $request->input('remove_place_ids'))
+                        ->get();
+                    foreach ($toDelete as $p) {
+                        $this->deleteImage($p->image);
+                    }
+                    \App\Models\DestinationPlace::whereIn('id', $toDelete->pluck('id'))->delete();
+                }
+
+                if ($request->filled('remove_activity_ids')) {
+                    $toDelete = \App\Models\DestinationActivity::where('destination_id', $destination->id)
+                        ->whereIn('id', $request->input('remove_activity_ids'))
+                        ->get();
+                    foreach ($toDelete as $act) {
+                        $this->deleteImage($act->image);
+                    }
+                    \App\Models\DestinationActivity::whereIn('id', $toDelete->pluck('id'))->delete();
+                }
+
+                if ($request->filled('remove_route_ids')) {
+                    \App\Models\DestinationRoute::where('destination_id', $destination->id)
+                        ->whereIn('id', $request->input('remove_route_ids'))
+                        ->delete();
+                }
+
+                if ($request->filled('remove_journey_ids')) {
+                    $toDelete = \App\Models\DestinationJourneyDay::where('destination_id', $destination->id)
+                        ->whereIn('id', $request->input('remove_journey_ids'))
+                        ->get();
+                    foreach ($toDelete as $j) {
+                        $this->deleteImage($j->image);
+                    }
+                    \App\Models\DestinationJourneyDay::whereIn('id', $toDelete->pluck('id'))->delete();
+                }
+
+                if ($request->filled('remove_faq_ids')) {
+                    \App\Models\DestinationFaq::where('destination_id', $destination->id)
+                        ->whereIn('id', $request->input('remove_faq_ids'))
+                        ->delete();
+                }
+
+                $this->updateExistingRoutes($request, $destination);
+                $this->syncRoutes($request, $destination);
+                $this->updateExistingJourneyDays($request, $destination);
+                $this->syncJourneyDays($request, $destination);
+                $this->syncBanner($request, $destination);
+                $this->updateExistingActivities($request, $destination);
+                $this->syncActivities($request, $destination);
+                $this->updateExistingPlaces($request, $destination);
+                $this->updateExistingAreas($request, $destination);
+                $this->updateExistingHighlights($request, $destination);
+                $this->updateExistingGallery($request, $destination);
+                $this->syncGallery($request, $destination);
+                $this->updateExistingMatches($request, $destination);
+                $this->syncMatches($request, $destination);
+                $this->syncAreas($request, $destination);
+                $this->syncHighlights($request, $destination);
+                $this->syncPlaces($request, $destination);
+                $this->syncSeasons($request, $destination);
+                $this->syncBudgetTiers($request, $destination);
+                $this->syncBudgetBreakdown($request, $destination);
+                $this->updateExistingFaqs($request, $destination);
+                $this->syncFaqs($request, $destination);
+
+            });
+        } catch (\Throwable $e) {
+            $this->pendingDeletes = [];   // rolled back, keep every old file
+            report($e);
+            $msg = config('app.debug') ? $e->getMessage() : 'Could not update the destination. Nothing was saved. Please try again.';
+
+            return $request->expectsJson()
+                ? response()->json(['message' => $msg], 500)
+                : back()->withInput()->with('error', $msg);
         }
 
-        if ($request->hasFile('image')) {
-            $this->deleteImage($destination->image);
-            $validated['image'] = $request->file('image')->store('destinations', 'public');
+        $this->flushDeletes();   // committed, now remove replaced and removed files
+
+        if ($request->expectsJson()) {
+            session()->flash('success', 'Destination updated successfully.');
+            return response()->json(['redirect' => route('admin.destinations.index')]);
         }
 
-        if ($request->hasFile('og_image')) {
-            $this->deleteImage($destination->og_image);
-            $validated['og_image'] = $request->file('og_image')->store('destinations/seo', 'public');
-        }
-
-        if ($request->hasFile('why_visit_image')) {
-            $this->deleteImage($destination->why_visit_image);
-            $validated['why_visit_image'] = $request->file('why_visit_image')->store('destinations/highlights', 'public');
-        }
-
-        $validated['h1'] = $validated['h1'] ?: $validated['name'];
-        $validated['og_title'] = $validated['og_title'] ?: $validated['meta_title'];
-        $validated['og_description'] = $validated['og_description'] ?: $validated['meta_description'];
-        $validated['canonical_url'] = $validated['canonical_url']
-            ?: url('/destinations/' . ($validated['slug'] ?? $destination->slug));
-
-        $validated['best_for_tags'] = $this->parseTags($request->input('best_for_tags'));
-        $validated['is_featured'] = $request->boolean('is_featured');
-        $validated['status'] = $request->input('status', $destination->status);
-        $validated['season_highlights'] = $this->parseSeasonHighlights($request);
-
-        $destination->update($validated);
-
-        if ($request->filled('remove_gallery_ids')) {
-            $toDelete = DestinationGallery::where('destination_id', $destination->id)
-                ->whereIn('id', $request->input('remove_gallery_ids'))
-                ->get();
-            foreach ($toDelete as $g) {
-                $this->deleteImage($g->image);
-            }
-            DestinationGallery::whereIn('id', $toDelete->pluck('id'))->delete();
-        }
-
-        if ($request->filled('remove_match_ids')) {
-            $toDelete = \App\Models\DestinationMatch::where('destination_id', $destination->id)
-                ->whereIn('id', $request->input('remove_match_ids'))
-                ->get();
-            foreach ($toDelete as $m) {
-                $this->deleteImage($m->icon);
-            }
-            \App\Models\DestinationMatch::whereIn('id', $toDelete->pluck('id'))->delete();
-        }
-
-        if ($request->filled('remove_area_ids')) {
-            $toDelete = \App\Models\DestinationArea::where('destination_id', $destination->id)
-                ->whereIn('id', $request->input('remove_area_ids'))
-                ->get();
-            foreach ($toDelete as $a) {
-                $this->deleteImage($a->image);
-            }
-            \App\Models\DestinationArea::whereIn('id', $toDelete->pluck('id'))->delete();
-        }
-
-        if ($request->filled('remove_highlight_ids')) {
-            $toDelete = \App\Models\DestinationHighlight::where('destination_id', $destination->id)
-                ->whereIn('id', $request->input('remove_highlight_ids'))
-                ->get();
-            foreach ($toDelete as $h) {
-                $this->deleteImage($h->icon);
-            }
-            \App\Models\DestinationHighlight::whereIn('id', $toDelete->pluck('id'))->delete();
-        }
-
-        if ($request->filled('remove_place_ids')) {
-            $toDelete = \App\Models\DestinationPlace::where('destination_id', $destination->id)
-                ->whereIn('id', $request->input('remove_place_ids'))
-                ->get();
-            foreach ($toDelete as $p) {
-                $this->deleteImage($p->image);
-            }
-            \App\Models\DestinationPlace::whereIn('id', $toDelete->pluck('id'))->delete();
-        }
-
-        if ($request->filled('remove_activity_ids')) {
-            $toDelete = \App\Models\DestinationActivity::where('destination_id', $destination->id)
-                ->whereIn('id', $request->input('remove_activity_ids'))
-                ->get();
-            foreach ($toDelete as $act) {
-                $this->deleteImage($act->image);
-            }
-            \App\Models\DestinationActivity::whereIn('id', $toDelete->pluck('id'))->delete();
-        }
-
-        if ($request->filled('remove_route_ids')) {
-            \App\Models\DestinationRoute::where('destination_id', $destination->id)
-                ->whereIn('id', $request->input('remove_route_ids'))
-                ->delete();
-        }
-
-        if ($request->filled('remove_journey_ids')) {
-            $toDelete = \App\Models\DestinationJourneyDay::where('destination_id', $destination->id)
-                ->whereIn('id', $request->input('remove_journey_ids'))
-                ->get();
-            foreach ($toDelete as $j) {
-                $this->deleteImage($j->image);
-            }
-            \App\Models\DestinationJourneyDay::whereIn('id', $toDelete->pluck('id'))->delete();
-        }
-
-        if ($request->filled('remove_faq_ids')) {
-            \App\Models\DestinationFaq::where('destination_id', $destination->id)
-                ->whereIn('id', $request->input('remove_faq_ids'))
-                ->delete();
-        }
-
-        $this->updateExistingRoutes($request, $destination);
-        $this->syncRoutes($request, $destination);
-        $this->updateExistingJourneyDays($request, $destination);
-        $this->syncJourneyDays($request, $destination);
-        $this->syncBanner($request, $destination);
-        $this->updateExistingActivities($request, $destination);
-        $this->syncActivities($request, $destination);
-        $this->updateExistingPlaces($request, $destination);
-        $this->updateExistingAreas($request, $destination);
-        $this->updateExistingHighlights($request, $destination);
-        $this->updateExistingGallery($request, $destination);
-        $this->syncGallery($request, $destination);
-        $this->updateExistingMatches($request, $destination);
-        $this->syncMatches($request, $destination);
-        $this->syncAreas($request, $destination);
-        $this->syncHighlights($request, $destination);
-        $this->syncPlaces($request, $destination);
-        $this->syncSeasons($request, $destination);
-        $this->syncBudgetTiers($request, $destination);
-        $this->syncBudgetBreakdown($request, $destination);
-        $this->updateExistingFaqs($request, $destination);
-        $this->syncFaqs($request, $destination);
-
-        return redirect()
-            ->route('admin.destinations.index')
-            ->with('success', 'Destination updated successfully.');
+        return redirect()->route('admin.destinations.index')->with('success', 'Destination updated successfully.');
     }
 
     public function destroy(Destination $destination)
     {
-        $this->deleteImage($destination->image);
-        $this->deleteImage($destination->og_image);
-        $this->deleteImage($destination->why_visit_image);
-
-        foreach ($destination->galleries as $g) {
-            $this->deleteImage($g->image);
-        }
-
         $destination->galleries()->delete();
         $destination->delete();
+
+        $this->flushDeletes();
 
         return redirect()
             ->route('admin.destinations.index')
             ->with('success', 'Destination deleted successfully.');
     }
 
-    /**
-     * Delete a stored image from the public disk if it exists.
-     */
-    private function deleteImage(?string $path): void
-    {
-        if ($path && Storage::disk('public')->exists($path)) {
-            Storage::disk('public')->delete($path);
-        }
-    }
+
+    private const REPEATER_KEYS = [
+        'gallery',
+        'match',
+        'area',
+        'highlight',
+        'place',
+        'activity',
+        'route',
+        'journey',
+        'season',
+        'season_highlight',
+        'budget_tier',
+        'budget_breakdown',
+        'faq',
+        'banner',
+        'banner_image',
+        'existing_gallery',
+        'existing_match',
+        'existing_area',
+        'existing_highlight',
+        'existing_place',
+        'existing_activity',
+        'existing_route',
+        'existing_journey',
+        'existing_faq',
+    ];
 
     private function validateData(Request $request, ?int $ignoreId = null): array
     {
-        return $request->validate([
+        $rules = [
             'name' => 'required|string|max:255',
             'country_id' => 'required|exists:countries,id',
             'state_id' => 'nullable|exists:states,id',
             'city_id' => 'nullable|exists:cities,id',
+            'status' => 'nullable|in:draft,published,unpublished',
             'image' => 'nullable|image|max:2048',
             'short_description' => 'nullable|string|max:500',
             'description' => 'nullable|string',
@@ -294,9 +359,92 @@ class DestinationController extends Controller
             'canonical_url' => 'nullable|string|max:255',
             'twitter_card_image' => 'nullable|string|max:255',
             'robots' => 'nullable|string|max:50',
-            'why_visit_image' => 'nullable|image',
+            'why_visit_image' => 'nullable|image|max:2048',
             'why_visit_media_tag' => 'nullable|string|max:255',
-        ]);
+
+            // repeater images
+            'banner_image' => 'nullable|image|max:2048',
+            'gallery.*.image' => 'nullable|image|max:2048',
+            'match.*.icon' => 'nullable|image|max:2048',
+            'area.*.image' => 'nullable|image|max:2048',
+            'highlight.*.icon' => 'nullable|image|max:2048',
+            'place.*.image' => 'nullable|image|max:2048',
+            'activity.*.image' => 'nullable|image|max:2048',
+            'journey.*.image' => 'nullable|image|max:2048',
+
+            // partly filled rows -> error instead of being silently skipped
+            'match.*.want' => 'required_with:match.*.offer_text|nullable|string|max:255',
+            'match.*.offer_text' => 'required_with:match.*.want|nullable|string',
+            'area.*.name' => 'required_with:area.*.tag,area.*.stay_duration,area.*.nearby_text,area.*.why_text|nullable|string|max:255',
+            'highlight.*.title' => 'required_with:highlight.*.description|nullable|string|max:255',
+            'place.*.name' => 'required_with:place.*.description|nullable|string|max:255',
+            'activity.*.title' => 'required_with:activity.*.tag,activity.*.description|nullable|string|max:255',
+            'route.*.days' => 'required_with:route.*.label,route.*.subtitle,route.*.path,route.*.note|nullable|integer|min:1',
+            'route.*.label' => 'required_with:route.*.days,route.*.subtitle,route.*.path,route.*.note|nullable|string|max:255',
+            'journey.*.title' => 'required_with:journey.*.day_number,journey.*.flow_text,journey.*.stay_text,journey.*.food_text|nullable|string|max:255',
+            'season.*.name' => 'required_with:season.*.range_text,season.*.description|nullable|string|max:255',
+            'budget_tier.*.name' => 'required_with:budget_tier.*.price_from,budget_tier.*.price_to,budget_tier.*.description|nullable|string|max:255',
+            'budget_breakdown.*.label' => 'required_with:budget_breakdown.*.percent|nullable|string|max:255',
+            'budget_breakdown.*.percent' => 'required_with:budget_breakdown.*.label|nullable|integer|min:0|max:100',
+            'faq.*.question' => 'required_with:faq.*.answer|nullable|string|max:500',
+            'faq.*.answer' => 'required_with:faq.*.question|nullable|string',
+
+            // existing rows (edit page)
+            'existing_gallery.*.image' => 'nullable|image|max:2048',
+            'existing_match.*.icon' => 'nullable|image|max:2048',
+            'existing_area.*.image' => 'nullable|image|max:2048',
+            'existing_highlight.*.icon' => 'nullable|image|max:2048',
+            'existing_place.*.image' => 'nullable|image|max:2048',
+            'existing_activity.*.image' => 'nullable|image|max:2048',
+            'existing_journey.*.image' => 'nullable|image|max:2048',
+
+            'existing_match.*.want' => 'required|string|max:255',
+            'existing_area.*.name' => 'required|string|max:255',
+            'existing_highlight.*.title' => 'required|string|max:255',
+            'existing_place.*.name' => 'required|string|max:255',
+            'existing_activity.*.title' => 'required|string|max:255',
+            'existing_route.*.days' => 'required|integer|min:1',
+            'existing_route.*.label' => 'required|string|max:255',
+            'existing_journey.*.title' => 'required|string|max:255',
+            'existing_faq.*.question' => 'required|string|max:500',
+            'existing_faq.*.answer' => 'required|string',
+        ];
+
+        $attributes = [
+            'name' => 'destination name',
+            'country_id' => 'country',
+            'state_id' => 'state',
+            'city_id' => 'city',
+            'route.*.days' => 'route days',
+            'route.*.label' => 'route label',
+            'faq.*.question' => 'FAQ question',
+            'faq.*.answer' => 'FAQ answer',
+            'journey.*.title' => 'itinerary day title',
+            'season.*.name' => 'season name',
+            'budget_tier.*.name' => 'budget tier name',
+            'budget_breakdown.*.label' => 'breakdown label',
+            'budget_breakdown.*.percent' => 'breakdown percent',
+            'match.*.want' => 'trip match "want"',
+            'area.*.name' => 'stay area name',
+            'highlight.*.title' => 'highlight title',
+            'place.*.name' => 'place name',
+            'activity.*.title' => 'activity title',
+            'existing_route.*.days' => 'route days',
+            'existing_route.*.label' => 'route label',
+            'existing_faq.*.question' => 'FAQ question',
+            'existing_faq.*.answer' => 'FAQ answer',
+            'existing_journey.*.title' => 'itinerary day title',
+            'existing_area.*.name' => 'stay area name',
+            'existing_highlight.*.title' => 'highlight title',
+            'existing_place.*.name' => 'place name',
+            'existing_activity.*.title' => 'activity title',
+            'existing_match.*.want' => 'trip match "want"',
+        ];
+
+        $validated = $request->validate($rules, [], $attributes);
+
+        // Repeater arrays are handled by the sync*() methods, never mass-assigned
+        return Arr::except($validated, self::REPEATER_KEYS);
     }
 
     private function uniqueSlug(string $name, ?int $ignoreId = null): string
@@ -850,6 +998,9 @@ class DestinationController extends Controller
     private function syncSeasons(Request $request, Destination $destination): void
     {
         if (!$request->has('season')) {
+            if ($request->boolean('seasons_submitted')) {
+                $destination->seasons()->delete();
+            }
             return;
         }
 
@@ -884,6 +1035,9 @@ class DestinationController extends Controller
     private function syncBudgetTiers(Request $request, Destination $destination): void
     {
         if (!$request->has('budget_tier')) {
+            if ($request->boolean('budget_tiers_submitted')) {
+                $destination->budgetTiers()->delete();
+            }
             return;
         }
 
@@ -910,6 +1064,9 @@ class DestinationController extends Controller
     private function syncBudgetBreakdown(Request $request, Destination $destination): void
     {
         if (!$request->has('budget_breakdown')) {
+            if ($request->boolean('budget_breakdown_submitted')) {
+                $destination->budgetBreakdown()->delete();
+            }
             return;
         }
 

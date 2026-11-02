@@ -330,6 +330,41 @@
         .cat-tab-panel.active {
             display: block;
         }
+
+        .form-alert {
+            margin: 16px 24px 0;
+            padding: 14px 16px;
+            border: 1px solid #f1b5b5;
+            background: #fff4f4;
+            color: #8a1f1f;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+        }
+
+        .form-alert strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .form-alert ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .form-alert a {
+            color: inherit;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .form-control-styled.is-invalid {
+            border-color: #b22222;
+        }
+
+        .btn-primary-dash[disabled] {
+            opacity: .6;
+            cursor: not-allowed;
+        }
     </style>
 
     <div class="app-content content container-fluid">
@@ -352,8 +387,11 @@
             </div>
 
             <div class="cat-card">
-                <form action="{{ route('admin.destinations.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="destination-form" action="{{ route('admin.destinations.store') }}" method="POST"
+                    enctype="multipart/form-data" novalidate>
                     @csrf
+
+                    <div id="form-alert" class="form-alert" style="display:none" role="alert"></div>
 
                     <div class="cat-tabs" id="destination-tabs">
                         <button type="button" class="cat-tab active" data-tab="general">General</button>
@@ -1232,7 +1270,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-primary-dash">
+                        <button type="submit" id="save-btn" class="btn-primary-dash">
                             <i class="fa fa-check"></i> Save Destination
                         </button>
                         <a href="{{ route('admin.destinations.index') }}" class="btn-secondary-dash">Cancel</a>
@@ -1255,9 +1293,8 @@
                 'blockQuote', 'undo', 'redo'
             ]
         })
-        .catch(error => {
-            console.error(error);
-        });
+        .then(editor => { window.moreAboutEditor = editor; })
+        .catch(error => console.error(error));
 </script>
 <script>
     // ---- Tabs ----
@@ -1790,4 +1827,5 @@
 
 </script>
 
+@include('admin.destination._ajax-form')
 @include('admin.footer')
