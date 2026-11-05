@@ -62,7 +62,7 @@ class DestinationSeeder extends Seeder
                 'h1' => 'Kashmir',
                 'meta_title' => 'Kashmir Tour Packages | Indo Tours & Adventures',
                 'meta_description' => 'Explore Kashmir with curated tour packages covering Srinagar, Gulmarg, Pahalgam and Sonamarg — nature, adventure and relaxation in one trip.',
-                'canonical_url' => url('/destinations/kashmir'),
+                'canonical_url' => url('/destination/kashmir'),
                 'og_title' => 'Kashmir | Indo Tours & Adventures',
                 'og_description' => 'A Himalayan escape of peaceful lakes, lush valleys and snow-covered mountains.',
                 'og_image' => $this->copyDemoImage('assets/images/attraction/kashmir1.jpg', 'kashmir-og'),

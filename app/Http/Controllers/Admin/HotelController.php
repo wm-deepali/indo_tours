@@ -37,7 +37,7 @@ class HotelController extends Controller
             'location' => 'nullable|string|max:255',
             'status' => 'nullable|in:draft,published,unpublished',
             'gallery_images' => 'nullable|array',
-            'gallery_images.*' => 'nullable|image|max:2048',
+            'gallery_images.*' => 'nullable|image',
         ]);
 
         $validated['slug'] = Str::slug($request->name) . '-' . Str::random(5);
@@ -71,7 +71,7 @@ class HotelController extends Controller
             'location' => 'nullable|string|max:255',
             'status' => 'nullable|in:draft,published,unpublished',
             'gallery_images' => 'nullable|array',
-            'gallery_images.*' => 'nullable|image|max:2048',
+            'gallery_images.*' => 'nullable|image',
         ]);
 
         $validated['status'] = $request->status ?? $hotel->status;

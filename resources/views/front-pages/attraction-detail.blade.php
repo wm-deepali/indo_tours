@@ -929,7 +929,7 @@
               <div class="swiper-wrapper">
                 @foreach($relatedAttractions as $related)
                   <div class="swiper-slide">
-                    <a href="{{ route('attraction.detail', $related) }}" class="journey_card">
+                    <a href="{{ route('attraction.show', $related) }}" class="journey_card">
                       <div class="img">
                         <img loading="lazy" src="{{ asset('storage/' . $related->image) }}" alt="{{ $related->name }}" />
                       </div>

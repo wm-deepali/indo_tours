@@ -44,7 +44,7 @@ class BlogController extends Controller
     {
         $data = $this->validateData($request);
         $data = $this->handleUploads($request, $data);
-        $data['author_id'] = auth('admin')->id();
+        $data['author_id'] = auth()->id();
 
         $blog = Blog::create($data);
 

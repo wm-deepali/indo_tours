@@ -75,7 +75,7 @@ class DestinationController extends Controller
                 $validated['h1'] = $validated['h1'] ?: $validated['name'];
                 $validated['og_title'] = $validated['og_title'] ?: $validated['meta_title'];
                 $validated['og_description'] = $validated['og_description'] ?: $validated['meta_description'];
-                $validated['canonical_url'] = $validated['canonical_url'] ?: url('/destinations/' . $validated['slug']);
+                $validated['canonical_url'] = $validated['canonical_url'] ?: url('/destination/' . $validated['slug']);
                 $validated['best_for_tags'] = $this->parseTags($request->input('best_for_tags'));
                 $validated['is_featured'] = $request->boolean('is_featured');
                 $validated['status'] = $request->input('status', 'draft');
@@ -155,7 +155,7 @@ class DestinationController extends Controller
                 $validated['og_title'] = $validated['og_title'] ?: $validated['meta_title'];
                 $validated['og_description'] = $validated['og_description'] ?: $validated['meta_description'];
                 $validated['canonical_url'] = $validated['canonical_url']
-                    ?: url('/destinations/' . ($validated['slug'] ?? $destination->slug));
+                    ?: url('/destination/' . ($validated['slug'] ?? $destination->slug));
 
                 $validated['best_for_tags'] = $this->parseTags($request->input('best_for_tags'));
                 $validated['is_featured'] = $request->boolean('is_featured');
