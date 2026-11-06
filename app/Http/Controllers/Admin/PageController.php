@@ -11,6 +11,24 @@ use Illuminate\Validation\Rule;
 
 class PageController extends Controller
 {
+
+    private function applySeoDefaults(array $v, string $slug): array
+    {
+        $title = $v['title'];
+        $site = config('app.name');
+        $body = trim(preg_replace('/\s+/', ' ', strip_tags($v['content'] ?? '')));
+
+        $v['h1'] = ($v['h1'] ?? null) ?: $title;
+        $v['meta_title'] = ($v['meta_title'] ?? null) ?: Str::limit($title . ($site ? ' | ' . $site : ''), 60, '');
+        $v['meta_description'] = ($v['meta_description'] ?? null) ?: Str::limit($body ?: "Read more about {$title}.", 160, '');
+        $v['canonical_url'] = ($v['canonical_url'] ?? null) ?: url('/' . $slug);
+        $v['og_title'] = ($v['og_title'] ?? null) ?: $v['meta_title'];
+        $v['og_description'] = ($v['og_description'] ?? null) ?: $v['meta_description'];
+        $v['robots'] = ($v['robots'] ?? null) ?: 'index, follow';
+
+        return $v;
+    }
+
     public function index()
     {
         $pages = Page::latest()->paginate(15);
@@ -32,6 +50,7 @@ class PageController extends Controller
             : Page::generateUniqueSlug($request->input('title'));
 
         $validated['is_active'] = $request->boolean('is_active');
+        $validated = $this->applySeoDefaults($validated, $validated['slug']);
 
         if ($request->hasFile('og_image')) {
             $validated['og_image'] = $request->file('og_image')->store('pages/og', 'public');
@@ -64,6 +83,7 @@ class PageController extends Controller
         }
 
         $validated['is_active'] = $request->boolean('is_active');
+        $validated = $this->applySeoDefaults($validated, $validated['slug']);
 
         if ($request->hasFile('og_image')) {
             if ($page->og_image) {

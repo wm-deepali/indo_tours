@@ -24,9 +24,18 @@ class SubCategoryController extends Controller
 
     // Returned by validate() but they are child-table data, never SubCategory columns
     private const CHILD_KEYS = [
-        'highlight_ids', 'highlight_titles', 'highlight_values', 'highlight_images', 'deleted_highlights',
-        'perk_ids', 'perk_texts', 'deleted_perks',
-        'faq_ids', 'faq_questions', 'faq_answers', 'deleted_faqs',
+        'highlight_ids',
+        'highlight_titles',
+        'highlight_values',
+        'highlight_images',
+        'deleted_highlights',
+        'perk_ids',
+        'perk_texts',
+        'deleted_perks',
+        'faq_ids',
+        'faq_questions',
+        'faq_answers',
+        'deleted_faqs',
     ];
 
     private array $pendingDeletes = [];   // old files, removed only after a successful commit
@@ -88,6 +97,29 @@ class SubCategoryController extends Controller
         return redirect()->route('admin.subcategories.index')->with('success', $message);
     }
 
+    private function applySeoDefaults(array $v, string $slug): array
+    {
+        $site = config('app.name');
+        $name = $v['name'];
+
+        $v['h1'] = $v['h1'] ?? null ?: $name;
+        $v['meta_title'] = $v['meta_title'] ?? null
+            ?: Str::limit($name . ' Tour Packages' . ($site ? ' | ' . $site : ''), 60, '');
+        $v['meta_description'] = $v['meta_description'] ?? null
+            ?: Str::limit(
+                strip_tags($v['intro_text'] ?? $v['heading_intro'] ?? ("Explore {$name} tour packages. Compare itineraries, hotels, inclusions and best prices, and book online.")),
+                160
+            );
+        $v['og_title'] = $v['og_title'] ?? null ?: $v['meta_title'];
+        $v['og_description'] = $v['og_description'] ?? null ?: $v['meta_description'];
+        $v['canonical_url'] = $v['canonical_url'] ?? null ?: url('/' . $slug);
+        $v['robots'] = $v['robots'] ?? null ?: 'index, follow';
+        $v['twitter_title'] = $v['twitter_title'] ?? null ?: $v['og_title'];
+        $v['twitter_description'] = $v['twitter_description'] ?? null ?: $v['og_description'];
+
+        return $v;
+    }
+
     public function index()
     {
         $subCategories = SubCategory::with('category')->latest()->paginate(20);
@@ -110,6 +142,7 @@ class SubCategoryController extends Controller
                 $validated['status'] = $request->status ?? 'draft';
                 $validated['show_in_header'] = $request->boolean('show_in_header');
                 $validated['header_sort_order'] = $validated['header_sort_order'] ?? 0;
+                $validated = $this->applySeoDefaults($validated, $validated['slug']);
 
                 foreach (self::IMAGE_FIELDS as $field => $dir) {
                     if ($request->hasFile($field)) {
@@ -150,6 +183,7 @@ class SubCategoryController extends Controller
                 $validated['status'] = $request->status ?? $subcategory->status;
                 $validated['show_in_header'] = $request->boolean('show_in_header');
                 $validated['header_sort_order'] = $validated['header_sort_order'] ?? 0;
+                $validated = $this->applySeoDefaults($validated, $subcategory->slug);
 
                 foreach (self::IMAGE_FIELDS as $field => $dir) {
                     if ($request->hasFile($field)) {

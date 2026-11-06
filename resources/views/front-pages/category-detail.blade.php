@@ -15,8 +15,58 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/sass/category-listing/category-listing.css') }}" />
-@endpush
+    <style>
+        .category-detail-content {
+            padding: 48px 0;
+        }
 
+        .category-detail-content .richtext {
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .category-detail-content .richtext p {
+            margin: 0 0 16px;
+        }
+
+        .category-detail-content .richtext h2,
+        .category-detail-content .richtext h3,
+        .category-detail-content .richtext h4 {
+            margin: 26px 0 10px;
+        }
+
+        .category-detail-content .richtext ul {
+            list-style: disc;
+            padding-left: 22px;
+            margin: 0 0 16px;
+        }
+
+        .category-detail-content .richtext ol {
+            list-style: decimal;
+            padding-left: 22px;
+            margin: 0 0 16px;
+        }
+
+        .category-detail-content .richtext img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .category-detail-content .richtext table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+        }
+
+        .category-detail-content .richtext th,
+        .category-detail-content .richtext td {
+            border: 1px solid #e3e5e8;
+            padding: 8px 12px;
+            text-align: left;
+        }
+    </style>
+@endpush
 @section('content')
 
     <main>
@@ -684,6 +734,26 @@
             </section>
         @endif
 
+        <!-- DETAIL CONTENT SECTION -->
+        @if(filled($category->detail_content))
+            @php $detailIsHtml = $category->detail_content !== strip_tags($category->detail_content); @endphp
+            <section class="listing-secJ category-detail-content">
+                <div class="container">
+                    <div class="heading">
+                        <h3>About <span>{{ $category->name }}</span></h3>
+                    </div>
+
+                    <div class="richtext">
+                        @if($detailIsHtml)
+                            {!! $category->detail_content !!}
+                        @else
+                            {!! nl2br(e($category->detail_content)) !!}
+                        @endif
+                    </div>
+                </div>
+            </section>
+        @endif
+
         <!-- HYPERLINK SECTION -->
         @if($category->subCategories->isNotEmpty() || $destinations->isNotEmpty() || $attractions->isNotEmpty() || $activities->isNotEmpty())
             <section class="seo-links-sec">
@@ -807,8 +877,8 @@
     @endphp
 
     <script type="application/ld+json">
-                        {!! json_encode($categorySchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
-                    </script>
+                                {!! json_encode($categorySchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+                            </script>
 
     @if($category->promo_end_at)
         <script>

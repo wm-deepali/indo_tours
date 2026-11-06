@@ -799,7 +799,7 @@
                             <input type="text" id="h1" name="h1"
                                 class="form-control-styled @error('h1') is-invalid @enderror" value="{{ old('h1') }}"
                                 placeholder="Auto-filled from Attraction Name">
-                            <div class="hint">Auto-fills from Attraction Name — edit anytime to override</div>
+                            <div class="hint">Auto-filled from Attraction Name. Edit to override</div>  
                             @error('h1')
                             <div class="form-error">{{ $message }}</div>@enderror
                         </div>
@@ -808,12 +808,14 @@
                             <label for="meta_title">Meta Title</label>
                             <input type="text" id="meta_title" name="meta_title" class="form-control-styled"
                                 value="{{ old('meta_title') }}" placeholder="Enter meta title">
+                                <div class="hint">Auto-filled: Name | Site Name (ideal under 60 characters)</div>  
                         </div>
 
                         <div class="form-field">
                             <label for="meta_description">Meta Description</label>
                             <textarea id="meta_description" name="meta_description" rows="4"
                                 class="form-control-styled">{{ old('meta_description') }}</textarea>
+                                <div class="hint">Auto-filled from Short Description (ideal under 160 characters)</div> 
                         </div>
 
                         <div class="form-field">
@@ -821,7 +823,7 @@
                             <input type="text" id="og_title" name="og_title"
                                 class="form-control-styled @error('og_title') is-invalid @enderror"
                                 value="{{ old('og_title') }}" placeholder="Auto-filled from Meta Title">
-                            <div class="hint">Auto-fills from Meta Title — edit anytime to override</div>
+                            <div class="hint">Follows Meta Title. Edit to override</div>
                             @error('og_title')
                             <div class="form-error">{{ $message }}</div>@enderror
                         </div>
@@ -831,7 +833,7 @@
                             <textarea id="og_description" name="og_description" rows="3"
                                 class="form-control-styled @error('og_description') is-invalid @enderror"
                                 placeholder="Auto-filled from Meta Description">{{ old('og_description') }}</textarea>
-                            <div class="hint">Auto-fills from Meta Description — edit anytime to override</div>
+                            <div class="hint">Follows Meta Description. Edit to override</div>       
                             @error('og_description')
                             <div class="form-error">{{ $message }}</div>@enderror
                         </div>
@@ -857,7 +859,7 @@
                             <input type="text" id="canonical_url" name="canonical_url"
                                 class="form-control-styled @error('canonical_url') is-invalid @enderror"
                                 value="{{ old('canonical_url') }}" placeholder="Auto-generated from slug">
-                            <div class="hint">Auto-fills from the slug — edit anytime to override</div>
+                           <div class="hint">Auto-generated from slug. Edit only if the page lives at a different URL</div>
                             @error('canonical_url')
                             <div class="form-error">{{ $message }}</div>@enderror
                         </div>
@@ -928,25 +930,32 @@
         el.value = value;
     }
 
+    const SAVED_SLUG = @json(isset($attraction) ? $attraction->slug : null);
+    const SAVED_NAME = @json(isset($attraction) ? $attraction->name : null);
+    const SITE_NAME = @json(config('app.name'));
+
     function seoAutoFill() {
         const name = document.getElementById('name').value.trim();
         if (!name) return;
 
-        const slug = seoSlug(name);
+        // Edit page: slug only changes when the name changes (same rule as the controller)
+        const slug = (SAVED_SLUG && name === SAVED_NAME) ? SAVED_SLUG : seoSlug(name);
         document.getElementById('slug').value = slug;
 
-        const branded = `${name} | Indo Tours & Adventures`;
-        const metaTitle = branded.length <= 60 ? branded : seoTrim(name, 60);
+        const branded = SITE_NAME ? `${name} | ${SITE_NAME}` : name;
+        const metaTitle = seoTrim(branded, 60);
 
-        const source = seoFieldValue('short_description').trim()
-            ? seoFieldValue('short_description')
-            : (seoPlain(seoFieldValue('description')) || seoPlain(seoFieldValue('about_content')) || seoPlain(seoFieldValue('about_more_content')));
-        const metaDesc = seoTrim(seoPlain(source), 160);
+        const source = seoPlain(
+            seoFieldValue('short_description')
+            || seoFieldValue('description')
+            || seoFieldValue('about_content')
+            || seoFieldValue('about_more_content')
+        ) || `Explore ${name}: best time to visit, things to do, itinerary, budget and tour packages.`;
+        const metaDesc = seoTrim(source, 160);
 
         seoSet('h1', name);
         seoSet('meta_title', metaTitle);
         seoSet('meta_description', metaDesc);
-        // OG fields follow whatever is currently in Meta Title / Meta Description
         seoSet('og_title', document.getElementById('meta_title').value.trim() || metaTitle);
         seoSet('og_description', document.getElementById('meta_description').value.trim() || metaDesc);
         seoSet('canonical_url', '{{ url('/attractions') }}/' + slug);
@@ -1011,39 +1020,6 @@
         panel.classList.add('active');
         document.querySelector('#attraction-tabs .cat-tab[data-tab="' + panel.dataset.panel + '"]').classList.add('active');
     })();
-
-    let h1Edited = false, ogTitleEdited = false, ogDescEdited = false, canonicalEdited = false;
-
-    document.getElementById('h1').addEventListener('input', () => h1Edited = true);
-    document.getElementById('og_title').addEventListener('input', () => ogTitleEdited = true);
-    document.getElementById('og_description').addEventListener('input', () => ogDescEdited = true);
-    document.getElementById('canonical_url').addEventListener('input', () => canonicalEdited = true);
-
-    document.getElementById('name').addEventListener('keyup', function () {
-        const slug = this.value
-            .toLowerCase()
-            .trim()
-            .replace(/[^a-z0-9\s-]/g, '')
-            .replace(/\s+/g, '-')
-            .replace(/-+/g, '-');
-
-        document.getElementById('slug').value = slug;
-
-        if (!canonicalEdited) {
-            document.getElementById('canonical_url').value = '{{ url('/attractions') }}/' + slug;
-        }
-        if (!h1Edited) {
-            document.getElementById('h1').value = this.value;
-        }
-    });
-
-    document.getElementById('meta_title').addEventListener('keyup', function () {
-        if (!ogTitleEdited) document.getElementById('og_title').value = this.value;
-    });
-
-    document.getElementById('meta_description').addEventListener('keyup', function () {
-        if (!ogDescEdited) document.getElementById('og_description').value = this.value;
-    });
 
     // ---- Cascading Country -> State -> City ----
     const countrySelect = document.getElementById('country_id');

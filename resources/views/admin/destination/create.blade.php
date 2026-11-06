@@ -1211,7 +1211,7 @@
                             <input type="text" id="h1" name="h1"
                                 class="form-control-styled @error('h1') is-invalid @enderror" value="{{ old('h1') }}"
                                 placeholder="Auto-filled from Destination Name">
-                            <div class="hint">Auto-fills from Destination Name — edit anytime to override</div>
+                            <div class="hint">Auto-filled from Destination Name. Edit to override</div>
                             @error('h1')
                             <div class="form-error">{{ $message }}</div> @enderror
                         </div>
@@ -1220,12 +1220,14 @@
                             <label for="meta_title">Meta Title</label>
                             <input type="text" id="meta_title" name="meta_title" class="form-control-styled"
                                 value="{{ old('meta_title') }}" placeholder="Enter meta title">
+                            <div class="hint">Auto-filled: Name | Site Name (ideal under 60 characters)</div>
                         </div>
 
                         <div class="form-field">
                             <label for="meta_description">Meta Description</label>
                             <textarea id="meta_description" name="meta_description" rows="4"
                                 class="form-control-styled">{{ old('meta_description') }}</textarea>
+                            <div class="hint">Auto-filled from Short Description (ideal under 160 characters)</div>
                         </div>
 
                         <div class="form-field">
@@ -1233,7 +1235,7 @@
                             <input type="text" id="og_title" name="og_title"
                                 class="form-control-styled @error('og_title') is-invalid @enderror"
                                 value="{{ old('og_title') }}" placeholder="Auto-filled from Meta Title">
-                            <div class="hint">Auto-fills from Meta Title — edit anytime to override</div>
+                            <div class="hint">Follows Meta Title. Edit to override</div>
                             @error('og_title')
                             <div class="form-error">{{ $message }}</div> @enderror
                         </div>
@@ -1243,7 +1245,7 @@
                             <textarea id="og_description" name="og_description" rows="3"
                                 class="form-control-styled @error('og_description') is-invalid @enderror"
                                 placeholder="Auto-filled from Meta Description">{{ old('og_description') }}</textarea>
-                            <div class="hint">Auto-fills from Meta Description — edit anytime to override</div>
+                            <div class="hint">Follows Meta Description. Edit to override</div>
                             @error('og_description')
                             <div class="form-error">{{ $message }}</div> @enderror
                         </div>
@@ -1252,7 +1254,7 @@
                             <label for="og_image">OG Image</label>
                             <input type="file" id="og_image" name="og_image"
                                 class="form-control-styled @error('og_image') is-invalid @enderror" accept="image/*">
-                            <div class="hint">Leave blank to automatically use the Destination Image as OG Image</div>
+                            <div class="hint">Leave blank to keep current (falls back to Destination Image if none)</div>
                             @error('og_image')
                             <div class="form-error">{{ $message }}</div> @enderror
                         </div>
@@ -1262,7 +1264,8 @@
                             <input type="text" id="canonical_url" name="canonical_url"
                                 class="form-control-styled @error('canonical_url') is-invalid @enderror"
                                 value="{{ old('canonical_url') }}" placeholder="Auto-generated from slug">
-                            <div class="hint">Auto-fills from the slug — edit anytime to override</div>
+                            <div class="hint">Auto-generated from slug. Edit only if the page lives at a different URL
+                            </div>
                             @error('canonical_url')
                             <div class="form-error">{{ $message }}</div> @enderror
                         </div>
@@ -1374,35 +1377,40 @@
         el.value = value;
     }
 
+    const SAVED_SLUG = @json(isset($destination) ? $destination->slug : null);
+    const SAVED_NAME = @json(isset($destination) ? $destination->name : null);
+    const SITE_NAME = @json(config('app.name'));
+
     function seoAutoFill() {
         const name = seoVal('name');
         if (!name) return;
 
-        const slug = seoSlug(name);
+        // Edit page: slug only changes when the name changes (same rule as the controller)
+        const slug = (SAVED_SLUG && name === SAVED_NAME) ? SAVED_SLUG : seoSlug(name);
         document.getElementById('slug').value = slug;
 
-        const branded = `${name} | Indo Tours & Adventures`;
-        const metaTitle = branded.length <= 60 ? branded : seoTrim(name, 60);
+        const branded = SITE_NAME ? `${name} | ${SITE_NAME}` : name;
+        const metaTitle = seoTrim(branded, 60);
 
         const moreAbout = window.moreAboutEditor
             ? window.moreAboutEditor.getData()
             : seoVal('more_about_content');
 
-        const source = seoVal('short_description')
+        const source = seoPlain(
+            seoVal('short_description')
             || seoVal('description')
             || seoVal('more_about_intro')
-            || seoPlain(moreAbout);
-        const metaDesc = seoTrim(seoPlain(source), 160);
+            || moreAbout
+        ) || `Explore ${name}: best time to visit, places to see, sample itinerary, budget and tour packages.`;
+        const metaDesc = seoTrim(source, 160);
 
         seoSet('h1', name);
         seoSet('meta_title', metaTitle);
         seoSet('meta_description', metaDesc);
-        // OG fields follow whatever is currently in Meta Title / Meta Description
         seoSet('og_title', seoVal('meta_title') || metaTitle);
         seoSet('og_description', seoVal('meta_description') || metaDesc);
         seoSet('canonical_url', '{{ url('/destinations') }}/' + slug);
     }
-
     // A field is "auto" while empty. Once you type your own value it is left alone;
     // clearing it hands it back to auto-fill. Saved values on the edit page are kept.
     SEO_AUTO_FIELDS.forEach(function (id) {

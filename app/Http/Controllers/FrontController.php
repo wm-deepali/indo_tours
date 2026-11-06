@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Blog;
 use App\Models\Page;
+use App\Models\Hotel;
 use App\Models\Review;
 use App\Models\Activity;
 use App\Models\Category;
@@ -732,6 +733,7 @@ class FrontController extends Controller
             'Activity' => Activity::class,
             'Attraction' => Attraction::class,
             'Destination' => Destination::class,
+            'Hotel' => Hotel::class, 
         ];
 
         // In types ka model nahi hai, sirf label save hoga
@@ -800,6 +802,64 @@ class FrontController extends Controller
         };
 
         return view('front-pages.thank-you', $copy);
+    }
+
+    public function hotelDetail(string $slug)
+    {
+        $hotel = Hotel::published()
+            ->where('slug', $slug)
+            ->with([
+                'country',
+                'state',
+                'city',
+                'galleries',
+                'rooms' => fn($q) => $q->where('is_active', true)->with('images'),
+            ])
+            ->firstOrFail();
+
+        return view('front-pages.hotel-detail', compact('hotel'));
+    }
+
+    public function hotelEnquiryStore(Request $request)
+    {
+        $validated = $request->validate([
+            'hotel_id' => 'required|exists:hotels,id',
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'dates' => 'required|string|max:100',
+            'traveller_count' => 'required|integer|min:1|max:500',
+            'message' => 'nullable|string|max:1000',
+        ]);
+
+        $hotel = Hotel::published()->findOrFail($validated['hotel_id']);
+
+        QuickEnquiry::create([
+            'full_name' => $validated['full_name'],
+            'email' => $validated['email'],
+            'country_code' => '+91',
+            'phone' => $validated['phone'],
+            'travel_dates' => $validated['dates'],
+            'traveller_count' => $validated['traveller_count'],
+            'message' => $validated['message'] ?? null,
+            'enquiry_type' => 'Hotel',
+            'enquiry_for' => $hotel->name,
+            'enquiry_ref_id' => $hotel->id,
+            'source_url' => route('hotel.show', $hotel->slug),
+            'ip_address' => $request->ip(),
+        ]);
+
+        $redirect = route('thankyou', ['context' => 'enquiry']);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Thank you! Our travel expert will contact you shortly.',
+                'redirect' => $redirect,
+            ]);
+        }
+
+        return redirect($redirect);
     }
 
 }

@@ -443,7 +443,11 @@ $pkgCategories = $subCategories->pluck('category')->filter()->unique('id');
                           </div>
 
                           <div class="hw-hotel-name">
-                            {{ $stay->hotel->name ?? '' }}
+  @if($stay->hotel && $stay->hotel->status === 'published')
+    <a href="{{ route('hotel.show', $stay->hotel->slug) }}" target="_blank" rel="noopener">{{ $stay->hotel->name }}</a>
+  @else
+    {{ $stay->hotel->name ?? '' }}
+  @endif
 
                             @if($stay->hotel && $stay->hotel->rating)
                               <span class="hw-stars">
@@ -532,6 +536,13 @@ $pkgCategories = $subCategories->pluck('category')->filter()->unique('id');
                                 </div>
                               </div>
                             </div>
+
+                            @if($stay->hotel && $stay->hotel->status === 'published')
+  <a href="{{ route('hotel.show', $stay->hotel->slug) }}" target="_blank" rel="noopener"
+    class="btn btn-outline-primary" style="margin-top:14px;">
+    View Hotel Details & Rooms
+  </a>
+@endif
                           </div>
                         </div>
                       </div>

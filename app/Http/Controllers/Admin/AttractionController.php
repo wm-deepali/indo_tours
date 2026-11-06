@@ -32,20 +32,62 @@ class AttractionController extends Controller
 
     // Returned by validate() but they are child-table data, never Attraction columns
     private const CHILD_KEYS = [
-        'gallery_images', 'gallery_titles', 'gallery_subtitles',
-        'gallery_titles_existing', 'gallery_subtitles_existing', 'deleted_galleries',
-        'highlight_icons', 'highlight_titles', 'highlight_descriptions',
-        'highlight_titles_existing', 'highlight_descriptions_existing', 'highlight_icons_existing', 'deleted_highlights',
-        'experience_images', 'experience_titles', 'experience_descriptions', 'experience_durations',
-        'experience_titles_existing', 'experience_descriptions_existing', 'experience_durations_existing', 'experience_images_existing', 'deleted_experiences',
-        'place_images', 'place_tags', 'place_titles', 'place_descriptions', 'place_button_texts',
-        'place_titles_existing', 'place_tags_existing', 'place_descriptions_existing', 'place_button_texts_existing', 'place_images_existing', 'deleted_places',
-        'itinerary_days', 'itinerary_titles', 'itinerary_stops', 'itinerary_popular',
-        'season_months', 'season_titles', 'season_descriptions', 'season_tags', 'season_active',
-        'transport_types', 'transport_names', 'transport_subs', 'transport_descriptions',
-        'budget_tier_names', 'budget_price_ranges', 'budget_price_units', 'budget_notes', 'budget_features', 'budget_recommended',
-        'carry_titles', 'carry_items',
-        'faq_questions', 'faq_answers',
+        'gallery_images',
+        'gallery_titles',
+        'gallery_subtitles',
+        'gallery_titles_existing',
+        'gallery_subtitles_existing',
+        'deleted_galleries',
+        'highlight_icons',
+        'highlight_titles',
+        'highlight_descriptions',
+        'highlight_titles_existing',
+        'highlight_descriptions_existing',
+        'highlight_icons_existing',
+        'deleted_highlights',
+        'experience_images',
+        'experience_titles',
+        'experience_descriptions',
+        'experience_durations',
+        'experience_titles_existing',
+        'experience_descriptions_existing',
+        'experience_durations_existing',
+        'experience_images_existing',
+        'deleted_experiences',
+        'place_images',
+        'place_tags',
+        'place_titles',
+        'place_descriptions',
+        'place_button_texts',
+        'place_titles_existing',
+        'place_tags_existing',
+        'place_descriptions_existing',
+        'place_button_texts_existing',
+        'place_images_existing',
+        'deleted_places',
+        'itinerary_days',
+        'itinerary_titles',
+        'itinerary_stops',
+        'itinerary_popular',
+        'season_months',
+        'season_titles',
+        'season_descriptions',
+        'season_tags',
+        'season_active',
+        'transport_types',
+        'transport_names',
+        'transport_subs',
+        'transport_descriptions',
+        'budget_tier_names',
+        'budget_price_ranges',
+        'budget_price_units',
+        'budget_notes',
+        'budget_features',
+        'budget_recommended',
+        'carry_titles',
+        'carry_items',
+        'faq_questions',
+        'faq_answers',
         'offer_perks',
     ];
 
@@ -288,11 +330,24 @@ class AttractionController extends Controller
         $slug = $validated['slug'] ?? $attraction?->slug;
 
         $validated['offer_perks'] = array_values(array_filter($request->input('offer_perks', [])));
-        $validated['h1'] = ($validated['h1'] ?? null) ?: $validated['name'];
-        $validated['og_title'] = ($validated['og_title'] ?? null) ?: ($validated['meta_title'] ?? null);
-        $validated['og_description'] = ($validated['og_description'] ?? null) ?: ($validated['meta_description'] ?? null);
-        $validated['canonical_url'] = ($validated['canonical_url'] ?? null) ?: url('/attractions/' . $slug);
+        $site = config('app.name');
+        $body = trim(preg_replace('/\s+/', ' ', strip_tags(
+            ($validated['short_description'] ?? null)
+            ?: ($validated['description'] ?? null)
+            ?: ($validated['about_content'] ?? null)
+            ?: ($validated['about_more_content'] ?? '')
+        )));
+        $name = $validated['name'];
 
+        $validated['h1'] = ($validated['h1'] ?? null) ?: $name;
+        $validated['meta_title'] = ($validated['meta_title'] ?? null)
+            ?: Str::limit($name . ($site ? ' | ' . $site : ''), 60, '');
+        $validated['meta_description'] = ($validated['meta_description'] ?? null)
+            ?: Str::limit($body ?: "Explore {$name}: best time to visit, things to do, itinerary, budget and tour packages.", 160, '');
+        $validated['og_title'] = ($validated['og_title'] ?? null) ?: $validated['meta_title'];
+        $validated['og_description'] = ($validated['og_description'] ?? null) ?: $validated['meta_description'];
+        $validated['canonical_url'] = ($validated['canonical_url'] ?? null) ?: url('/attractions/' . $slug);
+        $validated['robots'] = ($validated['robots'] ?? null) ?: 'index, follow';
         $validated['best_for_tags'] = $this->parseTags($request->input('best_for_tags'));
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['is_must_visit'] = $request->boolean('is_must_visit');

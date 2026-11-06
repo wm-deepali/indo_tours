@@ -35,6 +35,25 @@ class DestinationController extends Controller
         $this->pendingDeletes = [];
     }
 
+    private function applySeoDefaults(array $v, string $slug): array
+    {
+        $name = $v['name'];
+        $site = config('app.name');
+        $body = trim(preg_replace('/\s+/', ' ', strip_tags(
+            ($v['short_description'] ?? null) ?: ($v['description'] ?? null) ?: ($v['more_about_intro'] ?? '')
+        )));
+
+        $v['h1'] = ($v['h1'] ?? null) ?: $name;
+        $v['meta_title'] = ($v['meta_title'] ?? null) ?: Str::limit($name . ($site ? ' | ' . $site : ''), 60, '');
+        $v['meta_description'] = ($v['meta_description'] ?? null)
+            ?: Str::limit($body ?: "Explore {$name}: best time to visit, places to see, itinerary, budget and tour packages.", 160, '');
+        $v['og_title'] = ($v['og_title'] ?? null) ?: $v['meta_title'];
+        $v['og_description'] = ($v['og_description'] ?? null) ?: $v['meta_description'];
+        $v['canonical_url'] = ($v['canonical_url'] ?? null) ?: url('/destinations/' . $slug);
+
+        return $v;
+    }
+
     public function index()
     {
         $destinations = Destination::with(['country', 'state', 'city'])
@@ -72,10 +91,7 @@ class DestinationController extends Controller
                     $validated['why_visit_image'] = $request->file('why_visit_image')->store('destinations/highlights', 'public');
                 }
 
-                $validated['h1'] = $validated['h1'] ?: $validated['name'];
-                $validated['og_title'] = $validated['og_title'] ?: $validated['meta_title'];
-                $validated['og_description'] = $validated['og_description'] ?: $validated['meta_description'];
-                $validated['canonical_url'] = $validated['canonical_url'] ?: url('/destination/' . $validated['slug']);
+                $validated = $this->applySeoDefaults($validated, $validated['slug']);
                 $validated['best_for_tags'] = $this->parseTags($request->input('best_for_tags'));
                 $validated['is_featured'] = $request->boolean('is_featured');
                 $validated['status'] = $request->input('status', 'draft');
@@ -151,12 +167,7 @@ class DestinationController extends Controller
                     $validated['why_visit_image'] = $request->file('why_visit_image')->store('destinations/highlights', 'public');
                 }
 
-                $validated['h1'] = $validated['h1'] ?: $validated['name'];
-                $validated['og_title'] = $validated['og_title'] ?: $validated['meta_title'];
-                $validated['og_description'] = $validated['og_description'] ?: $validated['meta_description'];
-                $validated['canonical_url'] = $validated['canonical_url']
-                    ?: url('/destination/' . ($validated['slug'] ?? $destination->slug));
-
+                $validated = $this->applySeoDefaults($validated, $validated['slug'] ?? $destination->slug);
                 $validated['best_for_tags'] = $this->parseTags($request->input('best_for_tags'));
                 $validated['is_featured'] = $request->boolean('is_featured');
                 $validated['status'] = $request->input('status', $destination->status);

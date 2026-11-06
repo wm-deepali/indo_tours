@@ -236,53 +236,60 @@
         </div>
     </div>
 
-    {{-- SEO --}}
+       {{-- SEO --}}
     <div class="section-card">
         <h3>SEO</h3>
 
         <div class="form-row">
             <div class="form-field">
-                <label>H1</label>
-                <input type="text" name="h1" class="form-control-styled" value="{{ old('h1', $blog->h1) }}">
+                <label for="h1">H1</label>
+                <input type="text" id="h1" name="h1" class="form-control-styled" value="{{ old('h1', $blog->h1) }}">
+                <div class="hint">Auto-filled from Title. Edit to override</div>
             </div>
             <div class="form-field">
-                <label>Meta Title</label>
-                <input type="text" name="meta_title" class="form-control-styled" value="{{ old('meta_title', $blog->meta_title) }}">
+                <label for="meta_title">Meta Title</label>
+                <input type="text" id="meta_title" name="meta_title" class="form-control-styled" value="{{ old('meta_title', $blog->meta_title) }}">
+                <div class="hint">Auto-filled: Title | Site Name (ideal under 60 characters)</div>
             </div>
         </div>
 
         <div class="form-field">
-            <label>Meta Description</label>
-            <textarea name="meta_description" rows="2" class="form-control-styled">{{ old('meta_description', $blog->meta_description) }}</textarea>
+            <label for="meta_description">Meta Description</label>
+            <textarea id="meta_description" name="meta_description" rows="2" class="form-control-styled">{{ old('meta_description', $blog->meta_description) }}</textarea>
+            <div class="hint">Auto-filled from Short Description / Content (ideal under 160 characters)</div>
         </div>
 
         <div class="form-field">
-            <label>Canonical URL</label>
-            <input type="text" name="canonical_url" class="form-control-styled"
-                value="{{ old('canonical_url', $blog->canonical_url) }}" placeholder="{{ url('/blog/' . ($blog->slug ?: '{slug}') . '/') }}">
+            <label for="canonical_url">Canonical URL</label>
+            <input type="text" id="canonical_url" name="canonical_url" class="form-control-styled"
+                value="{{ old('canonical_url', $blog->canonical_url) }}">
+            <div class="hint">Auto-generated from slug. Edit only if the page lives at a different URL</div>
             @error('canonical_url')<div class="form-error">{{ $message }}</div>@enderror
         </div>
 
         <div class="form-row">
             <div class="form-field">
-                <label>OG Title</label>
-                <input type="text" name="og_title" class="form-control-styled" value="{{ old('og_title', $blog->og_title) }}">
+                <label for="og_title">OG Title</label>
+                <input type="text" id="og_title" name="og_title" class="form-control-styled" value="{{ old('og_title', $blog->og_title) }}">
+                <div class="hint">Follows Meta Title. Edit to override</div>
             </div>
             <div class="form-field">
-                <label>Robots</label>
-                <input type="text" name="robots" class="form-control-styled" value="{{ old('robots', $blog->robots ?: 'index,follow') }}">
+                <label for="robots">Robots</label>
+                <input type="text" id="robots" name="robots" class="form-control-styled" value="{{ old('robots', $blog->robots ?: 'index,follow') }}">
             </div>
         </div>
 
         <div class="form-field">
-            <label>OG Description</label>
-            <textarea name="og_description" rows="2" class="form-control-styled">{{ old('og_description', $blog->og_description) }}</textarea>
+            <label for="og_description">OG Description</label>
+            <textarea id="og_description" name="og_description" rows="2" class="form-control-styled">{{ old('og_description', $blog->og_description) }}</textarea>
+            <div class="hint">Follows Meta Description. Edit to override</div>
         </div>
 
         <div class="form-row">
             <div class="form-field">
                 <label>OG Image</label>
                 <input type="file" name="og_image" class="form-control-styled" accept="image/*" style="height:auto;padding:8px 12px;">
+                <div class="hint">Leave blank to use the Featured Image{{ $blog->og_image ? ' (current image kept)' : '' }}</div>
                 @if($blog->og_image)
                     <img src="{{ asset($blog->og_image) }}" class="img-preview" alt="OG image">
                 @endif
@@ -290,6 +297,7 @@
             <div class="form-field">
                 <label>Twitter Card Image</label>
                 <input type="file" name="twitter_card_image" class="form-control-styled" accept="image/*" style="height:auto;padding:8px 12px;">
+                <div class="hint">Leave blank to use the OG Image / Featured Image{{ $blog->twitter_card_image ? ' (current image kept)' : '' }}</div>
                 @if($blog->twitter_card_image)
                     <img src="{{ asset($blog->twitter_card_image) }}" class="img-preview" alt="Twitter card image">
                 @endif
@@ -308,8 +316,78 @@
 
 @push('scripts')
 <script>
+(function () {
+    const SITE = @json(config('app.name'));
+    const BASE = @json(url('/blog'));   // change if your blog URL prefix differs
+
+    let editor = null;
     if (typeof CKEDITOR !== 'undefined' && document.getElementById('content')) {
-        CKEDITOR.replace('content');
+        editor = CKEDITOR.replace('content');
     }
+
+    const g   = id => document.getElementById(id);
+    const val = id => ((g(id) && g(id).value) || '').trim();
+    const plain = html => {
+        const t = document.createElement('div');
+        t.innerHTML = html || '';
+        return (t.textContent || '').replace(/\s+/g, ' ').trim();
+    };
+    const clip = (s, n) => s.length <= n ? s : s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…';
+    const slugify = s => s.toLowerCase().trim()
+        .replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+
+    const rules = {
+        h1: () => val('title'),
+        meta_title: () => {
+            const t = val('title');
+            return t ? clip(SITE ? t + ' | ' + SITE : t, 60) : '';
+        },
+        meta_description: () => {
+            const t = val('title');
+            const body = val('short_description') || plain(editor ? editor.getData() : val('content'));
+            return clip(body || (t ? 'Read ' + t + ' on our travel blog.' : ''), 160);
+        },
+        canonical_url: () => {
+            const s = val('slug') || slugify(val('title'));
+            return s ? BASE.replace(/\/$/, '') + '/' + s + '/' : '';
+        },
+        og_title: () => val('meta_title'),
+        og_description: () => val('meta_description'),
+    };
+    const order  = Object.keys(rules);
+    const manual = {};
+
+    function refresh() {
+        order.forEach(id => {
+            if (manual[id]) return;
+            const el = g(id);
+            if (el) el.value = rules[id]();
+        });
+    }
+
+    // Init: empty -> fill. Non-empty and different from auto -> user's own value, keep it.
+    order.forEach(id => {
+        const el = g(id);
+        if (!el) return;
+        const auto = rules[id]();
+        if (!el.value.trim()) { el.value = auto; manual[id] = false; }
+        else { manual[id] = el.value.trim() !== auto; }
+
+        el.addEventListener('input', () => {
+            manual[id] = el.value.trim() !== '';   // cleared -> back to auto
+            refresh();
+        });
+    });
+
+    ['title', 'slug', 'short_description'].forEach(id => {
+        if (g(id)) g(id).addEventListener('input', refresh);
+    });
+    if (editor) editor.on('change', refresh);
+
+    g('title').closest('form').addEventListener('submit', function () {
+        if (typeof CKEDITOR !== 'undefined') Object.keys(CKEDITOR.instances).forEach(k => CKEDITOR.instances[k].updateElement());
+        refresh();
+    }, true);
+})();
 </script>
 @endpush

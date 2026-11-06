@@ -640,7 +640,7 @@
                                 class="current-img-preview">@endif
                                 <input type="file" id="main_image" name="main_image" class="form-control-styled"
                                     accept="image/*">
-                                <div class="hint">Leave blank to keep current</div>
+                                <div class="hint">Leave blank to keep current (falls back to Main Image if none)</div>
                             </div>
                             <div class="form-field">
                                 <label for="top_image">Top Image</label>
@@ -1277,7 +1277,7 @@
                             class="current-img-preview">@endif
                             <input type="file" id="og_image" name="og_image" class="form-control-styled"
                                 accept="image/*">
-                            <div class="hint">Leave blank to keep current</div>
+                            <div class="hint">Leave blank to keep current (falls back to Main Image if none)</div>
                         </div>
 
                         <div class="form-field">
@@ -1287,7 +1287,7 @@
                             class="current-img-preview">@endif
                             <input type="file" id="twitter_card_image" name="twitter_card_image"
                                 class="form-control-styled" accept="image/*">
-                            <div class="hint">Leave blank to keep current</div>
+                            <div class="hint">Leave blank to keep current (falls back to Main Image if none)</div>
                         </div>
 
                         <div class="form-field">
@@ -1693,6 +1693,7 @@ setupTextList({
 
 </script>
 
+@include('admin.tourpackage._seo-autofill', ['isEdit' => true])
 @include('admin.partials._ajax-form', ['formId' => 'tp-form', 'tabsId' => 'tp-tabs'])
 @include('admin.footer')
 

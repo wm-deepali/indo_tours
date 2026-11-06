@@ -435,14 +435,21 @@
         }
 
         .bulk-box {
-    margin-top: 16px;
-    padding: 14px;
-    border: 1px dashed var(--border);
-    border-radius: var(--radius-sm);
-    background: var(--surface);
-}
-.bulk-box textarea { margin-bottom: 10px; }
-.bulk-box .hint-inline { font-weight: 400; color: var(--text-hint); }
+            margin-top: 16px;
+            padding: 14px;
+            border: 1px dashed var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+        }
+
+        .bulk-box textarea {
+            margin-bottom: 10px;
+        }
+
+        .bulk-box .hint-inline {
+            font-weight: 400;
+            color: var(--text-hint);
+        }
     </style>
 
     <div class="app-content content container-fluid">
@@ -505,8 +512,7 @@
                                 @foreach($subCategories as $categoryName => $subs)
                                     <optgroup label="{{ $categoryName }}">
                                         @foreach($subs as $sc)
-                                            <option value="{{ $sc->id }}" {{ in_array($sc->id, $selectedSubs) ? 'selected' : '' }}>
-                                                {{ $sc->name }}
+                                            <option value="{{ $sc->id }}" {{ in_array($sc->id, $selectedSubs) ? 'selected' : '' }}>{{ $sc->name }}
                                             </option>
                                         @endforeach
                                     </optgroup>
@@ -755,44 +761,46 @@
                         </div>
                     </div>
 
-                   {{-- ============ INCLUDES / EXCLUDES ============ --}}
-<div class="cat-tab-panel" data-panel="incexc">
+                    {{-- ============ INCLUDES / EXCLUDES ============ --}}
+                    <div class="cat-tab-panel" data-panel="incexc">
 
-    <div class="form-field">
-        <label>The Cost Includes</label>
-        <div id="new-include-rows"></div>
-        <button type="button" class="btn-secondary-dash" id="add-include-row">
-            <i class="fa fa-plus"></i> Add Include
-        </button>
+                        <div class="form-field">
+                            <label>The Cost Includes</label>
+                            <div id="new-include-rows"></div>
+                            <button type="button" class="btn-secondary-dash" id="add-include-row">
+                                <i class="fa fa-plus"></i> Add Include
+                            </button>
 
-        <div class="bulk-box">
-            <label for="bulk-include-input">Bulk add includes <span class="hint-inline">(one per line)</span></label>
-            <textarea id="bulk-include-input" class="form-control-styled" rows="5"
-                placeholder="Professional Tour Guide&#10;Air-Conditioned Tour Vehicle&#10;Bottled Mineral Water"></textarea>
-            <button type="button" class="btn-secondary-dash" id="bulk-include-btn">
-                <i class="fa fa-list"></i> Add All
-            </button>
-        </div>
-    </div>
+                            <div class="bulk-box">
+                                <label for="bulk-include-input">Bulk add includes <span class="hint-inline">(one per
+                                        line)</span></label>
+                                <textarea id="bulk-include-input" class="form-control-styled" rows="5"
+                                    placeholder="Professional Tour Guide&#10;Air-Conditioned Tour Vehicle&#10;Bottled Mineral Water"></textarea>
+                                <button type="button" class="btn-secondary-dash" id="bulk-include-btn">
+                                    <i class="fa fa-list"></i> Add All
+                                </button>
+                            </div>
+                        </div>
 
-    <div class="form-field" style="margin-top:24px;">
-        <label>The Cost Excludes</label>
-        <div id="new-exclude-rows"></div>
-        <button type="button" class="btn-secondary-dash" id="add-exclude-row">
-            <i class="fa fa-plus"></i> Add Exclude
-        </button>
+                        <div class="form-field" style="margin-top:24px;">
+                            <label>The Cost Excludes</label>
+                            <div id="new-exclude-rows"></div>
+                            <button type="button" class="btn-secondary-dash" id="add-exclude-row">
+                                <i class="fa fa-plus"></i> Add Exclude
+                            </button>
 
-        <div class="bulk-box">
-            <label for="bulk-exclude-input">Bulk add excludes <span class="hint-inline">(one per line)</span></label>
-            <textarea id="bulk-exclude-input" class="form-control-styled" rows="5"
-                placeholder="Personal Travel Insurance&#10;Lunch &amp; Additional Meals&#10;Gratuities / Tips"></textarea>
-            <button type="button" class="btn-secondary-dash" id="bulk-exclude-btn">
-                <i class="fa fa-list"></i> Add All
-            </button>
-        </div>
-    </div>
+                            <div class="bulk-box">
+                                <label for="bulk-exclude-input">Bulk add excludes <span class="hint-inline">(one per
+                                        line)</span></label>
+                                <textarea id="bulk-exclude-input" class="form-control-styled" rows="5"
+                                    placeholder="Personal Travel Insurance&#10;Lunch &amp; Additional Meals&#10;Gratuities / Tips"></textarea>
+                                <button type="button" class="btn-secondary-dash" id="bulk-exclude-btn">
+                                    <i class="fa fa-list"></i> Add All
+                                </button>
+                            </div>
+                        </div>
 
-</div>
+                    </div>
 
                     {{-- ============ POLICIES ============ --}}
                     <div class="cat-tab-panel" data-panel="policies">
@@ -961,41 +969,44 @@
 
                         <div class="form-field">
                             <label for="h1">H1 Tag</label>
-                            <input type="text" id="h1" name="h1" class="form-control-styled" value="{{ old('h1') }}"
-                                placeholder="Auto-fills from Package Name">
-                            <div class="hint">Auto-fills from Package Name — edit anytime to override</div>
+                            <input type="text" id="h1" name="h1" class="form-control-styled" value="{{ old('h1') }}">
+                            <div class="hint">Auto-filled from Package Name — edit to override</div>
                         </div>
 
                         <div class="form-field">
                             <label for="meta_title">Meta Title</label>
                             <input type="text" id="meta_title" name="meta_title" class="form-control-styled"
                                 value="{{ old('meta_title') }}">
+                            <div class="hint">Auto-filled: Package Name | Site Name (ideal under 60 characters)</div>
                         </div>
 
                         <div class="form-field">
                             <label for="meta_description">Meta Description</label>
                             <textarea id="meta_description" name="meta_description" rows="4"
                                 class="form-control-styled">{{ old('meta_description') }}</textarea>
+                            <div class="hint">Auto-filled from Banner Intro / Overview (ideal under 160 characters)
+                            </div>
                         </div>
 
                         <div class="form-field">
                             <label for="og_title">OG Title</label>
                             <input type="text" id="og_title" name="og_title" class="form-control-styled"
-                                value="{{ old('og_title') }}" placeholder="Auto-filled from Meta Title">
-                            <div class="hint">Auto-fills from Meta Title — edit anytime to override</div>
+                                value="{{ old('og_title') }}">
+                            <div class="hint">Follows Meta Title — edit to override</div>
                         </div>
 
                         <div class="form-field">
                             <label for="og_description">OG Description</label>
-                            <textarea id="og_description" name="og_description" rows="3" class="form-control-styled"
-                                placeholder="Auto-filled from Meta Description">{{ old('og_description') }}</textarea>
-                            <div class="hint">Auto-fills from Meta Description — edit anytime to override</div>
+                            <textarea id="og_description" name="og_description" rows="3"
+                                class="form-control-styled">{{ old('og_description') }}</textarea>
+                            <div class="hint">Follows Meta Description — edit to override</div>
                         </div>
 
                         <div class="form-field">
                             <label for="og_image">OG Image</label>
                             <input type="file" id="og_image" name="og_image" class="form-control-styled"
                                 accept="image/*">
+                            <div class="hint">Leave blank to automatically use the Main Image</div>
                         </div>
 
                         <div class="form-field">
@@ -1008,7 +1019,9 @@
                         <div class="form-field">
                             <label for="canonical_url">Canonical URL</label>
                             <input type="text" id="canonical_url" name="canonical_url" class="form-control-styled"
-                                value="{{ old('canonical_url') }}" placeholder="Auto-generated from slug">
+                                value="{{ old('canonical_url') }}">
+                            <div class="hint">Auto-generated from slug — edit only if the page lives at a different URL
+                            </div>
                         </div>
 
                         <div class="form-field">
@@ -1044,10 +1057,10 @@
         jQuery(scope || document).find('select.searchable-select').each(function () {
             if (jQuery(this).hasClass('select2-hidden-accessible')) return;
             jQuery(this).select2({
-    width: '100%',
-    placeholder: jQuery(this).data('placeholder') || undefined,
-    allowClear: !jQuery(this).prop('multiple') ? false : true
-});
+                width: '100%',
+                placeholder: jQuery(this).data('placeholder') || undefined,
+                allowClear: !jQuery(this).prop('multiple') ? false : true
+            });
         });
     }
 
@@ -1070,30 +1083,6 @@
         panel.classList.add('active');
         document.querySelector('#tp-tabs .cat-tab[data-tab="' + panel.dataset.panel + '"]').classList.add('active');
     })();
-
-    let ogTitleEdited = false, ogDescEdited = false, canonicalEdited = false;
-    let h1Edited = false;
-    document.getElementById('h1').addEventListener('input', () => h1Edited = true);
-    document.getElementById('og_title').addEventListener('input', () => ogTitleEdited = true);
-    document.getElementById('og_description').addEventListener('input', () => ogDescEdited = true);
-    document.getElementById('canonical_url').addEventListener('input', () => canonicalEdited = true);
-
-    document.getElementById('name').addEventListener('keyup', function () {
-        const slug = this.value.toLowerCase().trim()
-            .replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
-        document.getElementById('slug').value = slug;
-        if (!canonicalEdited) document.getElementById('canonical_url').value = '{{ url('/tour-package') }}/' + slug;
-        if (!h1Edited) {
-            document.getElementById('h1').value = this.value;
-        }
-    });
-
-    document.getElementById('meta_title').addEventListener('keyup', function () {
-        if (!ogTitleEdited) document.getElementById('og_title').value = this.value;
-    });
-    document.getElementById('meta_description').addEventListener('keyup', function () {
-        if (!ogDescEdited) document.getElementById('og_description').value = this.value;
-    });
 
     // ---- Location cascading dropdowns ----
     // Uses jQuery events because Select2 fires jQuery "change" (native addEventListener would not catch it).
@@ -1269,51 +1258,51 @@
         row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
     });
 
-  // ---- Includes / Excludes repeaters (single add + bulk add) ----
-function setupTextList(cfg) {
-    let index = cfg.start;
-    const container = document.getElementById(cfg.container);
+    // ---- Includes / Excludes repeaters (single add + bulk add) ----
+    function setupTextList(cfg) {
+        let index = cfg.start;
+        const container = document.getElementById(cfg.container);
 
-    function addRow(value) {
-        const i = index++;
-        const row = document.createElement('div');
-        row.className = 'gallery-row';
-        row.innerHTML = `
+        function addRow(value) {
+            const i = index++;
+            const row = document.createElement('div');
+            row.className = 'gallery-row';
+            row.innerHTML = `
             <div class="form-field">
                 <label>${cfg.label}</label>
                 <input type="text" name="${cfg.field}[${i}]" class="form-control-styled" placeholder="${cfg.placeholder}">
             </div>
             <button type="button" class="btn-secondary-dash remove-new-row"><i class="fa fa-trash"></i> Remove</button>
         `;
-        if (typeof value === 'string') row.querySelector('input').value = value; // set via DOM, not HTML
-        container.appendChild(row);
-        row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
+            if (typeof value === 'string') row.querySelector('input').value = value; // set via DOM, not HTML
+            container.appendChild(row);
+            row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
+        }
+
+        document.getElementById(cfg.addBtn).addEventListener('click', () => addRow());
+
+        document.getElementById(cfg.bulkBtn).addEventListener('click', function () {
+            const ta = document.getElementById(cfg.bulkInput);
+            const lines = ta.value
+                .split(/\r?\n/)
+                .map(s => s.replace(/^\s*(?:[-*•●▪]|\d+[.)])\s*/, '').trim())
+                .filter(Boolean)
+                .map(s => s.substring(0, 255)); // matches the max:255 validation rule
+            lines.forEach(addRow);
+            ta.value = '';
+        });
     }
 
-    document.getElementById(cfg.addBtn).addEventListener('click', () => addRow());
-
-    document.getElementById(cfg.bulkBtn).addEventListener('click', function () {
-        const ta = document.getElementById(cfg.bulkInput);
-        const lines = ta.value
-            .split(/\r?\n/)
-            .map(s => s.replace(/^\s*(?:[-*•●▪]|\d+[.)])\s*/, '').trim())
-            .filter(Boolean)
-            .map(s => s.substring(0, 255)); // matches the max:255 validation rule
-        lines.forEach(addRow);
-        ta.value = '';
+    setupTextList({
+        start: 0, container: 'new-include-rows', field: 'include_texts',
+        label: 'Include Text', placeholder: 'e.g. Professional Tour Guide',
+        addBtn: 'add-include-row', bulkBtn: 'bulk-include-btn', bulkInput: 'bulk-include-input'
     });
-}
-
-setupTextList({
-    start: 0, container: 'new-include-rows', field: 'include_texts',
-    label: 'Include Text', placeholder: 'e.g. Professional Tour Guide',
-    addBtn: 'add-include-row', bulkBtn: 'bulk-include-btn', bulkInput: 'bulk-include-input'
-});
-setupTextList({
-    start: 0, container: 'new-exclude-rows', field: 'exclude_texts',
-    label: 'Exclude Text', placeholder: 'e.g. Personal Travel Insurance',
-    addBtn: 'add-exclude-row', bulkBtn: 'bulk-exclude-btn', bulkInput: 'bulk-exclude-input'
-});
+    setupTextList({
+        start: 0, container: 'new-exclude-rows', field: 'exclude_texts',
+        label: 'Exclude Text', placeholder: 'e.g. Personal Travel Insurance',
+        addBtn: 'add-exclude-row', bulkBtn: 'bulk-exclude-btn', bulkInput: 'bulk-exclude-input'
+    });
 
     // ---- Policies repeater ----
     let policyIndex = 0;
@@ -1424,6 +1413,7 @@ setupTextList({
     });
 </script>
 
+@include('admin.tourpackage._seo-autofill', ['isEdit' => false])
 @include('admin.partials._ajax-form', ['formId' => 'tp-form', 'tabsId' => 'tp-tabs'])
 @include('admin.footer')
 

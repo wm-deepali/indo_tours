@@ -248,6 +248,9 @@ class TourPackageController extends Controller
                 );
                 $validated['featured'] = $request->boolean('featured');
                 $validated['h1'] = $validated['h1'] ?: $validated['name'];
+                $validated['meta_title'] = $validated['meta_title'] ?: Str::limit($validated['name'] . ' | ' . config('app.name'), 60, '');
+                $validated['meta_description'] = $validated['meta_description']
+                    ?: Str::limit(strip_tags($validated['banner_intro'] ?? $validated['overview_content'] ?? ('Book ' . $validated['name'] . ' tour package online.')), 160);
                 $validated['og_title'] = $validated['og_title'] ?: $validated['meta_title'];
                 $validated['og_description'] = $validated['og_description'] ?: $validated['meta_description'];
                 $validated['canonical_url'] = $validated['canonical_url'] ?: url('/tour-package/' . $validated['slug']);
@@ -326,11 +329,12 @@ class TourPackageController extends Controller
                 );
                 $validated['featured'] = $request->boolean('featured');
                 $validated['h1'] = $validated['h1'] ?: $validated['name'];
+                $validated['meta_title'] = $validated['meta_title'] ?: Str::limit($validated['name'] . ' | ' . config('app.name'), 60, '');
+                $validated['meta_description'] = $validated['meta_description']
+                    ?: Str::limit(strip_tags($validated['banner_intro'] ?? $validated['overview_content'] ?? ('Book ' . $validated['name'] . ' tour package online.')), 160);
                 $validated['og_title'] = $validated['og_title'] ?: $validated['meta_title'];
                 $validated['og_description'] = $validated['og_description'] ?: $validated['meta_description'];
-                $validated['canonical_url'] = $validated['canonical_url']
-                    ?: $tourpackage->canonical_url
-                    ?: url('/tour-package/' . $tourpackage->slug);
+                $validated['canonical_url'] = $validated['canonical_url'] ?: url('/tour-package/' . $validated['slug']);
 
                 foreach (self::IMAGE_FIELDS as $field) {
                     if ($request->hasFile($field)) {

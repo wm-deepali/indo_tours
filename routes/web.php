@@ -68,6 +68,9 @@ Route::controller(FrontController::class)->group(function () {
     Route::post('/enquiry', 'quickEnquirystore')->middleware('throttle:10,1')->name('enquiry.store');
     Route::get('/thank-you', 'thankYou')->name('thankyou');
 
+    Route::get('/hotels/{slug}', 'hotelDetail')->name('hotel.show');
+    Route::post('/hotel-enquiry', 'hotelEnquiryStore')->name('hotel.enquiry.store');
+
 
 });
 
@@ -147,7 +150,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('landing-pages/about', [AboutPageContentController::class, 'update'])->name('landing-pages.about.update');
 
         Route::get('landing-pages/home', [HomePageContentController::class, 'edit'])->name('landing-pages.home.edit');
-        Route::put('landing-pages/home', [HomePageContentController::class, 'update']) ->name('landing-pages.home.update');
+        Route::put('landing-pages/home', [HomePageContentController::class, 'update'])->name('landing-pages.home.update');
 
         Route::prefix('seo-setting')->name('seo-setting.')->group(function () {
             Route::get('/', [SeoSettingController::class, 'index'])->name('index');

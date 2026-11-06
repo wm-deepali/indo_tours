@@ -1473,35 +1473,40 @@
         el.value = value;
     }
 
+    const SAVED_SLUG = @json(isset($destination) ? $destination->slug : null);
+    const SAVED_NAME = @json(isset($destination) ? $destination->name : null);
+    const SITE_NAME = @json(config('app.name'));
+
     function seoAutoFill() {
         const name = seoVal('name');
         if (!name) return;
 
-        const slug = seoSlug(name);
+        // Edit page: slug only changes when the name changes (same rule as the controller)
+        const slug = (SAVED_SLUG && name === SAVED_NAME) ? SAVED_SLUG : seoSlug(name);
         document.getElementById('slug').value = slug;
 
-        const branded = `${name} | Indo Tours & Adventures`;
-        const metaTitle = branded.length <= 60 ? branded : seoTrim(name, 60);
+        const branded = SITE_NAME ? `${name} | ${SITE_NAME}` : name;
+        const metaTitle = seoTrim(branded, 60);
 
         const moreAbout = window.moreAboutEditor
             ? window.moreAboutEditor.getData()
             : seoVal('more_about_content');
 
-        const source = seoVal('short_description')
+        const source = seoPlain(
+            seoVal('short_description')
             || seoVal('description')
             || seoVal('more_about_intro')
-            || seoPlain(moreAbout);
-        const metaDesc = seoTrim(seoPlain(source), 160);
+            || moreAbout
+        ) || `Explore ${name}: best time to visit, places to see, sample itinerary, budget and tour packages.`;
+        const metaDesc = seoTrim(source, 160);
 
         seoSet('h1', name);
         seoSet('meta_title', metaTitle);
         seoSet('meta_description', metaDesc);
-        // OG fields follow whatever is currently in Meta Title / Meta Description
         seoSet('og_title', seoVal('meta_title') || metaTitle);
         seoSet('og_description', seoVal('meta_description') || metaDesc);
         seoSet('canonical_url', '{{ url('/destinations') }}/' + slug);
     }
-
     // A field is "auto" while empty. Once you type your own value it is left alone;
     // clearing it hands it back to auto-fill. Saved values on the edit page are kept.
     SEO_AUTO_FIELDS.forEach(function (id) {

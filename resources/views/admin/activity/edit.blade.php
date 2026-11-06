@@ -714,6 +714,7 @@
                             <label for="h1">H1 Heading</label>
                             <input type="text" id="h1" name="h1" class="form-control-styled"
                                 value="{{ old('h1', $activity->h1) }}" placeholder="Defaults to Activity Name">
+                            <div class="hint">Auto-filled from Activity Name. Edit to override</div>
                         </div>
 
                         <div class="form-field">
@@ -721,14 +722,15 @@
                             <input type="text" id="meta_title" name="meta_title" class="form-control-styled"
                                 value="{{ old('meta_title', $activity->meta_title) }}"
                                 placeholder="Defaults to Activity Name">
-                            <div class="hint">Recommended: under 60 characters</div>
+                            <div class="hint">Auto-filled: Name | Location (ideal under 60 characters)</div>
                         </div>
 
                         <div class="form-field">
                             <label for="meta_description">Meta Description</label>
                             <textarea id="meta_description" name="meta_description" rows="3"
                                 class="form-control-styled">{{ old('meta_description', $activity->meta_description) }}</textarea>
-                            <div class="hint">Recommended: under 160 characters</div>
+                            <div class="hint">Auto-filled from Banner Description / About (ideal under 160 characters)
+                            </div>
                         </div>
 
                         <div class="form-field">
@@ -736,6 +738,8 @@
                             <input type="text" id="canonical_url" name="canonical_url" class="form-control-styled"
                                 value="{{ old('canonical_url', $activity->canonical_url) }}"
                                 placeholder="Leave blank to auto-use the page URL">
+                            <div class="hint">Auto-generated from slug. Edit only if the page lives at a different URL
+                            </div>
                         </div>
 
                         <div class="form-field">
@@ -753,12 +757,14 @@
                             <label for="og_title">OG Title</label>
                             <input type="text" id="og_title" name="og_title" class="form-control-styled"
                                 value="{{ old('og_title', $activity->og_title) }}" placeholder="Defaults to Meta Title">
+                            <div class="hint">Follows Meta Title. Edit to override</div>
                         </div>
 
                         <div class="form-field">
                             <label for="og_description">OG Description</label>
                             <textarea id="og_description" name="og_description" rows="3"
                                 class="form-control-styled">{{ old('og_description', $activity->og_description) }}</textarea>
+                            <div class="hint">Follows Meta Description. Edit to override</div>
                         </div>
 
                         <div class="form-field">
@@ -851,7 +857,7 @@
     }
 
     // ---- SEO auto-fill (no button) ----
-    const SEO_AUTO_FIELDS = ['h1', 'meta_title', 'meta_description', 'og_title', 'og_description'];
+    const SEO_AUTO_FIELDS = ['h1', 'meta_title', 'meta_description', 'og_title', 'og_description', 'canonical_url'];
 
     function seoText(html) {
         const tmp = document.createElement('div');
@@ -871,9 +877,22 @@
         el.value = value;
     }
 
+    const SAVED_SLUG = @json(isset($activity) ? $activity->slug : null);
+    const SAVED_NAME = @json(isset($activity) ? $activity->name : null);
+    const SITE_NAME = @json(config('app.name'));
+
+    function seoSlug(v) {
+        return v.toLowerCase().trim()
+            .replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+    }
+
     function seoAutoFill() {
         const name = document.getElementById('name').value.trim();
         if (!name) return;
+
+        // Edit page: slug changes only when the name changes (same rule as the controller)
+        const slug = (SAVED_SLUG && name === SAVED_NAME) ? SAVED_SLUG : seoSlug(name);
+        document.getElementById('slug').value = slug;
 
         const location = document.getElementById('location_label').value.trim();
         const bannerDesc = document.getElementById('banner_description').value.trim();
@@ -889,8 +908,9 @@
         seoSet('h1', name);
         seoSet('meta_title', metaTitle);
         seoSet('meta_description', metaDesc);
-        seoSet('og_title', metaTitle);
-        seoSet('og_description', metaDesc);
+        seoSet('og_title', document.getElementById('meta_title').value.trim() || metaTitle);
+        seoSet('og_description', document.getElementById('meta_description').value.trim() || metaDesc);
+        seoSet('canonical_url', '{{ url('/activities') }}/' + slug);
     }
 
     // A field is "auto" while empty. Once the user types something it is left alone;
@@ -971,7 +991,7 @@
 
         if (!this.value) return;
 
-        fetch(`{{ url('admin/attractions/states') }}/${this.value}`)
+        fetch(`{{ url('admin/location/states') }}/${this.value}`)
             .then(res => res.json())
             .then(states => {
                 states.forEach(state => {
@@ -985,7 +1005,7 @@
 
         if (!this.value) return;
 
-        fetch(`{{ url('admin/attractions/cities') }}/${this.value}`)
+        fetch(`{{ url('admin/location/cities') }}/${this.value}`)
             .then(res => res.json())
             .then(cities => {
                 cities.forEach(city => {

@@ -618,61 +618,65 @@
                             <label for="meta_title">Meta Title</label>
                             <input type="text" id="meta_title" name="meta_title" class="form-control-styled"
                                 value="{{ old('meta_title') }}">
+                            <div class="hint">Auto-filled: Name + Tour Packages | Site Name (ideal under 60 characters)
+                            </div>
                         </div>
 
                         <div class="form-field">
                             <label for="meta_description">Meta Description</label>
                             <textarea id="meta_description" name="meta_description" rows="4"
                                 class="form-control-styled">{{ old('meta_description') }}</textarea>
+                            <div class="hint">Auto-filled from Intro Text (ideal under 160 characters)</div>
                         </div>
 
                         <div class="form-field">
                             <label for="og_title">OG Title</label>
                             <input type="text" id="og_title" name="og_title" class="form-control-styled"
-                                value="{{ old('og_title') }}" placeholder="Auto-filled from Meta Title">
-                            <div class="hint">Auto-fills from Meta Title — edit anytime to override</div>
+                                value="{{ old('og_title') }}">
+                            <div class="hint">Follows Meta Title — edit to override</div>
                         </div>
 
                         <div class="form-field">
                             <label for="og_description">OG Description</label>
-                            <textarea id="og_description" name="og_description" rows="3" class="form-control-styled"
-                                placeholder="Auto-filled from Meta Description">{{ old('og_description') }}</textarea>
-                            <div class="hint">Auto-fills from Meta Description — edit anytime to override</div>
+                            <textarea id="og_description" name="og_description" rows="3"
+                                class="form-control-styled">{{ old('og_description') }}</textarea>
+                            <div class="hint">Follows Meta Description — edit to override</div>
                         </div>
 
                         <div class="form-field">
                             <label for="og_image">OG Image</label>
                             <input type="file" id="og_image" name="og_image" class="form-control-styled"
                                 accept="image/*">
+                            <div class="hint">Leave blank to automatically use the first Banner Image</div>
                         </div>
 
                         <div class="form-field">
                             <label for="canonical_url">Canonical URL</label>
                             <input type="text" id="canonical_url" name="canonical_url" class="form-control-styled"
-                                value="{{ old('canonical_url') }}" placeholder="Auto-generated from slug">
-                            <div class="hint">Auto-fills from the slug — edit anytime to override</div>
+                                value="{{ old('canonical_url') }}">
+                            <div class="hint">Auto-generated from slug — edit only if the page lives at a different URL
+                            </div>
                         </div>
 
                         <div class="form-field">
                             <label for="robots">Robots</label>
                             <input type="text" id="robots" name="robots" class="form-control-styled"
-                                value="{{ old('robots') }}" placeholder="index, follow">
-                            <div class="hint">Leave blank to default to "index, follow"</div>
+                                value="{{ old('robots') }}">
+                            <div class="hint">Defaults to "index, follow"</div>
                         </div>
 
                         <div class="form-field">
                             <label for="twitter_title">Twitter Title</label>
                             <input type="text" id="twitter_title" name="twitter_title" class="form-control-styled"
-                                value="{{ old('twitter_title') }}" placeholder="Auto-filled from OG Title">
-                            <div class="hint">Auto-fills from OG Title — edit anytime to override</div>
+                                value="{{ old('twitter_title') }}">
+                            <div class="hint">Follows OG Title — edit to override</div>
                         </div>
 
                         <div class="form-field">
                             <label for="twitter_description">Twitter Description</label>
                             <textarea id="twitter_description" name="twitter_description" rows="3"
-                                class="form-control-styled"
-                                placeholder="Auto-filled from OG Description">{{ old('twitter_description') }}</textarea>
-                            <div class="hint">Auto-fills from OG Description — edit anytime to override</div>
+                                class="form-control-styled">{{ old('twitter_description') }}</textarea>
+                            <div class="hint">Follows OG Description — edit to override</div>
                         </div>
 
                         <div class="form-field">
@@ -681,7 +685,7 @@
                                 class="form-control-styled" accept="image/*">
                             <div class="hint">Leave blank to fall back to OG Image</div>
                         </div>
-
+                        
                     </div>
 
                     <div class="form-actions">
@@ -719,46 +723,6 @@
         panel.classList.add('active');
         document.querySelector('#subcat-tabs .cat-tab[data-tab="' + panel.dataset.panel + '"]').classList.add('active');
     })();
-
-    let ogTitleEdited = false, ogDescEdited = false, canonicalEdited = false;
-    let twitterTitleEdited = false, twitterDescEdited = false;
-
-    document.getElementById('og_title').addEventListener('input', () => ogTitleEdited = true);
-    document.getElementById('og_description').addEventListener('input', () => ogDescEdited = true);
-    document.getElementById('canonical_url').addEventListener('input', () => canonicalEdited = true);
-    document.getElementById('twitter_title').addEventListener('input', () => twitterTitleEdited = true);
-    document.getElementById('twitter_description').addEventListener('input', () => twitterDescEdited = true);
-
-    document.getElementById('meta_title').addEventListener('keyup', function () {
-        if (!ogTitleEdited) document.getElementById('og_title').value = this.value;
-    });
-
-    document.getElementById('meta_description').addEventListener('keyup', function () {
-        if (!ogDescEdited) document.getElementById('og_description').value = this.value;
-    });
-
-    document.getElementById('og_title').addEventListener('keyup', function () {
-        if (!twitterTitleEdited) document.getElementById('twitter_title').value = this.value;
-    });
-
-    document.getElementById('og_description').addEventListener('keyup', function () {
-        if (!twitterDescEdited) document.getElementById('twitter_description').value = this.value;
-    });
-
-    document.getElementById('name').addEventListener('keyup', function () {
-        const slug = this.value
-            .toLowerCase()
-            .trim()
-            .replace(/[^a-z0-9\s-]/g, '')
-            .replace(/\s+/g, '-')
-            .replace(/-+/g, '-');
-
-        document.getElementById('slug').value = slug;
-
-        if (!canonicalEdited) {
-            document.getElementById('canonical_url').value = '{{ url('/') }}/' + slug;
-        }
-    });
 
     // ---- Highlight repeater ----
     let highlightIndex = 0;
@@ -828,5 +792,6 @@
 
 </script>
 
+@include('admin.subcategory._seo-autofill', ['isEdit' => false])
 @include('admin.partials._ajax-form', ['formId' => 'subcategory-form', 'tabsId' => 'subcat-tabs'])
 @include('admin.footer')

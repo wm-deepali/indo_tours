@@ -1142,30 +1142,37 @@
         el.value = value;
     }
 
+    const SAVED_SLUG = @json(isset($attraction) ? $attraction->slug : null);
+    const SAVED_NAME = @json(isset($attraction) ? $attraction->name : null);
+    const SITE_NAME = @json(config('app.name'));
+
     function seoAutoFill() {
         const name = document.getElementById('name').value.trim();
         if (!name) return;
 
-        const slug = seoSlug(name);
+        // Edit page: slug only changes when the name changes (same rule as the controller)
+        const slug = (SAVED_SLUG && name === SAVED_NAME) ? SAVED_SLUG : seoSlug(name);
         document.getElementById('slug').value = slug;
 
-        const branded = `${name} | Indo Tours & Adventures`;
-        const metaTitle = branded.length <= 60 ? branded : seoTrim(name, 60);
+        const branded = SITE_NAME ? `${name} | ${SITE_NAME}` : name;
+        const metaTitle = seoTrim(branded, 60);
 
-        const source = seoFieldValue('short_description').trim()
-            ? seoFieldValue('short_description')
-            : (seoPlain(seoFieldValue('description')) || seoPlain(seoFieldValue('about_content')) || seoPlain(seoFieldValue('about_more_content')));
-        const metaDesc = seoTrim(seoPlain(source), 160);
+        const source = seoPlain(
+            seoFieldValue('short_description')
+            || seoFieldValue('description')
+            || seoFieldValue('about_content')
+            || seoFieldValue('about_more_content')
+        ) || `Explore ${name}: best time to visit, things to do, itinerary, budget and tour packages.`;
+        const metaDesc = seoTrim(source, 160);
 
         seoSet('h1', name);
         seoSet('meta_title', metaTitle);
         seoSet('meta_description', metaDesc);
-        // OG fields follow whatever is currently in Meta Title / Meta Description
         seoSet('og_title', document.getElementById('meta_title').value.trim() || metaTitle);
         seoSet('og_description', document.getElementById('meta_description').value.trim() || metaDesc);
         seoSet('canonical_url', '{{ url('/attractions') }}/' + slug);
     }
-
+    
     // A field is "auto" while empty. Once you type your own value it is left alone;
     // clearing it hands it back to auto-fill. Saved values on the edit page are kept.
     SEO_AUTO_FIELDS.forEach(function (id) {

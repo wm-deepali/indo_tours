@@ -911,5 +911,6 @@
 
 </script>
 
+@include('admin.category._seo-autofill', ['isEdit' => true])
 @include('admin.partials._ajax-form', ['formId' => 'category-form', 'tabsId' => 'category-tabs'])
 @include('admin.footer')

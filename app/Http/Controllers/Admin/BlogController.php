@@ -14,12 +14,30 @@ use Illuminate\Support\Str;
 
 class BlogController extends Controller
 {
+    private function applySeoDefaults(array $d): array
+    {
+        $title = $d['title'];
+        $site = config('app.name');
+        $body = trim(preg_replace('/\s+/', ' ', strip_tags(
+            ($d['short_description'] ?? null) ?: ($d['content'] ?? '')
+        )));
+
+        $d['h1'] = ($d['h1'] ?? null) ?: $title;
+        $d['meta_title'] = ($d['meta_title'] ?? null) ?: Str::limit($title . ($site ? ' | ' . $site : ''), 60, '');
+        $d['meta_description'] = ($d['meta_description'] ?? null) ?: Str::limit($body ?: "Read {$title} on our travel blog.", 160, '');
+        $d['canonical_url'] = ($d['canonical_url'] ?? null) ?: url('/blog/' . $d['slug'] . '/');
+        $d['og_title'] = ($d['og_title'] ?? null) ?: $d['meta_title'];
+        $d['og_description'] = ($d['og_description'] ?? null) ?: $d['meta_description'];
+
+        return $d;
+    }
+
     public function index(Request $request)
     {
         $blogs = Blog::with('category')
             ->when($request->search, function ($q) use ($request) {
                 $q->where('title', 'like', '%' . $request->search . '%')
-                  ->orWhere('slug', 'like', '%' . $request->search . '%');
+                    ->orWhere('slug', 'like', '%' . $request->search . '%');
             })
             ->when($request->blog_category_id, function ($q) use ($request) {
                 $q->where('blog_category_id', $request->blog_category_id);
@@ -87,7 +105,7 @@ class BlogController extends Controller
         $blog->delete();
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'Blog deleted successfully.',
         ]);
     }
@@ -99,9 +117,9 @@ class BlogController extends Controller
         $blog->save();
 
         return response()->json([
-            'status'     => true,
-            'newStatus'  => $blog->status,
-            'message'    => 'Status updated successfully.',
+            'status' => true,
+            'newStatus' => $blog->status,
+            'message' => 'Status updated successfully.',
         ]);
     }
 
@@ -110,11 +128,11 @@ class BlogController extends Controller
     private function formData(Blog $blog): array
     {
         return [
-            'blog'         => $blog,
-            'categories'   => BlogCategory::active()->ordered()->get(),
+            'blog' => $blog,
+            'categories' => BlogCategory::active()->ordered()->get(),
             'destinations' => Destination::orderBy('name')->get(),
-            'attractions'  => Attraction::orderBy('name')->get(),
-            'activities'   => Activity::orderBy('name')->get(),
+            'attractions' => Attraction::orderBy('name')->get(),
+            'activities' => Activity::orderBy('name')->get(),
             'tourPackages' => TourPackage::orderBy('name')->get(),
         ];
     }
@@ -123,38 +141,38 @@ class BlogController extends Controller
     {
         $rules = [
             'blog_category_id' => 'required|exists:blog_categories,id',
-            'title'             => 'required|string|max:255',
-            'slug'              => 'nullable|string|max:255|unique:blogs,slug' . ($id ? ',' . $id : ''),
-            'tag'               => 'nullable|string|max:100',
+            'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:blogs,slug' . ($id ? ',' . $id : ''),
+            'tag' => 'nullable|string|max:100',
             'short_description' => 'nullable|string|max:500',
-            'content'           => 'nullable|string',
-            'status'            => 'required|in:draft,published',
-            'published_at'      => 'nullable|date',
+            'content' => 'nullable|string',
+            'status' => 'required|in:draft,published',
+            'published_at' => 'nullable|date',
 
-            'is_journey_story'   => 'nullable|boolean',
-            'card_title'         => 'nullable|string|max:100',
+            'is_journey_story' => 'nullable|boolean',
+            'card_title' => 'nullable|string|max:100',
             'journey_sort_order' => 'nullable|integer|min:0',
 
-            'destination_heading'     => 'nullable|string|max:255',
+            'destination_heading' => 'nullable|string|max:255',
             'destination_description' => 'nullable|string|max:1000',
-            'attraction_heading'      => 'nullable|string|max:255',
-            'attraction_description'  => 'nullable|string|max:1000',
-            'activity_heading'        => 'nullable|string|max:255',
-            'activity_description'    => 'nullable|string|max:1000',
-            'tour_package_heading'     => 'nullable|string|max:255',
+            'attraction_heading' => 'nullable|string|max:255',
+            'attraction_description' => 'nullable|string|max:1000',
+            'activity_heading' => 'nullable|string|max:255',
+            'activity_description' => 'nullable|string|max:1000',
+            'tour_package_heading' => 'nullable|string|max:255',
             'tour_package_description' => 'nullable|string|max:1000',
 
-            'featured_image'      => 'nullable|image|mimes:jpg,jpeg,png,webp,avif|max:2048',
-            'og_image'            => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'twitter_card_image'  => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'featured_image' => 'nullable|image|mimes:jpg,jpeg,png,webp,avif|max:2048',
+            'og_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'twitter_card_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
 
-            'h1'                => 'nullable|string|max:255',
-            'meta_title'        => 'nullable|string|max:255',
-            'meta_description'  => 'nullable|string|max:500',
-            'canonical_url'     => 'nullable|url|max:255|unique:blogs,canonical_url' . ($id ? ',' . $id : ''),
-            'og_title'          => 'nullable|string|max:255',
-            'og_description'    => 'nullable|string|max:500',
-            'robots'            => 'nullable|string|max:50',
+            'h1' => 'nullable|string|max:255',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+            'canonical_url' => 'nullable|url|max:255|unique:blogs,canonical_url' . ($id ? ',' . $id : ''),
+            'og_title' => 'nullable|string|max:255',
+            'og_description' => 'nullable|string|max:500',
+            'robots' => 'nullable|string|max:50',
         ];
 
         $data = $request->validate($rules);
@@ -163,10 +181,11 @@ class BlogController extends Controller
             ? Str::slug($request->slug)
             : Blog::uniqueSlug($request->title, $id);
 
+        $data = $this->applySeoDefaults($data);
         $data['robots'] = $request->robots ?: 'index,follow';
 
         // Journey Stories: unchecked/blank values ko safe defaults do (column NOT NULL hai)
-        $data['is_journey_story']   = $request->boolean('is_journey_story');
+        $data['is_journey_story'] = $request->boolean('is_journey_story');
         $data['journey_sort_order'] = (int) $request->input('journey_sort_order', 0);
 
         return $data;

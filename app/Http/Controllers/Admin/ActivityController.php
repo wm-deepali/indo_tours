@@ -108,6 +108,27 @@ class ActivityController extends Controller
         return redirect()->route('admin.activities.index')->with('success', $message);
     }
 
+    private function applySeoDefaults(array $v, string $slug): array
+    {
+        $name = $v['name'];
+        $location = trim((string) ($v['location_label'] ?? ''));
+        $body = trim(preg_replace('/\s+/', ' ', strip_tags(
+            ($v['banner_description'] ?? null) ?: ($v['about_content'] ?? null) ?: ($v['more_about_content'] ?? '')
+        )));
+
+        $v['h1'] = ($v['h1'] ?? null) ?: $name;
+        $v['meta_title'] = ($v['meta_title'] ?? null)
+            ?: Str::limit($location ? "{$name} | {$location}" : $name, 60, '');
+        $v['meta_description'] = ($v['meta_description'] ?? null)
+            ?: Str::limit($body ?: "Book {$name}" . ($location ? " in {$location}" : '') . ' online with instant confirmation.', 160, '');
+        $v['og_title'] = ($v['og_title'] ?? null) ?: $v['meta_title'];
+        $v['og_description'] = ($v['og_description'] ?? null) ?: $v['meta_description'];
+        $v['canonical_url'] = ($v['canonical_url'] ?? null) ?: url('/activities/' . $slug);
+        $v['robots'] = ($v['robots'] ?? null) ?: 'index, follow';
+
+        return $v;
+    }
+
     public function index()
     {
         $activities = Activity::with(['country', 'state', 'city', 'category'])
@@ -247,7 +268,8 @@ class ActivityController extends Controller
             $validated['duration_unit']
         );
         $validated['free_cancellation_text'] = !empty($validated['free_cancellation_hours']) ? 'Free Cancellation' : null;
-
+        $validated = $this->applySeoDefaults($validated, $validated['slug'] ?? $activity?->slug);
+        
         return $validated;
     }
 

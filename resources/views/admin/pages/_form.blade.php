@@ -89,8 +89,8 @@
             <label for="meta_title">Meta Title</label>
             <input type="text" id="meta_title" name="meta_title"
                 class="form-control-styled @error('meta_title') is-invalid @enderror"
-                value="{{ old('meta_title', $page->meta_title ?? '') }}"
-                placeholder="Shown in browser tab / search results">
+                value="{{ old('meta_title', $page->meta_title ?? '') }}">
+            <div class="hint">Auto-filled: Title | Site Name (ideal under 60 characters)</div>
             @error('meta_title')
             <div class="form-error">{{ $message }}</div>@enderror
         </div>
@@ -98,8 +98,8 @@
         <div class="form-field">
             <label for="meta_description">Meta Description</label>
             <textarea id="meta_description" name="meta_description" rows="3"
-                class="form-control-styled @error('meta_description') is-invalid @enderror"
-                placeholder="Short summary shown in search results">{{ old('meta_description', $page->meta_description ?? '') }}</textarea>
+                class="form-control-styled @error('meta_description') is-invalid @enderror">{{ old('meta_description', $page->meta_description ?? '') }}</textarea>
+            <div class="hint">Auto-filled from Content (ideal under 160 characters)</div>
             @error('meta_description')
             <div class="form-error">{{ $message }}</div>@enderror
         </div>
@@ -108,8 +108,8 @@
             <label for="canonical_url">Canonical URL</label>
             <input type="text" id="canonical_url" name="canonical_url"
                 class="form-control-styled @error('canonical_url') is-invalid @enderror"
-                value="{{ old('canonical_url', $page->canonical_url ?? '') }}"
-                placeholder="https://example.com/about-us">
+                value="{{ old('canonical_url', $page->canonical_url ?? '') }}">
+            <div class="hint">Auto-generated from slug. Edit only if the page lives at a different URL</div>
             @error('canonical_url')
             <div class="form-error">{{ $message }}</div>@enderror
         </div>
@@ -180,4 +180,77 @@
     if (window.CKEDITOR) {
         CKEDITOR.replace('content');
     }
+    (function () {
+        const SITE = @json(config('app.name'));
+        const BASE = @json(url('/'));          // change to url('/page') if your pages live under a prefix
+
+        const g = id => document.getElementById(id);
+        const val = id => ((g(id) && g(id).value) || '').trim();
+
+        let editor = null;
+        if (window.CKEDITOR) editor = CKEDITOR.replace('content');
+
+        const plain = html => {
+            const t = document.createElement('div');
+            t.innerHTML = html || '';
+            return (t.textContent || '').replace(/\s+/g, ' ').trim();
+        };
+        const clip = (s, n) => s.length <= n ? s : s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…';
+        const slugify = s => s.toLowerCase().trim()
+            .replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+        const content = () => plain(editor ? editor.getData() : val('content'));
+
+        const rules = {
+            slug: () => slugify(val('title')),
+            h1: () => val('title'),
+            meta_title: () => {
+                const t = val('title');
+                return t ? clip(SITE ? t + ' | ' + SITE : t, 60) : '';
+            },
+            meta_description: () => {
+                const t = val('title');
+                return clip(content() || (t ? 'Read more about ' + t + '.' : ''), 160);
+            },
+            canonical_url: () => {
+                const s = val('slug');
+                return s ? BASE.replace(/\/$/, '') + '/' + s : '';
+            },
+            og_title: () => val('meta_title'),
+            og_description: () => val('meta_description'),
+        };
+        const order = Object.keys(rules);
+        const manual = {};
+
+        function refresh() {
+            order.forEach(id => {
+                if (manual[id]) return;
+                const el = g(id);
+                if (el) el.value = rules[id]();
+            });
+        }
+
+        // Init: empty -> fill. Non-empty and different from auto -> user's own value, keep it.
+        order.forEach(id => {
+            const el = g(id);
+            if (!el) return;
+            const auto = rules[id]();
+            if (!el.value.trim()) { el.value = auto; manual[id] = false; }
+            else { manual[id] = el.value.trim() !== auto; }
+
+            el.addEventListener('input', () => {
+                manual[id] = el.value.trim() !== '';   // cleared -> back to auto
+                refresh();
+            });
+        });
+
+        g('title').addEventListener('input', refresh);
+        if (editor) editor.on('change', refresh);
+        else g('content').addEventListener('input', refresh);
+
+        // make sure CKEditor content is synced before submit
+        g('title').closest('form').addEventListener('submit', function () {
+            if (window.CKEDITOR) Object.keys(CKEDITOR.instances).forEach(k => CKEDITOR.instances[k].updateElement());
+            refresh();
+        }, true);
+    })();
 </script>
