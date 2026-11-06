@@ -785,6 +785,22 @@
             </div>
         </section>
 
+        {{-- MORE ABOUT --}}
+        @if($activity->more_about_content)
+            <section class="more-about">
+                <div class="container">
+                    <div class="heading">
+                        <h3>More About <span>{{ $activity->more_about_title ?: $activity->name }}</span></h3>
+                        <p>Explore nearby places, activity and tour packages for your trip.</p>
+                    </div>
+
+                    <div class="rte-content">
+                        {!! $activity->more_about_content !!}
+                    </div>
+                </div>
+            </section>
+        @endif
+
         <!-- FAQ SECTION -->
         <section class="attraction_accordion" id="faqSection">
             <div class="container">
@@ -944,8 +960,8 @@
     @endphp
 
     <script type="application/ld+json">
-                            {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
-                        </script>
+                                {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+                            </script>
 
     <script>
         $(function () {

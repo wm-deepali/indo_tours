@@ -1430,10 +1430,108 @@
                 'blockQuote', 'undo', 'redo'
             ]
         })
-        .then(editor => { window.moreAboutEditor = editor; })
+        .then(editor => {
+            window.moreAboutEditor = editor;
+            editor.model.document.on('change:data', () => {
+                if (window.seoAutoFillSoon) window.seoAutoFillSoon();
+            });
+        })
         .catch(error => console.error(error));
 </script>
 <script>
+
+    // ---- SEO auto-fill (no button) — same block for create + edit ----
+    const SEO_AUTO_FIELDS = ['h1', 'meta_title', 'meta_description', 'og_title', 'og_description', 'canonical_url'];
+
+    function seoPlain(html) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = html || '';
+        return (tmp.textContent || '').replace(/\s+/g, ' ').trim();
+    }
+
+    function seoTrim(str, max) {
+        if (str.length <= max) return str;
+        return str.slice(0, max - 1).replace(/\s+\S*$/, '') + '…';
+    }
+
+    function seoSlug(v) {
+        return v.toLowerCase().trim()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-');
+    }
+
+    function seoVal(id) {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : '';
+    }
+
+    // Only fields still marked "auto" (empty, or filled by this script) get overwritten
+    function seoSet(id, value) {
+        const el = document.getElementById(id);
+        if (!el || !value || el.dataset.auto !== '1') return;
+        el.value = value;
+    }
+
+    function seoAutoFill() {
+        const name = seoVal('name');
+        if (!name) return;
+
+        const slug = seoSlug(name);
+        document.getElementById('slug').value = slug;
+
+        const branded = `${name} | Indo Tours & Adventures`;
+        const metaTitle = branded.length <= 60 ? branded : seoTrim(name, 60);
+
+        const moreAbout = window.moreAboutEditor
+            ? window.moreAboutEditor.getData()
+            : seoVal('more_about_content');
+
+        const source = seoVal('short_description')
+            || seoVal('description')
+            || seoVal('more_about_intro')
+            || seoPlain(moreAbout);
+        const metaDesc = seoTrim(seoPlain(source), 160);
+
+        seoSet('h1', name);
+        seoSet('meta_title', metaTitle);
+        seoSet('meta_description', metaDesc);
+        // OG fields follow whatever is currently in Meta Title / Meta Description
+        seoSet('og_title', seoVal('meta_title') || metaTitle);
+        seoSet('og_description', seoVal('meta_description') || metaDesc);
+        seoSet('canonical_url', '{{ url('/destinations') }}/' + slug);
+    }
+
+    // A field is "auto" while empty. Once you type your own value it is left alone;
+    // clearing it hands it back to auto-fill. Saved values on the edit page are kept.
+    SEO_AUTO_FIELDS.forEach(function (id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.dataset.auto = el.value.trim() === '' ? '1' : '0';
+        el.addEventListener('input', function () {
+            el.dataset.auto = el.value.trim() === '' ? '1' : '0';
+        });
+    });
+
+    let seoTimer;
+    function seoAutoFillSoon() {
+        clearTimeout(seoTimer);
+        seoTimer = setTimeout(seoAutoFill, 300);
+    }
+    window.seoAutoFillSoon = seoAutoFillSoon;
+
+    ['name', 'short_description', 'description', 'more_about_intro', 'meta_title', 'meta_description'].forEach(function (id) {
+        document.getElementById(id).addEventListener('input', seoAutoFillSoon);
+    });
+
+    seoAutoFill(); // once on load (fills any empty SEO fields on the edit page)
+
+    // Final pass before the AJAX form reads its values
+    document.getElementById('destination-form').addEventListener('submit', function () {
+        if (window.moreAboutEditor) window.moreAboutEditor.updateSourceElement();
+        seoAutoFill();
+    }, true);
+
     // ---- Tabs ----
     document.querySelectorAll('#destination-tabs .cat-tab').forEach(function (tabBtn) {
         tabBtn.addEventListener('click', function () {

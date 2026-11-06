@@ -894,6 +894,98 @@
         CKEDITOR.replace('about_more_content');
     }
 
+    // ---- SEO auto-fill (no button) — same block for create + edit ----
+    const SEO_AUTO_FIELDS = ['h1', 'meta_title', 'meta_description', 'og_title', 'og_description', 'canonical_url'];
+
+    function seoPlain(html) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = html || '';
+        return (tmp.textContent || '').replace(/\s+/g, ' ').trim();
+    }
+
+    function seoTrim(str, max) {
+        if (str.length <= max) return str;
+        return str.slice(0, max - 1).replace(/\s+\S*$/, '') + '…';
+    }
+
+    function seoSlug(v) {
+        return v.toLowerCase().trim()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-');
+    }
+
+    function seoFieldValue(id) {
+        if (window.CKEDITOR && CKEDITOR.instances[id]) return CKEDITOR.instances[id].getData();
+        const el = document.getElementById(id);
+        return el ? el.value : '';
+    }
+
+    // Only fields still marked "auto" (empty, or filled by this script) get overwritten
+    function seoSet(id, value) {
+        const el = document.getElementById(id);
+        if (!el || !value || el.dataset.auto !== '1') return;
+        el.value = value;
+    }
+
+    function seoAutoFill() {
+        const name = document.getElementById('name').value.trim();
+        if (!name) return;
+
+        const slug = seoSlug(name);
+        document.getElementById('slug').value = slug;
+
+        const branded = `${name} | Indo Tours & Adventures`;
+        const metaTitle = branded.length <= 60 ? branded : seoTrim(name, 60);
+
+        const source = seoFieldValue('short_description').trim()
+            ? seoFieldValue('short_description')
+            : (seoPlain(seoFieldValue('description')) || seoPlain(seoFieldValue('about_content')) || seoPlain(seoFieldValue('about_more_content')));
+        const metaDesc = seoTrim(seoPlain(source), 160);
+
+        seoSet('h1', name);
+        seoSet('meta_title', metaTitle);
+        seoSet('meta_description', metaDesc);
+        // OG fields follow whatever is currently in Meta Title / Meta Description
+        seoSet('og_title', document.getElementById('meta_title').value.trim() || metaTitle);
+        seoSet('og_description', document.getElementById('meta_description').value.trim() || metaDesc);
+        seoSet('canonical_url', '{{ url('/attractions') }}/' + slug);
+    }
+
+    // A field is "auto" while empty. Once you type your own value it is left alone;
+    // clearing it hands it back to auto-fill. Saved values on the edit page are kept.
+    SEO_AUTO_FIELDS.forEach(function (id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.dataset.auto = el.value.trim() === '' ? '1' : '0';
+        el.addEventListener('input', function () {
+            el.dataset.auto = el.value.trim() === '' ? '1' : '0';
+        });
+    });
+
+    let seoTimer;
+    function seoAutoFillSoon() {
+        clearTimeout(seoTimer);
+        seoTimer = setTimeout(seoAutoFill, 300);
+    }
+
+    ['name', 'short_description', 'description', 'meta_title', 'meta_description'].forEach(function (id) {
+        document.getElementById(id).addEventListener('input', seoAutoFillSoon);
+    });
+    ['about_content', 'about_more_content'].forEach(function (id) {
+        if (window.CKEDITOR && CKEDITOR.instances[id]) CKEDITOR.instances[id].on('change', seoAutoFillSoon);
+    });
+
+    seoAutoFill(); // once on load (fills any empty SEO fields on the edit page)
+
+    // Final sync before the AJAX form reads its values
+    document.getElementById('attraction-form').addEventListener('submit', function () {
+        if (window.CKEDITOR) {
+            Object.keys(CKEDITOR.instances).forEach(k => CKEDITOR.instances[k].updateElement());
+        }
+        seoAutoFill();
+    }, true);
+
     document.querySelectorAll('#attraction-tabs .cat-tab').forEach(function (tabBtn) {
         tabBtn.addEventListener('click', function () {
             document.querySelectorAll('#attraction-tabs .cat-tab').forEach(b => b.classList.remove('active'));

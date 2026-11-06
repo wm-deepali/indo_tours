@@ -346,6 +346,7 @@
                         <button type="button" class="cat-tab" data-tab="map">Map</button>
                         <button type="button" class="cat-tab" data-tab="policies">Policies</button>
                         <button type="button" class="cat-tab" data-tab="attractions">Attractions</button>
+                        <button type="button" class="cat-tab" data-tab="more_about">More About</button>
                         <button type="button" class="cat-tab" data-tab="faqs">FAQs</button>
                         <button type="button" class="cat-tab" data-tab="seo">SEO</button>
                     </div>
@@ -652,6 +653,26 @@
                         </div>
                     </div>
 
+                    {{-- ============ MORE ABOUT ============ --}}
+                    <div class="cat-tab-panel" data-panel="more_about">
+
+                        <div class="form-field">
+                            <label for="more_about_title">Section Title</label>
+                            <input type="text" id="more_about_title" name="more_about_title" class="form-control-styled"
+                                value="{{ old('more_about_title') }}"
+                                placeholder="e.g. More About Burj Khalifa Sky Views">
+                            <div class="hint">Shown as "More About [Title]" — leave blank to use the Activity Name</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="more_about_content">Content</label>
+                            <textarea id="more_about_content" name="more_about_content" rows="10"
+                                class="form-control-styled">{{ old('more_about_content') }}</textarea>
+                            <div class="hint">Rich text — supports headings, lists, links and quotes</div>
+                        </div>
+
+                    </div>
+
                     {{-- ============ FAQS ============ --}}
                     <div class="cat-tab-panel" data-panel="faqs">
                         <div id="faq-rows"></div>
@@ -744,10 +765,92 @@
     </div>
 </div>
 
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 <script id="attractions-options-data" type="application/json">
     {!! json_encode($attractions->map(fn($a) => ['id' => $a->id, 'name' => $a->name])) !!}
 </script>
 <script>
+    // ---- More About rich text (CKEditor 4) ----
+    let moreAboutEditor = null;
+    if (window.CKEDITOR) {
+        moreAboutEditor = CKEDITOR.replace('more_about_content');
+    }
+
+    // ---- SEO auto-fill (no button) ----
+    const SEO_AUTO_FIELDS = ['h1', 'meta_title', 'meta_description', 'og_title', 'og_description'];
+
+    function seoText(html) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = html || '';
+        return (tmp.textContent || '').replace(/\s+/g, ' ').trim();
+    }
+
+    function seoTrim(str, max) {
+        if (str.length <= max) return str;
+        return str.slice(0, max - 1).replace(/\s+\S*$/, '') + '…';
+    }
+
+    // Only fields still marked auto (empty, or filled by this script) get overwritten
+    function seoSet(id, value) {
+        const el = document.getElementById(id);
+        if (!el || !value || el.dataset.auto !== '1') return;
+        el.value = value;
+    }
+
+    function seoAutoFill() {
+        const name = document.getElementById('name').value.trim();
+        if (!name) return;
+
+        const location = document.getElementById('location_label').value.trim();
+        const bannerDesc = document.getElementById('banner_description').value.trim();
+        const aboutText = seoText(document.getElementById('about_content').value);
+        const moreHtml = moreAboutEditor ? moreAboutEditor.getData() : document.getElementById('more_about_content').value;
+
+        const description = bannerDesc || aboutText || seoText(moreHtml)
+            || `Book ${name}${location ? ' in ' + location : ''} online with instant confirmation.`;
+
+        const metaTitle = seoTrim(location ? `${name} | ${location}` : name, 60);
+        const metaDesc = seoTrim(description, 160);
+
+        seoSet('h1', name);
+        seoSet('meta_title', metaTitle);
+        seoSet('meta_description', metaDesc);
+        seoSet('og_title', metaTitle);
+        seoSet('og_description', metaDesc);
+    }
+
+    // A field is "auto" while empty. Once the user types something it is left alone;
+    // clearing it hands it back to auto-fill. On the edit page, saved values are kept.
+    SEO_AUTO_FIELDS.forEach(function (id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.dataset.auto = el.value.trim() === '' ? '1' : '0';
+        el.addEventListener('input', function () {
+            el.dataset.auto = el.value.trim() === '' ? '1' : '0';
+        });
+    });
+
+    let seoTimer;
+    function seoAutoFillSoon() {
+        clearTimeout(seoTimer);
+        seoTimer = setTimeout(seoAutoFill, 300);
+    }
+
+    ['name', 'location_label', 'banner_description', 'about_content'].forEach(function (id) {
+        document.getElementById(id).addEventListener('input', seoAutoFillSoon);
+    });
+    if (moreAboutEditor) moreAboutEditor.on('change', seoAutoFillSoon);
+
+    seoAutoFill(); // once on load (fills empty fields on the edit page)
+
+    // Before the AJAX form reads its values: sync CKEditor -> textarea and run a final auto-fill
+    document.getElementById('activity-form').addEventListener('submit', function () {
+        if (window.CKEDITOR) {
+            Object.keys(CKEDITOR.instances).forEach(k => CKEDITOR.instances[k].updateElement());
+        }
+        seoAutoFill();
+    }, true);
+
     document.querySelectorAll('#activity-tabs .cat-tab').forEach(function (tabBtn) {
         tabBtn.addEventListener('click', function () {
             document.querySelectorAll('#activity-tabs .cat-tab').forEach(b => b.classList.remove('active'));
@@ -1024,6 +1127,7 @@
     }
 
     document.getElementById('add-attraction-row').addEventListener('click', () => addAttractionRow());
+
 </script>
 
 @include('admin.partials._ajax-form', ['formId' => 'activity-form', 'tabsId' => 'activity-tabs'])

@@ -59,7 +59,7 @@ class HeaderMenu
                     ->get(['id', 'name', 'slug'])
                     ->map(fn($a) => (object) [
                         'label' => $a->name,
-                        'url'   => url('/activities/' . $a->slug),   // <-- change to your activity page URL/route
+                        'url' => url('/activities/' . $a->slug),   // <-- change to your activity page URL/route
                     ]),
             ])
             ->filter(fn($g) => $g['items']->isNotEmpty())
@@ -79,7 +79,7 @@ class HeaderMenu
             ->get(['id', 'name', 'slug'])
             ->map(fn($d) => (object) [
                 'label' => $d->name,
-                'url'   => url('/destination/' . $d->slug),   // <-- change to your destination page URL/route
+                'url' => url('/destination/' . $d->slug),   // <-- change to your destination page URL/route
             ]);
     }
 
@@ -88,11 +88,11 @@ class HeaderMenu
         return Category::inHeader()
             ->get(['id', 'name', 'menu_name', 'header_sort_order'])
             ->map(fn($c) => [
-                'sort'  => $c->header_sort_order,
+                'sort' => $c->header_sort_order,
                 'title' => $c->menu_name ?: $c->name,
                 'items' => $this->packages(
                     $scope,
-                    fn($q) => $q->whereHas('subCategory', fn($s) => $s->where('category_id', $c->id))
+                    fn($q) => $q->whereHas('subCategories', fn($s) => $s->where('sub_categories.category_id', $c->id))
                 ),
             ]);
     }
@@ -102,9 +102,12 @@ class HeaderMenu
         return SubCategory::inHeader()
             ->get(['id', 'name', 'header_sort_order'])
             ->map(fn($s) => [
-                'sort'  => $s->header_sort_order,
+                'sort' => $s->header_sort_order,
                 'title' => $s->name,
-                'items' => $this->packages($scope, fn($q) => $q->where('sub_category_id', $s->id)),
+                'items' => $this->packages(
+                    $scope,
+                    fn($q) => $q->whereHas('subCategories', fn($sc) => $sc->where('sub_categories.id', $s->id))
+                ),
             ]);
     }
 
@@ -119,7 +122,7 @@ class HeaderMenu
             ->get(['id', 'name', 'slug'])
             ->map(fn($p) => (object) [
                 'label' => $p->name,
-                'url'   => url('/tour-package/' . $p->slug),
+                'url' => url('/tour-package/' . $p->slug),
             ]);
     }
 
@@ -134,7 +137,7 @@ class HeaderMenu
         // international: has a country, and it isn't India
         $query->whereNotNull('country_id');
 
-           
+
         return $indiaId ? $query->where('country_id', '!=', $indiaId) : $query;
     }
 

@@ -43,6 +43,8 @@ class Activity extends Model
         'price_unit',
         'about_title',
         'about_content',
+        'more_about_title',
+        'more_about_content',
         'highlights',
         'what_to_expect_content',
         'know_before_you_go',

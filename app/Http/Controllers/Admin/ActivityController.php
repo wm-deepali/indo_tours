@@ -461,6 +461,8 @@ class ActivityController extends Controller
 
             'about_title' => 'nullable|string|max:255',
             'about_content' => 'nullable|string',
+            'more_about_title' => 'nullable|string|max:255',
+            'more_about_content' => 'nullable|string',
             'highlights' => 'nullable|array',
             'highlights.*' => 'nullable|string|max:255',
             'what_to_expect_content' => 'nullable|string',
