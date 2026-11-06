@@ -25,6 +25,7 @@ class TourPackageController extends Controller
 
     // Returned by validate() but they are child-table / pivot data, never TourPackage columns
     private const CHILD_KEYS = [
+        'sub_category_ids',
         'amenity_ids',
         'destination_ids',
         'attraction_ids',
@@ -157,7 +158,7 @@ class TourPackageController extends Controller
     private function attributes(): array
     {
         return [
-            'sub_category_id' => 'sub category',
+            'sub_category_ids' => 'sub categories',
             'name' => 'package name',
             'duration_days' => 'days',
             'duration_nights' => 'nights',
@@ -173,6 +174,7 @@ class TourPackageController extends Controller
         ];
     }
     private array $relations = [
+        'subCategories',
         'amenities',
         'durationOptions',
         'routeStops',
@@ -188,15 +190,31 @@ class TourPackageController extends Controller
         'activities',
     ];
 
+    private function primarySubCategoryId(Request $request): ?int
+    {
+        $id = collect($request->input('sub_category_ids', []))->filter()->first();
+        return $id ? (int) $id : null;
+    }
+
+    // Used by create() and edit()
+    private function groupedSubCategories()
+    {
+        return SubCategory::with('category:id,name')
+            ->orderBy('name')
+            ->get(['id', 'name', 'category_id'])
+            ->groupBy(fn($s) => $s->category->name ?? 'Uncategorised')
+            ->sortKeys();
+    }
+
     public function index()
     {
-        $tourPackages = TourPackage::with('subCategory')->latest()->paginate(20);
+        $tourPackages = TourPackage::with(['subCategories'])->latest()->paginate(20);
         return view('admin.tourpackage.index', compact('tourPackages'));
     }
 
     public function create()
     {
-        $subCategories = SubCategory::orderBy('name')->get(['id', 'name']);
+        $subCategories = $this->groupedSubCategories();
         $hotels = Hotel::orderBy('name')->get(['id', 'name']);
         $countries = Country::orderBy('name')->get(['id', 'name']);
         $destinations = Destination::orderBy('name')->get(['id', 'name']);
@@ -222,6 +240,7 @@ class TourPackageController extends Controller
         try {
             DB::transaction(function () use ($request, $validated) {
                 $validated['slug'] = $this->uniqueSlug($validated['name']);
+                $validated['sub_category_id'] = $this->primarySubCategoryId($request);
                 $validated['status'] = $request->status ?? 'draft';
                 $validated['duration_text'] = TourPackage::formatDuration(
                     (int) $validated['duration_days'],
@@ -256,7 +275,7 @@ class TourPackageController extends Controller
     {
         $tourpackage->load($this->relations);
 
-        $subCategories = SubCategory::orderBy('name')->get(['id', 'name']);
+        $subCategories = $this->groupedSubCategories();
         $hotels = Hotel::orderBy('name')->get(['id', 'name']);
         $countries = Country::orderBy('name')->get(['id', 'name']);
         $destinations = Destination::orderBy('name')->get(['id', 'name']);
@@ -300,6 +319,7 @@ class TourPackageController extends Controller
         try {
             DB::transaction(function () use ($request, $tourpackage, $validated) {
                 $validated['status'] = $request->status ?? $tourpackage->status;
+                $validated['sub_category_id'] = $this->primarySubCategoryId($request);
                 $validated['duration_text'] = TourPackage::formatDuration(
                     (int) $validated['duration_days'],
                     (int) $validated['duration_nights']
@@ -334,13 +354,10 @@ class TourPackageController extends Controller
 
     public function destroy(TourPackage $tourpackage)
     {
-        $tourpackage->load(['features', 'durationOptions']);
+        $tourpackage->load(['durationOptions']);
 
         foreach (self::IMAGE_FIELDS as $field) {
             $this->queueDelete($tourpackage->{$field});
-        }
-        foreach ($tourpackage->features as $feature) {
-            $this->queueDelete($feature->icon_image);
         }
         foreach ($tourpackage->durationOptions as $option) {
             $this->queueDelete($option->image);
@@ -369,7 +386,8 @@ class TourPackageController extends Controller
     private function rules(): array
     {
         return [
-            'sub_category_id' => 'required|exists:sub_categories,id',
+            'sub_category_ids' => 'required|array|min:1',
+            'sub_category_ids.*' => 'required|exists:sub_categories,id',
             'name' => 'required|string|max:255',
             'status' => 'nullable|in:draft,published,unpublished',
             'featured' => 'nullable|boolean',
@@ -690,6 +708,7 @@ class TourPackageController extends Controller
 
     private function syncLinkedEntities(TourPackage $tp, Request $request): void
     {
+        $tp->subCategories()->sync(array_filter($request->input('sub_category_ids', [])));
         $tp->amenities()->sync(array_filter($request->input('amenity_ids', [])));
         $tp->destinations()->sync($this->buildSyncPayload($request->destination_ids ?? []));
         $tp->attractions()->sync($this->buildSyncPayload($request->attraction_ids ?? []));

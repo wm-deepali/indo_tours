@@ -84,9 +84,15 @@ class TourPackage extends Model
         ])->filter()->implode(', ');
     }
 
-    public function subCategory(): BelongsTo
+    public function subCategories()
     {
-        return $this->belongsTo(SubCategory::class);
+        return $this->belongsToMany(SubCategory::class, 'sub_category_tour_package');
+    }
+
+    // Categories derived from the selected sub categories
+    public function getCategoriesAttribute()
+    {
+        return $this->subCategories->pluck('category')->filter()->unique('id')->values();
     }
 
     public function country(): BelongsTo

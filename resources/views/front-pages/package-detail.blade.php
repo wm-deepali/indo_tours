@@ -41,6 +41,13 @@
       $percent = $reviewCount ? round($count / $reviewCount * 100) : 0;
       return [$star => ['count' => $count, 'percent' => $percent]];
     });
+
+    $subCategories = $tourPackage->subCategories->isNotEmpty()
+    ? $tourPackage->subCategories
+    : collect([$tourPackage->subCategory])->filter();
+$primarySub = $currentSub ?? $subCategories->first();
+$pkgCategories = $subCategories->pluck('category')->filter()->unique('id');
+
   @endphp
 
 
@@ -54,12 +61,10 @@
           <ul>
             <li><a href="/">Home</a></li>
             <li><span class="breadcrumb-separator">/</span></li>
-            @if($tourPackage->subCategory)
-              <li><a
-                  href="{{ route('subcategory.show', $tourPackage->subCategory->slug) }}">{{ $tourPackage->subCategory->name }}</a>
-              </li>
-              <li><span class="breadcrumb-separator">/</span></li>
-            @endif
+            @if($primarySub)
+  <li><a href="{{ route('subcategory.show', $primarySub->slug) }}">{{ $primarySub->name }}</a></li>
+  <li><span class="breadcrumb-separator">/</span></li>
+@endif
             <li>
               <a href="{{ route('tourpackage.show', $tourPackage->slug) }}" class="active">
                 {{ $tourPackage->name }}
@@ -745,9 +750,9 @@
               @endif
 
               <div class="group-offer-banner__actions">
-                @if($tourPackage->group_offer_button1_text)
-                  <a href="{{ $tourPackage->group_offer_button1_url ?: route('subcategory.show', $tourPackage->subCategory->slug ?? '') }}"
-                    class="btn btn-white">
+               @if($tourPackage->group_offer_button1_text && ($tourPackage->group_offer_button1_url || $primarySub))
+  <a href="{{ $tourPackage->group_offer_button1_url ?: route('subcategory.show', $primarySub->slug) }}"
+  class="btn btn-white">
                     {{ $tourPackage->group_offer_button1_text }}
                   </a>
                 @endif
@@ -1012,17 +1017,17 @@
               </button>
             </div>
           </div>
-
-          <div class="center-btn">
-            <a href="{{ route('subcategory.show', $tourPackage->subCategory->slug ?? '') }}"
-              class="btn btn-outline-primary">View All</a>
-          </div>
+@if($primarySub)
+  <div class="center-btn">
+    <a href="{{ route('subcategory.show', $primarySub->slug) }}" class="btn btn-outline-primary">View All</a>
+  </div>
+@endif
         </div>
       </section>
     @endif
 
     <!-- HYPERLINK SECTION -->
-    @if($tourPackage->subCategory || $tourPackage->destinations->isNotEmpty() || $tourPackage->attractions->isNotEmpty() || $tourPackage->activities->isNotEmpty())
+    @if($subCategories->isNotEmpty() || $tourPackage->destinations->isNotEmpty() || $tourPackage->attractions->isNotEmpty() || $tourPackage->activities->isNotEmpty())
       <section class="seo-links-sec">
         <div class="container">
           <div class="heading">
@@ -1034,22 +1039,19 @@
 
           <div class="seo-links-wrapper">
             {{-- Category / Sub-Category --}}
-            @if($tourPackage->subCategory)
-              <div class="seo-link-block">
-                <h4>Browse By Category</h4>
-                <div class="seo-link-wrap">
-                  @if($tourPackage->subCategory->category)
-                    <a href="{{ route('category.show', $tourPackage->subCategory->category->slug) }}">
-                      {{ $tourPackage->subCategory->category->name }}
-                    </a>
-                  @endif
-
-                  <a href="{{ route('subcategory.show', $tourPackage->subCategory->slug) }}">
-                    {{ $tourPackage->subCategory->name }}
-                  </a>
-                </div>
-              </div>
-            @endif
+           @if($subCategories->isNotEmpty())
+  <div class="seo-link-block">
+    <h4>Browse By Category</h4>
+    <div class="seo-link-wrap">
+      @foreach($pkgCategories as $cat)
+        <a href="{{ route('category.show', $cat->slug) }}">{{ $cat->name }}</a>
+      @endforeach
+      @foreach($subCategories as $sc)
+        <a href="{{ route('subcategory.show', $sc->slug) }}">{{ $sc->name }}</a>
+      @endforeach
+    </div>
+  </div>
+@endif
 
             {{-- Destinations --}}
             @if($tourPackage->destinations->isNotEmpty())
@@ -1173,9 +1175,9 @@
     $breadcrumbItems = [
       ['name' => 'Home', 'url' => url('/')],
     ];
-    if ($tourPackage->subCategory) {
-      $breadcrumbItems[] = ['name' => $tourPackage->subCategory->name, 'url' => route('subcategory.show', $tourPackage->subCategory->slug)];
-    }
+    if ($primarySub) {
+  $breadcrumbItems[] = ['name' => $primarySub->name, 'url' => route('subcategory.show', $primarySub->slug)];
+}
     $breadcrumbItems[] = ['name' => $tourPackage->name, 'url' => url()->current()];
 
     $schema = [

@@ -408,6 +408,47 @@
             padding: 1px 6px;
             vertical-align: middle;
         }
+
+        .select2-container--default .select2-selection--multiple {
+            min-height: 40px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+            padding: 2px 6px;
+        }
+
+        .select2-container--default.select2-container--focus .select2-selection--multiple,
+        .select2-container--default.select2-container--open .select2-selection--multiple {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(48, 61, 137, .12);
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background: var(--accent-light);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            border-radius: 6px;
+            font-size: 12.5px;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+            color: var(--accent);
+        }
+
+        .select2-container.is-invalid .select2-selection--multiple {
+            border-color: #b22222;
+        }
+
+        .bulk-box {
+    margin-top: 16px;
+    padding: 14px;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+}
+.bulk-box textarea { margin-bottom: 10px; }
+.bulk-box .hint-inline { font-weight: 400; color: var(--text-hint); }
+
     </style>
 
     <div class="app-content content container-fluid">
@@ -461,18 +502,30 @@
                     <div class="cat-tab-panel active" data-panel="general">
 
                         <div class="form-field">
-                            <label for="sub_category_id">Parent Sub Category</label>
-                            <select id="sub_category_id" name="sub_category_id"
-                                class="form-control-styled searchable-select @error('sub_category_id') is-invalid @enderror"
+                            <label for="sub_category_ids">Categories / Sub Categories</label>
+                            <select id="sub_category_ids" name="sub_category_ids[]" multiple
+                                data-placeholder="Select one or more sub categories"
+                                style="height:auto;min-height:40px;"
+                                class="form-control-styled searchable-select @error('sub_category_ids') is-invalid @enderror"
                                 required>
-                                <option value="">Select Sub Category</option>
-                                @foreach($subCategories as $sc)
-                                    <option value="{{ $sc->id }}" {{ old('sub_category_id', $tourPackage->sub_category_id) == $sc->id ? 'selected' : '' }}>{{ $sc->name }}
-                                    </option>
+                                @php
+                                    $selectedSubs = old('sub_category_ids', $tourPackage->subCategories->pluck('id')->all());
+                                @endphp
+                                @foreach($subCategories as $categoryName => $subs)
+                                    <optgroup label="{{ $categoryName }}">
+                                        @foreach($subs as $sc)
+                                            <option value="{{ $sc->id }}" {{ in_array($sc->id, $selectedSubs) ? 'selected' : '' }}>
+                                                {{ $sc->name }}
+                                            </option>
+                                        @endforeach
+                                    </optgroup>
                                 @endforeach
                             </select>
-                            @error('sub_category_id')
-                            <div class="form-error">{{ $message }}</div>@enderror
+                            <div class="hint">Pick every sub category this package belongs to. The first one in the list
+                                is used as the primary.</div>
+                            @error('sub_category_ids')
+                                <div class="form-error">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="form-field">
@@ -883,6 +936,16 @@
                             <div id="new-include-rows"></div>
                             <button type="button" class="btn-secondary-dash" id="add-include-row"><i
                                     class="fa fa-plus"></i> Add Include</button>
+
+                                    <div class="bulk-box">
+    <label for="bulk-include-input">Bulk add includes <span class="hint-inline">(one per line)</span></label>
+    <textarea id="bulk-include-input" class="form-control-styled" rows="5"
+        placeholder="Professional Tour Guide&#10;Air-Conditioned Tour Vehicle&#10;Bottled Mineral Water"></textarea>
+    <button type="button" class="btn-secondary-dash" id="bulk-include-btn">
+        <i class="fa fa-list"></i> Add All
+    </button>
+</div>
+
                         </div>
 
                         <div class="form-field" style="margin-top:24px;">
@@ -905,6 +968,15 @@
                             <div id="new-exclude-rows"></div>
                             <button type="button" class="btn-secondary-dash" id="add-exclude-row"><i
                                     class="fa fa-plus"></i> Add Exclude</button>
+
+                                    <div class="bulk-box">
+    <label for="bulk-exclude-input">Bulk add excludes <span class="hint-inline">(one per line)</span></label>
+    <textarea id="bulk-exclude-input" class="form-control-styled" rows="5"
+        placeholder="Personal Travel Insurance&#10;Lunch &amp; Additional Meals&#10;Gratuities / Tips"></textarea>
+    <button type="button" class="btn-secondary-dash" id="bulk-exclude-btn">
+        <i class="fa fa-list"></i> Add All
+    </button>
+</div>
                         </div>
 
                     </div>
@@ -1256,7 +1328,11 @@
         if (typeof window.jQuery === 'undefined' || !jQuery.fn.select2) return;
         jQuery(scope || document).find('select.searchable-select').each(function () {
             if (jQuery(this).hasClass('select2-hidden-accessible')) return;
-            jQuery(this).select2({ width: '100%' });
+            jQuery(this).select2({
+    width: '100%',
+    placeholder: jQuery(this).data('placeholder') || undefined,
+    allowClear: jQuery(this).prop('multiple')
+});
         });
     }
 
@@ -1463,39 +1539,49 @@
         row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
     });
 
-    // ---- Includes repeater ----
-    let includeIndex = {{ $tourPackage->includes->count() }};
-    document.getElementById('add-include-row').addEventListener('click', function () {
-        const row = document.createElement('div');
-        row.className = 'gallery-row';
-        row.innerHTML = `
-            <div class="form-field">
-                <label>Text</label>
-                <input type="text" name="include_texts[${includeIndex}]" class="form-control-styled">
-            </div>
-            <button type="button" class="btn-secondary-dash remove-new-row"><i class="fa fa-trash"></i> Remove</button>
-        `;
-        document.getElementById('new-include-rows').appendChild(row);
-        includeIndex++;
-        row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
-    });
+    // ---- Includes / Excludes repeaters (single add + bulk add) ----
+function setupTextList(cfg) {
+    let index = cfg.start;
+    const container = document.getElementById(cfg.container);
 
-    // ---- Excludes repeater ----
-    let excludeIndex = {{ $tourPackage->excludes->count() }};
-    document.getElementById('add-exclude-row').addEventListener('click', function () {
+    function addRow(value) {
+        const i = index++;
         const row = document.createElement('div');
         row.className = 'gallery-row';
         row.innerHTML = `
             <div class="form-field">
-                <label>Text</label>
-                <input type="text" name="exclude_texts[${excludeIndex}]" class="form-control-styled">
+                <label>${cfg.label}</label>
+                <input type="text" name="${cfg.field}[${i}]" class="form-control-styled">
             </div>
             <button type="button" class="btn-secondary-dash remove-new-row"><i class="fa fa-trash"></i> Remove</button>
         `;
-        document.getElementById('new-exclude-rows').appendChild(row);
-        excludeIndex++;
+        if (typeof value === 'string') row.querySelector('input').value = value;
+        container.appendChild(row);
         row.querySelector('.remove-new-row').addEventListener('click', () => row.remove());
+    }
+
+    document.getElementById(cfg.addBtn).addEventListener('click', () => addRow());
+
+    document.getElementById(cfg.bulkBtn).addEventListener('click', function () {
+        const ta = document.getElementById(cfg.bulkInput);
+        const lines = ta.value
+            .split(/\r?\n/)
+            .map(s => s.replace(/^\s*(?:[-*•●▪]|\d+[.)])\s*/, '').trim())
+            .filter(Boolean)
+            .map(s => s.substring(0, 255));
+        lines.forEach(addRow);
+        ta.value = '';
     });
+}
+
+setupTextList({
+    start: {{ $tourPackage->includes->count() }}, container: 'new-include-rows', field: 'include_texts',
+    label: 'Text', addBtn: 'add-include-row', bulkBtn: 'bulk-include-btn', bulkInput: 'bulk-include-input'
+});
+setupTextList({
+    start: {{ $tourPackage->excludes->count() }}, container: 'new-exclude-rows', field: 'exclude_texts',
+    label: 'Text', addBtn: 'add-exclude-row', bulkBtn: 'bulk-exclude-btn', bulkInput: 'bulk-exclude-input'
+});
 
     // ---- Policies repeater ----
     let policyIndex = {{ $tourPackage->policies->count() }};

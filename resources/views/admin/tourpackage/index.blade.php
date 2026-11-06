@@ -255,11 +255,11 @@
                                     <div class="dest-location">{{ Str::limit($tp->banner_intro, 50) }}</div>
                                 </td>
                                 <td>
-                                    @if($tp->subCategory)
-                                        <span class="badge-cat">{{ $tp->subCategory->name }}</span>
-                                    @else
+                                    @forelse($tp->subCategories as $sc)
+                                        <span class="badge-cat" style="margin:0 4px 4px 0;">{{ $sc->name }}</span>
+                                    @empty
                                         —
-                                    @endif
+                                    @endforelse
                                 </td>
                                 <td>{{ $tp->duration_text ?? '—' }}</td>
                                 <td>

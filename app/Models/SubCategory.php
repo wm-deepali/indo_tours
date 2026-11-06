@@ -89,9 +89,8 @@ class SubCategory extends Model
         return $this->hasMany(SubCategoryFaq::class)->orderBy('sort_order');
     }
 
-    public function tourPackages(): HasMany
+    public function tourPackages()
     {
-        return $this->hasMany(TourPackage::class);
+        return $this->belongsToMany(TourPackage::class, 'sub_category_tour_package');
     }
-
 }

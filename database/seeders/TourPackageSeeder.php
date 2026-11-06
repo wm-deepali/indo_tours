@@ -44,6 +44,10 @@ class TourPackageSeeder extends Seeder
         $this->seedPackage($subCategory, [
             'slug' => 'leh-ladakh-expedition',
             'name' => 'Leh Ladakh Expedition',
+
+            // Additional sub categories (besides the primary one). Missing slugs are skipped.
+            'extra_sub_category_slugs' => ['ladakh-adventure-package'],
+
             'banner_tag_text' => 'Explore Ladakh',
             'banner_intro' => 'Discover breathtaking mountains, peaceful monasteries, high-altitude lakes and unforgettable Himalayan experiences.',
             'main_image' => 'assets/images/listing/banner1.jpg',
@@ -100,6 +104,9 @@ class TourPackageSeeder extends Seeder
         $this->seedPackage($subCategory, [
             'slug' => 'ladakh-family-discovery-tour',
             'name' => 'Ladakh Family Discovery Tour',
+
+            'extra_sub_category_slugs' => [],
+
             'banner_tag_text' => 'Family Trips to Ladakh',
             'banner_intro' => 'A relaxed, family-friendly journey through Ladakh — comfortable stays, easy pacing, and experiences the whole family will remember.',
             'main_image' => 'assets/images/listing/banner2.jpg',
@@ -163,6 +170,7 @@ class TourPackageSeeder extends Seeder
         $tourPackage = TourPackage::updateOrCreate(
             ['slug' => $data['slug']],
             [
+                // Primary sub category (kept for backward compatibility)
                 'sub_category_id' => $subCategory->id,
                 'name' => $data['name'],
                 'status' => 'published',
@@ -190,10 +198,18 @@ class TourPackageSeeder extends Seeder
             ]
         );
 
-        $tourPackage->features()->delete();
-        foreach ($data['features'] as $i => $text) {
-            $tourPackage->features()->create(['text' => $text, 'sort_order' => $i]);
-        }
+        // Multiple sub categories: primary first, then any extras that exist
+        $extraIds = empty($data['extra_sub_category_slugs'])
+            ? []
+            : SubCategory::whereIn('slug', $data['extra_sub_category_slugs'])->pluck('id')->all();
+
+        $tourPackage->subCategories()->sync(
+            array_values(array_unique(array_merge([$subCategory->id], $extraIds)))
+        );
+
+        // Features were replaced by amenities. Link any amenities whose name matches.
+        $amenityIds = \App\Models\Amenity::whereIn('name', $data['features'] ?? [])->pluck('id')->all();
+        $tourPackage->amenities()->sync($amenityIds);
 
         $tourPackage->durationOptions()->delete();
         foreach ($data['duration_options'] as $i => $option) {

@@ -123,65 +123,9 @@
             </div>
         </section>
 
-        <!-- SUBCATEGORIES SECTION -->
-        @if($category->subCategories->isNotEmpty())
-            <section class="listing-secA">
-                <div class="container">
-                    <div class="heading">
-                        <h3>{{ $category->name }} <span>Categories</span></h3>
-                        <p>
-                            Explore the different {{ strtolower($category->name) }} categories we offer, each tailored to a
-                            unique travel experience.
-                        </p>
-                    </div>
+        <!-- TOUR PACKAGES SECTION -->
+        @include('front-pages.partials.package-slider', ['tourPackages' => $tourPackages, 'title' => $category->name, 'ref' => ['cat' => $category->slug]])
 
-                    <div class="trip-grid">
-                        @foreach($category->subCategories as $subCategory)
-                            <div class="trip_card">
-                                <a href="{{ route('subcategory.show', $subCategory->slug) }}" target="_blank" class="img">
-                                    @if($subCategory->banner_image_one)
-                                        <img loading="lazy" src="{{ asset('storage/' . $subCategory->banner_image_one) }}"
-                                            alt="{{ $subCategory->name }}" />
-                                    @endif
-                                    @if($subCategory->offer_tag_text)
-                                        <span class="save">{{ $subCategory->offer_tag_text }}</span>
-                                    @endif
-                                </a>
-
-                                <div class="content">
-                                    <h3>
-                                        <a href="{{ route('subcategory.show', $subCategory->slug) }}"
-                                            target="_blank">{{ $subCategory->name }}</a>
-                                    </h3>
-
-                                    @if($subCategory->intro_text)
-                                        <p class="price">{{ Str::limit($subCategory->intro_text, 90) }}</p>
-                                    @endif
-
-                                    <div class="btns">
-                                        <a href="tel:+91 000 000 00" class="btn btn-outline-primary">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                                stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                                <path
-                                                    d="M7.829 16.171a20.9 20.9 0 0 1-4.846-7.614c-.573-1.564-.048-3.282 1.13-4.46l.729-.728a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.42.42a1.81 1.81 0 0 0 0 2.56l3.84 3.841a1.81 1.81 0 0 0 2.56 0l.421-.42a2.11 2.11 0 0 1 2.987 0l1.707 1.707a2.11 2.11 0 0 1 0 2.987l-.728.728c-1.178 1.179-2.896 1.704-4.46 1.131a20.9 20.9 0 0 1-7.614-4.846Z" />
-                                            </svg>
-                                        </a>
-                                        <a href="{{ route('subcategory.show', $subCategory->slug) }}" target="_blank"
-                                            class="btn btn-primary">
-                                            View Details
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-
-                    <div class="center-btn">
-                        <a href="{{ route('category.show', $category->slug) }}" class="btn btn-outline-primary">View All</a>
-                    </div>
-                </div>
-            </section>
-        @endif
 
         <!-- OFFER BANNER SECTION -->
         <section class="group-offer-banner">
@@ -863,8 +807,8 @@
     @endphp
 
     <script type="application/ld+json">
-                {!! json_encode($categorySchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
-            </script>
+                        {!! json_encode($categorySchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+                    </script>
 
     @if($category->promo_end_at)
         <script>

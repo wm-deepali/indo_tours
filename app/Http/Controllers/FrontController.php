@@ -44,6 +44,18 @@ class FrontController extends Controller
         ];
     }
 
+    /**
+     * Published tour packages that belong to ANY of the given sub categories
+     * (via the sub_category_tour_package pivot).
+     */
+    protected function publishedPackagesInSubCategories($subCategoryIds)
+    {
+        $ids = collect($subCategoryIds)->all();
+
+        return TourPackage::where('status', 'published')
+            ->whereHas('subCategories', fn($q) => $q->whereIn('sub_categories.id', $ids));
+    }
+
     public function home(Request $request)
     {
         $content = HomePageContent::instance();
@@ -56,7 +68,13 @@ class FrontController extends Controller
                 $section->setRelation(
                     'packages',
                     TourPackage::published()
-                        ->when($section->sub_category_id, fn($q) => $q->where('sub_category_id', $section->sub_category_id))
+                        ->when(
+                            $section->sub_category_id,
+                            fn($q) => $q->whereHas(
+                                'subCategories',
+                                fn($s) => $s->where('sub_categories.id', $section->sub_category_id)
+                            )
+                        )
                         ->orderByDesc('featured')
                         ->latest('id')
                         ->take($section->limit)
@@ -80,32 +98,36 @@ class FrontController extends Controller
 
         $subCategoryIds = $category->subCategories->pluck('id');
 
+        // Actual tour packages under any sub category of this category
+        $tourPackages = $this->publishedPackagesInSubCategories($subCategoryIds)
+            ->latest('tour_packages.id')
+            ->get();
+
         // Distinct destinations covered by this category's tour packages
         $destinations = Destination::whereHas('tourPackages', function ($query) use ($subCategoryIds) {
-            $query->whereIn('sub_category_id', $subCategoryIds)
-                ->where('status', 'published');
+            $query->where('status', 'published')
+                ->whereHas('subCategories', fn($q) => $q->whereIn('sub_categories.id', $subCategoryIds->all()));
         })->get();
 
         // Distinct attractions covered by this category's tour packages
         $attractions = Attraction::whereHas('tourPackages', function ($query) use ($subCategoryIds) {
-            $query->whereIn('sub_category_id', $subCategoryIds)
-                ->where('status', 'published');
+            $query->where('status', 'published')
+                ->whereHas('subCategories', fn($q) => $q->whereIn('sub_categories.id', $subCategoryIds->all()));
         })->get();
 
         // Distinct activities covered by this category's tour packages
         $activities = Activity::whereHas('tourPackages', function ($query) use ($subCategoryIds) {
-            $query->whereIn('sub_category_id', $subCategoryIds)
-                ->where('status', 'published');
+            $query->where('status', 'published')
+                ->whereHas('subCategories', fn($q) => $q->whereIn('sub_categories.id', $subCategoryIds->all()));
         })->get();
 
         // Top reviews for tour packages under this category
         $reviews = Review::with('reviewable')
             ->where('reviewable_type', TourPackage::class)
-            ->whereIn('reviewable_id', function ($query) use ($subCategoryIds) {
-                $query->select('id')->from('tour_packages')
-                    ->whereIn('sub_category_id', $subCategoryIds)
-                    ->where('status', 'published');
-            })
+            ->whereIn(
+                'reviewable_id',
+                $this->publishedPackagesInSubCategories($subCategoryIds)->select('tour_packages.id')
+            )
             ->where('status', 'published')
             ->orderByDesc('rating')
             ->latest()
@@ -114,6 +136,7 @@ class FrontController extends Controller
 
         return view('front-pages.category-detail', compact(
             'category',
+            'tourPackages',
             'destinations',
             'attractions',
             'activities',
@@ -128,39 +151,42 @@ class FrontController extends Controller
             'ctaPerks',
             'faqs',
             'category',
-            'tourPackages' => fn($query) => $query->where('status', 'published')->latest(),
         ])
             ->where('slug', $slug)
             ->firstOrFail();
 
         $subCategoryId = $subCategory->id;
 
+        // Actual tour packages assigned to this sub category (via pivot)
+        $tourPackages = $this->publishedPackagesInSubCategories([$subCategoryId])
+            ->latest('tour_packages.id')
+            ->get();
+
         // Distinct destinations covered by this sub-category's tour packages
         $destinations = Destination::whereHas('tourPackages', function ($query) use ($subCategoryId) {
-            $query->where('sub_category_id', $subCategoryId)
-                ->where('status', 'published');
+            $query->where('status', 'published')
+                ->whereHas('subCategories', fn($q) => $q->where('sub_categories.id', $subCategoryId));
         })->get();
 
         // Distinct attractions covered by this sub-category's tour packages
         $attractions = Attraction::whereHas('tourPackages', function ($query) use ($subCategoryId) {
-            $query->where('sub_category_id', $subCategoryId)
-                ->where('status', 'published');
+            $query->where('status', 'published')
+                ->whereHas('subCategories', fn($q) => $q->where('sub_categories.id', $subCategoryId));
         })->get();
 
         // Distinct activities covered by this sub-category's tour packages
         $activities = Activity::whereHas('tourPackages', function ($query) use ($subCategoryId) {
-            $query->where('sub_category_id', $subCategoryId)
-                ->where('status', 'published');
+            $query->where('status', 'published')
+                ->whereHas('subCategories', fn($q) => $q->where('sub_categories.id', $subCategoryId));
         })->get();
 
         // Top reviews for tour packages under this sub-category
         $reviews = Review::with('reviewable')
             ->where('reviewable_type', TourPackage::class)
-            ->whereIn('reviewable_id', function ($query) use ($subCategoryId) {
-                $query->select('id')->from('tour_packages')
-                    ->where('sub_category_id', $subCategoryId)
-                    ->where('status', 'published');
-            })
+            ->whereIn(
+                'reviewable_id',
+                $this->publishedPackagesInSubCategories([$subCategoryId])->select('tour_packages.id')
+            )
             ->where('status', 'published')
             ->orderByDesc('rating')
             ->latest()
@@ -169,6 +195,7 @@ class FrontController extends Controller
 
         return view('front-pages.subcategory-detail', compact(
             'subCategory',
+            'tourPackages',
             'destinations',
             'attractions',
             'activities',
@@ -176,12 +203,12 @@ class FrontController extends Controller
         ));
     }
 
-    public function tourPackageDetail(string $slug)
+    public function tourPackageDetail(Request $request, string $slug)
     {
         $tourPackage = TourPackage::where('slug', $slug)
             ->where('status', 'published')
             ->with([
-                'subCategory.category',
+                'subCategories.category',
                 'country',
                 'state',
                 'city',
@@ -202,14 +229,29 @@ class FrontController extends Controller
             ])
             ->firstOrFail();
 
-        $relatedPackages = TourPackage::where('status', 'published')
-            ->where('sub_category_id', $tourPackage->sub_category_id)
-            ->where('id', '!=', $tourPackage->id)
+        // Breadcrumb context: sub category (or category) the visitor came from, else primary
+        $currentSub = $tourPackage->subCategories->firstWhere('slug', $request->query('sub'))
+            ?? ($request->query('cat')
+                ? $tourPackage->subCategories->first(fn($s) => optional($s->category)->slug === $request->query('cat'))
+                : null)
+            ?? $tourPackage->subCategories->first()
+            ?? $tourPackage->subCategory;
+
+        // Related = any package sharing at least one sub category with this one
+        $subCategoryIds = $tourPackage->subCategories->pluck('id');
+
+        // Old data fallback: if the pivot is empty, use the primary column
+        if ($subCategoryIds->isEmpty() && $tourPackage->sub_category_id) {
+            $subCategoryIds = collect([$tourPackage->sub_category_id]);
+        }
+
+        $relatedPackages = $this->publishedPackagesInSubCategories($subCategoryIds)
+            ->where('tour_packages.id', '!=', $tourPackage->id)
             ->latest()
             ->take(8)
             ->get();
 
-        return view('front-pages.package-detail', compact('tourPackage', 'relatedPackages'));
+        return view('front-pages.package-detail', compact('tourPackage', 'relatedPackages', 'currentSub'));
     }
 
     public function destinations(Request $request)

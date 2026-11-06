@@ -16,9 +16,9 @@ class DestinationSeeder extends Seeder
 {
     public function run(): void
     {
-        $country = Country::firstOrCreate(['name' => 'India']);
-        $state = State::firstOrCreate(['name' => 'Jammu and Kashmir', 'country_id' => $country->id]);
-        $city = City::firstOrCreate(['name' => 'Srinagar', 'state_id' => $state->id]);
+        $country = Country::firstOrCreate(['name' => 'India', 'slug' => 'india']);
+        $state = State::firstOrCreate(['name' => 'Jammu and Kashmir', 'slug' => 'jammu-kashmir', 'country_id' => $country->id]);
+        $city = City::firstOrCreate(['name' => 'Srinagar', 'slug' => 'srinagar', 'state_id' => $state->id]);
 
         $destination = Destination::updateOrCreate(
             ['slug' => 'kashmir'],
@@ -27,6 +27,7 @@ class DestinationSeeder extends Seeder
                 'state_id' => $state->id,
                 'city_id' => $city->id,
                 'name' => 'Kashmir',
+                'slug' => 'kashmir',
                 'image' => $this->copyDemoImage('assets/images/attraction/kashmir1.jpg', 'kashmir-main'),
 
                 'short_description' => 'A Himalayan escape of peaceful lakes, lush valleys, snow-covered mountains and unforgettable local experiences.',
@@ -269,7 +270,7 @@ class DestinationSeeder extends Seeder
         // ⚠️ Assumed fields: name, price_text, description, is_featured, badge_text, sort_order
         $destination->budgetTiers()->delete();
         foreach ([
-            ['name' => 'Budget', 'price_suffix' => '₹', 'price_from' => '25,000',  'price_to' => '35,000', 'desc' => 'Basic stays, shared travel, local food.', 'featured' => false, 'badge' => null],
+            ['name' => 'Budget', 'price_suffix' => '₹', 'price_from' => '25,000', 'price_to' => '35,000', 'desc' => 'Basic stays, shared travel, local food.', 'featured' => false, 'badge' => null],
             ['name' => 'Comfort', 'price_suffix' => '₹', 'price_from' => '35,000', 'price_to' => '60,000', 'desc' => '3-star stays, private cabs, curated experiences.', 'featured' => true, 'badge' => 'Popular'],
             ['name' => 'Premium', 'price_suffix' => '₹', 'price_from' => '60,000', 'price_to' => '+', 'desc' => 'Luxury stays, private transport, top experiences.', 'featured' => false, 'badge' => null],
         ] as $i => $tier) {
